@@ -28,6 +28,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Claroline\CoreBundle\Controller\RegistrationController as BaseController;
+
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -107,7 +110,16 @@ class RegistrationController extends Controller
         $localeManager = $this->get('claroline.common.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
-
+        
+        // START Pregenerate the username
+        $request = $this->get('request');
+        $profile_form = $request->request->get('profile_form');
+        $search = array('@', '-', '+');
+        $replace = array('__AT__', '_', '_');
+        $profile_form['username'] = str_replace($search, $replace, $profile_form['mail']);
+        $request->request->set('profile_form', $profile_form);
+        // END Pregenerate the username
+        
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -116,8 +128,11 @@ class RegistrationController extends Controller
                 $user,
                 PlatformRoles::USER
             );
-            $msg = $this->get('translator')->trans('account_created', array(), 'platform');
-            $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
+            
+            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $this->get('security.context')->setToken($token);
+            $this->get('session')->set('_security_main',serialize($token));
+            return $this->redirect($this->generateUrl('claro_desktop_open_tool', array('toolName' => 'home')));
         }
 
         return array('form' => $form->createView());
