@@ -253,3 +253,8 @@ claro_admin_groups:
     prefix: admin/groups
     resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
     type: annotation
+
+solerni_static_page:
+    resource: "@ClarolineCoreBundle/Controller/StaticController.php"
+    type: annotation
+    prefix: /static

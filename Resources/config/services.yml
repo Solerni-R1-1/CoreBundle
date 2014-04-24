@@ -78,3 +78,8 @@ services:
             - { name: kernel.event_listener, event: create_notification_item_workspace-role-change_right, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_user, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_group, method: onCreateNotificationItem }
+
+    orange.static.controller:
+        class: Claroline\CoreBundle\Controller\StaticController
+        calls:
+            - [ setContainer, [@service_container] ]

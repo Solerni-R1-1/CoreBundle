@@ -1,0 +1,24 @@
+<div class="col-xs-12 col-md-12 slrn-widget slrn-widget--workspace">
+    {# HEADER FOND + POLICE #}
+    <div class="londrina-solid row slrn-widget__header bg-color-second"><a href="{{ path( 'solerni_static_page', { 'name': 'static_lesson' } ) }}">{{ workspaceName }}</a></div>
+    {# IMAGE #}
+    <div class="row slrn-widget__body">
+        {% if workspaceThumbnail is not null %}
+        <a href="{{ path( 'solerni_static_page', { 'name': 'static_lesson' } ) }}">
+            <img class="slrn-widget__image" src="{{ workspaceThumbnail.src }}" alt="{{ workspaceThumbnail.alt }}" width="{{ workspaceThumbnail.width }}" height="{{ workspaceThumbnail.height }}" />
+        </a>    
+        {% endif %}
+    </div>
+    {# PROGRESSION #}
+    {% if renderProgression %}
+    <div class="row slrn-widget__body bg-color-primary">
+        <div class="slrn-widget__title slrn-widget_row">{{ 'my_progress'|trans({}, 'platform') }}</div>
+        <span class="presentation__mooc__progression__wrapper">
+            <span class="presentation__mooc__progression__text">{{ workspaceUserProgression }}%</span>
+            <span class="presentation__mooc__progression__100">
+                <span class="presentation__mooc__progression__xx" style="width:{{ workspaceUserProgression }}%"></span>
+            </span>
+        </span>
+    </div>
+    {% endif %}
+</div>

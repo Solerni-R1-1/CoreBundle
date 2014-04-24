@@ -1,0 +1,20 @@
+        {% render controller(
+            'OrangeThemeBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'dashboard' }
+        ) %}
+<div class='col-xs-9 col-md-9'>
+    <div class='dsk__article__mooc'>
+        <div class='clearfix'></div>
+        <h2>
+            {{ 'dashboard'|trans({}, 'platform') }}
+        </h2>
+        {% render controller(
+            'OrangeThemeBundle:Solerni:getDesktopLessonBlockWidget',
+            {}
+        ) %}
+    </div>
+        {% render controller(
+            'OrangeThemeBundle:Solerni:getDesktopMessagesBadgesAndEvalBlockWidget',
+            {}
+        ) %}
+<div class='clearfix'></div>
