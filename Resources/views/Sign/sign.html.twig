@@ -1,0 +1,60 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block bodyClasses %}sign-in{% endblock %}
+
+{% block loggingHeaderImage %}
+     <div class="slrn-header">
+        <div class="container slrn-header_w">
+            <div class="slrn-header__body">
+                <img class="slrn-header__tagimage" src="{{ asset('bundles/orangetheme/images/header-inscription.png') }}" alt="" width="" height="" />
+                <h1 class="slrn-header__content" >Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs</h1>
+            </div>
+        </div>
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/orangetheme/images/logging_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-6 col-xs-6 slrn-md-6 slrn-md-6--signin">
+        <h1 class="slrn-section-title">{% block formTitle %}{% endblock %}</h1>
+        {% if is_facebook_available() %}
+            <button onclick="fb_login();" disabled="disabled" class="slrn-facebook-connect">
+                Je me connecte avec Facebook
+            </button>
+            <script>
+                function fb_login() {
+                    FB.getLoginStatus(function(response) {
+                        if (response.status === 'connected') {
+                            document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                        } else {
+                            FB.login(function(response) {
+                                if (response.authResponse) {
+                                    document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                                }
+                            });
+                        }
+                    });
+                }
+            </script>
+            <div class="slrn-hr"/><span class="slrn-hr__inner">{{ 'ou'|trans({}, 'platform' )}}</span></div>
+        {% endif %}
+        {% block signinForm %}{% endblock %}
+        <p class="small slrn-mention">* Tous les champs sont obligatoires</p>
+    </div>
+    <div class="col-md-1 cold-xd-1"></div>
+    <div class="col-md-5 slrn-md-5 slrn-md-5--signin col-xs-5">
+        {% block alternateText %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    {# IE8 BUG OF formvalidator PLUGIN #}
+    <script type="text/javascript" src="{{ asset('bundles/orangetheme/js/form-validator/jquery.form-validator-ie8.js') }}"></script>
+    <!--[if IE 8 ]>
+        <script src="{{ asset('bundles/orangetheme/js/jquery.placeholder.js') }}"></script>
+        <script src="{{ asset('bundles/orangetheme/js/placeholder-init.js') }}"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{{ asset('bundles/orangetheme/js/form-validator-init.js') }}"></script>
+   
+{% endblock %}
