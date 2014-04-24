@@ -9,7 +9,15 @@
         </div>
         <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
               method="post" id="terms_of_service_form">
-            <div class="panel-body">
+            <div id="text_content" class="panel-body">
+                <p>Pour vous connecter via Facebook, vous devez d'abord accepter nos <a class="js-open" href="{{ twig_cgu_url }}">conditions générales d'utilisation</a>.</p>
+                {# CACHE : CONDITIONS D'UTILISATION #}
+                <div class="form-group row hide">
+                    {{ form_label(form.scroll, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                    <div class="col-md-3 col-xs-3">
+                       {{ form_widget(form.scroll, {'attr': { 'class' : 'hide' } }) }}
+                    </div>
+                </div>
                  {{ form_widget(form) }}
             </div>
             <div class="panel-footer">
@@ -20,4 +28,16 @@
             </div>
         </form>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript">
+        jQuery(document).ready(function(jQuery) {
+            jQuery('.js-open').on( 'click', function(elm) {
+                elm.preventDefault();
+                cguWin = window.open( jQuery(this).attr('href'), 'cgu', 'toolbar=no,scrollbar=yes,resizable=yes,status=no,width=980,height=600,top=100,left=200' );             
+            });        
+        });
+    </script>
 {% endblock %}
