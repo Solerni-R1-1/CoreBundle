@@ -36,7 +36,7 @@ class SolerniController extends Controller
     public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
     {
         $doctrine = $this->getDoctrine();
-        $doneRepository = $doctrine->getRepository('OrangeLessonBundle:Done');
+        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
 
         $lesson = $this->getFirstLessonFromWorkspace($workspace);
         $image = $this->getFirstImageFromWorkspace($workspace, 'image/.*');
@@ -117,7 +117,7 @@ class SolerniController extends Controller
         );
 
         return $this->render(
-            'OrangeThemeBundle:Partials:workspacePresentationWidget.html.twig',
+            'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             $return
         );
     }
@@ -186,7 +186,7 @@ class SolerniController extends Controller
     public function getWorkspaceUserBadgesWidgetAction($workspace, $user)
     {
         return $this->render(
-                'OrangeThemeBundle:Partials:workspaceUserBadgesWidget.html.twig',
+                'ClarolineCoreBundle:Partials:workspaceUserBadgesWidget.html.twig',
                 $this->getWorkspaceUserBadges(
                     $workspace,
                     $user
@@ -270,7 +270,7 @@ class SolerniController extends Controller
         );
 
     	return $this->render(
-    			'OrangeThemeBundle:Partials:desktopAsideBlockWidget.html.twig',
+    			'ClarolineCoreBundle:Partials:desktopAsideBlockWidget.html.twig',
     			$return
     	);
     }
@@ -285,7 +285,7 @@ class SolerniController extends Controller
         $static = $this->get('orange.static.controller');
         $workspaceRepository = $doctrine->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-        $doneRepository = $doctrine->getRepository('OrangeLessonBundle:Done');
+        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
         $roleRepository = $doctrine->getRepository('ClarolineCoreBundle:Role');
 
         $allWorkspaces = $workspaceRepository->findNonPersonal();
@@ -370,7 +370,7 @@ class SolerniController extends Controller
         }
 
     	return $this->render(
-            'OrangeThemeBundle:Partials:desktopLessonBlockWidget.html.twig',
+            'ClarolineCoreBundle:Partials:desktopLessonBlockWidget.html.twig',
             $return
     	);
     }
@@ -462,7 +462,7 @@ class SolerniController extends Controller
         }
 
         return $this->render(
-            'OrangeThemeBundle:Partials:desktopMessagesBadgesAndEvalBlockWidget.html.twig',
+            'ClarolineCoreBundle:Partials:desktopMessagesBadgesAndEvalBlockWidget.html.twig',
             $messageReturn + $badgeReturn + $evalReturn
         );
     }
@@ -484,7 +484,7 @@ class SolerniController extends Controller
             ->getUser();
         $lessonRepository = $doctrine->getRepository('IcapLessonBundle:Lesson');
         $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-        $doneRepository = $doctrine->getRepository('OrangeLessonBundle:Done');
+        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
 
         // TODO see if it can be parametered
         $resourceType = $resourcesTypeRepository->findOneByName('icap_lesson');
@@ -562,7 +562,7 @@ class SolerniController extends Controller
         }
 
         return $this->render(
-            'OrangeThemeBundle:Partials:workspaceUserLessonsWidget.html.twig',
+            'ClarolineCoreBundle:Partials:workspaceUserLessonsWidget.html.twig',
             $convertedTab
         );
     }
@@ -580,7 +580,7 @@ class SolerniController extends Controller
         );
 
         return $this->render(
-                'OrangeThemeBundle:Partials:desktopProfileWidget.html.twig',
+                'ClarolineCoreBundle:Partials:desktopProfileWidget.html.twig',
                 $return
         );
     }
@@ -664,7 +664,7 @@ class SolerniController extends Controller
         $this->get('session')->set('solerni_partager_url', $workspaceUrl);
 
         return $this->render(
-            'OrangeThemeBundle:Partials:includeSolerniTabs.html.twig',
+            'ClarolineCoreBundle:Partials:includeSolerniTabs.html.twig',
             $solerniTabs
         );
     }
