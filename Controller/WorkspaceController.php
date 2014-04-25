@@ -353,6 +353,11 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      * @EXT\Template()
      *
      * Renders the left tool bar. Not routed.
