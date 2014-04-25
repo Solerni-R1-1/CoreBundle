@@ -109,7 +109,14 @@ class ProfileType extends AbstractType
             'description',
             'tinymce',
             array('required' => false, 'label' => 'description')
-        );
+        )
+        ->add(
+            'accepted_com_terms', 
+            'checkbox', 
+            array(
+                'label' => 'I agree that my personal information be used for commercial purposes',
+                'required' => false
+        ));
     }
 
     public function getName()
