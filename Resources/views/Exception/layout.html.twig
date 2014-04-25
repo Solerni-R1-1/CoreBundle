@@ -1,89 +1,137 @@
 {% extends 'ClarolineCoreBundle::base.html.twig' %}
 
-{% block stylesheets %}
-
-    {% if config.getParameter('theme') != '' %}
-        <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
-    {% endif %}
-
-    <link rel="stylesheet" href="{{ asset('vendor/fortawesome/font-awesome/css/font-awesome.css') }}" screen="media" />
-{% endblock %}
-
-{% block javascripts_header %}
+{% block meta %}
     {{ parent() }}
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+    {% if config.getParameter('google_meta_tag') != '' %}
+       {{ config.getParameter('google_meta_tag') | raw }}
+    {% endif %}
 {% endblock %}
+
+{% block stylesheets %}
+    {# REMOVE CUSTOM THEMING AND USING claroline BOOSTRAP CSS INSTEAD #}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/bootstrap.css') }}" screen="media" />
+
+    {# ADDING SOLERNI STYLESHEETS #}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/solerni.css') }}" screen="media" />
+    
+    {# Font-Awesome CSS + Fonts #}
+      {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
+    '../vendor/fortawesome/font-awesome/less/font-awesome.less'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/font/FontAwesome.otf'
+        '../vendor/fortawesome/font-awesome/font/FontAwesome.otf' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot'
+        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg'
+        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf'
+        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff'
+        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff' %}
+    {% endimage %}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker3.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/iframe/iframe.css')}}'>
+{% endblock %}
+
 
 {% block favicon %}
-    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
-    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/apple-touch-icon.png')}}"/>
 {% endblock %}
 
 {% block layout %}
-    <div id="wrap">
-        <div class="please-wait">
-            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
-        </div>
-        <div class="hidden-xs">
-            <div class="hide">
-                <div id="left-bar">
-                    {% block leftbar %}{% endblock %}
-                </div>
-            </div>
-        </div>
-
-    <div id="top_bar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+ <header id="top_bar" class="navbar navbar-inverse navbar-fixed-top slrn-navbar" role="navigation">
         <div class="container">
-            <div class="navbar-header">
-                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+             {# <div class="navbar-header">
+                MENU BUTTON WHEN RESIZED 
+                <button class="navbar-toggle" data-toggle="rm-collapse" data-target="rm-.navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                {% if config.getParameter('logo') != "" %}
-                    <a class="navbar-brand logo" href="{{ path('claro_index') }}">
-                        <img src="{{ asset("") ~ "uploads/logos/" ~ config.getParameter('logo') }}" height="35">
-                    </a>
-                {% endif %}
-                {% if config.getParameter('name') != "" %}
-                    <a class="navbar-brand" href="{{ path('claro_index') }}">
-                        {{ config.getParameter('name') }}
-                    </a>
-                {% endif %}
+            </div>#}
+            <div class="rm-navbar-collapse rm-collapse slrn-top-header">
+                <a class="navbar-brand logo slrn-logo slrn-top-header__item" title="{{ 'solerni_homepage'|trans( {}, 'platform' ) }}" href="{{ path( 'solerni_static_page', { 'name': 'cms_url' } ) }}"></a>
+                <ul class="nav navbar-nav slrn-topbar slrn-top-header__item">
+                    {{ block('whatIsSolerni') }}
+                </ul>
+                <ul class="nav navbar-nav slrn-top-header__item slrn-top-right">
+                        {{ block('login') }}
+                </ul>
             </div>
         </div>
+    </header>
+    {# BREADCRUMB & CONTENT #}
+    <div class="container slrn-content-container" style="margin-top: 10%; font-size: 1.2em">
+        <div class="row content">
+            {# CONTENT #}
+            <section id="text_content" class="col-xs-12 col-md-12">
+                {% block content %}{% endblock %}
+            </section>
+        </div>
     </div>
-
+   {# <div id="push"></div> #}
+    <footer id="footer" class="slrn-footer slrn-footer-fixed">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {% block breadcrumb %}{% endblock %}
-                </div>
-            </div>
-            <div class="row content">
-                <div class="col-md-12">
+            <a target="_blank" href="http://www.orange.com">
+                <div class="footer_powered">powered by Orange</div>
+            </a>
 
-                        <div class="col-md-6 col-md-offset-3">
-                            <div class="alert alert-danger">
-                                 {% block message %}
-                                 {% endblock %}
-                            </div>
-                        </div>
-
-                </div>
+            <div class="footer_social">
+                <span class="footer_social__text">Suivez nous sur</span>
+                <a href="{{ path( 'solerni_static_page', { 'name': 'social_facebook' } ) }}" class="footer_social_link" target="_blank">
+                    <span class="footer_social_link__tooltip">Facebook</span>
+                    <span class="footer_social_link__icon social_facebook">Facebook</span>
+                </a>
+                {# <a href="{{ path( 'solerni_static_page', { 'name': 'social_gplus' } ) }}" class="footer_social_link">
+                    <span class="footer_social_link__tooltip">Google+</span>
+                    <span class="footer_social_link__icon social_googlep">Google Plus</span>
+                </a> #}
+                {# <a href="{{ path( 'solerni_static_page', { 'name': 'social_linkedin' } ) }}" class="footer_social_link">
+                    <span class="footer_social_link__tooltip">Linkedin</span>
+                    <span class="footer_social_link__icon social_linkedin" style="display:block;">Linkedin</span>
+                </a> #}
+                {# <a href="{{ path( 'solerni_static_page', { 'name': 'social_rss' } ) }}" class="footer_social_link">
+                    <span class="footer_social_link__tooltip">Flux RSS</span>
+                    <span class="footer_social_link__icon social_rss">Rss</span>
+                </a> #}
+                <a href="{{ path( 'solerni_static_page', { 'name': 'social_twitter' } ) }}" class="footer_social_link" target="_blank">
+                    <span class="footer_social_link__tooltip">Twitter</span>
+                    <span class="footer_social_link__icon social_twitter">Twitter</span>
+                </a>
+                <a href="{{ path( 'solerni_static_page', { 'name': 'social_blog' } ) }}" class="footer_social_link">
+                    <span class="footer_social_link__tooltip">Blog</span>
+                    <span class="footer_social_link__icon social_blog">Blog</span>
+                </a>
             </div>
+
+            <nav class="footer_cms_menu">
+                <ul class="footer_cms_menu__column">
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_quoi' } ) }}">Qu'est-ce que Solerni ?</a></li>
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_partenaires' } ) }}">Partenaires</a></li>
+                </ul>
+                <ul class="footer_cms_menu__column">
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_legal' } ) }}">Mentions légales</a></li>
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_cgu' } ) }}">CGU</a></li>
+                </ul>
+                <ul class="footer_cms_menu__column">
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="mailto:contact@solerni.com">Contact</a></li>
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">FAQ</a></li>
+                </ul>
+            </nav>
         </div>
-        <div id="push"></div>
-    </div>
-    {% block footer %}
-        {% render controller('ClarolineCoreBundle:Layout:footer') %}
-    {% endblock%}
+    </footer>
 {% endblock %}
 
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset('vendor/twbs/bootstrap/js/bootstrap.js') }}"></script>
-    {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
-        '../vendor/jms/twig-js/twig.js'
-        %}<script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endblock %}
+
