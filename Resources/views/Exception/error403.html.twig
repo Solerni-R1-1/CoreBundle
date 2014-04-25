@@ -3,5 +3,12 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'unauthorized' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block message %}
-    {{'unauthorized' | trans({}, 'platform') }}
+    {#{'unauthorized' | trans({}, 'platform') }#}
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <p><b>Désolé,</b></p>
+            <p>Vous n'avez pas l'autorisation d'accéder à cette page.<br/>
+            Vous pouvez revenir à <a href="javascript:history.back()">la page précédente</a> ou à <a href="/">l'accueil.</a></p>
+        </div>
+    </div>
 {% endblock %}
