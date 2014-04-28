@@ -289,6 +289,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $publicProfilePreferences;
 
+    /**
+     * @ORM\Column(name="is_first_visit", type="boolean")
+     */
+    protected $isFirstVisit = true;
+
     public function __construct()
     {
         parent::__construct();
@@ -970,4 +975,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
         }
     }
+
+    public function isFirstVisit()
+    {
+        return $this->isFirstVisit;
+    }
+    
+    public function setFirstVisit($boolean)
+    {
+        $this->isFirstVisit = $boolean;
+    }
+
 }

@@ -11,10 +11,101 @@
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
         <form class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
-                {{ form_widget(form) }}
+                {# FIRST NAME #}
+                <div class="form-group row">
+                    {{ form_label(form.firstName) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.firstName) }}
+                    </div>
+                </div>
+                {# LAST  NAME #}
+                <div class="form-group row">
+                    {{ form_label(form.lastName) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.lastName) }}
+                    </div>
+                </div>
+                {# USERNAME #}
+                <div class="form-group row">
+                    {{ form_label(form.username) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.username) }}
+                    </div>
+                </div>
+                {# MAIL  #}
+                <div class="form-group row">
+                    {{ form_label(form.mail) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.mail) }}
+                    </div>
+                </div>
+                {# PICTURE FILE #}
+                <div class="form-group row">
+                    {{ form_label(form.pictureFile) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.pictureFile) }}
+                    </div>
+                </div>
+                {# DESCRIPTION #}
+                <div class="form-group row">
+                    {{ form_label(form.description) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.description) }}
+                    </div>
+                </div>
+                {# OPTIN #}
+                {% if profile_form.accepted_com_terms is defined %}
+                <div class="form-group row">
+                    {{ form_label(form.accepted_com_terms) }}
+                    <div class="col-md-9 col-xs-9">
+                       {{ form_widget(form.accepted_com_terms) }}
+                    </div>
+                </div>
+                {% endif %}
+                {# CACHE : ADMINISTRATIVE CODE #}
+                <div class="form-group row hide">
+                    {{ form_label(form.administrativeCode, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                    <div class="col-md-3 col-xs-3">
+                       {{ form_widget(form.administrativeCode, {'attr': { 'class' : 'hide' } }) }}
+                    </div>
+                </div>           
+                {# CACHE : TELEPHONE  #}
+                <div class="form-group row hide">
+                    {{ form_label(form.phone, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                    <div class="col-md-3 col-xs-3">
+                       {{ form_widget(form.phone, {'attr': { 'class' : 'hide' } }) }}
+                    </div>
+                </div>
+                {# CACHE : LOCALE  #}
+                <div class="form-group row hide">
+                    {{ form_label(form.locale, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                    <div class="col-md-3 col-xs-3">
+                       {{ form_widget(form.locale, {'attr': { 'class' : 'hide' } }) }}
+                    </div>
+                </div>
+                {# CACHE : PLATFORM ROLES  #}
+                {# TODO : ALLOW ADMIN TO CHANGE ROLE #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    {% set roleClasses = 'not-hide' %}
+                {% else %}
+                    {% set roleClasses = 'hide' %}
+                {% endif %}
+                <div class="form-group row {{ roleClasses }}">
+                    {{ form_label(form.platformRoles, label|default(null), { 'label_attr' : { 'class': roleClasses } } ) }}
+                    <div class="col-md-3 col-xs-3">
+                       {{ form_widget(form.platformRoles, {'attr': { 'class': roleClasses } }) }}
+                    </div>
+                </div> 
+                {# CACHE : TOKEN #}
+                <div class="form-group row hide">
+                    {{ form_label(form._token, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                    <div class="col-md-9 col-xs-9 slrn-accepted-terms">
+                        {{ form_widget(form._token, {'attr': { 'class' : 'hide' } } ) }}
+                    </div>
+                </div>
             </div>
             <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ cancelUrl }}" class="btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
             </div>
         </form>
