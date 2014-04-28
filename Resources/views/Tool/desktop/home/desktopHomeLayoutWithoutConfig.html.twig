@@ -2,6 +2,7 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
+{# WE DO NOT USE BREACRUMBS
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([
@@ -12,22 +13,30 @@
         ])
     }}
 {% endblock %}
+ #}
+
+{% block bodyClasses %}dsk{% endblock %}
 
 {% block section_content %}
-
-    <div class="panel-heading relative">
+        {# DISPLAY LEFT COLUMN : USER PROFILE #}
+        {% render controller(
+        'ClarolineCoreBundle:Solerni:getDesktopProfileWidget'
+    ) %}
+    {#<div class="panel-heading relative">
         <h3 class="panel-title">
-            {{ 'home'|trans({}, 'tools') }}
+            {{ 'dashboard'|trans({}, 'platform') }}
         </h3>
+       {# Bouton d'édition de la page  
         <div class="float-right-top">
             <a class="btn btn-primary" href="{{ path('claro_display_desktop_home_tabs_with_config', {'tabId': tabId}) }}">
                 <i id="switch-config-mode" class="icon-pencil"></i>
             </a>
         </div>
-    </div>
+    </div>#}
 
     <div class="panel-body">
-        <ul class="nav nav-tabs margin-bottom-md">
+        {# Tabs de navigation #}
+        {# <ul class="nav nav-tabs margin-bottom-md">
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
             <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}">
@@ -58,7 +67,7 @@
                 </a>
             </li>
             {% endfor %}
-        </ul>
+        </ul> #}
 
         {% block homeTab %}{% endblock %}
     </div>
