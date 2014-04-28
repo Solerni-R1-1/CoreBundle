@@ -357,9 +357,10 @@
         tinymce.claroline.initialization();
     });
 
+    /*
     $(window).on('beforeunload', function () {
         if (tinymce.claroline.checkBeforeUnload()) {
             return 'Leaving this page will lose your changes. Are you sure?';
         }
-    });
+    }); */
 }());
