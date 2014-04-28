@@ -429,6 +429,7 @@ class ResourceController
     public function openDirectoryAction(ResourceNode $node = null)
     {
         $user = $this->sc->getToken()->getUser();
+        $userPersonalWorkspaceId = $user->getPersonalWorkspace()->getId();
         $path = array();
         $creatableTypes = array();
         $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
@@ -482,6 +483,23 @@ class ResourceController
             $creatableTypes = array_merge($creatableTypes, $adminTypes);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
+        
+        /*
+         * We will only authorize certains types of resources
+         * in personal workspace
+         */
+        $personalWorkspaceAuthorized = array(
+            'file' => '', 
+            'directory' => '',
+            'text'=> '',
+            'resource_shortcut' => ''
+        );
+        
+        if ( $userPersonalWorkspaceId == $workspaceId ) {
+           $creatableTypes = array_intersect_key( $creatableTypes, $personalWorkspaceAuthorized );
+        }
+        
+        
 
         $jsonResponse = new JsonResponse(
             array(
