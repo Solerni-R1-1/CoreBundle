@@ -1,5 +1,5 @@
         {% render controller(
-            'OrangeThemeBundle:Solerni:getDesktopAsideBlockWidget',
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
             { 'renderingContext': 'dashboard' }
         ) %}
 <div class='col-xs-9 col-md-9'>
@@ -9,12 +9,12 @@
             {{ 'dashboard'|trans({}, 'platform') }}
         </h2>
         {% render controller(
-            'OrangeThemeBundle:Solerni:getDesktopLessonBlockWidget',
+            'ClarolineCoreBundle:Solerni:getDesktopLessonBlockWidget',
             {}
         ) %}
     </div>
         {% render controller(
-            'OrangeThemeBundle:Solerni:getDesktopMessagesBadgesAndEvalBlockWidget',
+            'ClarolineCoreBundle:Solerni:getDesktopMessagesBadgesAndEvalBlockWidget',
             {}
         ) %}
 <div class='clearfix'></div>

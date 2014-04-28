@@ -284,16 +284,30 @@ class DesktopController extends Controller
      *     name="claro_desktop_open_tool",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Opens a tool.
      *
      * @param string $toolName
-     *
+     * @param User $user
+     * 
      * @throws \Exception
      * @return Response
      */
-    public function openToolAction($toolName)
+    public function openToolAction(User $user, $toolName)
     {
+
+        $isFirstVisit = false;
+        if($user->isFirstVisit()){
+            $isFirstVisit = true;
+            $user->setFirstVisit(false);
+            $this->em->persist($user);
+            $this->em->flush();
+        }
+        
+        $this->get('session')->set('isFirstVisit', $isFirstVisit);
+         
+        
         $event = $this->eventDispatcher->dispatch(
             'open_tool_desktop_'.$toolName,
             'DisplayTool'

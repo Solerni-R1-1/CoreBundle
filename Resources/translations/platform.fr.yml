@@ -491,7 +491,7 @@ please_wait: 'Veuillez patienter...'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
 private: Privée
-profil_edition: 'Modification du profil utilisateur'
+profil_edition: 'Modifier mon profil'
 properties: Propriétés
 public: Public
 public_profile: 'Profil public'

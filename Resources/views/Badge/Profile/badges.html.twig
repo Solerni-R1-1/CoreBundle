@@ -4,45 +4,52 @@
 
 {% trans_default_domain "badge" %}
 
-{% block content %}
-    {{ macros.flashBox() }}
+{% block bodyClasses %}{{ parent() }} body-badges{% endblock %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1 class="panel-title">
-                {{ 'my_badges'|trans({}, 'platform') }}
-                <a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs">{{ 'claim_badge'|trans }}</a>
-            </h1>
-        </div>
-        <div class="panel-body">
-            {% if 0 < badgeClaims|length %}
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
-                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
-                        </a>
-                    </div>
-                    <div id="claimedBadges" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                {% for badgeClaim in badgeClaims %}
-                                    <li class="list-group-item">
-                                        <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug}) }}"
-                                           title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
-                                        {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
-                                    </li>
-                                {% endfor %}
-                            </ul>
+{% block content %}
+    <div class="row"><div class="panel panel-default">
+    {{ macros.flashBox() }}
+        {# OR PROFILE WIDGET #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'badges' }
+        ) %}    
+        <div class="col-xs-9 col-md-9 slrn-badges-main">
+            <div class="panel-heading">
+                <h1 class="panel-title slrn-panel-title">
+                    {{ 'my_badges'|trans({}, 'platform') }}
+                    {#<a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs">{{ 'claim_badge'|trans }}</a>#}
+                </h1>
+            </div>
+            {#<div class="panel-body">#}
+                {#{% if 0 < badgeClaims|length %}
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
+                                {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
+                            </a>
+                        </div>
+                        <div id="claimedBadges" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    {% for badgeClaim in badgeClaims %}
+                                        <li class="list-group-item">
+                                            <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug}) }}"
+                                               title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
+                                            {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
-
-            <div class="badge_management_container">
-                <div class="col-md-3 collections_container">
-                    <h3>
-                        {{ 'my_collections'|trans }}<br/>
-                        <small>{{ 'organize_badges_the_way_you_want'|trans }}</small>
+                {% endif %}
+                #}
+                <div class="badge_management_container">
+                    {#<div class="col-md-3 collections_container">
+                        <h3>
+                            {{ 'my_collections'|trans }}<br/>
+                            <small>{{ 'organize_badges_the_way_you_want'|trans }}</small>
 
                     </h3>
                     <hr/>
@@ -188,7 +195,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-9">#}
                     <div class="alert alert-danger" id="error_container" style="display: none">
                         <button type="button" class="close" aria-hidden="true">&times;</button>
                         <p></p>

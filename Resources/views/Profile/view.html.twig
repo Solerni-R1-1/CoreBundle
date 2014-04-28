@@ -5,13 +5,13 @@
 {% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
 
 {% block content %}
-    {{ macros.flashBox() }}
+    <!--{{ macros.flashBox() }}-->
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
             {% if canEdit %}
                 <div class="dropdown float-right-top">
-                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary">
-                        {{ 'actions' | trans({}, 'platform') }} <span class="icon-gear"></span> <i class="caret"></i>
+                    <a data-toggle="dropdown" href="#" class="btn btn-primary">
+                        {{ 'actions' | trans({}, 'platform') }} <i class="caret"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <li>
@@ -24,11 +24,11 @@
                                 {{ 'edit_password'|trans({}, 'platform') }}
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
-                                {{ 'see_public_profile'|trans({}, 'platform') }}
-                            </a>
-                        </li>
+	                    <li>
+	                        <a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
+	                            {{ 'see_public_profile'|trans({}, 'platform') }}
+	                        </a>
+	                    </li>
                         {% if false == user.hasTunedPublicUrl %}
                         <li>
                             <a href="{{ path('claro_user_public_url_edit') }}">
@@ -45,7 +45,8 @@
                 </div>
             {% endif %}
             <h3 class="panel-title">
-                {{ 'user_profile'|trans({}, 'platform') }}
+                {#{{ 'user_profile'|trans({}, 'platform') }}#}
+				{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}
             </h3>
         </div>
         <div class="panel-body">
@@ -58,12 +59,12 @@
                             <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                         {% endif %}
                     </div>
-                    <div class="informations">
+                    {#<div class="informations">
                         <p class="text-center text-muted">
                             {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
                         </p>
-                    </div>
-                    <ul class="nav nav-pills nav-stacked contact_methods">
+                    </div>#}
+                    {#<ul class="nav nav-pills nav-stacked contact_methods">
                         <li>
                             <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
                                 <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
@@ -74,24 +75,57 @@
                                 <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
                             </a>
                         </li>
-                    </ul>
+                    </ul>#}
                 </aside>
                 <div class="col-md-6 profile_informations">
-                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
-                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    {% if user.getPhone() is not null %}
-                        <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
-                    {% endif %}
-                    {% if '' != user.getDescription() %}
+					<ul class="col-md-12">
+                    	<li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
+                    	<li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
+                	</ul>
+					 <div class="informations">
+						 {% if '' != user.getDescription() %}
                         <div class="description_block">
-                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                            {#<p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>#}
                             <div class="description">
                                 {{ user.getDescription() |raw }}
                             </div>
                         </div>
                     {% endif %}
+                        <p class="text-muted">
+                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+                        </p>
+                    </div>
+                    {#<h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
+                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                    {% if user.getPhone() is not null %}
+                        <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
+                    {% endif %}#}
+                   
                 </div>
             </div>
         </div>
+		{% if user.getId() != app.user.getId() %}
+			<p>
+				<a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+			</p>
+		{% endif %}
+	<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'badges'|trans({}, 'badge') }}</h3>
+        </div>
+        <div class="panel panel-body">
+            {% include 'ClarolineCoreBundle:Badge/Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
+        </div>
     </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/clarolinecore/css/badge.css'
+      "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
 {% endblock %}
