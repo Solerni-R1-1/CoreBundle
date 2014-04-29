@@ -224,7 +224,7 @@ class SolerniController extends Controller
         $picDft = 'avatar.jpg';
 
 
-        $pathDft = realpath($this->container->getParameter('claroline.param.thumbnails_directory').'/../bundles/orangetheme/images/'.$picDft);
+        $pathDft = realpath($this->container->getParameter('claroline.param.thumbnails_directory').'/../bundles/clarolinecore/images/'.$picDft);
         $path = realpath($this->container->getParameter('claroline.param.thumbnails_directory').'/../uploads/pictures/' . $user->getPicture()) ;
         $pathDest = realpath($this->container->getParameter('claroline.param.thumbnails_directory')) . DIRECTORY_SEPARATOR . 'tmb_54_54_' . $user->getPicture();
         $pathDftDest = realpath($this->container->getParameter('claroline.param.thumbnails_directory')) . DIRECTORY_SEPARATOR . 'tmb_54_54_' . $picDft;
