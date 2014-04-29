@@ -28,7 +28,7 @@
                             <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                         {% endif %}
                     </div>
-                    <div class="informations">
+                    {#<div class="informations">
                         <p class="text-center text-muted">
                             {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
                         </p>
@@ -44,20 +44,37 @@
                                 <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
                             </a>
                         </li>
-                    </ul>
+                    </ul>#}
                 </aside>
                 <div class="col-md-6 profile_informations profil_visible{% if false == isProfilShared %} hidden{% endif %}">
-                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
+                    {#<h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>#}
+                    <ul class="col-md-12">
+                    	<li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
+                    	<li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
+                	</ul>
                     <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="display_email"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="display_phone_number"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
-                    {% if '' != user.getDescription() %}
-                        <div class="description_block">
-                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
-                            <div class="description">
-                                {{ user.getDescription() |raw }}
+                    {#<p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="display_phone_number"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>#}
+                    <div class="informations">
+						 {% if '' != user.getDescription() %}
+                            <div class="description_block">
+                                {#<p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>#}
+                                <div class="description">
+                                    {{ user.getDescription() |raw }}
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
+                         {% endif %}
+                        <p class="text-muted">
+                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+                        </p>
+                    </div>
+                    <p>
+                        <a{% if false == publicProfilePreferences.allowMailSending %} class="btn btn-default hidden"{% else %} class="btn btn-default"{% endif %} id="allow_mail_sending" href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                            <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                        </a>
+                        <a{% if false == publicProfilePreferences.allowMessageSending %} class="btn btn-default hidden"{% else %} class="btn btn-default"{% endif %} id="allow_message_sending" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                            <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
+                        </a>
+                    </p>
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">

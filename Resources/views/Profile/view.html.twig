@@ -95,21 +95,21 @@
                             {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
                         </p>
                     </div>
+                    {% if user.getId() != app.user.getId() %}
+                        <p>
+                            <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                            <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+                        </p>
+                    {% endif %}
                     {#<h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
                     <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
                     {% if user.getPhone() is not null %}
                         <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                     {% endif %}#}
-                   
                 </div>
             </div>
         </div>
-		{% if user.getId() != app.user.getId() %}
-			<p>
-				<a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
-			</p>
-		{% endif %}
+
 	<div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{ 'badges'|trans({}, 'badge') }}</h3>

@@ -85,17 +85,14 @@
                 </div>
                 {# CACHE : PLATFORM ROLES  #}
                 {# TODO : ALLOW ADMIN TO CHANGE ROLE #}
-                {% if is_granted('ROLE_ADMIN') %}
-                    {% set roleClasses = 'not-hide' %}
-                {% else %}
-                    {% set roleClasses = 'hide' %}
+                {% if form.platformRoles is defined %}
+                    <div class="form-group row">
+                        {{ form_label(form.platformRoles, label|default(null) ) }}
+                        <div class="col-md-3 col-xs-3">
+                           {{ form_widget(form.platformRoles) }}
+                        </div>
+                    </div> 
                 {% endif %}
-                <div class="form-group row {{ roleClasses }}">
-                    {{ form_label(form.platformRoles, label|default(null), { 'label_attr' : { 'class': roleClasses } } ) }}
-                    <div class="col-md-3 col-xs-3">
-                       {{ form_widget(form.platformRoles, {'attr': { 'class': roleClasses } }) }}
-                    </div>
-                </div> 
                 {# CACHE : TOKEN #}
                 <div class="form-group row hide">
                     {{ form_label(form._token, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
