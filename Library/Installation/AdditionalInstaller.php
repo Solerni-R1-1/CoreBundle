@@ -13,6 +13,9 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
+use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
 class AdditionalInstaller extends BaseInstaller
@@ -150,5 +153,13 @@ class AdditionalInstaller extends BaseInstaller
         $this->log('Creating default workspace template...');
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
         TemplateBuilder::buildDefault($defaultTemplatePath);
+    }
+    
+    private function createAclTablesIfNotExist()
+    {
+        $this->log('Checking acl tables are initialized...');
+        $command = new InitAclCommand();
+        $command->setContainer($this->container);
+        $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
     }
 }
