@@ -20,7 +20,7 @@
       {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
     '../vendor/fortawesome/font-awesome/less/font-awesome.less'
     %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
 
     {% image debug=false output='vendor/fortawesome/font-awesome/font/FontAwesome.otf'
@@ -52,8 +52,8 @@
 {% endblock %}
 
 {% block favicon %}
-    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/favicon.ico') }}"/>
-    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/apple-touch-icon.png')}}"/>
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
 {% endblock %}
 
 {% block layout %}
@@ -113,23 +113,29 @@
         {% block loggingHeaderImage %}{% endblock %}
         {# SUBNAV BAR (ONGLETS) #}
         {% block subnavbar %}{% endblock %}
+
         {# BREADCRUMB & CONTENT #}
         <div class="container slrn-content-container">
-             {# BREADCRUMB  - WE DON'T USE IT #}
-            {#<div class="row row-breadcrumb">
-                <div class="row col-xs-12">
+             
+            {#
+            {% block content_container %}
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
                     {% block breadcrumb %}{% endblock %}
                 </div>
-            </div>#}
+            </div>
+            #}
            
             <div class="row content">
                 {# CONTENT #}
-                <section class="col-xs-12 col-md-12">
+                <section class="col-md-12">
                     {% block content %}{% endblock %}
                 </section>
             </div>
         </div>
         <div id="push"></div>
+        {% endblock %}
     </div>
    {% block footer %}
         {% if not is_path_mode %}

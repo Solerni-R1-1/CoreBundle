@@ -7,7 +7,7 @@
         <div class="panel-heading">
             <h3 class="panel-title">{{ 'Terms of service'|trans({}, 'platform') }}</h3>
         </div>
-        <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
+        <form role="form" action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
               method="post" id="terms_of_service_form">
             <div id="text_content" class="panel-body">
                 <p>Pour vous connecter via Facebook, vous devez d'abord accepter nos <a class="js-open" href="{{ twig_cgu_url }}">conditions générales d'utilisation</a>.</p>
@@ -22,7 +22,7 @@
             </div>
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_security_logout') }}" class="btn btn-default">
+                <a href="{{ path('claro_security_logout') }}" class="btn btn-default" role="button">
                     {{ 'cancel'|trans({}, 'platform') }}
                 </a>
             </div>
