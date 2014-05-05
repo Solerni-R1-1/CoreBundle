@@ -59,7 +59,7 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ asset("") }}</div>
+    <div id="homeAsset" class="hide">{{ '//' ~ app.request.host ~ asset("") }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
         {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
             {{ app.request.locale }}
@@ -193,10 +193,10 @@
     {% endjavascripts %}
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/bazingaexposetranslation/js/translator.js') }}"></script>
-    <script type="text/javascript" src="{{ path('bazinga_exposetranslation_js', { 'domain_name': 'home' }) }}"></script>
-    <script type="text/javascript" src="{{ path('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
-    <script type="text/javascript" src="{{ path('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
-    <script type="text/javascript" src="{{ path('bazinga_exposetranslation_js', { 'domain_name': 'badge' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'home' }, true ) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }, true ) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }, true ) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'badge' }, true ) }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
     {% if 'en' != app.request.locale %}

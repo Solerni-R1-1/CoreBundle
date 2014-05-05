@@ -59,7 +59,7 @@ class AdditionalInstaller extends BaseInstaller
     public function postUpdate($currentVersion, $targetVersion)
     {
         $this->setLocale();
-
+        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -160,6 +160,6 @@ class AdditionalInstaller extends BaseInstaller
         $this->log('Checking acl tables are initialized...');
         $command = new InitAclCommand();
         $command->setContainer($this->container);
-        $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
+        $command->run(new ArrayInput(array()), new NullOutput() );
     }
 }

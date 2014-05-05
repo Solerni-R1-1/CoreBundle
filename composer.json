@@ -1,6 +1,7 @@
 {
     "name": "claroline/core-bundle",
     "description": "Claroline core bundle",
+    "version": "2.13.0",
     "keywords": ["Claroline", "Core"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
@@ -67,10 +68,5 @@
     "autoload": {
         "psr-0": { "Claroline\\CoreBundle": "" }
     },
-    "target-dir": "Claroline/CoreBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "2.13.x-dev"
-        }
-    }
+    "target-dir": "Claroline/CoreBundle"
 }
