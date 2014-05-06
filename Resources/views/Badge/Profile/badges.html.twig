@@ -23,24 +23,24 @@
             </div>
             {#<div class="panel-body">#}
                 {#{% if 0 < badgeClaims|length %}
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
-                                {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
-                            </a>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
+                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
+                        </a>
+                    </div>
+                    <div id="claimedBadges" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                {% for badgeClaim in badgeClaims %}
+                                    <li class="list-group-item">
+                                        <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug}) }}"
+                                           title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
+                                        {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                        <div id="claimedBadges" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <ul class="list-group">
-                                    {% for badgeClaim in badgeClaims %}
-                                        <li class="list-group-item">
-                                            <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug}) }}"
-                                               title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
-                                            {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 {% endif %}
@@ -104,11 +104,11 @@
                                         data-loading-state="' ~ loadingState|escape ~ '" data-shared-state="' ~ sharedState|escape ~ '" data-private-state="' ~ privateState|escape ~ '">
                                             ' ~ privateState|raw ~ '
                                     </a>
-                                    <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
-                                        <li class="active">
+                                    <ul class="dropdown-menu sharedoptions" role="menu">
+                                        <li role="presentation" class="active">
                                             <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
                                         </li>
-                                        <li>
+                                        <li role="presentation">
                                             <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
                                         </li>
                                     </ul>
@@ -175,11 +175,11 @@
                                                 {{ privateState|raw }}
                                             {% endif %}
                                         </a>
-                                        <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
-                                            <li class="{% if false == isCollectionShared %} active{% endif %}">
+                                        <ul class="dropdown-menu sharedoptions" role="menu">
+                                            <li role="presentation" class="{% if false == isCollectionShared %} active{% endif %}">
                                                 <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
                                             </li>
-                                            <li class="{% if isCollectionShared %} active{% endif %}">
+                                            <li role="presentation" class="{% if isCollectionShared %} active{% endif %}">
                                                 <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> {{ 'share'|trans }}</a>
                                             </li>
                                         </ul>

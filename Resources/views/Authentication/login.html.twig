@@ -9,7 +9,7 @@
         <div class="panel-heading">
              <h2 class="panel-title slrn-section-title slrn-section-title--sub">{{ 'connect_with_mail'|trans({}, 'platform') }} *</h2>
         </div>
-        <form id="login-form" class="form-horizontal" action="{{ path('claro_security_login_check') }}" method="post">
+        <form role="form"  id="login-form" class="form-horizontal" action="{{ path('claro_security_login_check') }}" method="post">
             <div class="panel-body">
                     <label class="hide" for="username">{{ 'admin_form_mail'|trans({}, 'platform') }}</label>
                     <input type="email" required="required" class="slrn-input form-control" id="username" name="_username" placeholder="{{ 'user_form_mail'|trans({}, 'platform') }}" tabindex="1" data-validation="email" data-validation-error-msg="{{ 'mail_invalid'|trans({}, 'platform') }}" />

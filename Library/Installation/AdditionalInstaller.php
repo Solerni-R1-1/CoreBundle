@@ -66,6 +66,7 @@ class AdditionalInstaller extends BaseInstaller
 
     public function postUpdate($currentVersion, $targetVersion)
     {
+        $currentVersion = '2.13.0';
         $this->setLocale();
 
         if ( substr( $targetVersion, 0, 4 ) === 'dev-' ) {
@@ -153,6 +154,13 @@ class AdditionalInstaller extends BaseInstaller
             $updater021200 = new Updater\Updater021201($this->container);
             $updater021200->setLogger($this->logger);
             $updater021200->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '2.14.0', '<')) {
+            $this->buildDefaultTemplate();
+            $updater021400 = new Updater\Updater021400($this->container);
+            $updater021400->setLogger($this->logger);
+            $updater021400->postUpdate();
         }
         
         // Update or create version.json file with current version
