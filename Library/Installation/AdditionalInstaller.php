@@ -60,6 +60,10 @@ class AdditionalInstaller extends BaseInstaller
     {
         $this->setLocale();
         
+        if ( $currentVersion == 'dev-develop' ) {
+            $currentVersion = 2.14;
+        }
+        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
