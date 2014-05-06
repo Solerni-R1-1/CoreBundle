@@ -61,7 +61,7 @@ class AdditionalInstaller extends BaseInstaller
         $this->setLocale();
         
         if ( $currentVersion == 'dev-develop' ) {
-            $currentVersion = 2.14;
+            $currentVersion = 2.13;
         }
         
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
