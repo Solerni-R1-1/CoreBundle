@@ -58,6 +58,7 @@ class AdditionalInstaller extends BaseInstaller
 
     public function postUpdate($currentVersion, $targetVersion)
     {
+        $currentVersion = '2.13.0';
         $this->setLocale();
 
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
