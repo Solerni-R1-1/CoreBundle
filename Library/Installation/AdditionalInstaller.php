@@ -45,6 +45,7 @@ class AdditionalInstaller extends BaseInstaller
         if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
             $currentVersion = $this->getCurrentVersion();
         }
+                
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
 
@@ -74,7 +75,7 @@ class AdditionalInstaller extends BaseInstaller
         if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
             $currentVersion = $this->getCurrentVersion();
         }
-               
+                        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -153,6 +154,11 @@ class AdditionalInstaller extends BaseInstaller
             $updater021200->setLogger($this->logger);
             $updater021200->postUpdate();
         }
+        
+        // Update or create version.json file with current version
+        if (  version_compare( $currentVersion, $targetVersion, '<') ) {
+           $this->writeVersionFile( $targetVersion );
+        }
     }
 
     private function setLocale()
@@ -180,21 +186,60 @@ class AdditionalInstaller extends BaseInstaller
     
     public function getCurrentVersion()
     {
-        $this->log('Getting target version...');
+        $this->log('Getting current version...');
+        $kernel = $this->container->get('kernel');
+  
+        try {
+            $versionFile = file_get_contents( $kernel->locateResource('@ClarolineCoreBundle/version.json') );
+          } catch (\InvalidArgumentException $ex) {
+            $this->log('version.json not found. Setting current version to 2.13');
+            $currentVersion = 2.13;
+            $this->writeVersionFile( $currentVersion ); // create json file
+            return $currentVersion;
+        } catch (\RuntimeException $ex ) {
+            $this->log('illegal characters');
+            return false;
+        }
         
+        $jsonVersion = json_decode( $versionFile, true );
+        $versionNumber = $jsonVersion['currentVersion'];
+        $this->log( 'Ok ! version found: ' . $versionNumber );
+        
+        return $versionNumber;
+
     }
     
     private function getTargetVersion()
     {
         $this->log('Getting target version...');
         $kernel = $this->container->get('kernel');
-        $composerFile = file_get_contents( $kernel->locateResource('@ClarolineCoreBundle/composer.json') );
+        try {
+            $composerFile = file_get_contents( $kernel->locateResource('@ClarolineCoreBundle/composer.json') );
+        } catch (\InvalidArgumentException $ex) {
+            $this->log('composer.json not found');
+            return false;
+        } catch (\RuntimeException $ex ) {
+            $this->log('Illegal characters in file name');
+            return false;
+        }
+        
         $jsonComposer = json_decode( $composerFile, true );
         $versionNumber = $jsonComposer['extra']['branch-alias'];
-        foreach ( $versionNumber as $key => $value ) {
-           $versionNumber = str_replace ( '.x-dev', '', $value );
-           $this->log('Ok !');
+        if ( $versionNumber ) {
+            foreach ( $versionNumber as $key => $value ) {
+               $versionNumber = str_replace ( '.x-dev', '', $value );
+               $this->log('Ok ! version found: '. $versionNumber );
+            }
+        } else {
+            $versionNumber = null;
         }
         return $versionNumber;
+    }
+    
+    private function writeVersionFile( $targetVersion ) {
+        $this->log( 'Updating version.json to : ' . $targetVersion );
+        $newVersion = json_encode( array( 'currentVersion' => $targetVersion ) );
+        $writing = file_put_contents( __DIR__ . '../../../version.json', $newVersion);
+        $this->log( 'Written bytes : ' . $writing );
     }
 }
