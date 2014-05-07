@@ -38,6 +38,13 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate($currentVersion, $targetVersion)
     {
+        if ( substr( $targetVersion, 0, 4 ) === 'dev-' ) {
+            $targetVersion = $this->getTargetVersion();
+        }
+        
+        if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
+            $currentVersion = $this->getCurrentVersion();
+        }
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
 
@@ -59,11 +66,15 @@ class AdditionalInstaller extends BaseInstaller
     public function postUpdate($currentVersion, $targetVersion)
     {
         $this->setLocale();
-        
-        if ( $currentVersion == 'dev-develop' ) {
-            $currentVersion = 2.13;
+
+        if ( substr( $targetVersion, 0, 4 ) === 'dev-' ) {
+            $targetVersion = $this->getTargetVersion();
         }
         
+        if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
+            $currentVersion = $this->getCurrentVersion();
+        }
+               
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -165,5 +176,25 @@ class AdditionalInstaller extends BaseInstaller
         $command = new InitAclCommand();
         $command->setContainer($this->container);
         $command->run(new ArrayInput(array()), new NullOutput() );
+    }
+    
+    public function getCurrentVersion()
+    {
+        $this->log('Getting target version...');
+        
+    }
+    
+    private function getTargetVersion()
+    {
+        $this->log('Getting target version...');
+        $kernel = $this->container->get('kernel');
+        $composerFile = file_get_contents( $kernel->locateResource('@ClarolineCoreBundle/composer.json') );
+        $jsonComposer = json_decode( $composerFile, true );
+        $versionNumber = $jsonComposer['extra']['branch-alias'];
+        foreach ( $versionNumber as $key => $value ) {
+           $versionNumber = str_replace ( '.x-dev', '', $value );
+           $this->log('Ok !');
+        }
+        return $versionNumber;
     }
 }
