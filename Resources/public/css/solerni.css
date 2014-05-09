@@ -1038,6 +1038,7 @@ input[type="file"] { height: auto; }
     text-align: left; 
     padding: 0 .8em  0 1.8em; 
     margin-top: .8em;
+    max-height: 5em;
 }
 
 .slrn-resource-manager-main .nodes .node-thumbnail .node-name .icon-caret-down { float: right; margin: 0 0 .5em .5em; }

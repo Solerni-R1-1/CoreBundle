@@ -487,7 +487,8 @@
             render: function (node, isSelectionAllowed, hasMenu) {
                 this.el.id = node.id;
                 $(this.el).addClass(this.parameters.resourceZoom);
-                node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
+                //node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
+                node.displayableName = node.name.replace(/_/g, " ");
                 this.el.innerHTML = Twig.render(ResourceManagerThumbnail, {
                     'node': node,
                     'isSelectionAllowed': isSelectionAllowed,
@@ -524,7 +525,8 @@
                 }
             },
             renameThumbnail: function (nodeId, newName, successHandler) {
-                var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
+                //var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
+                var displayableName = newName.replace(/_/g, " ");
                 this.$('#' + nodeId + ' .node-name')
                 .html(displayableName + ' ').append($(document.createElement('i')).addClass('icon-caret-down'));
                 this.$('#' + nodeId + ' .dropdown[rel=tooltip]').attr('title', newName);
