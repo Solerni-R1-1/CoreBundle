@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
 {
-    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage)
+    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage, $resourceString = 'all' )
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
@@ -30,13 +30,25 @@ class BadgeController extends Controller
         $inProgressBadges = array();
         $availableBadges  = array();
         $displayedBadges  = array();
+        $nbTotalBadges    = 0;
+        $nbAcquiredBadges = 0;
 
         foreach ($workspaceBadges as $workspaceBadge) {
+            
+            /* filter badges from string to check rules associated with the badge */
+            if ( $resourceString != 'all' ) {
+                if ( ! $this->isOneRuleAssociatedWithResource( $workspaceBadge, $resourceString ) ) {
+                   continue;
+                }
+            }
+            
             $isOwned = false;
             foreach ($workspaceBadge->getUserBadges() as $userBadge) {
                 if ($loggedUser->getId() === $userBadge->getUser()->getId()) {
                     $ownedBadges[] = $userBadge;
                     $isOwned = true;
+                    $nbAcquiredBadges++;
+                    $nbTotalBadges++;
                 }
             }
 
@@ -46,9 +58,11 @@ class BadgeController extends Controller
 
                 if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules >= $validatedRules['validRules']) {
                     $inProgressBadges[] = $workspaceBadge;
+                    $nbTotalBadges++;
                 }
                 else {
                     $availableBadges[] = $workspaceBadge;
+                    $nbTotalBadges++;
                 }
             }
         }
@@ -64,15 +78,17 @@ class BadgeController extends Controller
 
         foreach ($inProgressBadges as $inProgressBadge) {
             $displayedBadges[] = array(
-                'type'  => 'inprogress',
-                'badge' => $inProgressBadge
+                'type'          => 'inprogress',
+                'badge'         => $inProgressBadge,
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceString )
             );
         }
 
         foreach ($availableBadges as $availableBadge) {
             $displayedBadges[] = array(
                 'type'  => 'available',
-                'badge' => $availableBadge
+                'badge' => $availableBadge,
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceString )
             );
         }
 
@@ -83,10 +99,72 @@ class BadgeController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/Tool/list.html.twig',
             array(
-                'badgePager' => $badgePager,
-                'workspace'  => $workspace,
-                'badgePage'  => $badgePage
+                'badgePager'        => $badgePager,
+                'workspace'         => $workspace,
+                'badgePage'         => $badgePage,
+                'nbTotalBadges'     => $nbTotalBadges,
+                'nbAcquiredBadges'  => $nbAcquiredBadges
             )
         );
+    }
+    
+    /*
+     * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
+     * @var $resourceString is string part of resource type in rules
+     * 
+     * @return bool
+     */
+    public function isOneRuleAssociatedWithResource( $badge, $resourceString )
+    {
+        $returnBool = false;
+
+        foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
+            $badgeRuleAction = $BadgeRule->getAction();
+             if ( strpos( $badgeRuleAction, $resourceString ) ) {
+                $returnBool = true;
+            }
+        }
+
+        return $returnBool;
+    }
+    
+     /*
+     * Returns a url for the resource
+     * if the badge has a rule attached to a specific resource
+     * 
+     * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
+     * @var $resourceString is string part of resource type in rules
+     * 
+     * @return bool
+     */
+    public function getResourceUrlAssociatedWithRule( $badge, $resourceString ) {
+        
+        $returnUrl = null;
+        
+        foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
+            $badgeRuleAction = $BadgeRule->getAction();
+            $badgeRuleResource = $BadgeRule->getResource();
+            
+            if ( strpos( $badgeRuleAction, $resourceString ) && $badgeRuleResource ) {
+                $returnUrl = $this->getUrlFromResourceNode( $badgeRuleResource );
+            }
+        }
+              
+        return $returnUrl;
+    }
+    /*
+     * Return the url to open a resource
+     * 
+     * @var $resource is instance of Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * 
+     * @return string
+     */
+    public function getUrlFromResourceNode( $resource ) {
+        
+        $router = $this->get('router');
+        return $router->generate('claro_resource_open', array(
+                    'node' => $resource->getId(),
+                    'resourceType' => $resource->getResourceType()->getName()
+        ));       
     }
 }
