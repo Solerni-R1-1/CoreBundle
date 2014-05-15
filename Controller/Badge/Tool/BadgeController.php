@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
 {
-    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage, $resourceString = 'all' )
+    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage, $resourceType = 'all', $resourceId = null )
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
@@ -35,9 +35,17 @@ class BadgeController extends Controller
 
         foreach ($workspaceBadges as $workspaceBadge) {
             
-            /* filter badges from string to check rules associated with the badge */
-            if ( $resourceString != 'all' ) {
-                if ( ! $this->isOneRuleAssociatedWithResource( $workspaceBadge, $resourceString ) ) {
+            if ( $resourceType == null ) {
+                $resourceType = 'all';
+            }
+            
+            /* filter badges from resource ID to check rules associated with the badge */
+            if ( $resourceType != 'all' && $resourceId != null ) {
+                if ( ! $this->isOneRuleAssociatedWithResourceId( $workspaceBadge, $resourceId ) ) {
+                   continue;
+                }
+            } elseif ( $resourceType != 'all' ) {
+                if ( ! $this->isOneRuleAssociatedWithResource( $workspaceBadge, $resourceType ) ) {
                    continue;
                 }
             }
@@ -80,7 +88,7 @@ class BadgeController extends Controller
             $displayedBadges[] = array(
                 'type'          => 'inprogress',
                 'badge'         => $inProgressBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceString )
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceType )
             );
         }
 
@@ -88,7 +96,7 @@ class BadgeController extends Controller
             $displayedBadges[] = array(
                 'type'  => 'available',
                 'badge' => $availableBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceString )
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceType )
             );
         }
 
@@ -110,18 +118,39 @@ class BadgeController extends Controller
     
     /*
      * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
-     * @var $resourceString is string part of resource type in rules
+     * @var $resourceString is string part of resource type name in rules
      * 
      * @return bool
      */
-    public function isOneRuleAssociatedWithResource( $badge, $resourceString )
+    public function isOneRuleAssociatedWithResource( $badge, $resourceType )
     {
         $returnBool = false;
 
         foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
-            $badgeRuleAction = $BadgeRule->getAction();
-             if ( strpos( $badgeRuleAction, $resourceString ) ) {
+            if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
                 $returnBool = true;
+            }
+        }
+
+        return $returnBool;
+    }
+    
+     /*
+     * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
+     * @var $resourceId is int of the resource ID
+     * 
+     * @return bool
+     */
+    public function isOneRuleAssociatedWithResourceId( $badge, $resourceId ) {
+        
+        $returnBool = false;
+
+        foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
+             $badgeResource = $BadgeRule->getResource();
+             if ( $badgeResource ) {
+                 if ( $badgeResource->getId() == $resourceId ) {
+                     $returnBool = true;
+                 }
             }
         }
 
@@ -137,15 +166,13 @@ class BadgeController extends Controller
      * 
      * @return bool
      */
-    public function getResourceUrlAssociatedWithRule( $badge, $resourceString ) {
+    public function getResourceUrlAssociatedWithRule( $badge, $resourceType ) {
         
         $returnUrl = null;
         
         foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
-            $badgeRuleAction = $BadgeRule->getAction();
             $badgeRuleResource = $BadgeRule->getResource();
-            
-            if ( strpos( $badgeRuleAction, $resourceString ) && $badgeRuleResource ) {
+            if ( strpos( $BadgeRule->getAction(), $resourceType ) && $badgeRuleResource ) {
                 $returnUrl = $this->getUrlFromResourceNode( $badgeRuleResource );
             }
         }
