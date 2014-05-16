@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
 {
-    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage, $resourceType = 'all', $resourceId = null )
+    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage, $resourceType = 'all', $resourceId = null, $needEcho = true )
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
@@ -39,7 +39,7 @@ class BadgeController extends Controller
                 $resourceType = 'all';
             }
             
-            /* filter badges from resource ID to check rules associated with the badge */
+            /* filter badges from name and resource ID to check rules associated with the badge */
             if ( $resourceType != 'all' && $resourceId != null ) {
                 if ( ! $this->isOneRuleAssociatedWithResourceId( $workspaceBadge, $resourceId ) ) {
                    continue;
@@ -103,16 +103,23 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
         $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
+        
+        $badgeList = array(
+            'badgePager'        => $badgePager,
+            'workspace'         => $workspace,
+            'badgePage'         => $badgePage,
+            'nbTotalBadges'     => $nbTotalBadges,
+            'nbAcquiredBadges'  => $nbAcquiredBadges
+        );
+        
+        /* if we need this data from another controller */
+        if ( $needEcho == false ) {
+            return $badgeList;
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/Tool/list.html.twig',
-            array(
-                'badgePager'        => $badgePager,
-                'workspace'         => $workspace,
-                'badgePage'         => $badgePage,
-                'nbTotalBadges'     => $nbTotalBadges,
-                'nbAcquiredBadges'  => $nbAcquiredBadges
-            )
+            $badgeList
         );
     }
     
