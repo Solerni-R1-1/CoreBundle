@@ -83,3 +83,8 @@ services:
         class: Claroline\CoreBundle\Controller\StaticController
         calls:
             - [ setContainer, [@service_container] ]
+
+    orange.badge.controller:
+        class: Claroline\CoreBundle\Controller\Badge\Tool\BadgeController
+        calls:
+            - [ setContainer, [@service_container] ]
