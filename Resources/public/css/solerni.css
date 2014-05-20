@@ -319,7 +319,8 @@ body.subnavbar-fixed { padding-top: 110px }
 .dsk .slrn-content,
 .dsk .content,
 .body-resource-manager .content,
-.body-badges .content { padding-top: 0; }
+.body-badges .content,
+.body-my_badges .content { padding-top: 0; }
 .body-forum .content { padding-top: 0; }
 
 /* HIDE FLASHBOX ON DASHBOARD */
@@ -888,6 +889,7 @@ input[type="file"] { height: auto; }
 .slrn-read-faq { float: right; }
 
 .slrn-panel-title { font-size: 2em; font-weight: bold; margin-bottom: 1em; }
+.panel-heading .slrn-panel-title { margin-bottom: .4em; }
 
 .slrn-resource-manager-main .navbar {
     background-color: transparent;
@@ -1063,6 +1065,113 @@ input[type="file"] { height: auto; }
 .node-element[data-mime-type$='msword'] { background-image: url(../images/icones/res_msword.png) !important; }
 .node-element[data-mime-type$='pdf'] { background-image: url(../images/icones/res_pdf.png) !important; }
 
+/* Widget back Button */
+.slrn-back__link {
+	font-weight: bold;
+	padding: 0.66em;
+	color: #FFF;
+	display: block;
+	text-decoration: none;
+}
+.slrn-back__link:hover {
+	color: #FFF;
+}
+
+.slrn-back__link .no_underline,
+.slrn-back__link .no_underline:hover{
+	text-decoration: none;
+	margin-right: 5px;
+}
+
+/* Page badge de compétence (my_badges) */
+.slrn-subtitle {
+	font-size: 14px;
+	color: #000;
+	margin: 1em 0 2em 0;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.slrn-bold {
+    font-weight: bold;
+}
+
+.slrn-my-badges-o-list {
+    counter-reset: numeros;
+}
+
+.slrn-my-badges-o-list__item {
+    list-style-type: none;
+    counter-increment: numeros;
+    margin-bottom: 1.6em;
+    position: relative;
+}
+
+.slrn-my-badges-o-list__item:before {
+    content: counter(numeros);
+    font-family: 'LondrinaSolid';
+    color: #AAC044;
+    position: absolute;
+    left: -1.1em;
+    top: -.45em;
+    font-size: 2em;
+}
+
+.slrn-my_badges_enumerate {
+    font-size: 1.2em;
+}
+
+.slrn-my_badges-list {
+    padding-left: 0;
+    list-type-position: inside;
+}
+
+.slrn-my_badges-list__item {
+    background-color: #EEEEEF;
+    padding: 1em;
+    display: block;
+    overflow: hidden;
+    margin-bottom: 2em;
+}
+
+.slrn-my_badges-list__item__image {
+    width: 120px;
+    height: auto;
+    float: left;
+}
+
+.slrn-my_badges-list__body {
+    margin-left: 150px;
+}
+
+.slrn-my_badges-list__item__title {
+    font-size: 1.5em;
+    margin: 0 0 .5em 0;
+    font-weight: bold;
+}
+
+.slrn-my_badges-list__content a {
+    color: #D90045;
+}
+
+.slrn-gratuit-icon {
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-left: .5em;
+    line-height: 32px;
+}
+
+.slrn-gratuit-icon:before {
+    content: "";
+    width: 32px;
+    height: 32px;
+    background: transparent url(../images/sprites_solerni.png) no-repeat 0 -89px;
+    float: left;
+}
+
+.slrn-my_badges-list__footer { 
+    margin-top: 1.5em;
+}
 
 /* BADGES */
 .slrn-badges-main { margin-top: 2em; }

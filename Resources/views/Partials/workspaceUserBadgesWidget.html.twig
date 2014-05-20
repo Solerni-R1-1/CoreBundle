@@ -42,7 +42,7 @@
         <div class="slrn-badges-title slrn-widget_row">
             {{ 'badge_skill_short'|trans({}, 'platform') }}
             <div class="slrn-badges-count">
-                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}">{{ BadgesSkills.UserBadgesCollection|length }}/{{ BadgesSkills.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
+                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">{{ BadgesSkills.UserBadgesCollection|length }}/{{ BadgesSkills.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
             </div>
             <div class="slrn-badges-list">
                 {% import _self as badgeList %}

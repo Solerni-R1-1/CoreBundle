@@ -174,6 +174,7 @@ class SolerniController extends Controller
                 'UserBadgesCollection' => $mySkillBadges,
                 'BadgesCollection'      => $skillBadges,
             ),
+            'workspace' => $workspace
         );
 
 
@@ -427,13 +428,7 @@ class SolerniController extends Controller
                 'url' => $router->generate('claro_view_badge', array('slug' => $lastBadge->getSlug()))
             );
         }
-
-        //TODO fill with something
-        /*$evalReturn = array(
-            'evalUrl' => $static->getStaticPage('static_eval'),
-            'eval' => null
-        );*/
-        
+     
         $evals = $doctrine->getRepository('IcapDropzoneBundle:Drop')->findByUser($user);
         
         $lastEval = null;
@@ -454,16 +449,28 @@ class SolerniController extends Controller
                 'lastEval' => array(
                     'title' => $lastEval->getDropzone()->getResourceNode()->getName(),
                     'url' => $router->generate(
-                            'icap_dropzone_drop', 
+                            'icap_dropzone_drop',
                             array('resourceId' =>$lastEval->getDropzone()->getId())),
                     'summary' => strip_tags($lastEval->getDropzone()->getInstruction())
                 ),
             );
         }
+        
+        /* Need to find workspace associated.
+         * pasted from getDesktopLessonBlockWidgetAction methode
+         * TODO: refactor. Create method instead of duplicate. Need better way to find and store data.
+         */
+        $workspaceRepository = $doctrine->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $allWorkspaces = $workspaceRepository->findNonPersonal();
+        /* there should be only one */
+        foreach ( $allWorkspaces as $workspace ) {
+            $workspaceReturn = array( 'workspace' => $workspace );
+            break;
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Partials:desktopMessagesBadgesAndEvalBlockWidget.html.twig',
-            $messageReturn + $badgeReturn + $evalReturn
+            $messageReturn + $badgeReturn + $evalReturn + $workspaceReturn
         );
     }
 
