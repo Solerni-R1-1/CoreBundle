@@ -49,11 +49,6 @@ class AdditionalInstaller extends BaseInstaller
             $this->currentVersion = $this->getCurrentVersion();
             $currentVersion = $this->currentVersion;
         }
-        
-        if ( version_compare( $currentVersion, $targetVersion, '>=') ) {
-            $this->log( 'Same version.' );
-            return true;
-        }
                 
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
@@ -84,11 +79,6 @@ class AdditionalInstaller extends BaseInstaller
         
         if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
             $currentVersion = $this->currentVersion;
-        }
-        
-        if ( version_compare( $currentVersion, $targetVersion, '>=') ) {
-            $this->log( 'Same version.' );
-            return true;
         }
                         
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
