@@ -28,13 +28,13 @@
                     {% if buttonLink %}
                         <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
                             {% if 'owned' == badgeType %} 
-                                Consulter mon badge en détail
+                                {{'my_badge_details'|trans({}, 'platform')}}
                             {% endif %}
                             {% if 'inprogress' == badgeType %} 
-                                Aller dans mon espace de travail
+                               {{'go_to_evaluation'|trans({}, 'platform')}}
                             {% endif %}
                             {% if 'available' == badgeType %} 
-                                Obtenir ce badge
+                                {{'get_this_badge'|trans({}, 'platform')}}
                             {% endif %}
                         </a>
                     {% endif %}    

@@ -70,6 +70,9 @@ body.subnavbar-fixed { padding-top: 110px }
 .chapter_content_text a:hover,
 .pink_link:hover { color: #FF004F; text-decoration: underline; }
 
+.black_link { color: #000; }
+.black_link:hover { color: #000; }
+
 /* TOP BAR */
 #top_bar { height: 55px; max-height: 55px; overflow: visible; }
 .navbar-header { height: 100%; }
