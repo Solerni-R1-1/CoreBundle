@@ -40,21 +40,16 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate($currentVersion, $targetVersion)
     {
-        if ( substr( $targetVersion, 0, 4 ) === 'dev-' ) {
+        if ( strpos( $targetVersion, 'dev' ) !== false ) {
             $this->targetVersion = $this->getTargetVersion();
             $targetVersion = $this->targetVersion;
         }
         
-        if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
+        if ( strpos( $currentVersion, 'dev' ) !== false ) {
             $this->currentVersion = $this->getCurrentVersion();
             $currentVersion = $this->currentVersion;
         }
         
-        if ( version_compare( $currentVersion, $targetVersion, '>=') ) {
-            $this->log( 'Same version.' );
-            return true;
-        }
-                
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
 
@@ -78,19 +73,14 @@ class AdditionalInstaller extends BaseInstaller
 
         $this->setLocale();
 
-        if ( substr( $targetVersion, 0, 4 ) === 'dev-' ) {
+        if ( strpos( $targetVersion, 'dev' ) !== false ) {
             $targetVersion = $this->targetVersion;
         }
         
-        if ( substr( $currentVersion, 0, 4 ) === 'dev-' ) {
+        if ( strpos( $currentVersion, 'dev' ) !== false ) {
             $currentVersion = $this->currentVersion;
         }
         
-        if ( version_compare( $currentVersion, $targetVersion, '>=') ) {
-            $this->log( 'Same version.' );
-            return true;
-        }
-                        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
