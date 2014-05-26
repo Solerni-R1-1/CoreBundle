@@ -55,7 +55,7 @@
                 {% endif %}
                 {% if lastEval == null %}Aucune évaluation en cours pour le moment{% else %}{{ lastEval.summary | textTruncate(10, '...') | raw }}{% endif %}</p>
             </div>
-            <span><a class='footer__link' href="{{ evalsPageUrl }}">Obtenir des badges</a></span>
+            <span><a class='footer__link' href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">Obtenir des badges</a></span>
         </div>
     </div>
 </div>

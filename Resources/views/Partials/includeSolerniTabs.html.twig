@@ -23,7 +23,7 @@
         </ul>
         {% if is_registered %}
             {# LINK TO PROFILE BADGES #}
-            <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" href="{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}" class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges">{{ 'competence_badges' | trans({}, 'platform') }}</a>
+            <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}" class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges">{{ 'competence_badges' | trans({}, 'platform') }}</a>
         {% else %}
             {% if app.user.id is not defined  %}
             <button class="btn btn-primary btn-inscrire js-btn-inscrire js-btn-login" disabled="disabled" data-action-url="{{ path( 'claro_registration_user_registration_form', {} ) }}">Je participe</button>

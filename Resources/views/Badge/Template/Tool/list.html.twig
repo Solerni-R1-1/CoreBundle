@@ -1,7 +1,47 @@
-<ul class="list-inline my_badges">
+<ul class="panel-body my_badges slrn-my_badges-list">
+    <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ nbTotalBadges - nbAcquiredBadges }} badges à obtenir</h5>
     {% for workspaceBadge in badgePager %}
         {% set badgeType = workspaceBadge.type %}
-        <li class="col-md-6">
+        {% if 'owned' == badgeType %}
+                {% set badge     = workspaceBadge.badge.badge %}
+                {% set userBadge = workspaceBadge.badge %}
+                {% set buttonLink = path( 'claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badge.slug } ) %}
+        {% else %}
+                {% set badge     = workspaceBadge.badge %}
+                {% if workspaceBadge.associatedResourceUrl is defined %}
+                    {% set buttonLink =  workspaceBadge.associatedResourceUrl %}
+                {% endif %}
+        {% endif %}
+        <li class="slrn-my_badges-list__item">
+            <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="slrn-my_badges-list__item__image" />
+            <section class="slrn-my_badges-list__body">
+                <h6 class="slrn-my_badges-list__item__title">Badge &laquo; {{ badge.name }} &raquo;</h6>
+                {% if 'owned' == badgeType %} 
+                    <span class=" slrn-my_badges-list__body__status"><span class="slrn-bold">Obtenu le :</span> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }}</span>
+                {% endif %}
+                {% if 'inprogress' == badgeType %}
+                     <span class=" slrn-my_badges-list__body__status"><span class="slrn-bold">Badge en cours d'acquisition</span></span>
+                {% endif %}
+                <article class="slrn-my_badges-list__content">{{ badge.criteria | raw }}</article>
+                <footer class="slrn-my_badges-list__footer">
+                    <span class="slrn-gratuit-icon">prix gratuit</span>
+                    {% if buttonLink %}
+                        <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
+                            {% if 'owned' == badgeType %} 
+                                Consulter mon badge en détail
+                            {% endif %}
+                            {% if 'inprogress' == badgeType %} 
+                                Aller dans mon espace de travail
+                            {% endif %}
+                            {% if 'available' == badgeType %} 
+                                Obtenir ce badge
+                            {% endif %}
+                        </a>
+                    {% endif %}    
+                </footer>
+            </section>
+        </li>
+        {#<li class="col-md-6">
             {% if 'owned' == badgeType %}
                 {% set badge     = workspaceBadge.badge.badge %}
                 {% set userBadge = workspaceBadge.badge %}
@@ -43,7 +83,7 @@
     {% else %}
         <li class="node-thumbnail node">
             {{ 'no_badges_in_workspace'|trans({}, 'badge')|raw }}
-        </li>
+        </li>#}
     {% endfor %}
 </ul>
 
