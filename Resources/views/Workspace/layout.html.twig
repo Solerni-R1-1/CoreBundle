@@ -52,7 +52,7 @@
     {% if workspace is defined %}
         {% set params = params|merge({ 'workspaceId': workspace.getId() }) %}
     {% endif %}
-    {% if _resource is defined %}
+    {% if _resource is defined and workspace is not defined %}
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
     {% if params %}
@@ -88,11 +88,11 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if _resource is defined %}
+    {% if _resource is defined and workspace is not defined %}
         {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
     {% if workspace is defined %}
-        {% if not is_granted('OPEN', workspace) %}
+        {% if not is_granted( 'home', workspace ) %}
             <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/inscription.js') }}'></script>
         {% endif %}
     {% endif %}
