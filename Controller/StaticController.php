@@ -29,35 +29,18 @@ class StaticController extends Controller
          */
         public function getStaticPageAction($name){
             
-            $redirectUrl = $this->getStaticPage( $name );
-            if ( $redirectUrl === null ) {
-                return $this->redirect( $this->generateUrl( 'solerni_static_page_error_type_parameters', array( 'name' => $name ) ) );
-            } else {
-                return $this->redirect( $redirectUrl );
-            }
+            return $this->redirect( $this->getStaticPage( $name ) );
+
         }
         
         public function getStaticPage($name){
         
             // check values into parameters.yml. Also take a look inside README.md for example
             // it's must be something like "solerni_static_$name"
-            
             if($this->container->hasParameter('solerni_' . $name)) {
                return $this->container->getParameter('solerni_' . $name);
             } else {
-               return null;
+                throw $this->createNotFoundException('Cette URL statique n\'est pas configurée');
             }
         }
-        
-        /**
-         * @Route("error/missing-parameter/{name}", name="solerni_static_page_error_type_parameters")
-         */
-        public function RedirectErrorpageAction( $name ) {
-             return $this->render(
-            'OrangeThemeBundle:Errors:parametersMissing.html.twig',
-             array ( 'name' => $name )
-        );
-            
-        }
-
 }

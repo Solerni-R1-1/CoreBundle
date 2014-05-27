@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 
+
 /**
  * Description of SolerniController
  *
@@ -203,8 +204,7 @@ class SolerniController extends Controller
         if($this->container->hasParameter('solerni_' . $name)) {
             return $this->container->getParameter('solerni_' . $name);
         } else {
-            //todo redirect 404
-            return '';
+            throw $this->createNotFoundException('Cette URL statique n\'est pas configurée');
         }
 
      }
