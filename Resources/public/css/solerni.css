@@ -1187,3 +1187,14 @@ input[type="file"] { height: auto; }
     width: 100%; 
     height: 100%;
 }
+
+.chromeframe{
+    display: block;
+    background-color: #F00;
+    color: #FFF;
+    z-index: 9999999;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    top: 0;
+}
