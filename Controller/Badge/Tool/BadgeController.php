@@ -88,7 +88,8 @@ class BadgeController extends Controller
             $displayedBadges[] = array(
                 'type'          => 'inprogress',
                 'badge'         => $inProgressBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceType )
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceType ),
+                'associatedResource' => $this->getResourceAssociatedWithBadge( $inProgressBadge, $resourceType )
             );
         }
 
@@ -96,14 +97,15 @@ class BadgeController extends Controller
             $displayedBadges[] = array(
                 'type'  => 'available',
                 'badge' => $availableBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceType )
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceType ),
+                'associatedResource' => $this->getResourceAssociatedWithBadge( $availableBadge, $resourceType )
             );
         }
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
         $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
-        
+
         $badgeList = array(
             'badgePager'        => $badgePager,
             'workspace'         => $workspace,
@@ -127,7 +129,7 @@ class BadgeController extends Controller
      * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
      * @var $resourceString is string part of resource type name in rules
      * 
-     * @return bool
+     * @return bool 
      */
     public function isOneRuleAssociatedWithResource( $badge, $resourceType )
     {
@@ -171,7 +173,7 @@ class BadgeController extends Controller
      * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
      * @var $resourceString is string part of resource type in rules
      * 
-     * @return bool
+     * @return string
      */
     public function getResourceUrlAssociatedWithRule( $badge, $resourceType ) {
         
@@ -200,5 +202,28 @@ class BadgeController extends Controller
                     'node' => $resource->getId(),
                     'resourceType' => $resource->getResourceType()->getName()
         ));       
+    }
+    
+    /*
+     *  @return instance of Claroline\CoreBundle\Entity\Resource\ResourceNode if resource ID found
+     */
+    public function getResourceAssociatedWithBadge( $badge, $resourceType ) {
+        
+        if ( strpos( $resourceType, 'dropzone' ) ) {
+            $associatedResource = array();
+            $doctrine = $this->getDoctrine();
+            $evalRepo = $doctrine->getRepository('IcapDropzoneBundle:Dropzone');
+            
+            foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
+                if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
+                    $badgeRessourceNode = $BadgeRule->getResource();
+                    if ( $badgeRessourceNode ) {
+                        $associatedResource = $evalRepo->findOneByResourceNode( $badgeRessourceNode );
+                    }
+                }
+            }
+        }
+        
+        return $associatedResource;
     }
 }
