@@ -1187,3 +1187,14 @@ input[type="file"] { height: auto; }
     width: 100%; 
     height: 100%;
 }
+
+.slrn-my_badges-list__item__title--my_evals {
+    margin-bottom: 1.5em;
+}
+
+.slrn-my_badges-list__content--my_evals {
+    float: left;
+    line-height: 1.5;
+    margin: -.5em 0 0 0;
+    padding-top: .5em;
+}
