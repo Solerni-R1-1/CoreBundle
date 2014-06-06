@@ -204,7 +204,7 @@ class AdditionalInstaller extends BaseInstaller
             $decodedFile = $this->getContentAndDecode( $fileUri );
             $versionNumber = $decodedFile['currentVersion'];
         } else {
-            $versionNumber = 2.13;
+            $versionNumber = 2.11;
         }
         $this->log( 'Current version: ' . $versionNumber );
         return $versionNumber;
