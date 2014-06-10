@@ -30,7 +30,8 @@
 {% else %}
 
     <ul class="panel-body my_badges slrn-my_badges-list">
-        <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ nbTotalBadges - nbAcquiredBadges }} badges à obtenir</h5>
+        {% set badgesToGo = nbTotalBadges - nbAcquiredBadges %}
+        <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ badgesToGo }} badge{% if badgesToGo > 1 %}s{% endif %} à obtenir</h5>
         {% for workspaceBadge in badgePager %}
             {% set badgeType = workspaceBadge.type %}
             {% if 'owned' == badgeType %}
