@@ -381,6 +381,7 @@ class SolerniController extends Controller
      */
     public function getDesktopMessagesBadgesAndEvalBlockWidgetAction(User $user)
     {
+        
         $doctrine = $this->getDoctrine();
         $router = $this->get('router');
         $translator = $this->get('translator');
@@ -403,11 +404,11 @@ class SolerniController extends Controller
             );
         }
 
-
         $badgeReturn = array(
             'badgesListPageUrl' => $router->generate('claro_profile_view_badges'),
             'lastBadge' => null,
         );
+        
         $userBadges = $user->getUserBadges();
         if(count($userBadges) > 0){
             $lastBadge = null;
@@ -419,18 +420,21 @@ class SolerniController extends Controller
                 }
             }
 
+            /* remove Soft Deletable Filter in case we have modified the badge after it was acquired */
+            $doctrine->getEntityManager()->getFilters()->disable('softdeleteable');
             $lastBadge = $lastBadge->getBadge();
             $badgeReturn['lastBadge'] = array(
-                'title' => $lastBadge->getName($this->getRequest()->getSession()->get('_locale')),
+                'title' => $lastBadge->getName(),
                 'summary' =>  $lastBadge->getDescription(),
                 'obj'   => $lastBadge,
                 //'type' => $translator->trans('knowledge_badges', array(), 'platform'),
                 'url' => $router->generate('claro_view_badge', array('slug' => $lastBadge->getSlug()))
             );
+            
         }
-     
+
         $evals = $doctrine->getRepository('IcapDropzoneBundle:Drop')->findByUser($user);
-        
+
         $lastEval = null;
         foreach ($evals as $eval) {
             if($lastEval == null || $eval->getDropDate() > $lastEval->getDropDate()) {
