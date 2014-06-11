@@ -49,12 +49,9 @@
 
 {% block javascripts %}
     {{ parent()}}
-    {# IE8 BUG OF formvalidator PLUGIN #}
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator/jquery.form-validator-ie8.js') }}"></script>
-    <!--[if IE 8 ]>
+    <!--[if IE 9 ]>
         <script src="{{ asset('bundles/clarolinecore/js/jquery.placeholder.js') }}"></script>
         <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
     <![endif]-->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
-   
 {% endblock %}
