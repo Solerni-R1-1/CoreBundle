@@ -148,27 +148,30 @@
             );
         } else {
             $('.resource-manager').prepend(
-                '<div class="alert alert-danger">' + '<a class="close" href="#" data-dismiss="alert">×</a>' + '<ul>' +
+                '<div class="alert alert-danger">' + '<a class="close" href="#" data-dismiss="alert" aria-hidden="true">&times;</a>' + '<ul>' +
                 '<li>' + message + '</li>' + '</ul>' + '</div>'
             );
         }
     }
 
     function onFiles(files) {
-        var maxSize = $('#data-attributes').attr('data-max-post-size');
-        var lastChar = maxSize.substr(maxSize.length - 1);
-        var varSize = maxSize.slice(0, maxSize.length - 1);
+        var maxSize = $('#data-attributes').attr('data-max-post-size');  //16M
+        var lastChar = maxSize.substr(maxSize.length - 1);               // M
+        var varSize = maxSize.slice(0, maxSize.length - 1);              //16
         var size = maxSize;
-           
+
+        if (maxSize !== 0) {
+            switch(lastChar) {
+                case 'M': size = varSize * FileAPI.MB; break;
+                case 'K': size = varSize * FileAPI.KB; break;
+                case 'G': size = varSize * FileAPI.GB; break;
+            }
+        } 
+
         FileAPI.each(files, function (file) {
-            if (maxSize !== 0) {
-                switch(lastChar) {
-                    case 'M': size = varSize * FileAPI.MB; break;
-                    case 'K': size = varSize * FileAPI.KB; break;
-                    case 'G': size = varSize * FileAPI.GB; break;
-                }
-            } 
-        
+
+            alert(file.size +"  "+ size);
+
             if (file.size >= size) {
                 showErrorMessage(Translator.get('platform:max_size_is', {'size': maxSize}));
             } else if (file.size === void 0) {

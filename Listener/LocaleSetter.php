@@ -17,6 +17,8 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @Service
@@ -26,14 +28,20 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class LocaleSetter
 {
     private $localeManager;
+    private $container;  
     /**
      * @InjectParams({
-     *     "localeManager"  = @Inject("claroline.common.locale_manager")
+     *     "localeManager"  = @Inject("claroline.common.locale_manager"),
+     *     "container"      = @DI\Inject("service_container")
      * })
      */
-    public function __construct(LocaleManager $localeManager)
+    public function __construct(
+            LocaleManager $localeManager, 
+            ContainerInterface $container
+            )
     {
         $this->localeManager = $localeManager;
+        $this->container = $container;
     }
 
     /**
@@ -46,6 +54,13 @@ class LocaleSetter
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+        $token = $this->container->get('security.context')->getToken();
+        
+        if ( $token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken ) {
+            $request->setLocale( 'fr' );
+            return;
+        }
+        
         $locale = $this->localeManager->getUserLocale($request);
         $request->setLocale($locale);
     }

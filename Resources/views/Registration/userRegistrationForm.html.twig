@@ -1,25 +1,192 @@
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Sign:sign.html.twig' %}
 
-{% block title %}{{ 'register' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ 'register' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
-{% block content %}
-    {{ macros.flashBox() }}
+{% block formTitle %}Je n'ai pas de compte, je m'inscris{% endblock %}
+
+{% block signinForm %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ 'register'|trans({}, 'platform') }}</h3>
+            <h2 class="panel-title slrn-section-title slrn-section-title--sub">{{ 'register_with_mail'|trans({}, 'platform') }} *</h2>
         </div>
-        <form class="form-horizontal" id="user_registration_form"
+        <form role="form" class="form-horizontal" id="user_registration_form"
               action="{{ path('claro_registration_register_user') }}"
               method="post" {{ form_enctype(form) }}>
             <div class="panel-body">
-                {{ form_widget(form) }}
+                {# Error Classes #}
+                {% set errorClasses = 'slrn-input slrn-input--error' %}
+                {% set RegularClasses = 'slrn-input' %}
+                
+                {# First Name #}
+                {% if form.firstName.vars.errors %}
+                    {% set firstNameClasses = errorClasses %}
+                {% else %}
+                    {% set firstNameClasses = RegularClasses %}
+                {% endif %}
+                {# We use platform.yml langages for placeholders and error messages so updates are site-wide #}
+                {# We probably could use a macro to generate the pattern of the output #}
+                {% set firstNamePlaceholder %}{{ 'user_form_firstName'|trans({}, 'platform') }}{% endset %}
+                {% set firstNameInvalidMsg %}{{ 'user_form_firstName_invalid'|trans({}, 'platform') }}{% endset %}
+                {{ form_label( form.firstName, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                {{ form_widget( form.firstName, {'attr': {
+                                                            'placeholder' :  firstNamePlaceholder,
+                                                            'class' : firstNameClasses, 
+                                                            'data-validation': 'required',
+                                                            'data-validation-error-msg' : firstNameInvalidMsg 
+                } }) }}
+                
+                {# Last Name #}
+                {% if form.lastName.vars.errors %}
+                    {% set lastNameClasses = errorClasses %}
+                {% else %}
+                    {% set lastNameClasses = RegularClasses %}
+                {% endif %}
+                {% set lastNamePlaceholder %}{{ 'user_form_lastName'|trans({}, 'platform') }}{% endset %}
+                {% set lastNameInvalidMsg %}{{ 'user_form_lastName_invalid'|trans({}, 'platform') }}{% endset %}
+                {{ form_label( form.lastName, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                {{ form_widget( form.lastName, {'attr': { 
+                                                            'placeholder' : lastNamePlaceholder, 
+                                                            'class' : lastNameClasses, 
+                                                            'data-validation': 'required', 
+                                                            'data-validation-error-msg' : lastNameInvalidMsg 
+                } }) }}
+                
+                {# UserName
+                {% if form.username.vars.errors %}
+                    {% set usernameClasses = errorClasses %}
+                {% else %}
+                    {% set usernameClasses = RegularClasses %}
+                {% endif %}
+                {% set usernamePlaceholder %}{{ 'user_form_username'|trans({}, 'platform')}}{% endset %}
+                {% set usernameInvalidMsg %}{{ 'user_form_username_invalid'|trans({}, 'platform') }}{% endset %}
+                {{ form_label( form.username, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                {{ form_widget( form.username, {'attr': {
+                                                            'placeholder' : usernamePlaceholder,
+                                                            'class' : usernameClasses,
+                                                            'data-validation': 'alphanumeric length',
+                                                            'data-validation-length': 'min3',
+                                                            'data-validation-error-msg' : usernameInvalidMsg
+                } }) }} #}
+                
+                {# email  #}
+                {% if form.mail.vars.errors %}
+                    {% set mailClasses = errorClasses %}
+                        {% else %}
+                    {% set mailClasses = RegularClasses %}
+                {% endif %}
+                {% set mailPlaceholder %}{{ 'mail'|trans({}, 'platform')}}{% endset %}
+                {% set mailInvalidMsg %}{{ 'mail_invalid'|trans({}, 'platform') }}{% endset %}
+                {{ form_label( form.mail, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                {{ form_widget( form.mail, {'attr': { 
+                                                        'placeholder' : mailPlaceholder, 
+                                                        'class' : mailClasses, 
+                                                        'data-validation': 'email', 
+                                                        'data-validation-error-msg' : mailInvalidMsg
+                } }) }} 
+                
+                {# Password First #}
+                {% if form.plainPassword.first.vars.errors %}
+                    {% set plainPasswordFirstClasses = errorClasses %}
+                {% else %}
+                        {% set plainPasswordFirstClasses = RegularClasses %}
+                {% endif %}
+                {% set plainPasswordFirstPlaceholder %}{{ 'user_form_plainPassword_first'|trans({}, 'platform')}}{% endset %}
+                {% set plainPasswordFirstInvalidMsg %}{{ 'user_rules_password'|trans({}, 'platform') }}{% endset %}
+                {{ form_label( form.plainPassword.first, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                {{ form_widget( form.plainPassword.first, {'attr': { 
+                                                        'placeholder' : 'Mot de passe',
+                                                        'class' : plainPasswordFirstClasses,
+                                                        'data-validation': 'length', 
+                                                        'data-validation-length': 'min4', 
+                                                        'data-name': 'pass_confirmation', 
+                                                        'data-validation-error-msg' : plainPasswordFirstInvalidMsg 
+                } }) }}
+                {# Password Second #} 
+                {% if form.plainPassword.second.vars.errors %}
+                    {% set plainPasswordSecondClasses = 'slrn-input slrn-input--error' %}
+                {% else %}
+                    {% set plainPasswordSecondClasses = 'slrn-input' %}
+                {% endif %}
+                {% set plainPasswordSecondPlaceholder %}{{ 'user_form_plainPassword_second'|trans({}, 'platform')}}{% endset %}
+                {% set plainPasswordSecondInvalidMsg %}{{ 'password_mismatch'|trans({}, 'platform') }}{% endset %}
+                    {{ form_label( form.plainPassword.second, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                    {{ form_widget( form.plainPassword.second, {'attr': {
+                                                        'placeholder' : plainPasswordSecondPlaceholder,
+                                                        'class' : plainPasswordSecondClasses,
+                                                        'data-validation': 'confirmation',
+                                                        'data-name': 'pass',
+                                                        'data-validation-error-msg' : plainPasswordSecondInvalidMsg
+                } }) }}
+                {% if form.accepted_terms is defined %}
+                <div class="slrn-checkbox-w">
+                    {# CGU #}
+                    {% if form.accepted_terms.vars.errors %}
+                        {% set acceptedTermsClasses = errorClasses %}
+                            {% else %}
+                        {% set acceptedTermsClasses = RegularClasses %}
+                    {% endif %}
+                    {% set acceptedTermsInvalidMsg %}{{ 'cgu_terms_invalid'|trans({}, 'platform') }}{% endset %}
+                    <span class="slrn-checkbox-label"><label class="slrn-checkbox-label--cgu" for="profile_form_accepted_terms">{{ 'cgu_terms_label_partial'|trans({}, 'platform') }}</label> <a class="js-open" href="{{ path( 'solerni_static_page', { 'name': 'static_cgu' } ) }}">{{ 'cgu_terms_link'|trans({}, 'platform') }}</a></span>
+                    {{ form_widget( form.accepted_terms, {'attr': { 
+                                                            'class' : acceptedTermsClasses, 
+                                                            'data-validation': 'required',
+                                                            'data-validation-error-msg' : acceptedTermsInvalidMsg
+                    } }) }}
+                </div>
+                {% endif %}
+                {% if form.accepted_com_terms is defined %}
+                <div class="slrn-checkbox-w">
+                    {# OPTIN #}
+                    {{ form_label( form.accepted_com_terms, label|default(null), { 'label_attr' : { 'class': 'slrn-checkbox-label' } } ) }}
+                    {{ form_widget( form.accepted_com_terms ) }}
+                </div>
+                {% endif %}
+                {# TOKEN #}
+                {{ form_widget( form._token ) }}
             </div>
+            <div class="panel-body slrn-errors">
+                {% if form.firstName.vars.errors %}
+                    <div class="slrn-errors__item"><span class="help-title">Prénom : </span>{{ form_errors( form.firstName ) }}</div>
+                {% endif %}
+                {% if form.lastName.vars.errors %}
+                    <div class="slrn-errors__item"><span class="help-title">Nom : </span>{{ form_errors( form.lastName ) }}</div>
+                {% endif %}
+                {% if form.username.vars.errors %}
+                    <div class="slrn-errors__item"><span class="help-title">Nom d'utilisateur : </span>{{ form_errors( form.username ) }}</div>
+                {% endif %}
+                {% if form.mail.vars.errors %}   
+                    <div class="slrn-errors__item"><span class="help-title">Email : </span>{{ form_errors( form.mail ) }}</div>
+                {% endif %}
+                {% if form.plainPassword.first.vars.errors %}    
+                    <div class="slrn-errors__item"><span class="help-title">Mot de passe : </span>{{ form_errors( form.plainPassword.first ) }}</div>
+                {% endif %}
+                {{ form_errors( form._token ) }}
+                {# flashBox IMPORTE LES MESSAGES D'ERREUR #}
+                {{ macros.flashBox() }}
+            </div>
+
             <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_index') }}">
-                    <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
-                </a>
+                <button type="submit" class="btn btn-primary">{{ 'Je m\'inscris'|trans({}, 'platform') }}</button>
             </div>
         </form>
     </div>
 {% endblock %}
+    
+{% block alternateText %}
+    <h2 class="slrn-section-title">J'ai déjà un compte, je me connecte</h2>
+    <p>Vous avez déjà un compte Solerni ?<br />
+    Connectez-vous avec votre email ou avec Facebook</p>
+    <p><a class="slrn-link" href="{{ path('claro_security_login') }}">Je me connecte</a></p>
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript">
+        jQuery(document).ready(function(jQuery) {
+            jQuery('.js-open').on( 'click', function(elm) {
+                elm.preventDefault();
+                cguWin = window.open( jQuery(this).attr('href'), 'cgu', 'toolbar=no,scrollbar=yes,resizable=yes,status=no,width=980,height=600,top=100,left=200' );             
+            });        
+        });
+    </script>
+{% endblock %} 

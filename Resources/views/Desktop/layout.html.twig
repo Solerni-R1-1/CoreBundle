@@ -2,6 +2,7 @@
 
 {% block title %}{{ 'desktop' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
+{# WE DO NOT USE BREADCRUMBS
 {% block breadcrumb %}
     <div id="resource-breadcrumb">
         {% if _resource is defined %}
@@ -25,9 +26,11 @@
         {% endif %}
     </div>
 {% endblock %}
+#}
 
+{# MENU DE GAUCHE - GESTION DES RESSOURCES #}
 {% block leftbar %}
-    {% if not is_path_mode %}
+    {% if not is_path_mode and has_role('ROLE_ADMIN')%}
         <div class="list-group menu">
             <div class="list-group-item disabled">{{ 'desktop'|trans({}, 'platform') }}</div>
             {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
@@ -35,17 +38,23 @@
     {% endif %}
 {% endblock %}
 
+{# CONTENU #}
 {% block content %}
+
     <div class="visible-xs">
-        {{ block("leftbar") }}
+     {{ block("leftbar") }}
     </div>
-    <div class="section-content">
+
+    <div class="row dsk-content slrn-content section-content">
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}
         </div>
     </div>
-    {% block section_after_content %}{% endblock %}
-
+    {% block section_after_content %}
+        {% if app.session.get('isFirstVisit') %}
+            {% include 'ClarolineCoreBundle:Partials:tracking.html.twig' %}
+        {% endif %}
+	{% endblock %}
 {% endblock %}
 
 {% block javascripts %}

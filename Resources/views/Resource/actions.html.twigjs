@@ -1,68 +1,67 @@
 {% twig_js name="ResourceManagerActions" %}
 {% if isPickerMode == false %}
-    <ul class="nav navbar-nav">
+
+    <ul class="nav navbar-nav slrn-resource-nav__inner" role="toolbar">
+        <li class="slrn-resource-nav__btn">
+            <a title="{{ 'add_file_tooltip'|trans({}, 'platform') }}" class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %} btn btn-primary">
+               {#<i class="icon-plus"></i>#}
+               {{ 'add_file'|trans({}, 'platform') }}
+           </a>
+        </li>
         {% if resourceTypes|length > 0 %}
-            <li class="dropdown">
-                <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
-                    <i class="icon-edit"></i>
-                    {{ 'create'|trans({}, 'platform') }}
+            <li class="slrn-resource-nav__btn dropdown">
+                <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %} btn btn-primary" data-toggle="dropdown" title="{{ 'add_new_tooltip'|trans({}, 'platform') }}">
+                    {#<i class="icon-edit"></i>#}
+                    {{ 'new'|trans({}, 'platform') }}
                     <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu create">
+                <ul class="dropdown-menu create" role="menu">
                     {% for resourceType, name in creatableTypes %}
-                        <li><a id='{{ resourceType }}'>{{ name }}</a></li>
+                        <li role="presentation"><a role="menuitem" id='{{ resourceType }}'>{{ name }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
         {% endif %}
-        <li>
-            <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
-               <i class="icon-plus"></i>
-               {{ 'add'|trans({}, 'platform') }}
-           </a>
-        </li>
-        <li>
-            <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
-                <i class="icon-cut"></i>
+    </ul>
+    <ul class="nav navbar-nav slrn-resource-nav__inner slrn-resource-tools">
+        <li class="slrn-action-btn-wrapper">
+            <a class="slrn-action-btn cut disabled" data-toggle="tooltip" data-placement="top" title="{{ 'cut'|trans({}, 'platform') }}">
             </a>
         </li>
-        <li>
-            <a class="copy disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'copy'|trans({}, 'platform') }}">
-                <i class="icon-copy"></i>
+        <li class="slrn-action-btn-wrapper">
+            <a class="slrn-action-btn copy disabled" data-toggle="tooltip" data-placement="top" title="{{ 'copy'|trans({}, 'platform') }}">
             </a>
         </li>
-        <li>
-           <a class="paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'paste'|trans({}, 'platform') }}">
-                <i class="icon-paste"></i>
+        <li class="slrn-action-btn-wrapper">
+           <a class="slrn-action-btn paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="top" title="{{ 'paste'|trans({}, 'platform') }}">
             </a>
         </li>
-        <li>
-            <a class="delete disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'delete'|trans({}, 'platform') }}">
-                <i class="icon-trash"></i>
+        <li class="slrn-action-btn-wrapper">
+            <a class="slrn-action-btn delete disabled" data-toggle="tooltip" data-placement="top" title="{{ 'delete'|trans({}, 'platform') }}">
             </a>
         </li>
-        <li>
-            <a class="download disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'download'|trans({}, 'platform') }}">
-                <i class="icon-download-alt"></i>
+        <li class="slrn-action-btn-wrapper">
+            <a class="slrn-action-btn download disabled" data-toggle="tooltip" data-placement="top" title="{{ 'download'|trans({}, 'platform') }}">
             </a>
         </li>
-        <li class="dropdown">
+        {# Commented By Solerni #}
+        {#<li class="dropdown">
             <a class="dropdown-toggle zoom{% if isSearchMode == true %} disabled{% endif %}" data-toggle="dropdown">
                 <i class="icon-zoom-in"></i>
                 <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu zoom">
-                <li{% if resourceZoom == 'zoom50' %} class="active"{% endif %}><a id='zoom50'>50%</a></li>
-                <li{% if resourceZoom == 'zoom75' %} class="active"{% endif %}><a id='zoom75'>75%</a></li>
-                <li{% if resourceZoom == 'zoom100' %} class="active"{% endif %}><a id='zoom100'>100%</a></li>
-                <li{% if resourceZoom == 'zoom125' %} class="active"{% endif %}><a id='zoom125'>125%</a></li>
-                <li{% if resourceZoom == 'zoom150' %} class="active"{% endif %}><a id='zoom150'>150%</a></li>
-                <li{% if resourceZoom == 'zoom200' %} class="active"{% endif %}><a id='zoom200'>200%</a></li>
+            <ul class="dropdown-menu zoom" role="menu">
+                <li role="presentation" {% if resourceZoom == 'zoom50' %} class="active"{% endif %}><a role="menuitem" id='zoom50'>50%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom75' %} class="active"{% endif %}><a role="menuitem" id='zoom75'>75%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom100' %} class="active"{% endif %}><a role="menuitem" id='zoom100'>100%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom125' %} class="active"{% endif %}><a role="menuitem" id='zoom125'>125%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom150' %} class="active"{% endif %}><a role="menuitem" id='zoom150'>150%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom200' %} class="active"{% endif %}><a role="menuitem" id='zoom200'>200%</a></li>
             </ul>
-        </li>
+        </li>#}
     </ul>
 {% else %}
-    <ul class='nav navbar-nav'>
+    <ul class='nav navbar-nav' role="toolbar">
         <li>
             <a class="add {% if isAddAllowed == false or isPasteAllowed == false %}disabled{% endif %}">
                 <i class="icon-plus"></i>
@@ -71,8 +70,9 @@
         </li>
     </ul>
 {% endif %}
-
-<form class="navbar-form pull-right">
+{# Commented By Solerni #}
+{#
+<form class="navbar-form pull-right" role="search">
     <div class="input-group"  style="width: 250px;">
         <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
         <span class="input-group-btn">
@@ -82,4 +82,4 @@
             <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
         </span>
    </div>
-</form>
+</form>#}

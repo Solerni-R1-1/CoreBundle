@@ -162,6 +162,11 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 isset($termsOfService['terms_of_service'])
             ) {
                 $user->setAcceptedTerms(true);
+                if ( isset($termsOfService['com_terms_of_service']) ) {
+                    $user->setAcceptedComTerms($termsOfService['com_terms_of_service']);
+                } else {
+                    $user->setAcceptedComTerms(false);
+                }
                 $this->manager->persist($user);
                 $this->manager->flush();
             } else {
@@ -202,7 +207,10 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         return array(
             'bazinga_exposetranslation_js',
             'login_check',
-            'login'
+            'login',
+            'orange_cms_api_user',
+            'orange_cms_api_route',
+            'orange_cms_api_moocs'
         );
     }
 

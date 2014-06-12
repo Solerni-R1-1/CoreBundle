@@ -33,6 +33,7 @@ use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Doctrine\ORM\EntityManager;
 
 class ResourceController
 {
@@ -58,7 +59,8 @@ class ResourceController
      *     "request"         = @DI\Inject("request"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"      = @DI\Inject("templating"),
-     *     "logManager"      = @DI\Inject("claroline.log.manager")
+     *     "logManager"      = @DI\Inject("claroline.log.manager"),
+     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct
@@ -72,7 +74,8 @@ class ResourceController
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
         TwigEngine $templating,
-        LogManager $logManager
+        LogManager $logManager,
+        EntityManager $entityManager
     )
     {
         $this->sc = $sc;
@@ -85,6 +88,7 @@ class ResourceController
         $this->maskManager = $maskManager;
         $this->templating = $templating;
         $this->logManager = $logManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -135,21 +139,26 @@ class ResourceController
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
         $this->checkAccess('CREATE', $collection);
-        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($resourceType));
+        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($parent, $resourceType));
 
         if (count($event->getResources()) > 0) {
             $nodesArray = array();
 
             foreach ($event->getResources() as $resource) {
-                $createdResource = $this->resourceManager->create(
-                    $resource,
-                    $this->resourceManager->getResourceTypeByName($resourceType),
-                    $user,
-                    $parent->getWorkspace(),
-                    $parent
-                );
 
-                $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode(), $this->sc->getToken());
+                if ($event->getProcess()) {
+                    $createdResource = $this->resourceManager->create(
+                        $resource,
+                        $this->resourceManager->getResourceTypeByName($resourceType),
+                        $user,
+                        $parent->getWorkspace(),
+                        $parent
+                    );
+
+                    $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode(), $this->sc->getToken());
+                } else {
+                    $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
+                }
             }
 
             return new JsonResponse($nodesArray);
@@ -425,6 +434,7 @@ class ResourceController
     public function openDirectoryAction(ResourceNode $node = null)
     {
         $user = $this->sc->getToken()->getUser();
+        $userPersonalWorkspaceId = $user->getPersonalWorkspace()->getId();
         $path = array();
         $creatableTypes = array();
         $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
@@ -478,6 +488,23 @@ class ResourceController
             $creatableTypes = array_merge($creatableTypes, $adminTypes);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
+        
+        /*
+         * We will only authorize certains types of resources
+         * in personal workspace
+         */
+        $personalWorkspaceAuthorized = array(
+            'file' => '', 
+            'directory' => '',
+            'text'=> '',
+            'resource_shortcut' => ''
+        );
+        
+        if ( $userPersonalWorkspaceId == $workspaceId ) {
+           $creatableTypes = array_intersect_key( $creatableTypes, $personalWorkspaceAuthorized );
+        }
+        
+        
 
         $jsonResponse = new JsonResponse(
             array(
@@ -763,6 +790,8 @@ class ResourceController
      */
     public function embedResource(ResourceNode $node, $type, $extension, $view = 'default')
     {
+        $entity = null;
+        
         switch ($type) {
             case 'video':
                 $view = 'video';
@@ -773,12 +802,23 @@ class ResourceController
             case 'image':
                 $view = 'image';
                 break;
+            case 'custom':
+                switch ($extension) { 
+                    case 'orange_extern_video':
+                        $entity = $this->entityManager
+                                        ->getRepository('OrangeExternVideoBundle:Video')
+                                        ->findOneByResourceNode($node);
+                        $view = 'custom_'.$extension;
+                        break;
+                }
+
+                break;
         }
 
         return new Response(
             $this->templating->render(
                 "ClarolineCoreBundle:Resource:embed/$view.html.twig",
-                array('node' => $node, 'type' => $type, 'extension' => $extension)
+                array('node' => $node, 'type' => $type, 'extension' => $extension, 'entity' => $entity)
             )
         );
     }

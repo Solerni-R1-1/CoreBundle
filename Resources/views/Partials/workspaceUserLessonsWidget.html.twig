@@ -1,0 +1,34 @@
+{% macro lessonItem( lesson, chapter ) %}
+    {% set itemClassDone = '' %}
+    {% if chapter.done %}{% set itemClassDone = ' chapter-done' %}{%endif %}
+    <li class="slrn-widget__list__item{{ itemClassDone }}">
+        <a class="js-chapter-link" href="{{ path( 'solerni_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.slug  }) }}">{{ chapter.title }}</a>
+        {% if chapter.childs is not empty %}
+            <ul class="slrn-widget__list slrn-widget__list--sub">
+                {% for child in chapter.childs %}
+                    {% import _self as lessonWidget %}
+                    {{ lessonWidget.lessonItem( lesson, child ) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% if lessons is defined %}
+    {% for lesson in lessons %}
+    <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--lessons js-accordeon">
+        <div class="row slrn-widget__title bg-color-primary slrn-widget_row js-slrn-accordeon-trigger">{{ lesson.title }}</div>
+         <div class="row slrn-widget__body slrn-widget_row bg-color-grey-1">
+            <ul class="slrn-widget__list slrn-widget__list--railroad">
+            {% for chapter in lesson.chapters %}
+                {% import _self as lessonWidget %}
+                {{ lessonWidget.lessonItem( lesson, chapter ) }}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+{# route: icap_lesson_chapter #}
+{# route: view/{resourceId}/{chapterId} #}

@@ -1,4 +1,5 @@
 {% extends 'ClarolineCoreBundle::base.html.twig' %}
+
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block meta %}
@@ -9,12 +10,14 @@
 {% endblock %}
 
 {% block stylesheets %}
+    {# REMOVE CUSTOM THEMING AND USING claroline BOOSTRAP CSS INSTEAD #}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/bootstrap.css') }}" screen="media" />
 
-    {% if config.getParameter('theme') != '' %}
-        <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
-    {% endif %}
-
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
+    {# ADDING SOLERNI STYLESHEETS #}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/solerni.css') }}" screen="media" />
+    
+    {# Font-Awesome CSS + Fonts #}
+      {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
     '../vendor/fortawesome/font-awesome/less/font-awesome.less'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
@@ -56,7 +59,7 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ asset("") }}</div>
+    <div id="homeAsset" class="hide">{{ '//' ~ app.request.host ~ asset("") }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
         {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
             {{ app.request.locale }}
@@ -67,13 +70,17 @@
         {% endif %}
     {% endspaceless %}
     </div>
+    {# FACEBOOK CONNECT #}
     {% if is_facebook_available() %}
         <div id="fb-root"></div>
     {% endif %}
-    <div id="wrap">
+    {# MAIN WRAPPER #}
+    <div class="main-wrap" id="wrap">
         <div class="please-wait">
-            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
+            <h4><span class="label label-warning bg-color-second"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
         </div>
+
+        {# LEFT BAR CONTEXTUAL COMMANDS #}
         <div class="hidden-xs">
             <div class="hide">
                 <div id="left-bar" class="sidebar">
@@ -86,6 +93,8 @@
                 </div>
             </div>
         </div>
+
+        {# RENDER TOP BAR #}
         {% if not is_path_mode and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
             {% if workspace is defined %}
                 {% render controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.getId()}) %}
@@ -94,24 +103,40 @@
             {% endif %}
         {% endif %}
 
+       {# EITHER IMPERSONATION BLOCK OR IMAGE HEADER BLOCK #}
        {% block impersonation %}
             {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
                 {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
             {% endif %}
         {% endblock %}
-        <div class="container">
-            <div class="row">
+        {# DISPLAY HEADER IMAGE FOR SIGNING IN  #}
+        {% block loggingHeaderImage %}{% endblock %}
+        {# SUBNAV BAR (ONGLETS) #}
+        {% block subnavbar %}{% endblock %}
+
+        {# BREADCRUMB & CONTENT #}
+        <div class="container slrn-content-container">
+             {% block content_container %}
+            {#
+            
+            <div class="container">
+              <div class="row">
                 <div class="col-md-12">
                     {% block breadcrumb %}{% endblock %}
                 </div>
             </div>
+            #}
+
+            
             <div class="row content">
-                <div class="col-md-12">
+                {# CONTENT #}
+                <section class="col-md-12">
                     {% block content %}{% endblock %}
-                </div>
+                </section>
             </div>
         </div>
         <div id="push"></div>
+        {% endblock %}
     </div>
    {% block footer %}
         {% if not is_path_mode %}
@@ -175,10 +200,10 @@
     {% endjavascripts %}
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/bazingaexposetranslation/js/translator.js') }}"></script>
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'home' }) }}"></script>
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'badge' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'home' }, true ) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }, true ) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }, true ) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'badge' }, true ) }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
     {% if 'en' != app.request.locale %}
@@ -204,6 +229,7 @@
             selector: '[data-toggle=tooltip]'
         });
     </script>
+    
     {% if is_facebook_available() %}
     <script>
         (function(d, s, id){
@@ -221,10 +247,10 @@
                 xfbml      : true,
                 cookie     : true
             });
-            $('.facebook-connect').removeClass('hide');
+            $('.slrn-facebook-connect').removeAttr('disabled');
             $('#btn-logout').on('click', function() {
                 FB.logout(function(respose){});
-            })
+            });
         };
     </script>
     {% endif %}

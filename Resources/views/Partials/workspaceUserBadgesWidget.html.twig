@@ -1,0 +1,54 @@
+{% macro badgeItem( allBadges, userBadges ) %}
+    {% for itemBadge in allBadges %}
+         {% if itemBadge.id in userBadges %}
+             {% set acquiredBadge = ' badge-item--acquired' %}
+         {% else %}
+             {% set acquiredBadge = '' %}
+         {% endif %}
+         <a href="{{ path( 'claro_view_badge', {'slug': itemBadge.slug } ) }}" class="lesson_tooltip badge-item{{ acquiredBadge }}" data-original-title="{{ itemBadge.name }}"></a>
+     {% endfor %}
+{% endmacro %}
+
+<div class="col-xs-12 col-md-12 slrn-widget slrn-widget--badges">
+    <div class="row slrn-widget__title bg-color-primary slrn-widget_row">
+        <i class='icon-angle-right collapsor' id='collapsor_icon_badges' data-collapsor='badges'></i>
+        {{ 'my_badges'|trans({}, 'platform') }}
+    </div>
+    <div class="row slrn-widget__body bg-color-primary" id="list_badges">
+        <div class="col-xs-6 col-md-6 slrn-widget_row slrn-widget_cell slrn-widget_cell--title">
+            {{ 'badge_knowledge_short'|trans({}, 'platform') }}
+        </div>
+        <div class="col-xs-6 col-md-6 slrn-widget_row slrn-widget_cell slrn-widget_cell--title">
+            {{ 'badge_skill_short'|trans({}, 'platform') }}
+        </div>
+        <div class="col-xs-6 col-md-6 slrn-widget_row slrn-widget_cell slrn-widget_cell--value badge-knowledge">
+             {{ BadgesKnowledge.UserBadgesCollection|length }}/{{ BadgesKnowledge.BadgesCollection|length }}
+        </div>
+        <div class="col-xs-6 col-md-6 slrn-widget_row slrn-widget_cell slrn-widget_cell--value badge-skills">
+             {{ BadgesSkills.UserBadgesCollection|length }}/{{ BadgesSkills.BadgesCollection|length }}
+        </div>
+    </div>
+    <div class="row slrn-widget__body bg-color-grey-1 hide list_full_badges">
+        <div class="slrn-badges-title slrn-widget_row">
+            {{ 'badge_knowledge_short'|trans({}, 'platform') }}
+            <div class="slrn-badges-count">
+                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ path( 'solerni_static_page', { 'name': 'static_badges' } ) }}">{{ BadgesKnowledge.UserBadgesCollection|length }}/{{ BadgesKnowledge.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
+            </div>
+            <div class="slrn-badges-list">
+                {% import _self as badgeList %}
+                {{ badgeList.badgeItem( BadgesKnowledge.BadgesCollection, BadgesKnowledge.UserBadgesCollection ) }}
+            </div>
+        </div>
+        <div class="slrn-badges-title slrn-widget_row">
+            {{ 'badge_skill_short'|trans({}, 'platform') }}
+            <div class="slrn-badges-count">
+                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">{{ BadgesSkills.UserBadgesCollection|length }}/{{ BadgesSkills.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
+            </div>
+            <div class="slrn-badges-list">
+                {% import _self as badgeList %}
+                {{ badgeList.badgeItem( BadgesSkills.BadgesCollection, BadgesSkills.UserBadgesCollection ) }}
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -93,10 +93,24 @@ class ProfileController extends Controller
      * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function viewAction(User $loggedUser)
+    public function viewAction(User $loggedUser, $page = 1)
     {
+        $doctrine = $this->getDoctrine();
+        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+
+        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($loggedUser, false);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new Pagerfanta($adapter);
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
+
         return array(
-            'user'  => $loggedUser
+            'user'  => $loggedUser,
+			'pager'    => $pager
         );
     }
 

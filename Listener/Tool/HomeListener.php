@@ -112,6 +112,7 @@ class HomeListener
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
         $tabId = 0;
+
         $firstHomeTab = reset($workspaceHomeTabConfigs);
 
         if ($firstHomeTab) {

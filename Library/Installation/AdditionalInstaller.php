@@ -13,11 +13,16 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
+use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
 class AdditionalInstaller extends BaseInstaller
 {
     private $logger;
+    private $currentVersion;
+    private $targetVersion;
 
     public function __construct()
     {
@@ -35,6 +40,16 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate($currentVersion, $targetVersion)
     {
+        if ( strpos( $targetVersion, 'dev' ) !== false ) {
+            $this->targetVersion = $this->getTargetVersion();
+            $targetVersion = $this->targetVersion;
+        }
+        
+        if ( strpos( $currentVersion, 'dev' ) !== false ) {
+            $this->currentVersion = $this->getCurrentVersion();
+            $currentVersion = $this->currentVersion;
+        }
+        
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
 
@@ -55,8 +70,17 @@ class AdditionalInstaller extends BaseInstaller
 
     public function postUpdate($currentVersion, $targetVersion)
     {
+
         $this->setLocale();
 
+        if ( strpos( $targetVersion, 'dev' ) !== false ) {
+            $targetVersion = $this->targetVersion;
+        }
+        
+        if ( strpos( $currentVersion, 'dev' ) !== false ) {
+            $currentVersion = $this->currentVersion;
+        }
+        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -135,6 +159,18 @@ class AdditionalInstaller extends BaseInstaller
             $updater021200->setLogger($this->logger);
             $updater021200->postUpdate();
         }
+
+        if (version_compare($currentVersion, '2.14.0', '<')) {
+            $this->buildDefaultTemplate();
+            $updater021400 = new Updater\Updater021400($this->container);
+            $updater021400->setLogger($this->logger);
+            $updater021400->postUpdate();
+        }
+        
+        // Update or create version.json file with current version
+        if (  version_compare( $currentVersion, $targetVersion, '<') ) {
+           $this->writeVersionFile( $targetVersion );
+        }
     }
 
     private function setLocale()
@@ -150,5 +186,86 @@ class AdditionalInstaller extends BaseInstaller
         $this->log('Creating default workspace template...');
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
         TemplateBuilder::buildDefault($defaultTemplatePath);
+    }
+    
+    private function createAclTablesIfNotExist()
+    {
+        $this->log('Checking acl tables are initialized...');
+        $command = new InitAclCommand();
+        $command->setContainer($this->container);
+        $command->run(new ArrayInput(array()), new NullOutput() );
+    }
+    
+    public function getCurrentVersion()
+    {
+        $fileUri = $this->getVersionFileUri( 'version.json' );
+        
+        if ( $fileUri ) {
+            $decodedFile = $this->getContentAndDecode( $fileUri );
+            $versionNumber = $decodedFile['currentVersion'];
+        } else {
+            $versionNumber = 2.11;
+        }
+        $this->log( 'Current version: ' . $versionNumber );
+        return $versionNumber;
+    }
+    
+    private function getTargetVersion()
+    {
+        
+        $fileUri = $this->getVersionFileUri( 'composer.json' );
+        
+        if ( $fileUri ) {
+            $decodedFile = $this->getContentAndDecode( $fileUri );
+            $versionNumber = $decodedFile['extra']['branch-alias'];
+            if ( $versionNumber ) {
+                foreach ( $versionNumber as $key => $value ) {
+                   $versionNumber = str_replace ( '.x-dev', '', $value );
+                }
+            } else {
+                $this->log( 'No extra section in composer.json' );
+                $versionNumber = null;
+            }
+        } else {
+            $versionNumber = false;
+        }
+
+        $this->log('Target version: '. $versionNumber );
+        return $versionNumber;
+    }
+    
+    private function writeVersionFile( $targetVersion )
+    {
+        $fileUri = $this->getVersionFileUri( 'version.json' );
+        
+        if ( ! $fileUri ) {
+            $fileUri = $this->getVersionFileUri( 'composer.json' );
+            $fileUri = str_replace( '/composer.json', '/version.json', $fileUri );
+        }
+        
+        $this->log( 'Updating version.json to : ' . $targetVersion );
+        $newVersion = json_encode( array( 'currentVersion' => $targetVersion ) );
+        $writing = file_put_contents( $fileUri, $newVersion);
+    }
+    
+    private function getVersionFileUri( $file )
+    {
+        $kernel = $this->container->get('kernel');
+        
+         try {
+            $fileUri = $kernel->locateResource('@ClarolineCoreBundle/'. $file );
+        } catch (\InvalidArgumentException $ex) {
+            $this->log( $file . ' not found.' );
+            return false;
+        } catch (\RuntimeException $ex ) {
+            $this->log( 'Illegal characters in file name' );
+            return false;
+        }
+        return $fileUri;        
+    }
+    
+    private function getContentAndDecode( $fileUri )
+    {
+        return json_decode( file_get_contents( $fileUri ), true );
     }
 }

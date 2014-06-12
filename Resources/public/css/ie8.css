@@ -1,0 +1,30 @@
+/* 
+ * This file is part of Solerni.
+ * 
+ * Copyright (C) 2014 Orange
+ * 
+ * Description: IE8 specific stylesheet
+ * 
+ * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
+ */
+
+.slrn-top-header__item { zoom: 1; display: inline; float: none !important; }
+#top_bar .slrn-logo { display: inline-block; }
+.slrn-facebook-connect[disabled] { background-color: #999; }
+.form-horizontal .control-label { text-align: left !important; }
+.form-horizontal input[type=checkbox] { border: 2px solid transparent; outline-width: 0; outline-color: transparent !important; outline-style: none !important; }
+.form-horizontal input[type=text],
+.form-horizontal input[type=email], 
+.form-horizontal input[type=password] { padding: 4px 12px 3px 12px; }
+
+.slrn-widget__list--railroad__pseudo {
+    content: "";
+    position: absolute;
+    width: .5em;
+    left: 1em;
+    background-color: #FF004F; 
+    top: 2em;
+}
+.slrn-widget__list--railroad .slrn-widget__list__item { z-index: 1; }
+.slrn-widget__list--railroad .slrn-widget__list__item.is-done:before { content: " "; }
+.btn-done-lesson.is-done:before { content: " \f00c"; }

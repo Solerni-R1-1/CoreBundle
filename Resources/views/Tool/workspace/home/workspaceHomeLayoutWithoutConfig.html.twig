@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
-
+{# WE DONT USE BREADCRUMBS
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -15,24 +15,33 @@
         )
     }}
 {% endblock %}
+#}
+{# SPECIAL BODY CLASS TO ADD PADDING TO BODY WHEN FIXED SUBNAV #}
+{% block bodyClasses %}subnavbar-fixed{% endblock %}
 
 {% block section_content %}
+    {# PAGE TITLE and EDITION BUTTON
+    <div class="panel-heading relative">
 
     <div class="panel-heading relative">
         <h3 class="panel-title">
             {{ 'home'|trans({}, 'tools') }}
 
         </h3>
+
         {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
             <div class="float-right-top">
-                <a class="btn btn-primary" href="{{ path( 'claro_display_workspace_home_tabs_with_config', { 'tabId': tabId, 'workspaceId': workspace.getId()}) }}">
+                <a class="btn btn-primary" href="{{ path( 'claro_display_workspace_home_tabs_with_config', { 'tabId': tabId, 'workspaceId': workspace.getId()}) }}" role="button">
                     <i id="switch-config-mode" class="icon-pencil"></i>
                 </a>
             </div>
         {% endif %}
     </div>
-
-    <div class="panel-body">
+    #}
+    <section class="col-xs-9 col-md-9">
+        <article class="js-chapter-container"></article>
+        
+        {# WORKSPACE TABS 
         <ul class="nav nav-tabs margin-bottom-md">
             {% for workspaceHomeTabConfig in workspaceHomeTabConfigs %}
                 {% set workspaceHomeTab = workspaceHomeTabConfig.getHomeTab() %}
@@ -53,7 +62,12 @@
                 </li>
             {% endfor %}
         </ul>
+        #}
 
+        {# RENDU DU COURS #}
+        {%  block blockLesson %}{% endblock %}
+
+        {# RENDU DES WIDGETS #}
         {% block homeTab %}{% endblock %}
-    </div>
+    </section>
 {% endblock %}

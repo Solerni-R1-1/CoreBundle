@@ -1,0 +1,35 @@
+{# LIST OF TABS ON THE TOPNAVBAR #}
+ <div class="slrn-content-container slrn-subnavbar-container navbar-fixed-top">
+    <div class="container">
+       {# {% if _resource is defined %}
+            {% set workspace = _resource.getResourceNode().getWorkspace() %}
+        {% endif %} #}
+        <ul class="slrn-subnavbar">
+        {% if is_registered %}
+            {# THE ACTUAL TABS #}
+              {% if solerniTabs is defined %}
+                  {% for solerniTab in solerniTabs %}
+                      <li class="slrn-subnavbar__item hometab-element active">
+                          <a class="slrn-subnavbar__link hometab-link" title="{{ solerniTab.title }}" href="{{ solerniTab.url }}">
+                              {{ solerniTab.name }}
+                          </a>
+                          {% if isCurrentPage( solerniTab.url ) %}<span class="slrn-item__marqueur"></span>{% endif %}
+                      </li>
+                  {% endfor %} 
+            {% endif %}
+        {% else %}
+            <li class="slrn-subnavbar__item hometab-element"><span class="slrn-subnavbar__link">Une formation gratuite ouverte à tous</span></li>
+        {% endif %}
+        </ul>
+        {% if is_registered %}
+            {# LINK TO PROFILE BADGES #}
+            <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}" class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges">{{ 'competence_badges' | trans({}, 'platform') }}</a>
+        {% else %}
+            {% if app.user.id is not defined  %}
+            <button class="btn btn-primary btn-inscrire js-btn-inscrire js-btn-login" disabled="disabled" data-action-url="{{ path( 'claro_registration_user_registration_form', {} ) }}">Je participe</button>
+            {% else %}
+            <button class="btn btn-primary btn-inscrire js-btn-inscrire" disabled="disabled" data-redirect-url="{{ app.session.get('solerni_apprendre_url') }}" data-action-url="{{ path( 'claro_workspace_add_user', { 'workspaceId': workspace.getId(), 'userId': app.user.id  } ) }}">Je participe</button>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
