@@ -1213,3 +1213,20 @@ input[type="file"] { height: auto; }
     color:#FFF;
     text-decoration: underline;
 }
+
+
+.ressource-breadcrumb {
+    margin-top: 1em;
+    padding: 0;
+}
+
+.ressource-breadcrumb li{
+    display: inline;
+}
+
+.ressource-breadcrumb li:after {
+    content: " > ";
+}
+.ressource-breadcrumb li:last-child:after {
+    content: "";
+}
