@@ -256,7 +256,6 @@ class SolerniController extends Controller
                 'message' => $router->generate('claro_message_list_received'),
 
                 'eval' => $static->getStaticPage('static_eval'),
-                // FIXME : resource manager en dur !!
                 'resource' => $router->generate('claro_workspace_open_tool', array(
                     'workspaceId' => $user->getPersonalWorkspace()
                         ->getId(),
@@ -267,7 +266,8 @@ class SolerniController extends Controller
                 ->getRepository('ClarolineCoreBundle:Message')
                 ->countUnread($user),
             
-            'renderingContext' => $renderingContext
+            'renderingContext' => $renderingContext,
+            'workspace' => $this->getDefaultWorskpace()
         );
 
     	return $this->render(
@@ -381,6 +381,7 @@ class SolerniController extends Controller
      */
     public function getDesktopMessagesBadgesAndEvalBlockWidgetAction(User $user)
     {
+        
         $doctrine = $this->getDoctrine();
         $router = $this->get('router');
         $translator = $this->get('translator');
@@ -403,11 +404,11 @@ class SolerniController extends Controller
             );
         }
 
-
         $badgeReturn = array(
             'badgesListPageUrl' => $router->generate('claro_profile_view_badges'),
             'lastBadge' => null,
         );
+        
         $userBadges = $user->getUserBadges();
         if(count($userBadges) > 0){
             $lastBadge = null;
@@ -419,18 +420,21 @@ class SolerniController extends Controller
                 }
             }
 
+            /* remove Soft Deletable Filter in case we have modified the badge after it was acquired */
+            $doctrine->getEntityManager()->getFilters()->disable('softdeleteable');
             $lastBadge = $lastBadge->getBadge();
             $badgeReturn['lastBadge'] = array(
-                'title' => $lastBadge->getName($this->getRequest()->getSession()->get('_locale')),
+                'title' => $lastBadge->getName(),
                 'summary' =>  $lastBadge->getDescription(),
                 'obj'   => $lastBadge,
                 //'type' => $translator->trans('knowledge_badges', array(), 'platform'),
                 'url' => $router->generate('claro_view_badge', array('slug' => $lastBadge->getSlug()))
             );
+            
         }
-     
+
         $evals = $doctrine->getRepository('IcapDropzoneBundle:Drop')->findByUser($user);
-        
+
         $lastEval = null;
         foreach ($evals as $eval) {
             if($lastEval == null || $eval->getDropDate() > $lastEval->getDropDate()) {
@@ -456,17 +460,8 @@ class SolerniController extends Controller
             );
         }
         
-        /* Need to find workspace associated.
-         * pasted from getDesktopLessonBlockWidgetAction methode
-         * TODO: refactor. Create method instead of duplicate. Need better way to find and store data.
-         */
-        $workspaceRepository = $doctrine->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-        $allWorkspaces = $workspaceRepository->findNonPersonal();
-        /* there should be only one */
-        foreach ( $allWorkspaces as $workspace ) {
-            $workspaceReturn = array( 'workspace' => $workspace );
-            break;
-        }
+        /* Need to find workspace associated. */
+        $workspaceReturn = array( 'workspace' => $this->getDefaultWorskpace() );
 
         return $this->render(
             'ClarolineCoreBundle:Partials:desktopMessagesBadgesAndEvalBlockWidget.html.twig',
@@ -796,7 +791,6 @@ class SolerniController extends Controller
             $current = $current->getNext();
         }
 
-
         return $current;
     }
 
@@ -890,8 +884,25 @@ class SolerniController extends Controller
             $details = $log->getDetails();
             $url = $router->generate('icap_lesson_chapter', array('resourceId' => $details['chapter']['lesson'], 'chapterId' => $details['chapter']['chapter']));
         }
-
-
+        
         return $url;
+    }
+    /*
+     * returns ClarolineCoreBundle:Workspace\AbstractWorkspace Object
+     * Just the first one found, for Solerni
+     */
+    private function getDefaultWorskpace() {
+        
+        /* Need to find workspace associated.
+         * pasted from getDesktopLessonBlockWidgetAction methode
+         * TODO: refactor. Create method instead of duplicate. Need better way to find and store data.
+         */
+        $doctrine = $this->getDoctrine();
+        $workspaceRepository = $doctrine->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $allWorkspaces = $workspaceRepository->findNonPersonal();
+        /* there should be only one */
+        foreach ( $allWorkspaces as $workspace ) {
+            return $workspace;
+        }
     }
 }

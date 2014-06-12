@@ -66,8 +66,8 @@
         <![endif]-->
     </head>
     {% set _bodyClasses = block("bodyClasses") %}
-    <body{% if _bodyClasses is not empty %} class="{% block bodyClasses %}{% endblock %}"{% endif %}>
-        <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+    <body{% if _bodyClasses is not empty %} class="{% block bodyClasses %}{% endblock %}"{% endif %}> 
+        <!--[if lte IE 8]><p class=chromeframe>Votre navigateur est <em>ancien !</em> <a href="http://browsehappy.com/">Mettez à jour votre navigateur</a> pour améliorer l'expérience de ce site.</p><![endif]-->
         {% block layout %}{% endblock %}
         {% block javascripts %}{% endblock %}
         <script>
