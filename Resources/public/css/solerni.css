@@ -1200,11 +1200,16 @@ input[type="file"] { height: auto; }
 }
 .chromeframe{
     display: block;
-    background-color: #F00;
+    background-color: #ff266b;
     color: #FFF;
     z-index: 9999999;
     position: fixed;
     width: 100%;
     text-align: center;
     top: 0;
+    height:30px;
+}
+.chromeframe a{
+    color:#FFF;
+    text-decoration: underline;
 }
