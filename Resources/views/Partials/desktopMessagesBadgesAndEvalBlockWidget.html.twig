@@ -55,7 +55,11 @@
                 {% endif %}
                 {% if lastEval == null %}Aucune évaluation en cours pour le moment{% else %}{{ lastEval.summary | textTruncate(10, '...') | raw }}{% endif %}</p>
             </div>
-            <span><a class='footer__link' href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">Obtenir des badges</a></span>
+            {% if isRegistered == true %}
+                <span><a class='footer__link' href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">Obtenir des badges</a></span>
+            {% else %}
+                <span><a class='footer__link' href="{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}">{{ 'more_about_badges'|trans({}, 'platform') }}</a></span>
+            {% endif %}
         </div>
     </div>
 </div>

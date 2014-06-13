@@ -240,6 +240,8 @@ class SolerniController extends Controller
             $thumbnail->fromImage($pathDft, $pathDftDest, 54, 54);
             $thb = 'tmb_54_54_' . $picDft;
         }
+        
+        $workspace = $this->getDefaultWorskpace();
 
         $return = array(
             'userFirstname' => $user->getFirstName(),
@@ -267,7 +269,8 @@ class SolerniController extends Controller
                 ->countUnread($user),
             
             'renderingContext' => $renderingContext,
-            'workspace' => $this->getDefaultWorskpace()
+            'workspace' => $workspace,
+            'isRegistered' => $this->isUserRegisteredinWorkspace( $user, $workspace )
         );
 
     	return $this->render(
@@ -291,17 +294,6 @@ class SolerniController extends Controller
 
         $allWorkspaces = $workspaceRepository->findNonPersonal();
         $router = $this->get('router');
-
-        $workspacesUsed = array();
-        if($user != null){
-            $userRoles = $user->getRoles(false);
-            foreach($userRoles as $roleName){
-                $userWorkspace = $roleRepository->findOneByName($roleName)->getWorkspace();
-                if($userWorkspace != null){
-                    $workspacesUsed[] = $userWorkspace->getId();
-                }
-            }
-        }
 
         $return =  array();
         $return['lessons'] = array();
@@ -341,7 +333,8 @@ class SolerniController extends Controller
                     }
                 }
 
-                $is_registered = in_array($workspace->getId(), $workspacesUsed);
+                $is_registered = $this->isUserRegisteredinWorkspace( $user, $workspace );
+                
                 if($is_registered){
                     $url = $this->getRouteToTheLastChapter($lesson, $user);
                     $this->get('session')->set('user_registered_in_lesson', true);
@@ -461,11 +454,13 @@ class SolerniController extends Controller
         }
         
         /* Need to find workspace associated. */
-        $workspaceReturn = array( 'workspace' => $this->getDefaultWorskpace() );
+        $workspace =  $this->getDefaultWorskpace();
+        $workspaceReturn = array( 'workspace' => $workspace );
+        $isRegistered = array ('isRegistered' => $this->isUserRegisteredinWorkspace( $user, $workspace ) );
 
         return $this->render(
             'ClarolineCoreBundle:Partials:desktopMessagesBadgesAndEvalBlockWidget.html.twig',
-            $messageReturn + $badgeReturn + $evalReturn + $workspaceReturn
+            $messageReturn + $badgeReturn + $evalReturn + $workspaceReturn + $isRegistered
         );
     }
 
@@ -904,5 +899,27 @@ class SolerniController extends Controller
         foreach ( $allWorkspaces as $workspace ) {
             return $workspace;
         }
+    }
+    /*
+     * Check if the user is registered to the workspace
+     * 
+     * @param $user Entity
+     * @param $workspace Entity
+     * 
+     * @return bool
+     */
+    
+    public function isUserRegisteredinWorkspace( User $user, AbstractWorkspace $workspace ) {
+        
+        $workspacesUsed = array();
+        
+        $userRoles = $user->getRoles(false);
+        foreach($userRoles as $roleName){
+            $userWorkspace = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Role')->findOneByName($roleName)->getWorkspace();
+            if($userWorkspace != null){
+                $workspacesUsed[] = $userWorkspace->getId();
+            }
+        }
+        return in_array($workspace->getId(), $workspacesUsed);
     }
 }
