@@ -70,7 +70,7 @@
     "target-dir": "Claroline/CoreBundle",
     "extra": {
         "branch-alias": {
-            "dev-release/openid": "2.14.x-dev"
+            "dev-develop": "2.14.x-dev"
         }
     }
 }
