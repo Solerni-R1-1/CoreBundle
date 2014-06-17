@@ -26,11 +26,12 @@ class MessageRepository extends NestedTreeRepository
      */
     public function findAncestors(Message $message)
     {
+        $level = $message->getLvl() + 1;
         $dql = "
             SELECT m FROM Claroline\CoreBundle\Entity\Message m
             WHERE m.lft BETWEEN m.lft AND m.rgt
             AND m.root = {$message->getRoot()}
-            AND m.lvl <= {$message->getLvl()}
+            AND m.lvl <= {$level}
         ";
 
         $query = $this->_em->createQuery($dql);
