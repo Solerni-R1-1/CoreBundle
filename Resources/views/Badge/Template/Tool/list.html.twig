@@ -1,20 +1,59 @@
+{# this the mes evaluations block #}
 {% if app.request.get('myBadgesFilter') == 'my_evals' %}
     {% set atLeastOne = false %}
     {% for workspaceBadge in badgePager %}
         {% if workspaceBadge.type == 'inprogress' %}
-            {% set badge     = workspaceBadge.badge %}
-            {% set buttonLink =  workspaceBadge.associatedResourceUrl %}
+            {% set badge = workspaceBadge.badge %}
+            {% set buttonLink = workspaceBadge.associatedResourceUrl %}
+            {# local variables #}
             {% set atLeastOne = true %}
+            {% set isOver = false %}
+            {% set isNotStarted = false %}
+            {% set userResult = false %}
+            {# check eval status #}
+            {% if workspaceBadge.associatedResource.dropzone.getEndReview() < date() %}
+                {% set isOver = true %}
+            {% endif %}
+            {% if workspaceBadge.associatedResource.dropzone.isNotStarted() %}
+                {% set isNotStarted = true %}
+            {% endif %}
+            {# check user eval status #}
+            {% if workspaceBadge.associatedResource.drop is defined %}
+                {% if workspaceBadge.associatedResource.drop.calculatedGrade is defined and workspaceBadge.associatedResource.drop.countFinishedCorrections >= workspaceBadge.associatedResource.dropzone.expectedTotalCorrection %}
+                    {% if workspaceBadge.associatedResource.drop.calculatedGrade >= workspaceBadge.associatedResource.dropzone.minimumScoreToPass %}
+                        {% set userResult = 'succeed' %}
+                    {% else %}
+                        {% set userResult = 'failed' %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            
             <li class="slrn-my_badges-list__item">
                 <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="slrn-my_badges-list__item__image" />
                 <section class="slrn-my_badges-list__body">
                     <h6 class="slrn-my_badges-list__item__title slrn-my_badges-list__item__title--my_evals">Badge &laquo; {{ badge.name }} &raquo;</h6>
                     <article class="slrn-my_badges-list__content slrn-my_badges-list__content--my_evals presentation__mooc__meta__date">
-                        <p>{{'start_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.getStartAllowDrop()|date('d/m/Y') }}<br />
-                        {{'end_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.getEndReview()|date('d/m/Y') }}</p>
+                        <p>{{'start_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.dropzone.getStartAllowDrop()|date('d/m/Y') }}<br />
+                        {{'end_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.dropzone.getEndReview()|date('d/m/Y') }}</p>
                     </article>
                     <footer class="slrn-my_badges-list__footer">
-                        {% if buttonLink %}
+                         {% if userResult == 'succeed' %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalSucceed'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif userResult == 'failed' %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalFailed'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif isOver == true %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalOver'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif isNotStarted == true %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalNotStarted'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif buttonLink %}
                             <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
                                 {{'continue_evaluation'|trans({}, 'solerni')}}
                             </a>
@@ -28,7 +67,7 @@
         <p>Vous n'avez aucun badge de compétences en cours d'évaluation pour le moment. Découvrez les badges de compétences proposée par le MOOC &laquo; Le digital, vivons-le ensemble &raquo;.</p>
     {% endif %}
 {% else %}
-
+    {# this is the badges de competences pages #}
     <ul class="panel-body my_badges slrn-my_badges-list">
         {% set badgesToGo = nbTotalBadges - nbAcquiredBadges %}
         <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ badgesToGo }} badge{% if badgesToGo > 1 %}s{% endif %} à obtenir</h5>
@@ -44,6 +83,29 @@
                         {% set buttonLink =  workspaceBadge.associatedResourceUrl %}
                     {% endif %}
             {% endif %}
+            {# local variables #}
+            {% set atLeastOne = true %}
+            {% set isOver = false %}
+            {% set isNotStarted = false %}
+            {% set userResult = false %}
+            {# check eval status #}
+            {% if workspaceBadge.associatedResource.dropzone.getEndReview() < date() %}
+                {% set isOver = true %}
+            {% endif %}
+            {% if workspaceBadge.associatedResource.dropzone.isNotStarted() %}
+                {% set isNotStarted = true %}
+            {% endif %}
+            {# check user eval status #}
+            {% if workspaceBadge.associatedResource.drop is not null %}
+                {% if workspaceBadge.associatedResource.drop.calculatedGrade is defined and workspaceBadge.associatedResource.drop.countFinishedCorrections >= workspaceBadge.associatedResource.dropzone.expectedTotalCorrection %}
+                    {% if workspaceBadge.associatedResource.drop.calculatedGrade >= workspaceBadge.associatedResource.dropzone.minimumScoreToPass %}
+                        {% set userResult = 'succeed' %}
+                    {% else %}
+                        {% set userResult = 'failed' %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        
             <li class="slrn-my_badges-list__item">
                 <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="slrn-my_badges-list__item__image" />
                 <section class="slrn-my_badges-list__body">
@@ -57,11 +119,29 @@
                     <article class="slrn-my_badges-list__content">{{ badge.criteria | raw }}</article>
                     <footer class="slrn-my_badges-list__footer">
                         <span class="slrn-gratuit-icon">prix gratuit</span>
-                        {% if buttonLink %}
+                         {% if 'owned' == badgeType %}
                             <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
-                                {% if 'owned' == badgeType %} 
-                                    {{'my_badge_details'|trans({}, 'platform')}}
-                                {% endif %}
+                                {{'my_badge_details'|trans({}, 'platform')}}
+                            </a>
+                         {% elseif userResult == 'succeed' %}
+                            {{ workspaceBadge.associatedResource.drop.calculatedGrade }}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalSucceed'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif userResult == 'failed' %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalFailed'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif isOver == true %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalOver'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif isNotStarted == true %}
+                            <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
+                                {{'evalNotStarted'|trans({}, 'solerni')}}
+                            </a>
+                        {% elseif buttonLink %}
+                            <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
                                 {% if 'inprogress' == badgeType %} 
                                    {{'go_to_evaluation'|trans({}, 'platform')}}
                                 {% endif %}

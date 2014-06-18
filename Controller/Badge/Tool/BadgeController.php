@@ -80,7 +80,9 @@ class BadgeController extends Controller
         foreach ($ownedBadges as $ownedBadge) {
             $displayedBadges[] = array(
                 'type'  => 'owned',
-                'badge' => $ownedBadge
+                'badge' => $ownedBadge,
+                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $ownedBadge->getBadge(), $resourceType ),
+                'associatedResource' => $this->getResourceAssociatedWithBadge( $ownedBadge->getBadge(), $resourceType, $loggedUser )
             );
         }
 
@@ -89,7 +91,7 @@ class BadgeController extends Controller
                 'type'          => 'inprogress',
                 'badge'         => $inProgressBadge,
                 'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceType ),
-                'associatedResource' => $this->getResourceAssociatedWithBadge( $inProgressBadge, $resourceType )
+                'associatedResource' => $this->getResourceAssociatedWithBadge( $inProgressBadge, $resourceType, $loggedUser )
             );
         }
 
@@ -98,7 +100,7 @@ class BadgeController extends Controller
                 'type'  => 'available',
                 'badge' => $availableBadge,
                 'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceType ),
-                'associatedResource' => $this->getResourceAssociatedWithBadge( $availableBadge, $resourceType )
+                'associatedResource' => $this->getResourceAssociatedWithBadge( $availableBadge, $resourceType, $loggedUser )
             );
         }
 
@@ -207,18 +209,21 @@ class BadgeController extends Controller
     /*
      *  @return instance of Claroline\CoreBundle\Entity\Resource\ResourceNode if resource ID found
      */
-    public function getResourceAssociatedWithBadge( $badge, $resourceType ) {
+    public function getResourceAssociatedWithBadge( $badge, $resourceType, $loggedUser ) {
         
         if ( strpos( $resourceType, 'dropzone' ) ) {
             $associatedResource = array();
             $doctrine = $this->getDoctrine();
-            $evalRepo = $doctrine->getRepository('IcapDropzoneBundle:Dropzone');
+            $evalDropzoneRepo = $doctrine->getRepository('IcapDropzoneBundle:Dropzone');
+            $evalDropRepo = $doctrine->getRepository('IcapDropzoneBundle:Drop');
             
             foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
                 if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
                     $badgeRessourceNode = $BadgeRule->getResource();
                     if ( $badgeRessourceNode ) {
-                        $associatedResource = $evalRepo->findOneByResourceNode( $badgeRessourceNode );
+                        $associatedDropzone = $evalDropzoneRepo->findOneByResourceNode( $badgeRessourceNode );
+                        $associatedDrop = $evalDropRepo->findOneBy( array( 'dropzone' => $associatedDropzone, 'user' => $loggedUser ) );
+                        $associatedResource = array( 'dropzone' => $associatedDropzone, 'drop' => $associatedDrop );
                     }
                 }
             }

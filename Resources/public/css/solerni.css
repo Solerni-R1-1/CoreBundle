@@ -1228,3 +1228,13 @@ input[type="file"] { height: auto; }
 .ressource-breadcrumb li+li:before{
     content: ">";
 }
+
+.btn-gris{
+	background-color: #999999;
+	border-color: #999999;
+    color: #FFF;
+}
+.btn-gris:hover, .btn-gris:focus, .btn-gris:active, .btn-gris.active, .open .dropdown-toggle.btn-gris {
+	background-color: #888686;
+	border-color: #888686;
+}
