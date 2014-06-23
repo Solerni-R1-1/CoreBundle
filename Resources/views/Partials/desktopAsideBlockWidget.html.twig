@@ -16,7 +16,10 @@
                 <li class="dsk__menu__item"><span class="dsk__menu__span"><a class='{% if dashboardIsActive is defined %}{{ dashboardIsActive }}{% endif %}dsk__menu__link' href="{{ path( 'claro_desktop_open' ) }}">{{ 'dashboard' | trans({}, 'platform') }}</a></span></li>
                 {% if renderingContext == 'badges' %}{% set badgesIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='{% if badgesIsActive is defined %}{{ badgesIsActive }}{% endif %}dsk__menu__link' href="{{ path('claro_profile_view_badges') }}">Mes badges</a></span></li>
-                {# <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='dsk__menu__link dsk_menu__link--disabled' href="#{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}">Mes évaluations</a></span></li> #}
+                {% if isRegistered == true %}
+                {% if renderingContext == 'my_badges' %}{% set myBadgesIsActive = 'active ' %}{% endif %}
+                    <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='{% if myBadgesIsActive is defined %}{{ myBadgesIsActive }}{% endif %}dsk__menu__link' href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges', 'myBadgesFilter': 'my_evals' } ) }}">Mes évaluations</a></span></li>
+                {% endif %}
                 {% if renderingContext == 'my_library' %}{% set myLibraryIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='{% if myLibraryIsActive is defined %}{{ myLibraryIsActive }}{% endif %}dsk__menu__link' href="{{ urls.resource }}">{{ 'my_library' | trans({}, 'platform') }}</a></span></li>
                 <li class="dsk__menu__item">

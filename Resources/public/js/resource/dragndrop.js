@@ -155,19 +155,22 @@
     }
 
     function onFiles(files) {
-        var maxSize = $('#data-attributes').attr('data-max-post-size');
-        var lastChar = maxSize.substr(maxSize.length - 1);
-        var varSize = maxSize.slice(0, maxSize.length - 1);
+        var maxSize = $('#data-attributes').attr('data-max-post-size');  //16M
+        var lastChar = maxSize.substr(maxSize.length - 1);               // M
+        var varSize = maxSize.slice(0, maxSize.length - 1);              //16
         var size = maxSize;
 
-        FileAPI.each(files, function (file) {
-            if (maxSize !== 0) {
-                switch(lastChar) {
-                    case 'M': size = varSize * FileAPI.MB; break;
-                    case 'K': size = varSize * FileAPI.KB; break;
-                    case 'G': size = varSize * FileAPI.GB; break;
-                }
+        if (maxSize !== 0) {
+            switch(lastChar) {
+                case 'M': size = varSize * FileAPI.MB; break;
+                case 'K': size = varSize * FileAPI.KB; break;
+                case 'G': size = varSize * FileAPI.GB; break;
             }
+        } 
+
+        FileAPI.each(files, function (file) {
+
+            alert(file.size +"  "+ size);
 
             if (file.size >= size) {
                 showErrorMessage(Translator.get('platform:max_size_is', {'size': maxSize}));

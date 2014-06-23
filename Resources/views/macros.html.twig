@@ -60,6 +60,22 @@
     {% endspaceless %}
 {% endmacro %}
 
+{% macro slrnBreadcrumbs(elements) %}
+    {% spaceless %}
+    <ul class="ressource-breadcrumb breadcrumb">
+        {% for element in elements %}
+            <li{% if element['href'] == "" %} class="active"{% endif %}>
+                {% if element['href'] != "" %}
+                    <a href="{{ element['href'] }}">{% if element['icon'] is defined %}<i class="{{ element['icon'] }}"></i> {% endif %}{{ element['name'] }}</a>
+                {% else %}
+                    {{ element['name'] }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endspaceless %}
+{% endmacro %}
+
 {% macro desktopBreadcrumbs(elements) %}
     {% import _self as self %}
 
@@ -80,19 +96,14 @@
     {% set workspaceElements =
         [
             {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_by_user')
-            },
-            {
-                'name': workspace.getName() ~ ' (' ~  workspace.getCode() ~ ') ',
-                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+                'name': 'Les ressources du mooc « ' ~ workspace.getName() ~ ' »',
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'})
             }
         ]
     %}
     {% set finalElements = workspaceElements|merge(elements) %}
 
-    {{ self.breadcrumbs(finalElements) }}
+    {{ self.slrnBreadcrumbs(finalElements) }}
 {% endmacro %}
 
 {% macro displayUser(user) %}
