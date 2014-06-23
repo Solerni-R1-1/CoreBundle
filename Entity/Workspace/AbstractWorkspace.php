@@ -131,6 +131,16 @@ abstract class AbstractWorkspace
     */
 
     protected $creationDate;
+    
+    /**
+     * @var Claroline\CoreBundle\Entity\Workspace\Mooc
+     * 
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Mooc")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    
+    protected $mooc;
+    
 
     public function __construct()
     {
@@ -274,5 +284,18 @@ abstract class AbstractWorkspace
             return (new \Datetime($date));
         }
     }
+
+    public function getMooc()
+    {
+        return $this->mooc;
+    }
+
+    public function setMooc(Mooc $mooc)
+    {
+        $this->mooc = $mooc;
+        
+        return $this;
+    }
+
 
 }

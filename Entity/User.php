@@ -293,6 +293,19 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="is_first_visit", type="boolean")
      */
     protected $isFirstVisit = true;
+    
+    
+     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\MoocSession",
+     *      inversedBy="users"
+     * )
+     * @ORM\JoinTable(name="claro_user_mooc_session")
+     */
+    protected $moocSessions;
+    
 
     public function __construct()
     {
@@ -306,6 +319,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->userBadges        = new ArrayCollection();
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
+        $this->moocSessions      = new ArrayCollection();
     }
 
     /**
@@ -985,5 +999,17 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         $this->isFirstVisit = $boolean;
     }
+
+    public function getMoocSessions()
+    {
+        return $this->moocSessions;
+    }
+
+    public function setMoocSessions(ArrayCollection $moocSessions)
+    {
+        $this->moocSessions = $moocSessions;
+    }
+
+
 
 }
