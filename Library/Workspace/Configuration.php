@@ -27,6 +27,7 @@ class Configuration
     private $displayable = false;
     private $selfRegistration = false;
     private $selfUnregistration = false;
+    private $isMooc = false;
     /**
      * If you want to use the role_anonymous from the platform, use
      * 'ROLE_ANONYMOUS'.
@@ -201,5 +202,13 @@ class Configuration
     public function getSelfUnregistration()
     {
         return $this->selfUnregistration;
+    }
+    
+    public function setIsMooc($isMooc) {
+        $this->isMooc = $isMooc;
+    }
+    
+    public function isMooc() {
+        return $this->isMooc;
     }
 }

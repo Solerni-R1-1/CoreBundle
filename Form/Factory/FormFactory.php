@@ -57,6 +57,7 @@ class FormFactory
     const TYPE_PLATFORM_MAIL_SERVER = 'platform_mail_server';
     const TYPE_PLATFORM_MAIL_INSCRIPTION = 'platform_mail_inscription';
     const TYPE_AGENDA_IMPORTER = 'import_agenda_file';
+    const TYPE_MOOC = 'mooc';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -193,6 +194,10 @@ class FormFactory
         ),
         self:: TYPE_AGENDA_IMPORTER => array(
             'formType' => 'Claroline\CoreBundle\Form\ImportAgendaType'
+        ),
+        self::TYPE_MOOC => array(
+            'formType' => 'Claroline\CoreBundle\Form\Workspace\MoocType',
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\Mooc'
         )
     );
 
@@ -208,7 +213,7 @@ class FormFactory
         $this->factory = $factory;
     }
 
-    public function create($type, array $typeArgs = array(), $entityVar = null)
+    public function create($type, $typeArgs = array(), $entityVar = null)
     {
         if (!isset(self::$types[$type])) {
             throw new UnknownTypeException(

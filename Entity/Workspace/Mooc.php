@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Mooc
@@ -24,14 +26,14 @@ class Mooc
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="alias", type="string", length=255)
+     * @ORM\Column(name="alias", type="string", length=255, nullable=true)
      */
     private $alias;
 
@@ -39,112 +41,123 @@ class Mooc
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="desc_img", type="string", length=255)
+     * @ORM\Column(name="desc_img", type="string", length=255, nullable=true)
      */
     private $descImg;
+    
+     /**
+     * @var UploadedFile
+     *
+     * @Assert\Image(
+     *     maxSize = "2048k",
+     *     minWidth = 64,
+     *     minHeight = 64
+     * )
+     */
+    protected $file;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="post_end_action", type="integer")
+     * @ORM\Column(name="post_end_action", type="integer", nullable=true)
      */
     private $postEndAction;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_public", type="boolean")
+     * @ORM\Column(name="is_public", type="boolean", nullable=true)
      */
     private $isPublic;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="duration", type="string", length=255)
+     * @ORM\Column(name="duration", type="string", length=255, nullable=true)
      */
     private $duration;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="weekly_time", type="string", length=255)
+     * @ORM\Column(name="weekly_time", type="string", length=255, nullable=true)
      */
     private $weeklyTime;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="cost", type="integer")
+     * @ORM\Column(name="cost", type="integer", nullable=true)
      */
     private $cost;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="language", type="string", length=10)
+     * @ORM\Column(name="language", type="string", length=10, nullable=true)
      */
     private $language;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="has_video", type="boolean")
+     * @ORM\Column(name="has_video", type="boolean", nullable=true)
      */
     private $hasVideo;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="has_subtitle", type="boolean")
+     * @ORM\Column(name="has_subtitle", type="boolean", nullable=true)
      */
     private $hasSubtitle;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prerequisites", type="text")
+     * @ORM\Column(name="prerequisites", type="text", nullable=true)
      */
     private $prerequisites;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="team_description", type="text")
+     * @ORM\Column(name="team_description", type="text", nullable=true)
      */
     private $teamDescription;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="has_facebook_share", type="boolean")
+     * @ORM\Column(name="has_facebook_share", type="boolean", nullable=true)
      */
     private $hasFacebookShare;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="has_tweeter_share", type="boolean")
+     * @ORM\Column(name="has_tweeter_share", type="boolean", nullable=true)
      */
     private $hasTweeterShare;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="has_gplus_share", type="boolean")
+     * @ORM\Column(name="has_gplus_share", type="boolean", nullable=true)
      */
     private $hasGplusShare;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="has_linkin_share", type="boolean")
+     * @ORM\Column(name="has_linkin_share", type="boolean", nullable=true)
      */
     private $hasLinkedinShare;
     
@@ -162,7 +175,7 @@ class Mooc
     /**
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      * 
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="mooc")
      * 
      */
     private $workspace;
@@ -610,12 +623,80 @@ class Mooc
         return $this;
     }
 
-    public function setWorkspace(Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace)
+    public function setWorkspace(\Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace $workspace)
     {
         $this->workspace = $workspace;
         
         return $this;
     }
+    
+    /**
+     * @param UploadedFile $file
+     *
+     * @return Mooc
+     */
+    public function setFile(UploadedFile $file)
+    {
+         $this->file = $file;
 
+        return $this;
+    }
 
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+    
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
+        return sprintf("uploads%smooc", DIRECTORY_SEPARATOR);
+    }
+
+     /**
+     * @throws \Exception
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $uploadRootDir = sprintf(
+            '%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s',
+            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
+        );
+        $realpathUploadRootDir = realpath($uploadRootDir);
+
+        if (false === $realpathUploadRootDir) {
+            throw new \Exception(
+                sprintf(
+                    "Invalid upload root dir '%s'for uploading badge images.",
+                    $uploadRootDir
+                )
+            );
+        }
+
+        return $realpathUploadRootDir;
+    }
+    
+     /**
+     * @return null|string
+     */
+    public function getAbsolutePath()
+    {
+        return (null === $this->descImg) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->descImg;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getWebPath()
+    {
+        return (null === $this->descImg) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->descImg;
+    }
 }

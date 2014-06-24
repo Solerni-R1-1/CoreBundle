@@ -26,7 +26,7 @@ class WorkspaceEditType extends AbstractType
      *
      * @param string $username
      */
-    public function __construct($username = null, $creationDate = null, $number = null)
+    public function __construct($username = null, $creationDate = null, $number = null )
     {
         $this->username = $username;
         $this->creationDate = $creationDate;

@@ -172,6 +172,7 @@ class WorkspaceManager
         $workspace->setDisplayable($config->isDisplayable());
         $workspace->setSelfRegistration($config->getSelfRegistration());
         $workspace->setSelfUnregistration($config->getSelfUnregistration());
+        $workspace->setIsMooc($config->isMooc());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);

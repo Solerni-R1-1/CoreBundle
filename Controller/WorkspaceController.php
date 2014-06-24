@@ -262,7 +262,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE );
 
         return array('form' => $form->createView());
     }
@@ -283,7 +283,7 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE );
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
@@ -299,14 +299,21 @@ class WorkspaceController extends Controller
             $config->setWorkspaceCode($form->get('code')->getData());
             $config->setDisplayable($form->get('displayable')->getData());
             $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());            
+            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
             $config->setWorkspaceDescription($form->get('description')->getData());
+            $config->setIsMooc($form->get('isMooc')->getData());
             
             $user = $this->security->getToken()->getUser();
-            $this->workspaceManager->create($config, $user);
+            $workspace = $this->workspaceManager->create($config, $user);
             $this->tokenUpdater->update($this->security->getToken());
-            $route = $this->router->generate('claro_workspace_list');
-
+            
+            if ( $form->get('isMooc')->getData() ) {
+                $route = $this->router->generate('claro_workspace_edit_form', array('workspace' => $workspace->getId() ));
+            } else {
+                $route = $this->router->generate('claro_workspace_list');
+            }
+            
+            //$route = $this->router->generate('claro_workspace_list');
             return new RedirectResponse($route);
         }
 
