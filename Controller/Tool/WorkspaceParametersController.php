@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Form\Workspace\MoocType;
 
 class WorkspaceParametersController extends Controller
 {
@@ -170,6 +171,9 @@ class WorkspaceParametersController extends Controller
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
+        if ( $workspace->isMooc() ) { 
+            $form->add('Mooc', new MoocType( $options ));
+        }
         
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(

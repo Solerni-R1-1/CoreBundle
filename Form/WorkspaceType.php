@@ -15,9 +15,17 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Form\Workspace\MoocType;
 
 class WorkspaceType extends AbstractType
 {
+    
+    private $options;
+
+    public function __construct( $options = array() ) {
+        $this->options = $options;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('required' => true));
@@ -69,6 +77,8 @@ class WorkspaceType extends AbstractType
                 'attr' => array('checked' => 'checked')
             )
         );
+        $builder->add('isMooc', 'checkbox', array( 'required' => false, 'data' => true ));
+ 
     }
 
     public function getName()

@@ -135,11 +135,16 @@ abstract class AbstractWorkspace
     /**
      * @var Claroline\CoreBundle\Entity\Workspace\Mooc
      * 
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Mooc")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Mooc", cascade={"persist", "remove"}, mappedBy="workspace")
      */
     
     protected $mooc;
+    
+    /**
+     *
+     * @var boolean
+     */
+    protected $isMooc;
     
 
     public function __construct()
@@ -296,6 +301,17 @@ abstract class AbstractWorkspace
         
         return $this;
     }
+    
+    public function isMooc() {
+        return ( null !== $this->getMooc() );
+    }
 
+    public function setIsMooc( $isMooc ) {
+        if ( $isMooc && ! $this->getMooc() ) {
+            $mooc = new Mooc();
+            $mooc->setWorkspace($this);
+            $this->setMooc($mooc);
+        }
+    }
 
 }
