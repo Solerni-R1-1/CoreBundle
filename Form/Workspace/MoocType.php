@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MoocType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -18,12 +18,13 @@ class MoocType extends AbstractType
             ->add('title', 'text', array('required' => true))
             ->add('alias', 'text', array('required' => false))
             ->add('description','textarea', array('required' => true))
-            ->add('file', 'file', array('label' => 'mooc_desc_image', 'required' => true))
+            ->add('file', 'file', array('required' => false))
+            ->add('illustrationPath', 'text', array('label' => ' ', 'required' => true, 'attr' => array('class' => 'hide')))
             ->add('postEndAction', 'choice', array('choices' => array('empty_value' => 'Choisir une action', '1' => 'Fermer', '2' => 'Supprimer' ), 'required' => false))
             ->add('duration', 'text', array('required' => false))
             ->add('weeklyTime', 'text', array('required' => false))
             ->add('cost', 'integer', array('required' => false))
-            ->add('language', 'choice', array('choices' => array('empty_value' => 'Choisir une langue', 'fr_FR' => 'français', 'en_EN' => 'Anglais' ), 'required' => true))
+            ->add('language', 'choice', array('choices' => array('empty_value' => 'Choisir une langue', 'fr_FR' => 'Français', 'en_EN' => 'Anglais' ), 'required' => true))
             ->add('hasVideo', 'checkbox', array('required' => false))
             ->add('hasSubtitle', 'checkbox', array('required' => false))
             ->add('prerequisites','tinymce', array('required' => false))
@@ -32,7 +33,7 @@ class MoocType extends AbstractType
             ->add('hasTweeterShare', 'checkbox', array('required' => false))
             ->add('hasGplusShare', 'checkbox', array('required' => false))
             ->add('hasLinkedinShare', 'checkbox', array('required' => false))
-            ->add('moocSessions', 'collection', array('type' => new MoocSessionType, 'allow_add' => true, 'by_reference' => false))
+            ->add('moocSessions', 'collection', array('type' => new MoocSessionType(), 'allow_add' => true, 'allow_delete' => true, 'by_reference' => false))
         ;
     }
     
@@ -42,7 +43,8 @@ class MoocType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Workspace\Mooc'
+            'data_class' => 'Claroline\CoreBundle\Entity\Workspace\Mooc',
+             'translation_domain' => 'platform'
         ));
     }
 

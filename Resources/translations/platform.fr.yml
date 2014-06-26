@@ -768,7 +768,7 @@ workspace_edit_form_creator : 'Créateur de l''espace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
-workspace_edit_form_number : Nombre de personnes inscrit à l''espace
+workspace_edit_form_number : Nombre de personnes inscrit à l'espace
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
@@ -872,3 +872,28 @@ go_to_evaluation: 'Aller dans mon espace d''évaluation'
 get_this_badge: 'Obtenir ce badge'
 my_evals: 'Mes évaluations'
 get_more_badges: 'Obtenir plus de badges'
+
+#Mooc Form Edit
+workspace_form_isMooc: 'Mooc'
+claroline_corebundle_workspace_mooc: 'Formulaire d''édition du MOOC'
+claroline_corebundle_workspace_mooc_title: 'Titre'
+claroline_corebundle_workspace_mooc_alias: 'Alias'
+claroline_corebundle_workspace_mooc_description: 'Description'
+claroline_corebundle_workspace_mooc_file: 'Image d''illustration'
+claroline_corebundle_workspace_mooc_postEndAction: 'Après fermeture'
+claroline_corebundle_workspace_mooc_duration: 'Durée'
+claroline_corebundle_workspace_mooc_weeklyTime: 'Durée hebdomadaire'
+claroline_corebundle_workspace_mooc_language: 'langue'
+claroline_corebundle_workspace_mooc_cost: 'Tarif'
+claroline_corebundle_workspace_mooc_hasVideo: 'Vidéos'
+claroline_corebundle_workspace_mooc_hasSubtitle: 'Avec sous-titres'
+claroline_corebundle_workspace_mooc_prerequisites: 'Prérequis'
+claroline_corebundle_workspace_mooc_teamDescription: 'Equipe pédagogique'
+claroline_corebundle_workspace_mooc_hasFacebookShare: 'Activer le partage Facebook'
+claroline_corebundle_workspace_mooc_hasTweeterShare: 'Activer le partage Twitter'
+claroline_corebundle_workspace_mooc_hasGplusShare: 'Activer le partage G+'
+claroline_corebundle_workspace_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
+
+workspace_edit: 'Gestion des paramètres du workspace'
+mooc_edit: 'Gestion des paramètres du MOOC'
+sessions_edit: 'Gestion des sessions du MOOC'

@@ -40,6 +40,7 @@ class WorkspaceEditType extends AbstractType
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
+        
         $builder->add('name', 'text', array('required' => true));
         $builder->add('code', 'text', array('required' => true));
         $builder->add(

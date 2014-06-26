@@ -313,7 +313,6 @@ class WorkspaceController extends Controller
                 $route = $this->router->generate('claro_workspace_list');
             }
             
-            //$route = $this->router->generate('claro_workspace_list');
             return new RedirectResponse($route);
         }
 
