@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Doctrine\Common\Util\ClassUtils;
+
 /*
  * Reusable code in indexable classes 
  */

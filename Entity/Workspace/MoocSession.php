@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\AbstractIndexable;
 
 /**
  * MoocSession
@@ -11,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="claro_mooc_session")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\MoocSessionRepository")
  */
-class MoocSession
+class MoocSession extends AbstractIndexable
 {
     /**
      * @var integer
@@ -259,7 +260,7 @@ class MoocSession
     
     /**
      * 
-     * @return mooc
+     * @return Mooc
      */
     public function getMooc()
     {
@@ -277,5 +278,33 @@ class MoocSession
         return $this;
     }
 
-    
+    public function fillIndexableDocument(&$doc)
+    {
+       $doc = parent::fillIndexableDocument($doc);
+       
+       $doc->start_date             = $this->getStartDate();
+       $doc->end_date               = $this->getEndDate();
+       $doc->start_inscription_date = $this->getStartInscriptionDate();
+       $doc->end_inscription_date   = $this->getEndInscriptionDate();
+       $doc->max_users              = $this->getMaxUsers();
+       $doc->title                  = $this->getTitle();
+       
+       $mooc                        = $this->getMooc();
+       $doc->mooc_id                = $mooc->getId();
+       $doc->mooc_illustration_path = $mooc->getIllustrationWebPath();
+       $doc->mooc_title             = $mooc->getTitle();
+       $doc->mooc_alias             = $mooc->getAlias();
+       $doc->mooc_description_t     = $mooc->getDescription();
+       $doc->mooc_is_public_b       = $mooc->getIsPublic();
+       $doc->mooc_duration          = $mooc->getDuration();
+       $doc->mooc_weekly_time       = $mooc->getWeeklyTime();
+       $doc->mooc_cost_i            = $mooc->getCost();
+       $doc->mooc_language          = $mooc->getLanguage();
+       $doc->mooc_has_video_b       = $mooc->getHasVideo();
+       $doc->mooc_has_subtitle_b    = $mooc->getHasSubtitle();
+       
+       $doc->wks_id                 = $mooc->getWorkspace()->getId();
+       
+       return $doc;
+    }
 }

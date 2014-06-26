@@ -321,7 +321,7 @@ class Mooc
     }
 
     /**
-     * Get isPublic
+     * isPublic
      *
      * @return boolean 
      */
@@ -611,6 +611,11 @@ class Mooc
         return $this->moocSessions;
     }
 
+    /**
+     * Get workspace 
+     * 
+     * @return AbstractWorkspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;
@@ -700,7 +705,7 @@ class Mooc
      /**
      * @return null|string
      */
-    public function getAbsolutePath()
+    public function getIllustrationAbsolutePath()
     {
         return (null === $this->illustrationPath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->illustrationPath;
     }
@@ -708,7 +713,7 @@ class Mooc
     /**
      * @return null|string
      */
-    public function getWebPath()
+    public function getIllustrationWebPath()
     {
         return (null === $this->illustrationPath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->illustrationPath;
     }
@@ -717,7 +722,7 @@ class Mooc
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function preUpload()
+    public function preUploadIllustration()
     {
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
@@ -729,7 +734,7 @@ class Mooc
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload()
+    public function uploadIllustration()
     {
         if (null === $this->file) {
             return;
@@ -743,9 +748,9 @@ class Mooc
     /**
      * @ORM\PostRemove()
      */
-    public function removeUpload()
+    public function removeUploadIllustration()
     {
-        if ($file = $this->getAbsolutePath()) {
+        if ($file = $this->getIllustrationAbsolutePath()) {
             unlink($file);
         }
     }
