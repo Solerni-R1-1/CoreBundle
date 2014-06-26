@@ -24,7 +24,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
     </div>
-    <form role="form" class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
+    <form role="form" class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form_mooc) }}>
         <div class="panel-body">
             {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}
                 <a href="#" class="workspace-delete-confirmation btn btn-default">
@@ -35,7 +35,20 @@
                 <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
             <hr />
+            {{'workspace_edit'|trans({}, 'platform')}}
             {{ form_widget(form) }}
+            {{'mooc_edit'|trans({}, 'platform')}}
+            {% do form_mooc.moocSessions.setRendered %}
+            {{ form_widget(form_mooc) }}
+            {{'sessions_edit'|trans({}, 'platform')}}
+                <div class="slrn-mooc_sessions" data-prototype="{{ form_widget(form_mooc.moocSessions.vars.prototype)|e }}">
+                    {% for session in form_mooc.moocSessions %}
+                        <div class="slrn-mooc_sessions__item">
+                            {{ form_row(session) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="#" id="js-mooc_sessions__add" class="btn btn-gris">Add</a>
             <hr />
             <h3 class="panel-title">{{ 'generate_url'|trans({}, 'platform') }}</h3> <br />
             {% if url is empty %}
@@ -76,4 +89,21 @@
 {% block javascripts %}
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/tool/workspace/workspace_parameters_edit.js') }}' type="text/javascript"></script>
+    <script>
+        var sessionPrototype = $('.slrn-mooc_sessions').data('prototype');
+        var newForm = sessionPrototype.replace( /__name__/g, $('.slrn-mooc_sessions__item').length );
+      
+        jQuery(document).ready(function() {
+             
+            $('#js-mooc_sessions__add').on('click', function(e) {
+                e.preventDefault();
+                $('.slrn-mooc_sessions').append('<div class="slrn-mooc_sessions__item">' + newForm + '</div>');
+                newForm = sessionPrototype.replace( /__name__/g, $('.slrn-mooc_sessions__item').length );
+            });
+            
+            $('#claroline_corebundle_workspace_mooc_file').on( "change", function() {
+                $('#claroline_corebundle_workspace_mooc_illustrationPath').val( 'dummy' );
+            });
+        });
+    </script>
 {% endblock %}

@@ -171,8 +171,11 @@ class WorkspaceParametersController extends Controller
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
-        if ( $workspace->isMooc() ) { 
-            $form->add('Mooc', new MoocType( $options ));
+       
+        /* Add custom form Mooc if workspace is mooc */
+        if ( $workspace->isMooc() ) {
+            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $workspace->getMooc() );
+            //$form->add('Mooc', new MoocType( $options ));
         }
         
         if ($workspace->getSelfRegistration()) {
@@ -187,6 +190,7 @@ class WorkspaceParametersController extends Controller
 
         return array(
             'form' => $form->createView(),
+            'form_mooc' => $form_mooc->createView(),
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
@@ -212,14 +216,19 @@ class WorkspaceParametersController extends Controller
         if (!$this->security->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
-
+        
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
+        $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $workspace->getMooc() );
         $form->handleRequest($this->request);
+        $form_mooc->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        if ($form->isValid() && $form_mooc->isValid() ) {
+            foreach ( $workspace->getMooc()->getMoocSessions() as $moocSession ) {
+                $moocSession->setMooc( $workspace->getMooc() );
+            }
             $this->workspaceManager->createWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();
@@ -241,10 +250,26 @@ class WorkspaceParametersController extends Controller
             $workspace->setName($wsRegisteredName);
             $workspace->setCode($wsRegisteredCode);
         }
-
+        
+        $user = $this->security->getToken()->getUser();
+        $count = $this->workspaceManager->countUsers($workspace->getId());
+        if ($workspace->getSelfRegistration()) {
+            $url = $this->router->generate(
+                'claro_workspace_subscription_url_generate',
+                array('workspace' => $workspace->getId()),
+                true
+            );
+        } else {
+            $url = '';
+        }
+        
         return array(
             'form' => $form->createView(),
+            'form_mooc' => $form_mooc->createView(),
             'workspace' => $workspace,
+            'url' => $url,
+            'user' => $user,
+            'count' => $count
         );
     }
 

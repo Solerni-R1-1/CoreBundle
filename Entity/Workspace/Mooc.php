@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="claro_mooc")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\MoocRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Mooc
 {
@@ -48,17 +49,21 @@ class Mooc
     /**
      * @var string
      *
-     * @ORM\Column(name="desc_img", type="string", length=255, nullable=true)
+     * @ORM\Column(name="illustration_path", type="string", length=255, nullable=true)
      */
-    private $descImg;
+    private $illustrationPath;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="illustration_name", type="string", length=255, nullable=true)
+     */
+    private $illustrationName;
     
      /**
-     * @var UploadedFile
      *
-     * @Assert\Image(
-     *     maxSize = "2048k",
-     *     minWidth = 64,
-     *     minHeight = 64
+     * @Assert\File(
+     *     maxSize = "2048k"
      * )
      */
     protected $file;
@@ -166,7 +171,8 @@ class Mooc
      * 
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\MoocSession",
-     *     mappedBy="mooc"
+     *     mappedBy="mooc",
+     *     cascade={"persist", "remove"}
      * )
      */
     private $moocSessions;
@@ -261,30 +267,24 @@ class Mooc
         return $this->description;
     }
 
-    /**
-     * Set descImg
-     *
-     * @param string $descImg
-     * @return Mooc
-     */
-    public function setDescImg($descImg)
-    {
-        $this->descImg = $descImg;
-
-        return $this;
+    public function getIllustrationPath() {
+        return $this->illustrationPath;
     }
 
-    /**
-     * Get descImg
-     *
-     * @return string 
-     */
-    public function getDescImg()
-    {
-        return $this->descImg;
+    public function getIllustrationName() {
+        return $this->illustrationName;
     }
 
-    /**
+    public function setIllustrationPath($illustrationPath) {
+        $this->illustrationPath = $illustrationPath;
+    }
+
+    public function setIllustrationName($illustrationName) {
+        $this->illustrationName = $illustrationName;
+    }
+
+        
+     /**
      * Set postEndAction
      *
      * @param integer $postEndAction
@@ -616,7 +616,7 @@ class Mooc
         return $this->workspace;
     }
 
-    public function setMoocSessions(\Doctrine\Common\Collections\ArrayCollection $moocSessions)
+    public function setMoocSessions($moocSessions)
     {
         $this->moocSessions = $moocSessions;
         
@@ -631,11 +631,11 @@ class Mooc
     }
     
     /**
-     * @param UploadedFile $file
+     * @param $file
      *
      * @return Mooc
      */
-    public function setFile(UploadedFile $file)
+    public function setFile($file)
     {
          $this->file = $file;
 
@@ -643,7 +643,7 @@ class Mooc
     }
 
     /**
-     * @return UploadedFile
+     * @return $file
      */
     public function getFile()
     {
@@ -670,9 +670,22 @@ class Mooc
             '%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s',
             __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
         );
-        $realpathUploadRootDir = realpath($uploadRootDir);
 
-        if (false === $realpathUploadRootDir) {
+        if ( ! realpath($uploadRootDir) ) {
+            try {
+                mkdir( $uploadRootDir );
+            } catch( \Symfony\Component\Filesystem\Exception\IOException $ex ) {
+                throw new \Exception(
+                    sprintf(
+                        "Cannot create '%s' folder %s",
+                        $uploadRootDir,
+                        $ex->getMessage()
+                    )
+                );
+            }
+        }
+        
+        if (false === realpath($uploadRootDir)) {
             throw new \Exception(
                 sprintf(
                     "Invalid upload root dir '%s'for uploading badge images.",
@@ -681,7 +694,7 @@ class Mooc
             );
         }
 
-        return $realpathUploadRootDir;
+        return realpath($uploadRootDir);
     }
     
      /**
@@ -689,7 +702,7 @@ class Mooc
      */
     public function getAbsolutePath()
     {
-        return (null === $this->descImg) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->descImg;
+        return (null === $this->illustrationPath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->illustrationPath;
     }
 
     /**
@@ -697,6 +710,44 @@ class Mooc
      */
     public function getWebPath()
     {
-        return (null === $this->descImg) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->descImg;
+        return (null === $this->illustrationPath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->illustrationPath;
     }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->file) {
+            // faites ce que vous voulez pour générer un nom unique
+            $this->illustrationPath = sha1(uniqid(mt_rand(), true)).'.'.$this->file->guessExtension();
+        }
+    }
+    
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->file) {
+            return;
+        }
+        
+        $this->file->move($this->getUploadRootDir(), $this->illustrationPath);
+
+        unset($this->file);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
+        }
+    }
+    
 }
