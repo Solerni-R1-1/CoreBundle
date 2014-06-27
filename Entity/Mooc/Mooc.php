@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Workspace;
+namespace Claroline\CoreBundle\Entity\Mooc;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Mooc
  *
  * @ORM\Table(name="claro_mooc")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\MoocRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\MoocRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Mooc
@@ -168,16 +168,25 @@ class Mooc
     
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocCategory",
+     *     mappedBy="moocs"
+     * )
+     */
+    private $categories;
+    
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
      * 
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\MoocSession",
+     *     targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession",
      *     mappedBy="mooc",
      *     cascade={"persist", "remove"}
      * )
      */
     private $moocSessions;
 
-    
     /**
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      * 
@@ -185,7 +194,6 @@ class Mooc
      * 
      */
     private $workspace;
-    
     
     /**
      * Get id
@@ -657,7 +665,14 @@ class Mooc
     public function setAboutPageDescription($aboutPageDescription) {
         $this->aboutPageDescription = $aboutPageDescription;
     }
+    
+    public function getCategories() {
+        return $this->categories;
+    }
 
+    public function setCategories($categories) {
+        $this->categories = $categories;
+    }
         
     /**
      * @return string
@@ -758,5 +773,5 @@ class Mooc
             unlink($file);
         }
     }
-    
+ 
 }

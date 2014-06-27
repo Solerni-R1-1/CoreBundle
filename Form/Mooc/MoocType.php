@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Form\Workspace;
+namespace Claroline\CoreBundle\Form\Mooc;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,6 +18,7 @@ class MoocType extends AbstractType
             ->add('title', 'text', array('required' => true))
             ->add('alias', 'text', array('required' => false))
             ->add('description','textarea', array('required' => true))
+            ->add('categories','collection', array('type' => new MoocCategoryType(), 'allow_add' => true, 'required' => true, 'allow_delete' => true, 'by_reference' => false))
             ->add('aboutPageDescription','tinymce', array('required' => false))
             ->add('file', 'file', array('required' => false))
             ->add('illustrationPath', 'text', array('required' => true, 'attr' => array( 'class' => 'hide' )))
@@ -44,7 +45,7 @@ class MoocType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Workspace\Mooc',
+            'data_class' => 'Claroline\CoreBundle\Entity\Mooc\Mooc',
              'translation_domain' => 'platform'
         ));
     }

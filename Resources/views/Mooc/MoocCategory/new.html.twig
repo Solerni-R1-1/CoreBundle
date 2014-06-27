@@ -1,0 +1,15 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>Workspace\MoocCategory creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_parameters_mooc_category') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
 
