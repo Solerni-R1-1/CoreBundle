@@ -288,11 +288,9 @@ class WorkspaceController extends Controller
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
-            $type = $form->get('type')->getData() == 'simple' ?
-                Configuration::TYPE_SIMPLE :
-                Configuration::TYPE_AGGREGATOR;
+            $type = Configuration::TYPE_SIMPLE;
             $config = Configuration::fromTemplate(
-                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+                $this->templateDir . $ds . 'default.zip'
             );
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());

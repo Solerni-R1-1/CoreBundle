@@ -46,27 +46,7 @@ class WorkspaceType extends AbstractType
         } else {
             $builder->add('description', 'tinymce', array('required' => false));
         }
-        $builder->add(
-            'type',
-            'choice',
-            array(
-                'choices' => array(
-                    'simple' => 'Simple',
-                    'aggregator' => 'Aggregator',
-                ),
-                'multiple' => false,
-                'required' => true
-            )
-        );
-
-        $builder->add(
-            'template',
-            'entity',
-            array(
-                'class' => 'ClarolineCoreBundle:Workspace\Template',
-                'property' => 'name'
-            )
-        );
+       
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add(

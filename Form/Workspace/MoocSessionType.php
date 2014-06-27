@@ -15,12 +15,51 @@ class MoocSessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('startDate', 'datetime', array( 'label' => 'Date de début', 'date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('endDate', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('startInscriptionDate', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('endInscriptionDate', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('title', 'text', array('required' => false))
-            ->add('maxUsers', 'integer')
+            ->add('startDate', 
+                    'date', 
+                    array( 
+                        'label' => 'Début de session',
+                        'widget' => 'single_text',
+                        'required' => false
+                    )
+                )
+            ->add('endDate',
+                    'date', 
+                    array(
+                        'label' => 'Fin de session',
+                        'widget' => 'single_text',
+                        'required' => false
+                    )
+                )
+            ->add('startInscriptionDate', 
+                    'date', 
+                    array(
+                        'label' => 'Début d\'inscription',
+                        'widget' => 'single_text',
+                        'required' => false
+                    )
+                )
+            ->add('endInscriptionDate', 
+                    'date',
+                    array(
+                        'label' => 'Fin d\'inscription',
+                        'widget' => 'single_text',
+                        'required' => false
+                    )
+                )
+            ->add('title', 
+                    'text', 
+                    array(
+                        'label' => 'Titre de la session',
+                        'required' => false
+                    )
+                )
+            ->add('maxUsers', 
+                    'integer', 
+                    array(
+                        'label' => 'Nombre maximum d\'inscrits',
+                        'required' => false
+                    ))
         ;
     }
     

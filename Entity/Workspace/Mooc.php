@@ -45,6 +45,13 @@ class Mooc
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="about_page_description", type="text", nullable=true)
+     */
+    private $aboutPageDescription;
 
     /**
      * @var string
@@ -52,13 +59,6 @@ class Mooc
      * @ORM\Column(name="illustration_path", type="string", length=255, nullable=true)
      */
     private $illustrationPath;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="illustration_name", type="string", length=255, nullable=true)
-     */
-    private $illustrationName;
     
      /**
      *
@@ -325,7 +325,7 @@ class Mooc
      *
      * @return boolean 
      */
-    public function getIsPublic()
+    public function isPublic()
     {
         return $this->isPublic;
     }
@@ -655,6 +655,15 @@ class Mooc
         return $this->file;
     }
     
+    public function getAboutPageDescription() {
+        return $this->aboutPageDescription;
+    }
+
+    public function setAboutPageDescription($aboutPageDescription) {
+        $this->aboutPageDescription = $aboutPageDescription;
+    }
+
+        
     /**
      * @return string
      */
