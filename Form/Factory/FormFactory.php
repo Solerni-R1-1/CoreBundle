@@ -196,8 +196,8 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\ImportAgendaType'
         ),
         self::TYPE_MOOC => array(
-            'formType' => 'Claroline\CoreBundle\Form\Workspace\MoocType',
-            'entity' => 'Claroline\CoreBundle\Entity\Workspace\Mooc'
+            'formType' => 'Claroline\CoreBundle\Form\Mooc\MoocType',
+            'entity' => 'Claroline\CoreBundle\Entity\Mooc\Mooc'
         )
     );
 

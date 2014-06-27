@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Form\Workspace;
+namespace Claroline\CoreBundle\Form\Mooc;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -69,7 +69,7 @@ class MoocSessionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Workspace\MoocSession'
+            'data_class' => 'Claroline\CoreBundle\Entity\Mooc\MoocSession'
         ));
     }
 

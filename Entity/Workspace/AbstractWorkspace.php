@@ -133,11 +133,10 @@ abstract class AbstractWorkspace
     protected $creationDate;
     
     /**
-     * @var Claroline\CoreBundle\Entity\Workspace\Mooc
+     * @var Claroline\CoreBundle\Entity\Mooc\Mooc
      * 
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Mooc", cascade={"persist", "remove"}, mappedBy="workspace")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc", cascade={"persist", "remove"}, mappedBy="workspace")
      */
-    
     protected $mooc;
     
     /**

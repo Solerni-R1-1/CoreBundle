@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Workspace;
+namespace Claroline\CoreBundle\Entity\Mooc;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Entity\AbstractIndexable;
  * MoocSession
  *
  * @ORM\Table(name="claro_mooc_session")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\MoocSessionRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\MoocSessionRepository")
  */
 class MoocSession extends AbstractIndexable
 {
@@ -26,35 +26,35 @@ class MoocSession extends AbstractIndexable
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="start_date", type="datetime")
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
     private $startDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="end_date", type="datetime")
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
     private $endDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="start_inscription_date", type="datetime")
+     * @ORM\Column(name="start_inscription_date", type="datetime", nullable=true)
      */
     private $startInscriptionDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="end_inscription_date", type="datetime")
+     * @ORM\Column(name="end_inscription_date", type="datetime", nullable=true)
      */
     private $endInscriptionDate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
      */
     private $title;
 
@@ -71,14 +71,13 @@ class MoocSession extends AbstractIndexable
     /**
      * @var integer
      *
-     * @ORM\Column(name="max_users", type="integer")
+     * @ORM\Column(name="max_users", type="integer", nullable=true)
      */
     private $maxUsers;
 
-    
      /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\Mooc",
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
      *      inversedBy="moocSessions"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)

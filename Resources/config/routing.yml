@@ -286,3 +286,8 @@ claro_admin_plugins:
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
+    
+claro_admin_category:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocCategoryController.php"
+    prefix: admin/parameters/mooc/category
+    type: annotation

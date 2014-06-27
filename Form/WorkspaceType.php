@@ -15,7 +15,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Form\Workspace\MoocType;
 
 class WorkspaceType extends AbstractType
 {
