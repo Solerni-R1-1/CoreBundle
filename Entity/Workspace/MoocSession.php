@@ -294,7 +294,7 @@ class MoocSession extends AbstractIndexable
        $doc->mooc_illustration_path = $mooc->getIllustrationWebPath();
        $doc->mooc_title             = $mooc->getTitle();
        $doc->mooc_alias             = $mooc->getAlias();
-       $doc->mooc_description_t     = $mooc->getDescription();
+       $doc->content                = $mooc->getDescription();
        $doc->mooc_is_public_b       = $mooc->getIsPublic();
        $doc->mooc_duration          = $mooc->getDuration();
        $doc->mooc_weekly_time       = $mooc->getWeeklyTime();
