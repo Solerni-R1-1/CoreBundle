@@ -45,6 +45,13 @@ class Mooc
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="about_page_description", type="text", nullable=true)
+     */
+    private $aboutPageDescription;
 
     /**
      * @var string
@@ -52,13 +59,6 @@ class Mooc
      * @ORM\Column(name="illustration_path", type="string", length=255, nullable=true)
      */
     private $illustrationPath;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="illustration_name", type="string", length=255, nullable=true)
-     */
-    private $illustrationName;
     
      /**
      *
@@ -325,7 +325,7 @@ class Mooc
      *
      * @return boolean 
      */
-    public function getIsPublic()
+    public function isPublic()
     {
         return $this->isPublic;
     }
@@ -650,6 +650,15 @@ class Mooc
         return $this->file;
     }
     
+    public function getAboutPageDescription() {
+        return $this->aboutPageDescription;
+    }
+
+    public function setAboutPageDescription($aboutPageDescription) {
+        $this->aboutPageDescription = $aboutPageDescription;
+    }
+
+        
     /**
      * @return string
      */
@@ -700,7 +709,7 @@ class Mooc
      /**
      * @return null|string
      */
-    public function getAbsolutePath()
+    public function getIllustrationAbsolutePath()
     {
         return (null === $this->illustrationPath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->illustrationPath;
     }
@@ -708,7 +717,7 @@ class Mooc
     /**
      * @return null|string
      */
-    public function getWebPath()
+    public function getIllustrationWebPath()
     {
         return (null === $this->illustrationPath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->illustrationPath;
     }
@@ -717,7 +726,7 @@ class Mooc
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function preUpload()
+    public function preUploadIllustration()
     {
         if (null !== $this->file) {
             // faites ce que vous voulez pour générer un nom unique
@@ -729,7 +738,7 @@ class Mooc
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload()
+    public function uploadIllustration()
     {
         if (null === $this->file) {
             return;
@@ -743,9 +752,9 @@ class Mooc
     /**
      * @ORM\PostRemove()
      */
-    public function removeUpload()
+    public function removeUploadIllustration()
     {
-        if ($file = $this->getAbsolutePath()) {
+        if ($file = $this->getIllustrationAbsolutePath()) {
             unlink($file);
         }
     }

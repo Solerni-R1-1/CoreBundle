@@ -32,6 +32,7 @@ use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Form\Workspace\MoocType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class WorkspaceParametersController extends Controller
 {
@@ -171,11 +172,10 @@ class WorkspaceParametersController extends Controller
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
-       
+        $mooc = $workspace->getMooc();
         /* Add custom form Mooc if workspace is mooc */
         if ( $workspace->isMooc() ) {
-            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $workspace->getMooc() );
-            //$form->add('Mooc', new MoocType( $options ));
+            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
         }
         
         if ($workspace->getSelfRegistration()) {
@@ -194,7 +194,8 @@ class WorkspaceParametersController extends Controller
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
-            'count' => $count
+            'count' => $count,
+            'illustration' => $mooc->getIllustrationWebPath()
         );
     }
 
@@ -220,15 +221,36 @@ class WorkspaceParametersController extends Controller
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
+        $mooc = $workspace->getMooc();
+               
+        
+        $originalSessions = new ArrayCollection();
+        foreach ( $mooc->getMoocSessions() as $session ) {
+            $originalSessions->add( $session );
+        }
+        //var_dump(count($mooc->getMoocSessions()));
+        
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-        $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $workspace->getMooc() );
+        $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
         $form->handleRequest($this->request);
         $form_mooc->handleRequest($this->request);
-
-        if ($form->isValid() && $form_mooc->isValid() ) {
-            foreach ( $workspace->getMooc()->getMoocSessions() as $moocSession ) {
-                $moocSession->setMooc( $workspace->getMooc() );
+       
+        if ( $form->isValid() && $form_mooc->isValid() ) {
+            
+            /* Setting current mooc for new sessions */
+            foreach ( $mooc->getMoocSessions() as $moocSession ) {
+                if (  ! $moocSession->getMooc() ) {
+                    $moocSession->setMooc( $mooc );
+                }
             }
+            
+            //var_dump(count($mooc->getMoocSessions()));
+            foreach ( $originalSessions as $moocSession ) {
+                if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
+                    $this->getDoctrine()->getManager()->remove($moocSession);
+                }    
+            }
+                       
             $this->workspaceManager->createWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();
@@ -236,7 +258,7 @@ class WorkspaceParametersController extends Controller
             if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
                 $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
             }
-
+            
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_open_tool',
@@ -269,7 +291,8 @@ class WorkspaceParametersController extends Controller
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
-            'count' => $count
+            'count' => $count,
+            'illustration' => $mooc->getIllustrationWebPath()
         );
     }
 
