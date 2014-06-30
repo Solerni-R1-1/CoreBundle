@@ -1,15 +1,28 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-    <h1>Workspace\MoocCategory creation</h1>
+    <h1>{{ 'mooc_categories_create'|trans({}, 'platform') }}</h1>
 
-    {{ form(form) }}
+ {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form._token) }}
+        <table class="slrn-categories-list">
+            <tr>
+                <td class="slrn-bold"">{{ 'mooc_category_create'|trans({}, 'platform') }}</td>
+                <td>{{ form_widget(form.name) }}</td>
+                <td><a class="btn btn-primary js-submit-button" href="#">{{ 'validate'|trans({}, 'platform') }}</a></td>
+                <td><a class="btn btn-gris" href="{{ path('admin_parameters_mooc_categories') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </tr>
+        </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_parameters_mooc_category') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('.js-submit-button').on('click', function(event) {
+            event.preventDefault();
+            $(this).parents('form').submit();
+        })
+    </script>
+    
 {% endblock %}

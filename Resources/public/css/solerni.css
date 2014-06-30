@@ -1250,3 +1250,13 @@ label.control-label:empty .col-md-9 { padding :0 }
 .slrn-mooc_sessions {
     margin-bottom: 2em;
 }
+
+.slrn-categories-list {
+    border-collapse: separate;
+    border-spacing: .7em;
+}
+
+.slrn-categories-list tr td:first-of-type {
+   padding-right: 2em;
+   text-align: right;
+}

@@ -1,16 +1,27 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
 {% block content -%}
-    <h1>Workspace\MoocCategory edit</h1>
-
-    {{ form(edit_form) }}
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_parameters_mooc_category') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <h1>{{ 'mooc_categories_edit'|trans({}, 'platform') }}</h1>
+        {{ form_start(edit_form) }}
+            {{ form_errors(edit_form) }}
+            {{ form_widget(edit_form._token) }}
+        <table class="slrn-categories-list">
+            <tr>
+                <td class="slrn-bold"">{{ 'mooc_category_edit'|trans({}, 'platform') }}</td>
+                <td>{{ form_widget(edit_form.name) }}</td>
+                <td><a class="btn btn-primary js-submit-button" href="#">{{ 'validate'|trans({}, 'platform') }}</a></td>
+                <td><a class="btn btn-gris" href="{{ path('admin_parameters_mooc_categories') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </tr>
+        </table>
+ 
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('.js-submit-button').on('click', function(event) {
+            event.preventDefault();
+            $(this).parents('form').submit();
+        })
+    </script>
+    
 {% endblock %}

@@ -16,7 +16,7 @@ class MoocCategoryController extends Controller
     /**
      * Lists all Mooc\MoocCategory entities.
      *
-     * @Route("/", name="admin_parameters_mooc_category")
+     * @Route("/", name="admin_parameters_mooc_categories")
      * @Method("GET")
      * @Template()
      */
@@ -48,7 +48,7 @@ class MoocCategoryController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameters_mooc_category_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('admin_parameters_mooc_categories'));
         }
 
         return array(
@@ -188,7 +188,7 @@ class MoocCategoryController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameters_mooc_category_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('admin_parameters_mooc_categories'));
         }
 
         return array(
@@ -220,7 +220,7 @@ class MoocCategoryController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('admin_parameters_mooc_category'));
+        return $this->redirect($this->generateUrl('admin_parameters_mooc_categories'));
     }
 
     /**

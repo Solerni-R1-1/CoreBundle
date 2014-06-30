@@ -1,41 +1,27 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
 {% block content -%}
-    <h1>Workspace\MoocCategory list</h1>
+    <h1>{{ 'mooc_categories'|trans({}, 'platform') }}</h1>
+    
+    <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_category_new') }}">
+      {{ 'mooc_categories_create'|trans({}, 'platform') }}
+    </a>
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h2>{{ 'mooc_categories_list'|trans({}, 'platform') }}</h2>
+
+    <table class="slrn-categories-list">
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('admin_parameters_mooc_category_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('admin_parameters_mooc_category_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                   <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
+                </td>
+                <td>
+                    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_delete', { 'id': entity.id }) }}">{{ 'delete'|trans({}, 'platform') }}</a>
                 </td>
             </tr>
         {% endfor %}
-        </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('admin_parameters_mooc_category_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+
     {% endblock %}
