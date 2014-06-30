@@ -1,0 +1,3 @@
+gregwar_image:
+    cache_dir:  vendor/gregwar/cache
+    throw_exception: true

@@ -286,3 +286,7 @@ claro_admin_plugins:
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
+
+claro_image:
+    resource: "@ClarolineCoreBundle/Controller/TransfoController.php"
+    type: annotation
