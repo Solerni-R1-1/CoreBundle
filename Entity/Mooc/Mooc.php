@@ -171,8 +171,9 @@ class Mooc
      *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocCategory",
-     *     mappedBy="moocs"
+     *     inversedBy="moocs"
      * )
+     * @ORM\JoinTable(name="claro_moocs_to_categories")
      */
     private $categories;
     

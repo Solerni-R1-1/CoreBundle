@@ -173,6 +173,7 @@ class WorkspaceParametersController extends Controller
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
         $mooc = $workspace->getMooc();
+        
         /* Add custom form Mooc if workspace is mooc */
         if ( $workspace->isMooc() ) {
             $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
@@ -223,17 +224,23 @@ class WorkspaceParametersController extends Controller
         $wsRegisteredDisplayable = $workspace->isDisplayable();
         $mooc = $workspace->getMooc();
                
-        
+        /* Store current sessions to compare with submitted form */
         $originalSessions = new ArrayCollection();
         foreach ( $mooc->getMoocSessions() as $session ) {
             $originalSessions->add( $session );
         }
-        //var_dump(count($mooc->getMoocSessions()));
         
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
         $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
         $form->handleRequest($this->request);
         $form_mooc->handleRequest($this->request);
+        
+        foreach ( $mooc->getCategories() as $category ) {
+                foreach($category->getMoocs() as $catmooc ) {
+                    var_dump($catmooc->getId());
+                }
+        }
+       var_dump('first pass');
        
         if ( $form->isValid() && $form_mooc->isValid() ) {
             
@@ -244,13 +251,13 @@ class WorkspaceParametersController extends Controller
                 }
             }
             
-            //var_dump(count($mooc->getMoocSessions()));
+            /* remove sessions from database if deleted */
             foreach ( $originalSessions as $moocSession ) {
                 if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
                     $this->getDoctrine()->getManager()->remove($moocSession);
-                }    
+                }
             }
-                       
+ 
             $this->workspaceManager->createWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();

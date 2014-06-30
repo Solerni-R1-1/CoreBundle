@@ -18,7 +18,7 @@ class MoocType extends AbstractType
             ->add('title', 'text', array('required' => true))
             ->add('alias', 'text', array('required' => false))
             ->add('description','textarea', array('required' => true))
-            ->add('categories','collection', array('type' => new MoocCategoryType(), 'allow_add' => true, 'required' => true, 'allow_delete' => true, 'by_reference' => false))
+            ->add('categories','entity', array( 'class' => 'ClarolineCoreBundle:Mooc\MoocCategory', 'property'=> 'name', 'multiple'=> true, 'expanded' => true ))
             ->add('aboutPageDescription','tinymce', array('required' => false))
             ->add('file', 'file', array('required' => false))
             ->add('illustrationPath', 'text', array('required' => true, 'attr' => array( 'class' => 'hide' )))
