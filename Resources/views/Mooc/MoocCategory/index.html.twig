@@ -17,11 +17,24 @@
                    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
                 </td>
                 <td>
-                    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_delete', { 'id': entity.id }) }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                        {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
+                            {{ form_widget( forms[loop.index0]._token ) }}
+                            <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
+                        </form>
                 </td>
             </tr>
         {% endfor %}
     </table>
 
-
     {% endblock %}
+
+    {% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('.js-submit-button').on('click', function(event) {
+            event.preventDefault();
+            $(this).parents('form').submit();
+        })
+    </script>
+    
+{% endblock %}

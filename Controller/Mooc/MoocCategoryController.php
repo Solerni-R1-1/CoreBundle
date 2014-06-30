@@ -25,9 +25,17 @@ class MoocCategoryController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('ClarolineCoreBundle:Mooc\MoocCategory')->findAll();
+        
+        $forms = array();
+        
+        foreach( $entities as $entity ) {
+            $deleteForm = $this->createDeleteForm( $entity->getId() );
+            $forms[] = $deleteForm->createView();
+        }
 
         return array(
-            'entities' => $entities,
+            'entities'  => $entities,
+            'forms' => $forms
         );
     }
     /**
