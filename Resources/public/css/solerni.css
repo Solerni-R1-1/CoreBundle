@@ -1240,8 +1240,8 @@ input[type="file"] { height: auto; }
 }
 
 /* form adaptation */
-label.control-label + .col-md-9 {
-    padding-top: 7px;
+label.control-label + .col-md-9 input[type=checkbox] {
+    margin-top: 10px;
 }
 
 label.control-label:empty,
