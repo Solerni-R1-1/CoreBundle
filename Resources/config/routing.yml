@@ -264,6 +264,14 @@ solerni_static_page:
     type: annotation
     prefix: /static
 
+mooc_view:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocController.php"
+    type: annotation
+
+mooc_view_session:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocController.php"
+    type: annotation
+
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
