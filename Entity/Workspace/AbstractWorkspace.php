@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -294,7 +295,7 @@ abstract class AbstractWorkspace
         return $this->mooc;
     }
 
-    public function setMooc( $mooc )
+    public function setMooc( Mooc $mooc )
     {
         $this->mooc = $mooc;
         

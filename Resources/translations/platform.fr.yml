@@ -904,9 +904,12 @@ mooc_edit: 'Paramètres du MOOC'
 sessions_edit: 'Gestion des sessions du MOOC'
 add_session: 'Ajouter une session'
 delete_session: 'Supprimer la session'
+#categories
+
 mooc_categories: 'Catégories des MOOCs'
 mooc_categories_create: 'Créer une catégorie'
 mooc_categories_list: 'Liste des catégories'
+mooc_categories_list_empty: 'Aucune catégorie'
 mooc_category_name: 'catégorie'
 mooc_categories_edit: 'Editer une catégorie'
 mooc_category_edit: 'Nom de la catégorie à modifier'

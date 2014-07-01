@@ -10,23 +10,26 @@
     <h2>{{ 'mooc_categories_list'|trans({}, 'platform') }}</h2>
 
     <table class="slrn-categories-list">
-        {% for entity in entities %}
-            <tr>
-                <td>{{ entity.name }}</td>
-                <td>
-                   <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
-                </td>
-                <td>
-                        {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
-                            {{ form_widget( forms[loop.index0]._token ) }}
-                            <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
-                        </form>
-                </td>
-            </tr>
-        {% endfor %}
+        {% if entities|length == 0 %}
+            {{ 'mooc_categories_list_empty'|trans({}, 'platform') }}
+        {% else  %}
+            {% for entity in entities %}
+                <tr>
+                    <td>{{ entity.name }}</td>
+                    <td>
+                       <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
+                    </td>
+                    <td>
+                            {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
+                                {{ form_widget( forms[loop.index0]._token ) }}
+                                <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
+                            </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
     </table>
-
-    {% endblock %}
+{% endblock %}
 
     {% block javascripts %}
     {{ parent() }} 

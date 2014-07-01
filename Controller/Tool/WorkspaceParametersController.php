@@ -172,12 +172,7 @@ class WorkspaceParametersController extends Controller
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
-        $mooc = $workspace->getMooc();
-        
-        /* Add custom form Mooc if workspace is mooc */
-        if ( $workspace->isMooc() ) {
-            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
-        }
+
         
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
@@ -188,16 +183,34 @@ class WorkspaceParametersController extends Controller
         } else {
             $url = '';
         }
-
-        return array(
-            'form' => $form->createView(),
-            'form_mooc' => $form_mooc->createView(),
-            'workspace' => $workspace,
-            'url' => $url,
-            'user' => $user,
-            'count' => $count,
-            'illustration' => $mooc->getIllustrationWebPath()
-        );
+        
+        /* Add custom form Mooc if workspace is mooc */
+        if ( $workspace->isMooc() ) {
+            $mooc = $workspace->getMooc();
+            $form_mooc = $this->formFactory->create( FormFactory::TYPE_MOOC, array(), $mooc );
+            
+            /* Return mooc data and form */
+            $returnArray = array(
+                'form' => $form->createView(),
+                'form_mooc' => $form_mooc->createView(),
+                'workspace' => $workspace,
+                'url' => $url,
+                'user' => $user,
+                'count' => $count,
+                'illustration' => $mooc->getIllustrationWebPath()
+            ); 
+        } else {
+            /* return only WS data */
+            $returnArray = array(
+                'form' => $form->createView(),
+                'workspace' => $workspace,
+                'url' => $url,
+                'user' => $user,
+                'count' => $count
+            ); 
+        }
+        
+        return $returnArray;
     }
 
     /**
