@@ -234,38 +234,31 @@ class WorkspaceParametersController extends Controller
         $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
         $form->handleRequest($this->request);
         $form_mooc->handleRequest($this->request);
-        
-        foreach ( $mooc->getCategories() as $category ) {
-                foreach($category->getMoocs() as $catmooc ) {
-                    var_dump($catmooc->getId());
-                }
-        }
-       var_dump('first pass');
-       
+              
         if ( $form->isValid() && $form_mooc->isValid() ) {
             
-            /* Setting current mooc for new sessions */
+            /* Setting current mooc for newly added sessions */
             foreach ( $mooc->getMoocSessions() as $moocSession ) {
                 if (  ! $moocSession->getMooc() ) {
                     $moocSession->setMooc( $mooc );
                 }
             }
-            
+
             /* remove sessions from database if deleted */
             foreach ( $originalSessions as $moocSession ) {
                 if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
                     $this->getDoctrine()->getManager()->remove($moocSession);
                 }
             }
- 
+            
             $this->workspaceManager->createWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();
-
+            
             if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
                 $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
             }
-            
+
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_open_tool',

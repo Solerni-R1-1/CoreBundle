@@ -1240,7 +1240,7 @@ input[type="file"] { height: auto; }
 }
 
 /* form adaptation */
-label.control-label + .col-md-9 input[type=checkbox] {
+#workspace_edit_form > .form-group.row > label.control-label + .col-md-9 input[type=checkbox] {
     margin-top: 10px;
 }
 
