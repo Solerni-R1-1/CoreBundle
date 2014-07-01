@@ -13,8 +13,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Mooc\Mooc;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Repository\MoocRepository;
-use Claroline\CoreBundle\Repository\MoocSessionRepository;
+use Claroline\CoreBundle\Repository\Mooc\MoocRepository;
+use Claroline\CoreBundle\Repository\Mooc\MoocSessionRepository;
 
 /**
  * Description of StaticController
@@ -39,7 +39,7 @@ class MoocController extends Controller
             }
 
             //check the mooc
-            $mooc = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Workspace\Mooc')
+            $mooc = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\Mooc')
             		->find($moocid);
 
 			if($mooc == null){
@@ -69,7 +69,7 @@ class MoocController extends Controller
             }
 
             //check the mooc
-            $session = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Workspace\MoocSession')->find($sessionid);
+            $session = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\MoocSession')->find($sessionid);
             if($session == null){
             	return $this->inner404("la session n'existe pas : ".$sessionid);
             }
