@@ -294,7 +294,7 @@ abstract class AbstractWorkspace
         return $this->mooc;
     }
 
-    public function setMooc(Mooc $mooc)
+    public function setMooc( $mooc )
     {
         $this->mooc = $mooc;
         
