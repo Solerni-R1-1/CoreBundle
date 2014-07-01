@@ -637,7 +637,7 @@ class Mooc
         return $this;
     }
 
-    public function setWorkspace(\Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace $workspace)
+    public function setWorkspace( $workspace )
     {
         $this->workspace = $workspace;
         

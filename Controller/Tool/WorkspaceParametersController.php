@@ -31,7 +31,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Form\Workspace\MoocType;
+use Claroline\CoreBundle\Form\Mooc\MoocType;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class WorkspaceParametersController extends Controller
