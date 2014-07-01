@@ -1,1 +1,92 @@
-Page mooc {{mooc.getTitle()}}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/clarolinecore/css/slrn_mooc.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'title page mooc' | trans({}, 'solerni') }} {% endblock %}
+
+
+{% block subnavbar %}
+<section class="col-xs-12 col-md-12 mooc___section">
+	<div class="row mooc___section__div">
+		<div class="col-xs-3 col-md-3 mooc__section__div__logo">
+			<img src='#' width='64' height='64' alt='logo xwxx' class='mock'/>
+		</div>
+		<div class="col-xs-9 col-md-9">
+			Le digital, vivons-le ensemble <br/>
+			<a class="btn btn-primary" href="/app_dev.php/forum/1/category">S'inscrire gratuitement</a>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+
+{% block section_content %}
+<section class="col-xs-12 col-md-12">
+ <div class="col-xs-3 col-md-3">
+ 	<img class="slrn-widget__image" src="/app_dev.php/clarolineimageplayerbundle/image/4" alt="" width="1632" height="1224">
+ 	
+ 	<h2>Les essentiels</h2>
+ 	{#% if mooc.getMoocSessions() %#}
+	Page mooc {{mooc.getTitle()}}
+	
+	<h2>Pré-requis</h2>
+	{% if mooc.getPrerequisites() is not empty %}
+		{{ mooc.getPrerequisites() | raw }}
+	{% else %}
+		Aucun pré-requis
+	{% endif %}
+
+	
+	{% if mooc.getTeamDescription() is not empty %}
+		<h2>Equipe pédagogique</h2>
+		{{ mooc.getTeamDescription() | raw }}
+	{% endif %}
+
+	{% if mooc.getHasFacebookShare()  or
+			mooc.getHasTweeterShare()  or
+			mooc.getHasGplusShare()  or
+			mooc.getHasLinkedinShare()  %}
+
+		<h2>Partager</h2>
+		{% if mooc.getHasFacebookShare() %}
+			[FB]
+		{% endif %}
+
+		{% if mooc.getHasTweeterShare() %}
+			[Tweet]
+		{% endif %}
+
+		{% if mooc.getHasGplusShare() %}
+			[G+]
+		{% endif %}
+
+		{% if mooc.getHasLinkedinShare() %}
+			[Linkedin]
+		{% endif %}
+	{% endif %}
+
+
+
+ </div>
+
+ <div class="col-xs-9 col-md-9">
+ 99
+ </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/xxx.js') }}"></script> -->
+{% endblock %}
+

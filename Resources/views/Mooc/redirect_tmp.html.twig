@@ -1,2 +1,26 @@
-<p>Page session {{session.getTitle()}}</p>
-<p><b>{{redirection}}</b></p>
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/clarolinecore/css/slrn_mooc.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'title page redirection' | trans({}, 'solerni') }} {% endblock %}
+
+{% block section_content %}
+
+	<p>Page session {{session.getTitle()}}</p>
+	<p><b>{{redirection}}</b></p>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

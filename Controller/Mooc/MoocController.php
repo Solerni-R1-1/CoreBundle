@@ -112,6 +112,8 @@ class MoocController extends Controller
         }
 
         private function sessionApprendrePage($session) {
+
+            //TODO : make inner redirection instead JS redirect
             return $this->render(
                 'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
                 array(
@@ -121,6 +123,8 @@ class MoocController extends Controller
             );
         }
         private function sessionDiscuterPage($session) {
+
+            //TODO : make inner redirection instead JS redirect
             return $this->render(
                 'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
                 array(
@@ -130,6 +134,8 @@ class MoocController extends Controller
             );
         }
         private function sessionPartagerPage($session) {
+
+            //TODO : make inner redirection instead JS redirect
             return $this->render(
                 'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
                 array(
@@ -139,6 +145,8 @@ class MoocController extends Controller
             );
         }
         private function sessionLolPage($session) {
+
+            //TODO : make inner redirection instead JS redirect
             return $this->render(
                 'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
                 array(

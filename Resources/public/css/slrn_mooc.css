@@ -1,0 +1,21 @@
+/** OVERRIDE **/
+.subnavbar-fixed{
+	padding-top: 50px;
+}
+
+.mooc___section{
+	border-bottom: 1px solid #000;
+}
+.mooc___section__div{
+	width: 966px;
+	margin:0 auto;
+}
+.mooc__section__div__logo{
+	text-align: center;
+}
+
+
+
+img.mock{
+	border: 1px dotted #000; 
+}
