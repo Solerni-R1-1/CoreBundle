@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Finder\Finder;
+
 
 class TransfoController extends Controller
 {
@@ -32,24 +32,37 @@ class TransfoController extends Controller
      *
      * @return Response
      */
-    
     public function transfoAction($filters = "")
     {
+
         $imageURI = $this->get('request')->get('uri');
-        $image = $this->filter($this->get('image.handling')->open($imageURI), $filters);
-        $image_mime = image_type_to_mime_type(exif_imagetype($imageURI));
-        $cacheData = file_get_contents('http://'.$this->getRequest()->getHost().$image->cacheFile('guess'));
-        $response = new Response($cacheData);
-        $response->headers->set('Content-Type', $image_mime);
-        $response->setPublic();
+
+        if (@fopen($imageURI, "r")) {
+            $image = $this->filter($this->get('image.handling')->open($imageURI), $filters);
+            $image_mime = image_type_to_mime_type(exif_imagetype($imageURI));
+            $cacheData = file_get_contents('http://' . $this->getRequest()->getHost() . $image->cacheFile('guess'));
+            $response = new Response($cacheData);
+            $response->headers->set('Content-Type', $image_mime);
+            $response->setPublic();
+            
+        } else {
+            $response = new Response();
+            $response->setStatusCode(404);
+        }
         return $response;
     }
     
-    
+    /**
+     * Tranform image with filters
+     * 
+     * @param Image $image image to transform
+     * @param string $filters filters to applicate
+     * 
+     * @return Image image
+     */
     private function filter($image, $filters)
     {
         $filters = explode(",", $filters);
-        //var_dump($filters);
         foreach ($filters as $filter) {
             $filterElmnts = explode("_", $filter);
             $functionShortCut = array_shift($filterElmnts);
@@ -64,8 +77,14 @@ class TransfoController extends Controller
         }
         return $image;
     }
-    
-    
+
+    /**
+     * Get methode name by short cut
+     * 
+     * @param string $filter short cut
+     * 
+     * @return string method name
+     */
     private function findFunctionFilterName($filter)
     {
         switch ($filter) {
