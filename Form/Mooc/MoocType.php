@@ -8,6 +8,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MoocType extends AbstractType
 {
+        
+    private $lessonResourceType;
+    private $forumResourceType;
+    private $workspace;
+
+    public function __construct( $workspace, $lessonResourceType, $forumResourceType ) {
+        $this->lessonResourceType = $lessonResourceType;
+        $this->forumResourceType = $forumResourceType;
+        $this->workspace = $workspace;
+    }
+    
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -35,7 +46,16 @@ class MoocType extends AbstractType
             ->add('hasTweeterShare', 'checkbox', array('required' => false))
             ->add('hasGplusShare', 'checkbox', array('required' => false))
             ->add('hasLinkedinShare', 'checkbox', array('required' => false))
-            ->add('moocSessions', 'collection', array('type' => new MoocSessionType(), 'allow_add' => true, 'allow_delete' => true, 'by_reference' => false))
+            ->add('hasLinkedinShare', 'checkbox', array('required' => false))
+            ->add('lesson', 'entity', array( 
+                    'required' => true,
+                    'property' => 'name',
+                    'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
+                    'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
+                            return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->lessonResourceType);
+                    }
+            ))
+            ->add('moocSessions', 'collection', array('type' => new MoocSessionType( $this->workspace, $this->forumResourceType ), 'allow_add' => true, 'allow_delete' => true, 'by_reference' => false))
         ;
     }
     

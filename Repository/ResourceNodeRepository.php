@@ -369,19 +369,24 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
     public function findByWorkspaceAndResourceType(AbstractWorkspace $workspace, ResourceType $resourceType)
     {
+        $qb = $this->getQueryFindByWorkspaceAndResourceType($workspace, $resourceType);
+        return $results = $qb->getQuery()->execute();
+    }
+
+    public function getQueryFindByWorkspaceAndResourceType(AbstractWorkspace $workspace, ResourceType $resourceType)
+    {
         $qb = $this->createQueryBuilder('resourceNode');
         $qb->select('resourceNode')
             ->where('resourceNode.workspace = :workspace')
             ->andWhere('resourceNode.resourceType = :resourceType');
-
-        return $results = $qb->getQuery()->execute(
+        
+        return $qb->setParameters(
             array(
                 ':workspace'    => $workspace,
                 ':resourceType' => $resourceType
             )
         );
     }
-
     /**
      * @param string $name
      * @param array  $extraDatas

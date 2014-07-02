@@ -757,7 +757,7 @@ class SolerniController extends Controller
      * Return the first element of the required type
      *
      * @param AbstractWorkspace $workspace
-     * @param string $resourceName the name of th resource
+     * @param string $resourceName the name of the resource
      * @param string $mimeType (optionnal) the mime type. Accept wildcards.
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode

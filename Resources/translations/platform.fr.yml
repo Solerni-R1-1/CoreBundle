@@ -896,6 +896,7 @@ claroline_corebundle_workspace_mooc_hasFacebookShare: 'Activer le partage Facebo
 claroline_corebundle_workspace_mooc_hasTweeterShare: 'Activer le partage Twitter'
 claroline_corebundle_workspace_mooc_hasGplusShare: 'Activer le partage G+'
 claroline_corebundle_workspace_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
+claroline_corebundle_workspace_mooc_lesson: 'Cours du MOOC'
 
 claroline_corebundle_workspace_mooccategory_name: 'Nom de la catégorie'
 

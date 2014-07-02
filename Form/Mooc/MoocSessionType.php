@@ -8,6 +8,15 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MoocSessionType extends AbstractType
 {
+    
+    private $forumResourceType;
+    private $workspace;
+
+    public function __construct( $workspace, $forumResourceType ) {
+        $this->forumResourceType = $forumResourceType;
+        $this->workspace = $workspace;
+    }
+    
         /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -60,6 +69,16 @@ class MoocSessionType extends AbstractType
                         'label' => 'Nombre maximum d\'inscrits',
                         'required' => false
                     ))
+            ->add('forum', 'entity', array(
+                'label' => 'Forum',
+                'property' => 'name',
+                'class' => 'ClarolineCoreBundle:Resource\ResourceNode', 
+                'required' => true,
+                    'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
+                            return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->forumResourceType);
+                    }
+            ))
+            
         ;
     }
     

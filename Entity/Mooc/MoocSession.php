@@ -83,6 +83,14 @@ class MoocSession extends AbstractIndexable
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     private $mooc;
+    
+    /**
+     * @var Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * 
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * 
+     */
+    private $forum;
 
     /**
      * Get id
@@ -275,6 +283,14 @@ class MoocSession extends AbstractIndexable
         $this->mooc = $mooc;
         
         return $this;
+    }
+    
+    public function getForum() {
+        return $this->forum;
+    }
+
+    public function setForum( $forum ) {
+        $this->forum = $forum;
     }
 
     public function fillIndexableDocument(&$doc)

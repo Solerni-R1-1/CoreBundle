@@ -186,10 +186,19 @@ class WorkspaceParametersController extends Controller
         
         /* Add custom form Mooc if workspace is mooc */
         if ( $workspace->isMooc() ) {
-            $mooc = $workspace->getMooc();
-            $form_mooc = $this->formFactory->create( FormFactory::TYPE_MOOC, array(), $mooc );
             
-            /* Return mooc data and form */
+            /* Get lessons and forums from current workspace*/
+            $mooc = $workspace->getMooc();
+            $doctrine = $this->getDoctrine();
+
+            $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+            $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
+            $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+            
+            /* generate form */
+            $form_mooc = $this->formFactory->create( FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType ), $mooc );
+            
+            /* Return MOOC data and form */
             $returnArray = array(
                 'form' => $form->createView(),
                 'form_mooc' => $form_mooc->createView(),
@@ -200,7 +209,7 @@ class WorkspaceParametersController extends Controller
                 'illustration' => $mooc->getIllustrationWebPath()
             ); 
         } else {
-            /* return only WS data */
+            /* return only WS data if not MOOC */
             $returnArray = array(
                 'form' => $form->createView(),
                 'workspace' => $workspace,
@@ -243,8 +252,15 @@ class WorkspaceParametersController extends Controller
             $originalSessions->add( $session );
         }
         
+        /* Get lessons and forums from current workspace*/
+        $mooc = $workspace->getMooc();
+        $doctrine = $this->getDoctrine();
+        $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
+        $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+        
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-        $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array(), $mooc );
+        $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType ), $mooc );
         $form->handleRequest($this->request);
         $form_mooc->handleRequest($this->request);
               
@@ -413,4 +429,5 @@ class WorkspaceParametersController extends Controller
             throw new AccessDeniedException();
         }
     }
+    
 }

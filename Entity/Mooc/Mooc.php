@@ -197,6 +197,14 @@ class Mooc
     private $workspace;
     
     /**
+     * @var Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * 
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * 
+     */
+    private $lesson;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -679,7 +687,15 @@ class Mooc
     public function setCategories($categories) {
         $this->categories = $categories;
     }
-        
+    
+    public function getLesson() {
+        return $this->lesson;
+    }
+
+    public function setLesson( $lesson ) {
+        $this->lesson = $lesson;
+    }
+            
     /**
      * @return string
      */
