@@ -7,16 +7,19 @@
 }
 
 /** END OVERRIDE **/
-.mooc___section{
+.mooc__section{
 	border-bottom: 1px solid #000;
 	padding: 15px 0;
 }
-.mooc___section__div{
+.mooc__section__left{
 	width: 966px;
 	margin:0 auto;
 }
-.mooc__section__div__logo{
+.mooc__section__left__logo{
 	text-align: center;
+}
+.mooc__section__right{
+	padding-left:35px;
 }
 
 /************************/
@@ -99,3 +102,31 @@
 img.mock{
 	border: 1px dotted #000; 
 }
+.essentiels{
+	padding-left: 30px;
+}
+
+.essentiels li{
+	list-style: none;
+	position: relative;
+	margin: 10px 0;
+}
+
+.essentiels li i{
+	content: "";
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	/*top: 30%;*/
+	left: -17%;
+    pointer-events: none;
+	background: transparent url(../images/mooc/sprite_presentation.png) no-repeat 0 0 scroll;
+}
+
+.essentiels li i.essentiels__date{background-position: 0 0;}
+.essentiels li i.essentiels__duree{background-position: 0 -25px;}
+.essentiels li i.essentiels__tarif{background-position: 0 -50px;}
+.essentiels li i.essentiels__certif{background-position: 0 -75px;}
+.essentiels li i.essentiels__lang{background-position: 0 -100px;}
+.essentiels li i.essentiels__video{background-position: 0 -125px;}
+/* */

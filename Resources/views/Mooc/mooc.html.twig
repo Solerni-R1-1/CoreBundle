@@ -16,14 +16,14 @@
 
 
 {% block subnavbar %}
-<section class="col-xs-12 col-md-12 mooc___section">
-	<div class="row mooc___section__div">
-		<div class="col-xs-3 col-md-3 mooc__section__div__logo">
+<section class="col-xs-12 col-md-12 mooc__section">
+	<div class="row mooc__section__left">
+		<div class="col-xs-3 col-md-3 mooc__section__left__logo">
 			<img src='#' width='64' height='64' alt='logo xwxx' class='mock'/>
 		</div>
-		<div class="col-xs-9 col-md-9">
+		<div class="col-xs-9 col-md-9 mooc__section__right">
 			<h1>Le digital, vivons-le ensemble </h1>
-			<a class="btn btn-primary" href="/app_dev.php/forum/1/category">S'inscrire gratuitement</a>
+			<a class="btn btn-primary" href="#">S'inscrire gratuitement</a>
 		</div>
 	</div>
 </section>
@@ -32,13 +32,24 @@
 
 {% block section_content %}
 <section class="col-xs-12 col-md-12">
- <div class="col-xs-4 col-md-4 sider">
- 	<img class="slrn-widget__image" src="http://solerni.localhost/app_dev.php/transfo/zcrop_312_200?uri=./{{ mooc.getIllustrationWebPath() }}" alt="">
+ <div class="col-xs-3 col-md-3 sider">
+	<img class="slrn-widget__image" src="{{ image(mooc.getIllustrationWebPath()).zoomCrop(234,150) }}" alt="">
+ 	{# <img class="slrn-widget__image" src="{{ path('claro_index')}}transfo/zcrop_234_150?uri=./{{ mooc.getIllustrationWebPath() }}" alt=""> #}
+ 	
  	
  	<h2>Les essentiels</h2>
  	{#% if mooc.getMoocSessions() %#}
 	<div class='sider__content'>
-		Page mooc {{mooc.getTitle()}}
+
+		<ul class='essentiels'>
+			<li><i class='essentiels__date'></i>Date de début<br/>Date de fin</li>
+			<li><i class='essentiels__duree'></i>Date de début<br/>Date de fin</li>
+			<li><i class='essentiels__tarif'></i>Date de début<br/>Date de fin</li>
+			<li><i class='essentiels__certif'></i>Date de début<br/>Date de fin</li>
+			<li><i class='essentiels__lang'></i>Date de début</li>
+			<li><i class='essentiels__video'></i>Date de début<br/>Date de fin<br/>Date de fin<br/>Date de fin</li>
+		</ul>
+		<center><a class="btn btn-primary" href="#">S'inscrire gratuitement</a></center>
 	</div>
 	
 	<h2>Pré-requis</h2>
@@ -95,7 +106,7 @@
 
  </div>
 
- <div class="col-xs-8 col-md-8 contentBlock">
+ <div class="col-xs-9 col-md-9 contentBlock">
  	{{ mooc.getAboutPageDescription() | raw }}
  </div>
 </section>
