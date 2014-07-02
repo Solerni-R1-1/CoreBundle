@@ -15,9 +15,13 @@ use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Repository\Mooc\MoocRepository;
 use Claroline\CoreBundle\Repository\Mooc\MoocSessionRepository;
-//use Icap\LessonBundle\Repository\LessonRepository;
 use Icap\LessonBundle\Entity\Lesson;
 use Claroline\CoreBundle\Controller\SolerniController;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * Description of StaticController
@@ -31,7 +35,25 @@ class MoocController extends Controller
 {
 	private $patternId = '/^[0-9]+$/';
 	private $patternName = '/^[0-9a-zA-Z\-\_](+)$/';
-
+    
+    private $translator;
+    private $security;
+    private $router;
+    
+    
+        /**
+         * @DI\InjectParams({
+         *     "security"           = @DI\Inject("security.context"),
+         *     "router"             = @DI\Inject("router"),
+         *     "translator"         = @DI\Inject("translator")
+         * })
+         */
+        public function __construct( SecurityContextInterface $security, UrlGeneratorInterface $router, TranslatorInterface $translator ) {
+            $this->translator = $translator;
+            $this->security = $security;
+            $this->router = $router;
+        }
+        
         /**
          * @Route("/{moocid}/{moocname}/sessions", name="mooc_view")
          */
@@ -184,7 +206,7 @@ class MoocController extends Controller
             );
         }
 
-        /**
+    /**
      * get the route to the last chapter read, according to the log.
      *
      * @param Lesson $lesson
@@ -199,7 +221,7 @@ class MoocController extends Controller
         // TODO see if it can be parametered
         $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_lesson');
         if ($resourceType == null) {
-            // TODO manage error
+            // @todo manage error
             die('must not be executed');
         }
 
@@ -239,5 +261,30 @@ class MoocController extends Controller
         
         return $url;
     }
+        
+        /**
+         * @Route("/session/{sessionId}/subscribe", name="session_subscribe")
+         * 
+         * @EXT\ParamConverter(
+         *      "moocSession",
+         *      class="ClarolineCoreBundle:Mooc\MoocSession",
+         *      options={"id" = "sessionId", "strictId" = true}
+         * )
+         * 
+         */
+        public function sessionAddUserAction( $moocSession ){
+            
+            $user = $this->security->getToken()->getUser();
+            
+            if ( $user == 'anon.' ) {
+                $route = $this->router->generate('claro_security_login', array ( 'mooc_session_id' => $moocSession->getId() ) );
+                
+            } else {
+               $route = $this->router->generate('mooc_view', array ( 'moocid' => $moocSession->getMooc()->getId(), 'moocname' => $moocSession->getMooc()->getAlias() ) );
+            }
+            
+            return new RedirectResponse($route);
+        }
+
 
 }

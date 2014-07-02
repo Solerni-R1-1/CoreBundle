@@ -1238,15 +1238,7 @@ input[type="file"] { height: auto; }
 	background-color: #888686;
 	border-color: #888686;
 }
-
-/* form adaptation */
-#workspace_edit_form > .form-group.row > label.control-label + .col-md-9 input[type=checkbox] {
-    margin-top: 10px;
-}
-
-label.control-label:empty,
-label.control-label:empty .col-md-9 { padding :0 }
-
+ 
 .slrn-mooc_sessions {
     margin-bottom: 2em;
 }
@@ -1259,4 +1251,16 @@ label.control-label:empty .col-md-9 { padding :0 }
 .slrn-categories-list tr td:first-of-type {
    padding-right: 2em;
    text-align: right;
+}
+
+.form-horizontal .control-label {
+    padding-top: 0;
+}
+
+.form-horizontal .row {
+    margin-bottom: 1.8em;
+}
+
+.form-horizontal h3 {
+    margin: 2em 0 1.8em 0;
 }

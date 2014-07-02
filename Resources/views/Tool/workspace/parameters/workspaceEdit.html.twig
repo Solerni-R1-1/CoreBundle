@@ -96,8 +96,8 @@
                     <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                    <a id="delete-confirm-ok" class="btn btn-primary js-submit-button">{{ 'ok'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default js-cancel-button" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</a>
                 </div>
             </div>
         </div>
