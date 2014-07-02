@@ -22,7 +22,7 @@
 			<img src='#' width='64' height='64' alt='logo xwxx' class='mock'/>
 		</div>
 		<div class="col-xs-9 col-md-9">
-			Le digital, vivons-le ensemble <br/>
+			<h1>Le digital, vivons-le ensemble </h1>
 			<a class="btn btn-primary" href="/app_dev.php/forum/1/category">S'inscrire gratuitement</a>
 		</div>
 	</div>
@@ -32,24 +32,30 @@
 
 {% block section_content %}
 <section class="col-xs-12 col-md-12">
- <div class="col-xs-3 col-md-3">
- 	<img class="slrn-widget__image" src="/app_dev.php/clarolineimageplayerbundle/image/4" alt="" width="1632" height="1224">
+ <div class="col-xs-4 col-md-4 sider">
+ 	<img class="slrn-widget__image" src="http://solerni.localhost/app_dev.php/transfo/zcrop_312_200?uri=./{{ mooc.getIllustrationWebPath() }}" alt="">
  	
  	<h2>Les essentiels</h2>
  	{#% if mooc.getMoocSessions() %#}
-	Page mooc {{mooc.getTitle()}}
+	<div class='sider__content'>
+		Page mooc {{mooc.getTitle()}}
+	</div>
 	
 	<h2>Pré-requis</h2>
+	<div class='sider__content'>
 	{% if mooc.getPrerequisites() is not empty %}
 		{{ mooc.getPrerequisites() | raw }}
 	{% else %}
 		Aucun pré-requis
 	{% endif %}
-
+	</div>
 	
+
 	{% if mooc.getTeamDescription() is not empty %}
 		<h2>Equipe pédagogique</h2>
-		{{ mooc.getTeamDescription() | raw }}
+		<div class='sider__content'>
+			{{ mooc.getTeamDescription() | raw }}
+		</div>
 	{% endif %}
 
 	{% if mooc.getHasFacebookShare()  or
@@ -58,29 +64,39 @@
 			mooc.getHasLinkedinShare()  %}
 
 		<h2>Partager</h2>
-		{% if mooc.getHasFacebookShare() %}
-			[FB]
-		{% endif %}
+		<div class='sider__content content_center'>
+			{% if mooc.getHasFacebookShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_facebook">Facebook</span>
+	            </a>
+			{% endif %}
 
-		{% if mooc.getHasTweeterShare() %}
-			[Tweet]
-		{% endif %}
+			{% if mooc.getHasTweeterShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_Twitter">Twitter</span>
+	            </a>
+			{% endif %}
 
-		{% if mooc.getHasGplusShare() %}
-			[G+]
-		{% endif %}
+			{% if mooc.getHasGplusShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_googlep">Google+</span>
+	            </a>
+			{% endif %}
 
-		{% if mooc.getHasLinkedinShare() %}
-			[Linkedin]
-		{% endif %}
+			{% if mooc.getHasLinkedinShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_linkedin">Linkedin</span>
+	            </a>
+			{% endif %}
+		</div>
 	{% endif %}
 
 
 
  </div>
 
- <div class="col-xs-9 col-md-9">
- 99
+ <div class="col-xs-8 col-md-8 contentBlock">
+ 	{{ mooc.getAboutPageDescription() | raw }}
  </div>
 </section>
 {% endblock %}

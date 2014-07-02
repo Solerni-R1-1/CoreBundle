@@ -1,10 +1,15 @@
 /** OVERRIDE **/
 .subnavbar-fixed{
-	padding-top: 50px;
+	padding-top: 55px !important;
+}
+.content{
+	padding: 0 0 15px !important;
 }
 
+/** END OVERRIDE **/
 .mooc___section{
 	border-bottom: 1px solid #000;
+	padding: 15px 0;
 }
 .mooc___section__div{
 	width: 966px;
@@ -14,6 +19,81 @@
 	text-align: center;
 }
 
+/************************/
+
+.sider{
+	background-color: #EEEEEF;
+	padding: 0;
+}
+
+.sider h2{
+	border-top: 1px solid #EEEEEF;
+	background-color: #4B667C;
+	color: #FFF;
+	pointer-events: none;
+	font-weight: bold;
+	font-size: 0.95em;
+	padding: 6px 7px;
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 1.5;
+	margin: 0;
+}
+
+.sider__content{
+	padding: 15px 10px;
+	font-size: 0.9em;
+}
+.content_center{
+	text-align: center;
+}
+
+.sider_social { float: right; width: 300px; }
+.sider_social__text {
+    color: #999999;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 17px;
+    position: absolute;
+}
+.sider_social_link {
+  color: #FFF;
+  display: inline-block;
+  margin: 5px 7px 0;
+  font-weight: 800;
+}
+
+.sider_social_link__icon {
+  background-image: url("../images/icone-social.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 32px;
+  margin: 10px 0;
+  text-indent: -999em;
+  width: 32px;
+}
+
+.social_facebook { background-position:0px 0px; }
+.social_twitter { background-position:-46px 0px; }
+.social_linkedin { background-position:-93px 0px; }
+.social_googlep { background-position:-140px 0px; }
+.social_blog { background-position:-187px 0px; }
+.social_rss { background-position:-234px 0px; }
+.sider_social_link:hover .social_facebook { background-position:0px -41px; }
+.sider_social_link:hover .social_twitter{ background-position:-46px -41px; }
+.sider_social_link:hover .social_linkedin{ background-position:-93px -41px; }
+.sider_social_link:hover .social_googlep{ background-position:-140px -41px; }
+.sider_social_link:hover .social_blog{ background-position:-187px -41px; }
+.sider_social_link:hover .social_rss{ background-position:-234px -41px; }
+
+
+
+/************************/
+.contentBlock{
+	padding: 2em; 
+}
+
+/*************************/
 
 
 img.mock{
