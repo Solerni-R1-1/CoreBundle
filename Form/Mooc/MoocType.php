@@ -48,7 +48,7 @@ class MoocType extends AbstractType
             ->add('hasLinkedinShare', 'checkbox', array('required' => false))
             ->add('hasLinkedinShare', 'checkbox', array('required' => false))
             ->add('lesson', 'entity', array( 
-                    'required' => true,
+                    'required' => false,
                     'property' => 'name',
                     'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {

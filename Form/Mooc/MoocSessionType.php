@@ -73,7 +73,7 @@ class MoocSessionType extends AbstractType
                 'label' => 'Forum',
                 'property' => 'name',
                 'class' => 'ClarolineCoreBundle:Resource\ResourceNode', 
-                'required' => true,
+                'required' => false,
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
                             return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->forumResourceType);
                     }

@@ -136,11 +136,12 @@
                 });
 
                 /* display illustration */
-                if ( $('#claroline_corebundle_workspace_mooc_illustrationPath').val() ) {
+                {% if illustration != null %}
                     $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<img src="{{ image( illustration ).zoomCrop( 234, 150 ) }}" alt="Illustration du MOOC" />');
-                } else {
+                {% else %}
                     $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<span>Pas d\'illustration</span>');
-                }
+                {% endif %}
+                
                 /* checkbox video/subtitle dependancies */
                 var videoCheckbox = $('#claroline_corebundle_workspace_mooc_hasVideo');
                 var subtitleCheckbox = $('#claroline_corebundle_workspace_mooc_hasSubtitle');
