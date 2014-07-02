@@ -30,7 +30,6 @@
 }
 
 .sider h2{
-	border-top: 1px solid #EEEEEF;
 	background-color: #4B667C;
 	color: #FFF;
 	pointer-events: none;
@@ -47,6 +46,38 @@
 	padding: 15px 10px;
 	font-size: 0.9em;
 }
+
+.essentiels{
+	padding-left: 30px;
+}
+
+.essentiels li{
+	list-style: none;
+	position: relative;
+	text-transform: uppercase;
+	margin: 10px 0;
+	font-size: 0.80em;
+	min-height: 25px;
+}
+
+.essentiels li i{
+	content: "";
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	/*top: 30%;*/
+	left: -17%;
+    pointer-events: none;
+	background: transparent url(../images/mooc/sprite_presentation.png) no-repeat 0 0 scroll;
+}
+
+.essentiels li i.essentiels__date{background-position: 0 0;}
+.essentiels li i.essentiels__duree{background-position: 0 -25px;}
+.essentiels li i.essentiels__tarif{background-position: 0 -50px;}
+.essentiels li i.essentiels__certif{background-position: 0 -75px;}
+.essentiels li i.essentiels__lang{background-position: 0 -100px;}
+.essentiels li i.essentiels__video{background-position: 0 -125px;}
+
 .content_center{
 	text-align: center;
 }
@@ -102,31 +133,9 @@
 img.mock{
 	border: 1px dotted #000; 
 }
-.essentiels{
-	padding-left: 30px;
-}
 
-.essentiels li{
-	list-style: none;
-	position: relative;
-	margin: 10px 0;
+a.link__more{
+	color: #FF004F;
+	text-transform: initial;
 }
-
-.essentiels li i{
-	content: "";
-	position: absolute;
-	width: 24px;
-	height: 24px;
-	/*top: 30%;*/
-	left: -17%;
-    pointer-events: none;
-	background: transparent url(../images/mooc/sprite_presentation.png) no-repeat 0 0 scroll;
-}
-
-.essentiels li i.essentiels__date{background-position: 0 0;}
-.essentiels li i.essentiels__duree{background-position: 0 -25px;}
-.essentiels li i.essentiels__tarif{background-position: 0 -50px;}
-.essentiels li i.essentiels__certif{background-position: 0 -75px;}
-.essentiels li i.essentiels__lang{background-position: 0 -100px;}
-.essentiels li i.essentiels__video{background-position: 0 -125px;}
 /* */

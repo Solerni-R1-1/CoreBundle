@@ -46,10 +46,18 @@ class MoocController extends Controller
             	return $this->inner404("le mooc n'existe pas : ".$moocid);
             }
 
+            $sessions = $mooc->getMoocSessions();
+
+            $session = null;
+            if(!empty($sessions)) {
+                $session = $sessions[0];
+            }
+
             return $this->render(
                 'ClarolineCoreBundle:Mooc:mooc.html.twig',
                 array(
-                    'mooc'     => $mooc
+                    'mooc'     => $mooc,
+                    'session'  => $session
                 )
             );
         }
@@ -81,7 +89,7 @@ class MoocController extends Controller
 
         	switch ($word){
         		case "apprendre" : 
-	        		return $this->sessionApprendrePage($session);
+	        		return $this->sessionApprendrePage($session->getMooc());
 	        		break;
 
         		case "discuter" : 
@@ -89,7 +97,7 @@ class MoocController extends Controller
 	        		break;
 
         		case "partager" :
-	        		return $this->sessionPartagerPage($session);
+	        		return $this->sessionPartagerPage($session->getMooc()->getWorkspace());
 	        		break;
 
         		case "vomir" :
@@ -111,38 +119,47 @@ class MoocController extends Controller
             );
         }
 
-        private function sessionApprendrePage($session) {
+        private function sessionApprendrePage($mooc) {
 
-            //TODO : make inner redirection instead JS redirect
-            return $this->render(
-                'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
-                array(
-                    'session'     => $session,
-                    'redirection'     => 'Redirection vers Apprendre'
-                )
-            );
+            $node = $mooc->getLesson();
+
+            if($node != null){
+                $resourceType = $node->getResourceType()->getName();
+                $nodeid = $node->getId();
+                $url = $this->get('router')
+                             ->generate('claro_resource_open', array('resourceType' => $resourceType, "node" => $nodeid));
+                return  $this->redirect($url);
+            }
+
+            // 404
+            $warn = "Aucune leçon n'est associée à ce mooc";
+            return $this->inner404($warn);
         }
         private function sessionDiscuterPage($session) {
 
-            //TODO : make inner redirection instead JS redirect
-            return $this->render(
-                'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
-                array(
-                    'session'     => $session,
-                    'redirection'     => 'Redirection vers les forums'
-                )
-            );
-        }
-        private function sessionPartagerPage($session) {
+            $node = $session->getForum();
 
-            //TODO : make inner redirection instead JS redirect
-            return $this->render(
-                'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
-                array(
-                    'session'     => $session,
-                    'redirection'     => 'Redirection vers les Resources/Fichiers'
-                )
-            );
+            if($node != null){
+                $resourceType = $node->getResourceType()->getName();
+                $nodeid = $node->getId();
+                $url = $this->get('router')
+                             ->generate('claro_resource_open', array('resourceType' => $resourceType, "node" => $nodeid));
+                return  $this->redirect($url);
+            }
+
+            // 404
+            $warn = "Aucun forum n'est associé à cette session";
+            return $this->inner404($warn);
+
+        }
+        private function sessionPartagerPage($workspace) {
+
+            $workspaceId = $workspace->getId();
+
+            $url = $this->get('router')
+                         ->generate('claro_workspace_open_tool', array('workspaceId' => $workspaceId, "toolName" => "resource_manager"));
+            return  $this->redirect($url);
+            
         }
         private function sessionLolPage($session) {
 
