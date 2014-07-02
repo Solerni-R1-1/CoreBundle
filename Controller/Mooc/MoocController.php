@@ -15,6 +15,9 @@ use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Repository\Mooc\MoocRepository;
 use Claroline\CoreBundle\Repository\Mooc\MoocSessionRepository;
+//use Icap\LessonBundle\Repository\LessonRepository;
+use Icap\LessonBundle\Entity\Lesson;
+use Claroline\CoreBundle\Controller\SolerniController;
 
 /**
  * Description of StaticController
@@ -64,8 +67,9 @@ class MoocController extends Controller
         
         /**
          * @Route("/{moocid}/{moocname}/session/{sessionid}/{word}", name="mooc_view_session")
+         * @ParamConverter("user", options={"authenticatedUser" = true})
          */
-        public function sessionPageAction($moocid, $moocname, $sessionid, $word){
+        public function sessionPageAction($moocid, $moocname, $sessionid, $word, $user){
 
 
         	if(!preg_match($this->patternId, $moocid)){
@@ -89,7 +93,7 @@ class MoocController extends Controller
 
         	switch ($word){
         		case "apprendre" : 
-	        		return $this->sessionApprendrePage($session->getMooc());
+	        		return $this->sessionApprendrePage($session->getMooc(), $user);
 	        		break;
 
         		case "discuter" : 
@@ -119,10 +123,17 @@ class MoocController extends Controller
             );
         }
 
-        private function sessionApprendrePage($mooc) {
+        private function sessionApprendrePage($mooc, $user) {
 
             $node = $mooc->getLesson();
 
+            $repo = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
+            $lesson = $repo->findOneByResourceNode($node);
+
+            $url = $this->getRouteToTheLastChapter($lesson, $user);
+            return  $this->redirect($url);
+
+/*
             if($node != null){
                 $resourceType = $node->getResourceType()->getName();
                 $nodeid = $node->getId();
@@ -130,10 +141,10 @@ class MoocController extends Controller
                              ->generate('claro_resource_open', array('resourceType' => $resourceType, "node" => $nodeid));
                 return  $this->redirect($url);
             }
-
+*/
             // 404
-            $warn = "Aucune leçon n'est associée à ce mooc";
-            return $this->inner404($warn);
+            //$warn = "Aucune leçon n'est associée à ce mooc";
+            //return $this->inner404($warn);
         }
         private function sessionDiscuterPage($session) {
 
@@ -173,6 +184,60 @@ class MoocController extends Controller
             );
         }
 
+        /**
+     * get the route to the last chapter read, according to the log.
+     *
+     * @param Lesson $lesson
+     * @param User|string $user
+     * @return string
+     */
+    private function getRouteToTheLastChapter(Lesson $lesson, $user){
+        $router = $this->get('router');
+        $doctrine = $this->get('doctrine');
+        $logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
+        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
+        // TODO see if it can be parametered
+        $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_lesson');
+        if ($resourceType == null) {
+            // TODO manage error
+            die('must not be executed');
+        }
 
+        if($user instanceof User){
+            $log = $logRepository->findOneBy(
+                    array(
+                        'resourceType' => $resourceType->getId(),
+                        'doer' => $user->getId(),
+                        'action' => LogChapterReadEvent::ACTION,
+                    ),
+                    array('dateLog' => 'DESC')
+                );
+        } else {
+            $log = null;
+        }
+
+        $firstChapter = null;
+        if($log == null){
+            $allChapters = $chapterRepository->findByLesson(array('lesson' => $lesson), array('left' => 'ASC'));
+            foreach($allChapters as $chapter){
+                if($chapter->getLevel() > 1){
+                    if($firstChapter == null){
+                        $firstChapter = $chapter;
+                        break;
+                    }
+                }
+            }
+            if($firstChapter != null){
+                $url = $router->generate('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterId' => $firstChapter->getId()));
+            } else {
+                $url = $router->generate('icap_lesson', array('resourceId' => $lesson->getId()));
+            }
+        } else {
+            $details = $log->getDetails();
+            $url = $router->generate('icap_lesson_chapter', array('resourceId' => $details['chapter']['lesson'], 'chapterId' => $details['chapter']['chapter']));
+        }
+        
+        return $url;
+    }
 
 }
