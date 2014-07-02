@@ -137,7 +137,7 @@
 
                 /* display illustration */
                 if ( $('#claroline_corebundle_workspace_mooc_illustrationPath').val() ) {
-                    $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<img src="{{ path('claro_index') }}transfo/zcrop_234_150?uri=./{{illustration}}" alt="Illustration du MOOC" />');
+                    $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<img src="{{ image( illustration ).zoomCrop( 234, 150 ) }}" alt="Illustration du MOOC" />');
                 } else {
                     $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<span>Pas d\'illustration</span>');
                 }
