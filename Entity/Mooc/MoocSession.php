@@ -63,8 +63,9 @@ class MoocSession extends AbstractIndexable
      * 
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"},
-     *     mappedBy="moocSessions"
+     *     inversedBy="moocSessions"
      * )
+     * @ORM\JoinTable(name="claro_user_mooc_session")
      */
     private $users;
 
@@ -220,7 +221,7 @@ class MoocSession extends AbstractIndexable
     /**
      * Get Users
      * 
-     * @return ArrayCollection
+     * @return PersistentCollection
      */
     public function getUsers()
     {
@@ -230,10 +231,10 @@ class MoocSession extends AbstractIndexable
     /**
      * Set Users
      * 
-     * @param ArrayCollection $users
+     * @param  $users
      * @return MoocSession
      */
-    public function setUsers(ArrayCollection $users)
+    public function setUsers( $users )
     {
         $this->users = $users;
         

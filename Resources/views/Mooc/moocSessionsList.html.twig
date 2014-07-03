@@ -1,0 +1,12 @@
+{# render a list of user sessions using moocSessionComponent #}
+
+{% if sessions|length == 0 %}
+    <span>Vous n'êtes inscrit à aucun mooc pour l'instant</span>
+{% else %}
+    {% for session in sessions %}
+        {% render controller(
+            'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
+            { 'session': session }
+        ) %}
+    {% endfor %}
+{% endif %}

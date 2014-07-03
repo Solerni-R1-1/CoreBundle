@@ -1,0 +1,32 @@
+{# display session component #}
+{% set mooc = session.getMooc() %}
+<div class='presentation__mooc'>
+
+	<div class="presentation__mooc__pic">
+		<span class='mooc__pic_w'>
+			<img class="slrn-widget__image" src="{{ image(mooc.getIllustrationWebPath()).zoomCrop(234,150) }}" alt="{{ mooc.getTitle() }}">
+		</span>
+		<span class='presentation__mooc__progression__title'>Ma progression</span>
+		<span class='presentation__mooc__progression__wrapper'>
+			<span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
+			<span class='presentation__mooc__progression__100'>
+				<span class='presentation__mooc__progression__xx' style='width:{{ progression }}%'></span>
+			</span>
+		</span>
+	</div>
+	<div class="presentation__mooc__text">
+		<span class="presentation__mooc__text__title">{{ session.getTitle() }}</span>
+        <span class="presentation__mooc__text__subtitle">?Proposé par Orange?</span>
+		<span class="presentation__mooc__text__desc">{{ mooc.getDescription }}</span>
+		<div class="clearfix"></div>
+        
+        {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+	</div>
+	<div class="presentation__mooc__meta">
+		<span class="presentation__mooc__meta__date">
+            <span class="valign">Début le {{ session.getStartDate|date('d/m/Y') }}<br>Fin le {{ session.getEndDate|date('d/m/Y') }}</span>
+        </span>
+		<span class="presentation__mooc__meta__badge"><span class="valign">?Badgeant?</span></span>
+  		<span class="presentation__mooc__meta__price"><span class="valign">{{ mooc.getCost() }} €</span></span>
+	</div>
+</div>

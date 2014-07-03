@@ -72,7 +72,8 @@ class MoocSessionType extends AbstractType
             ->add('forum', 'entity', array(
                 'label' => 'Forum',
                 'property' => 'name',
-                'class' => 'ClarolineCoreBundle:Resource\ResourceNode', 
+                'empty_value' => '-- Choisir un forum de session --',
+                'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'required' => false,
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
                             return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->forumResourceType);
@@ -88,7 +89,8 @@ class MoocSessionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Mooc\MoocSession'
+            'data_class' => 'Claroline\CoreBundle\Entity\Mooc\MoocSession',
+            'language' => 'fr'
         ));
     }
 
@@ -97,6 +99,6 @@ class MoocSessionType extends AbstractType
      */
     public function getName()
     {
-        return 'claroline_corebundle_workspace_moocsession';
+        return 'claroline_corebundle_moocsession';
     }
 }

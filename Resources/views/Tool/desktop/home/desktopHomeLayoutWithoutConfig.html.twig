@@ -2,73 +2,28 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
-{# WE DO NOT USE BREACRUMBS
-{% block breadcrumb %}
-    {{
-        macros.desktopBreadcrumbs([
-            {
-                'name': 'home'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
- #}
 
 {% block bodyClasses %}dsk{% endblock %}
 
 {% block section_content %}
-        {# DISPLAY LEFT COLUMN : USER PROFILE #}
         {% render controller(
-        'ClarolineCoreBundle:Solerni:getDesktopProfileWidget'
-    ) %}
-    {#<div class="panel-heading relative">
-        <h3 class="panel-title">
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'dashboard' }
+        ) %}
+<div class='col-xs-9 col-md-9'>
+    <div class='dsk__article__mooc'>
+        <div class='clearfix'></div>
+        <h2>
             {{ 'dashboard'|trans({}, 'platform') }}
-        </h3>
-       {# Bouton d'édition de la page  
-        <div class="float-right-top">
-            <a class="btn btn-primary" href="{{ path('claro_display_desktop_home_tabs_with_config', {'tabId': tabId}) }}" role="button">
-                <i id="switch-config-mode" class="icon-pencil"></i>
-            </a>
-        </div>
-    </div>#}
-
-    <div class="panel-body">
-        {# Tabs de navigation #}
-        {# <ul class="nav nav-tabs margin-bottom-md">
-            {% for adminHomeTabConfig in adminHomeTabConfigs %}
-            {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-            <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}">
-                <a href="{{
-                    path(
-                        'claro_display_desktop_home_tabs_without_config',
-                        {'tabId': adminHomeTab.getId()}
-                    )
-                    }}"
-                    class="hometab-link"
-                >
-                    {{ adminHomeTab.getName() }}
-                </a>
-            </li>
-            {% endfor %}
-            {% for userHomeTabConfig in userHomeTabConfigs %}
-            {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
-            <li class="hometab-element {% if userHomeTab.getId() == tabId %} active {% endif %}">
-                <a href="{{
-                    path(
-                        'claro_display_desktop_home_tabs_without_config',
-                        {'tabId': userHomeTab.getId()}
-                    )
-                    }}"
-                    class="hometab-link"
-                >
-                    {{ userHomeTab.getName() }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul> #}
-
-        {% block homeTab %}{% endblock %}
+        </h2>
+        {% render controller(
+            'ClarolineCoreBundle:Mooc\\Mooc:getUserSessionsList',
+            {}
+        ) %}
     </div>
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopMessagesBadgesAndEvalBlockWidget',
+            {}
+        ) %}
+    <div class='clearfix'></div>
 {% endblock %}

@@ -35,6 +35,6 @@ class MoocCategoryType extends AbstractType
      */
     public function getName()
     {
-        return 'claroline_corebundle_workspace_mooccategory';
+        return 'claroline_corebundle_mooc_category';
     }
 }

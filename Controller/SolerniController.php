@@ -219,7 +219,6 @@ class SolerniController extends Controller
         //Get the static pages controller
         $static = $this->get('orange.static.controller');
 
-
         $thumbnail = $this->get('claroline.utilities.thumbnail_creator');
 
         $picDft = 'avatar.jpg';
@@ -577,8 +576,7 @@ class SolerniController extends Controller
         );
 
         return $this->render(
-                'ClarolineCoreBundle:Partials:desktopProfileWidget.html.twig',
-                $return
+                'ClarolineCoreBundle:Partials:desktopProfileWidget.html.twig'
         );
     }
 

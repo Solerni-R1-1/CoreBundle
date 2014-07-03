@@ -1238,6 +1238,16 @@ input[type="file"] { height: auto; }
 	background-color: #888686;
 	border-color: #888686;
 }
+
+.btn-blue{
+	background-color: #4B667C;
+	border-color: #4B667C;
+    color: #FFF;
+}
+.btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open .dropdown-toggle.btn-blue {
+	background-color: #888686;
+	border-color: #888686;
+}
  
 .slrn-mooc_sessions {
     margin-bottom: 2em;

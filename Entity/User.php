@@ -300,9 +300,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession",
-     *      inversedBy="users"
+     *      mappedBy="users"
      * )
-     * @ORM\JoinTable(name="claro_user_mooc_session")
      */
     protected $moocSessions;
     

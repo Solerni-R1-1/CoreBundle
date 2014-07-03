@@ -131,20 +131,20 @@
                 });
 
                 /* Populate illustration field when upload file is set up to avoid empty field error */
-                $('#claroline_corebundle_workspace_mooc_file').on( "change", function() {
-                    $('#claroline_corebundle_workspace_mooc_illustrationPath').val( 'dummy' );
+                $('#claroline_corebundle_mooc_file').on( "change", function() {
+                    $('#claroline_corebundle_mooc_illustrationPath').val( 'dummy' );
                 });
 
                 /* display illustration */
                 {% if illustration != null %}
-                    $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<img src="{{ image( illustration ).zoomCrop( 234, 150 ) }}" alt="Illustration du MOOC" />');
+                    $('#claroline_corebundle_mooc_illustrationPath').parent().prepend('<img src="{{ image( illustration ).zoomCrop( 234, 150 ) }}" alt="Illustration du MOOC" />');
                 {% else %}
-                    $('#claroline_corebundle_workspace_mooc_illustrationPath').parent().prepend('<span>Pas d\'illustration</span>');
+                    $('#claroline_corebundle_mooc_illustrationPath').parent().prepend('<span>Pas d\'illustration</span>');
                 {% endif %}
                 
                 /* checkbox video/subtitle dependancies */
-                var videoCheckbox = $('#claroline_corebundle_workspace_mooc_hasVideo');
-                var subtitleCheckbox = $('#claroline_corebundle_workspace_mooc_hasSubtitle');
+                var videoCheckbox = $('#claroline_corebundle_mooc_hasVideo');
+                var subtitleCheckbox = $('#claroline_corebundle_mooc_hasSubtitle');
                 videoCheckbox.on( 'change', function() {
                     if ( ! $(this).prop('checked') && subtitleCheckbox.prop('checked')) {
                         subtitleCheckbox.prop('checked', false);

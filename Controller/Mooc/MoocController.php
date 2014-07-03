@@ -55,61 +55,67 @@ class MoocController extends Controller
         }
         
         /**
-         * @Route("/{moocid}/{moocname}/sessions", name="mooc_view")
+         * @Route("/{moocId}/{moocName}/sessions", name="mooc_view")
+         * @EXT\ParamConverter(
+         *      "mooc",
+         *      class="ClarolineCoreBundle:Mooc\Mooc",
+         *      options={"id" = "moocId", "strictId" = true}
+         * )
+         * @ParamConverter("user", options={"authenticatedUser" = false})
          */
-        public function moocPageAction($moocid, $moocname){
+        public function moocPageAction( $mooc, $user ) {
+            
             //Check pattern
-            if(!preg_match($this->patternId, $moocid)){
-            	return $this->inner404("parametre moocid invalid : ".$moocid);
-            }
-
-            //check the mooc
-            $mooc = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\Mooc')
-            		->find($moocid);
-
-			if($mooc == null){
-            	return $this->inner404("le mooc n'existe pas : ".$moocid);
+            if(  ( ! preg_match ( $this->patternId, $mooc->getId() ) ) || ! $mooc ) {
+            	return $this->inner404("parametre moocId invalid : " . $mooc->getId() );
             }
 
             $sessions = $mooc->getMoocSessions();
-
-            $session = null;
-            if(!empty($sessions)) {
-                $session = $sessions[0];
-            }
-
+            
             return $this->render(
                 'ClarolineCoreBundle:Mooc:mooc.html.twig',
                 array(
                     'mooc'     => $mooc,
-                    'session'  => $session
+                    'sessions'  => $sessions,
+                    'user'     => $user
                 )
             );
         }
         
         /**
-         * @Route("/{moocid}/{moocname}/session/{sessionid}/{word}", name="mooc_view_session")
+         * @Route("/{moocId}/{moocName}/session/{sessionId}/{word}", name="mooc_view_session")
          * @ParamConverter("user", options={"authenticatedUser" = true})
+         * @EXT\ParamConverter(
+         *      "moocSession",
+         *      class="ClarolineCoreBundle:Mooc\MoocSession",
+         *      options={"id" = "sessionId", "strictId" = true}
+         * )
+         * @EXT\ParamConverter(
+         *      "mooc",
+         *      class="ClarolineCoreBundle:Mooc\Mooc",
+         *      options={"id" = "moocId", "strictId" = true}
+         * )
          */
-        public function sessionPageAction($moocid, $moocname, $sessionid, $word, $user){
+        public function sessionPageAction( $mooc, $moocSession, $word, $user ){
 
 
-        	if(!preg_match($this->patternId, $moocid)){
-            	return $this->inner404("parametre moocid invalid : ".$moocid);
+        	if(!preg_match($this->patternId, $mooc->getId() )){
+            	return $this->inner404("parametre moocId invalid : ". $mooc->getId() );
             }
 
-            if(!preg_match($this->patternId, $sessionid)){
-            	return $this->inner404("parametre sessionid invalid : ".$sessionid);
+            if(!preg_match($this->patternId, $moocSession->getId() )){
+            	return $this->inner404("parametre sessionId invalid : " . $moocSession->getId() );
             }
 
             //check the mooc
-            $session = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\MoocSession')->find($sessionid);
+            $session = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\MoocSession')->find( $moocSession->getId() );
             if($session == null){
-            	return $this->inner404("la session n'existe pas : ".$sessionid);
+            	return $this->inner404("la session n'existe pas : ".$moocSession->getId() );
             }
-            if($session->getMooc()->getId() != $moocid){
+            
+            if( $session->getMooc()->getId() != $mooc->getId() ){
                 return $this->inner404("mooc non correspondant . expected : "
-                            .$session->getMooc()->getId()." given : ".$moocid);
+                            .$session->getMooc()->getId()." given : " . $mooc->getId() );
             }
 
 
@@ -155,19 +161,8 @@ class MoocController extends Controller
             $url = $this->getRouteToTheLastChapter($lesson, $user);
             return  $this->redirect($url);
 
-/*
-            if($node != null){
-                $resourceType = $node->getResourceType()->getName();
-                $nodeid = $node->getId();
-                $url = $this->get('router')
-                             ->generate('claro_resource_open', array('resourceType' => $resourceType, "node" => $nodeid));
-                return  $this->redirect($url);
-            }
-*/
-            // 404
-            //$warn = "Aucune leçon n'est associée à ce mooc";
-            //return $this->inner404($warn);
         }
+        
         private function sessionDiscuterPage($session) {
 
             $node = $session->getForum();
@@ -270,21 +265,89 @@ class MoocController extends Controller
          *      class="ClarolineCoreBundle:Mooc\MoocSession",
          *      options={"id" = "sessionId", "strictId" = true}
          * )
-         * 
+         * @ParamConverter("user", options={"authenticatedUser" = false })
          */
-        public function sessionAddUserAction( $moocSession ){
+        public function sessionAddUserAction( $moocSession, $user ){
             
-            $user = $this->security->getToken()->getUser();
-            
+            /* if anon redirect to login page with query param to redirect user after login */
             if ( $user == 'anon.' ) {
                 $route = $this->router->generate('claro_security_login', array ( 'mooc_session_id' => $moocSession->getId() ) );
-                
             } else {
-               $route = $this->router->generate('mooc_view', array ( 'moocid' => $moocSession->getMooc()->getId(), 'moocname' => $moocSession->getMooc()->getAlias() ) );
+                /* get all users */
+                $users = $moocSession->getUsers();
+                /* if not already in users, add user */
+                if ( ! $users->contains( $user ) ) {
+                    $users->add( $user );
+                    $moocSession->setUsers( $users );
+                    $this->getDoctrine()->getManager()->persist($moocSession);
+                    $this->getDoctrine()->getManager()->flush();
+                }
+                /* redirect to lesson default page */
+                $route = $this->router->generate('mooc_view_session', array ( 
+                    'moocId' => $moocSession->getMooc()->getId(), 
+                    'moocName' => $moocSession->getMooc()->getAlias(),
+                    'sessionId' => $moocSession->getId(), 
+                    'word' => 'apprendre'
+                    ) );
             }
             
             return new RedirectResponse($route);
         }
-
+        
+        /**
+        * @ParamConverter("user", options={"authenticatedUser" = true })
+        */
+        public function getUserSessionsListAction( $user )
+        {
+            return $this->render(
+            'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
+            array( 
+                'sessions' => $user->getMoocSessions(),
+                'user' => $user
+                )
+            );
+        }
+        
+        /**
+        * @ParamConverter("user", options={"authenticatedUser" = true })
+        */
+        public function renderSessionComponentAction( $session, $user )
+        {
+            $doctrine = $this->getDoctrine();
+            $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
+            $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
+            $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
+            
+            /* get lesson progression */
+            $lessonNode = $session->getMooc()->getLesson();
+            $lesson = $lessonRepository->findOneByResourceNode($lessonNode);
+            $totalProgression = 0;
+            $currentProgression = 0;
+            $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
+            $firstChapter = null;
+            foreach($allChapters as $chapter){
+                if($chapter->getLevel() > 1){
+                    if($firstChapter == null){
+                        $firstChapter = $chapter;
+                    }
+                    $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
+                    if($done && $done->getDone()){
+                        $currentProgression++;
+                    }
+                    $totalProgression++;
+                }
+            }
+            
+            $progression = ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
+         
+            return $this->render(
+            'ClarolineCoreBundle:Mooc:moocSessionComponent.html.twig',
+            array( 
+                'session' => $session,
+                'user' => $user,
+                'progression' => $progression
+                )
+            );
+        }
 
 }

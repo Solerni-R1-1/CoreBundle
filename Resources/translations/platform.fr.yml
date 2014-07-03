@@ -99,7 +99,7 @@ admin_analytics_no_data: 'Aucune donnée.'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_third_party_application: 'Applications tierces'
-admin_workspace_tag_form_name: Nom
+admin_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
@@ -456,7 +456,7 @@ notifications: 'Notifications'
 oauth: Oauth
 object: Objet
 ok: Ok
-only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
+only_for_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
 operation_done: 'Opération effectuée.'
 options: Options
@@ -521,7 +521,7 @@ public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concorda
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
 public_registration: 'Inscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
-public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
+public_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
@@ -540,9 +540,9 @@ remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %cou
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
-remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
-remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
-remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
+remove_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
+remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 rename: Renommer
 rename_category: 'Renommer la catégorie'
@@ -592,7 +592,7 @@ roles: Rôles
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
 save_as_template: 'Sauvegarder comme modèle'
-save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
+save_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
@@ -669,7 +669,7 @@ to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
 to_message: À
 to_platform_users: 'aux utilisateurs de la plateforme'
-to_workspace_members: 'aux membres de cet espace'
+to_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
 tool: Outil
 tool_form_displayName: 'Nom affiché'
@@ -745,7 +745,7 @@ visibility: Visibilité
 visible: Visible
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
-warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
+warning_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
 widget_display_form_name: Nom
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
@@ -875,30 +875,30 @@ get_more_badges: 'Obtenir plus de badges'
 
 #Mooc Form Edit
 workspace_form_isMooc: 'Mooc'
-claroline_corebundle_workspace_mooc: 'Formulaire d''édition du MOOC'
-claroline_corebundle_workspace_mooc_title: 'Titre'
-claroline_corebundle_workspace_mooc_alias: 'Alias'
-claroline_corebundle_workspace_mooc_description: 'Description'
-claroline_corebundle_workspace_mooc_categories: 'Catégories'
-claroline_corebundle_workspace_mooc_aboutPageDescription: 'Page En savoir +'
-claroline_corebundle_workspace_mooc_file: 'Image d''illustration'
-claroline_corebundle_workspace_mooc_illustrationPath: 'Illustration du mooc'
-claroline_corebundle_workspace_mooc_postEndAction: 'Après fermeture'
-claroline_corebundle_workspace_mooc_duration: 'Durée'
-claroline_corebundle_workspace_mooc_weeklyTime: 'Durée hebdomadaire'
-claroline_corebundle_workspace_mooc_language: 'langue'
-claroline_corebundle_workspace_mooc_cost: 'Tarif'
-claroline_corebundle_workspace_mooc_hasVideo: 'Vidéos'
-claroline_corebundle_workspace_mooc_hasSubtitle: 'Avec sous-titres'
-claroline_corebundle_workspace_mooc_prerequisites: 'Prérequis'
-claroline_corebundle_workspace_mooc_teamDescription: 'Equipe pédagogique'
-claroline_corebundle_workspace_mooc_hasFacebookShare: 'Activer le partage Facebook'
-claroline_corebundle_workspace_mooc_hasTweeterShare: 'Activer le partage Twitter'
-claroline_corebundle_workspace_mooc_hasGplusShare: 'Activer le partage G+'
-claroline_corebundle_workspace_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
-claroline_corebundle_workspace_mooc_lesson: 'Cours du MOOC'
+claroline_corebundle_mooc: 'Formulaire d''édition du MOOC'
+claroline_corebundle_mooc_title: 'Titre'
+claroline_corebundle_mooc_alias: 'Alias'
+claroline_corebundle_mooc_description: 'Description'
+claroline_corebundle_mooc_categories: 'Catégories'
+claroline_corebundle_mooc_aboutPageDescription: 'Page En savoir +'
+claroline_corebundle_mooc_file: 'Image d''illustration'
+claroline_corebundle_mooc_illustrationPath: 'Illustration du mooc'
+claroline_corebundle_mooc_postEndAction: 'Après fermeture'
+claroline_corebundle_mooc_duration: 'Durée'
+claroline_corebundle_mooc_weeklyTime: 'Durée hebdomadaire'
+claroline_corebundle_mooc_language: 'langue'
+claroline_corebundle_mooc_cost: 'Tarif'
+claroline_corebundle_mooc_hasVideo: 'Vidéos'
+claroline_corebundle_mooc_hasSubtitle: 'Avec sous-titres'
+claroline_corebundle_mooc_prerequisites: 'Prérequis'
+claroline_corebundle_mooc_teamDescription: 'Equipe pédagogique'
+claroline_corebundle_mooc_hasFacebookShare: 'Activer le partage Facebook'
+claroline_corebundle_mooc_hasTweeterShare: 'Activer le partage Twitter'
+claroline_corebundle_mooc_hasGplusShare: 'Activer le partage G+'
+claroline_corebundle_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
+claroline_corebundle_mooc_lesson: 'Cours du MOOC'
 
-claroline_corebundle_workspace_mooccategory_name: 'Nom de la catégorie'
+claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
 
 workspace_edit: 'Paramètres du workspace'
 mooc_edit: 'Paramètres du MOOC'
