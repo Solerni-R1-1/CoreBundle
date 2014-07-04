@@ -272,6 +272,10 @@ mooc_view_session:
     resource: "@ClarolineCoreBundle/Controller/Mooc/MoocController.php"
     type: annotation
 
+solerni_catalogue:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/CatalogueController.php"
+    type: annotation
+
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
