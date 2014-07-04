@@ -23,7 +23,7 @@
 		<div class="col-xs-9 col-md-9 mooc__section__right">
 			<h1>{{ mooc.getTitle() }}</h1>
             {% for session in sessions %}
-                {% include('ClarolineCoreBundle:Partials:moocSessionButton.html.twig') with { 'session': session } %}
+                {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
             {% endfor %}
 		</div>
 	</div>
@@ -108,7 +108,7 @@
 		</ul>
 		<center>
             {% for session in sessions %}
-                {% include('ClarolineCoreBundle:Partials:moocSessionButton.html.twig') with { 'session': session } %}
+                {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
             {% endfor %}
         </center>
 	</div>
