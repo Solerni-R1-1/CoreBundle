@@ -181,6 +181,8 @@ body.subnavbar-fixed { padding-top: 110px }
     position: relative;
     border-bottom: 5px solid rgb( 255, 0, 75 );
     margin-top: -5px;
+    min-height: 250px;
+    background-color: #4B667C;
 }
 .slrn-header__bgimage {
     width: 100%; 

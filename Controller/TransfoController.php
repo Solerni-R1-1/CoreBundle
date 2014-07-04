@@ -35,7 +35,7 @@ class TransfoController extends Controller
     public function transfoAction($filters = "")
     {
 
-        $imageURI = $this->get('request')->get('uri');
+        $imageURI = $this->get('request')->get('img_uri');
 
         if (@fopen($imageURI, "r")) {
             $image = $this->filter($this->get('image.handling')->open($imageURI), $filters);
