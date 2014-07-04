@@ -1276,3 +1276,7 @@ input[type="file"] { height: auto; }
 .form-horizontal h3 {
     margin: 2em 0 1.8em 0;
 }
+
+.spacer {
+    margin-bottom: 1em;
+}

@@ -18,7 +18,7 @@
 <section class="col-xs-12 col-md-12 mooc__section">
 	<div class="row mooc__section__left">
 		<div class="col-xs-3 col-md-3 mooc__section__left__logo">
-			<img src='#' width='64' height='64' alt='logo xwxx' class='mock'/>
+			<img src="http://www.nowebagency.com/wp-content/uploads/2013/06/01144352-photo-logo-o-range.jpg" alt="{{ mooc.getTitle() }}" width='86' height='64' alt='Mocked' class='mock'/>
 		</div>
 		<div class="col-xs-9 col-md-9 mooc__section__right">
 			<h1>{{ mooc.getTitle() }}</h1>
@@ -107,7 +107,7 @@
 		</ul>
 		<center>
             {% for session in sessions %}
-                {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+                <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
             {% endfor %}
         </center>
 	</div>
@@ -169,11 +169,16 @@
  <div class="col-xs-9 col-md-9 contentBlock">
  	{{ mooc.getAboutPageDescription() | raw }}
  </div>
+ <div class="col-xs-9 col-md-9 contentBlock text-center">
+    {% for session in sessions %}
+        {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+    {% endfor %}
+ </div>
 </section>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <!-- <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/xxx.js') }}"></script> -->
+    {# <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/xxx.js') }}"></script> #}
 {% endblock %}
 
