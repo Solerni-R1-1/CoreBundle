@@ -41,10 +41,14 @@ class TransfoController extends Controller
             $image = $this->filter($this->get('image.handling')->open($imageURI), $filters);
             $image_mime = image_type_to_mime_type(exif_imagetype($imageURI));
             $cacheData = file_get_contents('http://' . $this->getRequest()->getHost() . $image->cacheFile('guess'));
-            $response = new Response($cacheData);
-            $response->headers->set('Content-Type', $image_mime);
-            $response->setPublic();
-            
+            if ( $cacheData ) {
+                $response = new Response($cacheData);
+                $response->headers->set('Content-Type', $image_mime);
+                $response->setPublic(); 
+            } else {
+                $response = new Response();
+                $response->setStatusCode(404);  
+            }
         } else {
             $response = new Response();
             $response->setStatusCode(404);
