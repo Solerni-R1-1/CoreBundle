@@ -56,6 +56,7 @@
     
     {# DISPLAY THE LINK TO CMS PRESENTATION #}
     {% block whatIsSolerni %}
+        {% include ('ClarolineCoreBundle:Mooc:searchFormComponent.html.twig') %}
         {% import _self as topbar %}
         {{ topbar.item({'name':'what_is_solerni', 'breakhide': true, 'id':'what_is_solerni', 'href':path( 'solerni_static_page', { 'name': 'cms_quoi' } ), 'title':'Découvrez Solerni' }) }}
         {#{ topbar.item({'name':'catalogue', 'breakhide': true, 'id':'catalogue', 'href':path( 'solerni_catalogue', {}), 'title':'Découvrez Le catalogue Solerni' }) }#}

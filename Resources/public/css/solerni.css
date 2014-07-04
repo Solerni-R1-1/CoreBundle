@@ -1280,3 +1280,47 @@ input[type="file"] { height: auto; }
 .spacer {
     margin-bottom: 1em;
 }
+
+.slrn-search-form {
+    padding: .6em .5em;
+}
+
+.slrn-search-form__input {
+    width: 150px;
+    border-radius: 4px;
+    background-color: #8999a6;
+    color: #EEEEEF;
+    border: 0;
+    height: 2.3em;
+    padding: .2em .5em .2em 2.3em;
+}
+
+.slrn-search-form--inactive:before {
+    content: "";
+    width: 21px;
+    height: 21px;
+    background: transparent url(../images/sprites_solerni.png) no-repeat 0 -805px;
+    position: absolute;
+    top: 1em;
+    left: .8em;
+}
+
+.slrn-search-form ::-webkit-input-placeholder {
+    color: #EEEEEF;
+    text-transform: uppercase;
+}
+
+.slrn-search-form :-moz-placeholder {
+    color: #EEEEEF;
+    text-transform: uppercase;
+}
+
+.slrn-search-form ::-moz-placeholder {
+    color: #EEEEEF;
+    text-transform: uppercase;
+}
+ 
+.slrn-search-form :-ms-input-placeholder {
+    color: #EEEEEF;
+    text-transform: uppercase;
+}
