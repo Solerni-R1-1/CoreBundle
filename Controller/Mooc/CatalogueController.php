@@ -60,6 +60,56 @@ class CatalogueController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = false })
      */
     public function pageCatalogueAction( $user ){
+
+        $ws_url = 'https://mooc-dev.rennes.sii.fr/mooc/search/query.json';
+
+
+        //Parameters for the POST request
+        $parameters = <<<JSON
+        {
+            "page":1,
+            "item_per_page":2,
+            "keywords":"", 
+            "selections": {
+                "type_name":{
+                    "claroline_core_mooc_moocsession":true
+                }
+            }
+        }
+JSON;
+        $postdata = http_build_query(json_decode($parameters, true));
+
+        // Create a stream
+        $opts = stream_context_create(array(
+          'http'=>array(
+            'method'=>'POST',
+            'header'=>"Content-type: application/json\r\n".
+                          "content: $postdata"
+          )
+        ));
+
+        $json = @file_get_contents($ws_url, false, $context);
+        if($json == null){
+            echo ("WS url not found, check your configuration : <br/>{$ws_url}<br/> -->\n");
+            die();
+            return;
+        }
+        //$json = @json_decode($json)->documents;
+        //echo $json;
+        //die();
+         //$response = $this->forward('orange_search_request', array(
+             /*   'name'  => $name,
+                'color' => 'green',*/
+         //   ));
+
+        return $this->render(
+            'ClarolineCoreBundle:Mooc:catalogue.html.twig',
+            array(
+               // 'mooc'      => $mooc,
+                //'sessions'  => $sessions,
+                //'user'      => $user
+            )
+        );
     }
 
 
