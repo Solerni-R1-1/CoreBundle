@@ -107,7 +107,6 @@ class MoocController extends Controller
          */
         public function sessionPageAction( $mooc, $moocSession, $word, $user ){
 
-
         	if(!preg_match($this->patternId, $mooc->getId() )){
             	return $this->inner404("parametre moocId invalid : ". $mooc->getId() );
             }
@@ -116,13 +115,11 @@ class MoocController extends Controller
             	return $this->inner404("parametre sessionId invalid : " . $moocSession->getId() );
             }
 
-            //check the mooc
-            $session = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\MoocSession')->find( $moocSession->getId() );
-            if($session == null){
+            if($moocSession == null){
             	return $this->inner404("la session n'existe pas : ".$moocSession->getId() );
             }
             
-            if( $session->getMooc()->getId() != $mooc->getId() ){
+            if( $moocSession->getMooc()->getId() != $mooc->getId() ){
                 return $this->inner404("mooc non correspondant . expected : "
                             .$session->getMooc()->getId()." given : " . $mooc->getId() );
             }
@@ -130,20 +127,24 @@ class MoocController extends Controller
 
         	switch ($word){
         		case "apprendre" : 
-	        		return $this->sessionApprendrePage($session->getMooc(), $user);
+	        		return $this->sessionApprendrePage($moocSession->getMooc(), $user);
 	        		break;
 
         		case "discuter" : 
-	        		return $this->sessionDiscuterPage($session);
+	        		return $this->sessionDiscuterPage($moocSession);
 	        		break;
 
         		case "partager" :
-	        		return $this->sessionPartagerPage($session->getMooc()->getWorkspace());
+	        		return $this->sessionPartagerPage($mooc->getWorkspace());
+	        		break;
+                
+               case "subscribe" :
+	        		return $this->sessionAddUserAction( $moocSession, $user );
 	        		break;
 
         		case "vomir" :
         		case "subir" :
-	        		return $this->sessionLolPage($session);
+	        		return $this->sessionLolPage( $moocSession );
 	        		break;
 
         		default:return $this->inner404("le word est inconnu : ".$word);

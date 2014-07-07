@@ -9,11 +9,16 @@
 {% endfor %}
 
 {% if session.getEndDate() < date() %}
-    <a class="btn btn-gris disabled" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">Mooc terminé</a>
+    <a class="btn btn-gris disabled" href="#">Mooc terminé</a>
 {% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() %}
-    <a class="btn btn-gris disabled" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
+    <a class="btn btn-gris disabled" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
 {% elseif isRegistered %}
-    <a class="btn btn-blue" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">Accéder au mooc</a>
+    <a class="btn btn-blue" href="{{ path( 'mooc_view_session', { 
+        'moocId': session.getMooc().getId(), 
+        'moocName': session.getMooc().getAlias(), 
+        'sessionId': session.getId(), 
+        'word': 'apprendre'
+    }) }}">Accéder au mooc</a>
 {% else %}
     <a class="btn btn-primary" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">S'inscrire au mooc</a>
 {% endif %}
