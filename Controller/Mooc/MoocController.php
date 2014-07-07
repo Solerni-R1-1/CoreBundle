@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
  * Description of StaticController
@@ -39,19 +40,27 @@ class MoocController extends Controller
     private $translator;
     private $security;
     private $router;
+    private $workspaceManager;
     
     
         /**
          * @DI\InjectParams({
          *     "security"           = @DI\Inject("security.context"),
          *     "router"             = @DI\Inject("router"),
-         *     "translator"         = @DI\Inject("translator")
+         *     "translator"         = @DI\Inject("translator"),
+         *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
          * })
          */
-        public function __construct( SecurityContextInterface $security, UrlGeneratorInterface $router, TranslatorInterface $translator ) {
+        public function __construct( 
+                SecurityContextInterface $security, 
+                UrlGeneratorInterface $router, 
+                TranslatorInterface $translator,
+                WorkspaceManager $workspaceManager
+            ) {
             $this->translator = $translator;
             $this->security = $security;
             $this->router = $router;
+            $this->workspaceManager = $workspaceManager;
         }
         
         /**
@@ -277,6 +286,11 @@ class MoocController extends Controller
                 $users = $moocSession->getUsers();
                 /* if not already in users, add user */
                 if ( ! $users->contains( $user ) ) {
+                    /* add user to workspace */
+                    /* @todo : check if user allready workspace user */
+                    $workspace = $moocSession->getMooc()->getWorkspace();
+                    $this->workspaceManager->addUserAction($workspace, $user);
+                    /* add user to moocSession */
                     $users->add( $user );
                     $moocSession->setUsers( $users );
                     $this->getDoctrine()->getManager()->persist($moocSession);
