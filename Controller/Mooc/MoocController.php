@@ -286,10 +286,18 @@ class MoocController extends Controller
                 $users = $moocSession->getUsers();
                 /* if not already in users, add user */
                 if ( ! $users->contains( $user ) ) {
-                    /* add user to workspace */
-                    /* @todo : check if user allready workspace user */
+                    /* add user to workspace if not already member */
                     $workspace = $moocSession->getMooc()->getWorkspace();
-                    $this->workspaceManager->addUserAction($workspace, $user);
+                    $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
+                    $isRegistered = false;
+                    foreach( $userWorkspaces as $userWorkspace ) {
+                        if ( $userWorkspace->getId() == $workspace->getId() ) {
+                            $isRegistered = true;
+                        }
+                    }
+                    if ( ! $isRegistered ) {
+                        $this->workspaceManager->addUserAction( $workspace, $user );
+                    }
                     /* add user to moocSession */
                     $users->add( $user );
                     $moocSession->setUsers( $users );
