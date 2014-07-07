@@ -12,7 +12,7 @@
     <link href="{{ asset('bundles/clarolinecore/css/slrn_mooc.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'title page mooc' | trans({}, 'solerni') }} {% endblock %}
+{% block title %} {{ mooc.getTitle() }} {% endblock %}
 
 {% block subnavbar %}
 <section class="col-xs-12 col-md-12 mooc__section">
