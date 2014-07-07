@@ -2,23 +2,22 @@
 {% set isRegistered = false %}
 {% set sessionUsers = session.getUsers() %}
 {% for sessionUser in sessionUsers %}
-    {% set isRegistered = false %}
     {% if sessionUser.getId() == user.getId() %}
         {% set isRegistered = true %}
     {% endif %}
 {% endfor %}
 
 {% if session.getEndDate() < date() %}
-    <a class="btn btn-gris disabled" href="#">Mooc terminé</a>
+    <a class="btn btn-gris disabled top-margin bottom-margin" href="#">Mooc terminé</a>
 {% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() %}
-    <a class="btn btn-gris disabled" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
+    <a class="btn btn-gris disabled top-margin bottom-margin" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
 {% elseif isRegistered %}
-    <a class="btn btn-blue" href="{{ path( 'mooc_view_session', { 
+    <a class="btn btn-blue top-margin bottom-margin" href="{{ path( 'mooc_view_session', { 
         'moocId': session.getMooc().getId(), 
         'moocName': session.getMooc().getAlias(), 
         'sessionId': session.getId(), 
         'word': 'apprendre'
     }) }}">Accéder au mooc</a>
 {% else %}
-    <a class="btn btn-primary" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">S'inscrire au mooc</a>
+    <a class="btn btn-primary top-margin bottom-margin" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">S'inscrire au mooc</a>
 {% endif %}

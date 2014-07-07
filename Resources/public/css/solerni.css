@@ -1324,3 +1324,11 @@ input[type="file"] { height: auto; }
     color: #EEF5FB;
     text-transform: uppercase;
 }
+
+.top-margin {
+    margin-top: 1em;
+}
+
+.bottom-margin {
+    margin-bottom: 1em;
+}

@@ -17,9 +17,8 @@
 	<div class="presentation__mooc__text">
 		<span class="presentation__mooc__text__title">{{ session.getTitle() }}</span>
         <span class="presentation__mooc__text__subtitle">?Proposé par Orange?</span>
-		<span class="presentation__mooc__text__desc">{{ mooc.getDescription }}</span>
+        <span class="presentation__mooc__text__desc">{{ mooc.getDescription|textTruncate(30)|raw }}</span>
 		<div class="clearfix"></div>
-        
         {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
 	</div>
 	<div class="presentation__mooc__meta">
