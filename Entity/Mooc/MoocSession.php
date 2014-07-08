@@ -319,14 +319,14 @@ class MoocSession extends AbstractIndexable
        $doc->mooc_has_video_b       = $mooc->getHasVideo();
        $doc->mooc_has_subtitle_b    = $mooc->getHasSubtitle();
        $doc->mooc_view_url          = $this->get('router')->generate('mooc_view', array(
-                                        'moocid'    => $mooc->getId(),
-                                        'moocname'  => $mooc->getAlias()
+                                        'moocId'    => $mooc->getId(),
+                                        'moocName'  => $mooc->getAlias()
                                       ));
        $doc->mooc_session_learn_url = $this->get('router')->generate('mooc_view_session', array(
                                         'word'      => 'apprendre',
-                                        'sessionid' => $this->getId(),
-                                        'moocid'    => $mooc->getId(),
-                                        'moocname'  => $mooc->getAlias()
+                                        'sessionId' => $this->getId(),
+                                        'moocId'    => $mooc->getId(),
+                                        'moocName'  => $mooc->getAlias()
                                       ));
        
        $doc->mooc_category_ids      = array_map(function($obj) { return $obj->getId(); }, $mooc->getCategories()->toArray());
