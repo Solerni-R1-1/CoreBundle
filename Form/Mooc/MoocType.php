@@ -31,6 +31,7 @@ class MoocType extends AbstractType
             ->add('description','textarea', array('required' => true))
             ->add('owner','entity', array( 'class' => 'ClarolineCoreBundle:Mooc\MoocOwner', 'property' => 'name', 'multiple'=> false, 'expanded' => false, 'required' => true, 'empty_value' => '-- Choisir un propriétaire pour ce MOOC --'))
             ->add('isPublic', 'checkbox', array('required' => false))
+            ->add('accessConstraints', 'entity', array('class' => 'ClarolineCoreBundle:Mooc\MoocAccessConstraints', 'property'=> 'name', 'multiple'=> true, 'expanded' => true))
             ->add('categories','entity', array( 'class' => 'ClarolineCoreBundle:Mooc\MoocCategory', 'property'=> 'name', 'multiple'=> true, 'expanded' => true ))
             ->add('aboutPageDescription','tinymce', array('required' => false))
             ->add('file', 'file', array('required' => false))

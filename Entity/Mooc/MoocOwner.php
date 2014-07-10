@@ -65,6 +65,18 @@ class MoocOwner
      */
     private $moocs;
     
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * 
+     * @ORM\OneToMany(
+     * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
+     * mappedBy="moocOwner",
+     * cascade={"persist", "remove"}
+     * )
+     * 
+     */
+    private $moocAccessConstraints;
+    
      /**
      *
      * @Assert\File(

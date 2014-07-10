@@ -31,8 +31,10 @@ class MoocAccessConstraints
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      * 
-     * @ORM\OneToOne(
-     *  targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner"
+     * @ORM\ManyToOne(
+     *  targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner",
+     *  inversedBy="moocAccessConstraints",
+     *  cascade={"persist", "remove"}
      * )
      * 
      */
@@ -60,6 +62,15 @@ class MoocAccessConstraints
      * @ORM\JoinTable(name="claro_mooc_constraints_to_users")
      */
     private $matchedUsers;
+    
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc")
+     * @ORM\JoinTable(name="claro_mooc_constraints_to_moocs")
+     */
+    private $moocs;
     
     
     /* GETTERS and SETTERS */
@@ -107,6 +118,14 @@ class MoocAccessConstraints
     public function setMatchedUsers(\Doctrine\Common\Collections\ArrayCollection $matchedUsers) {
         $this->matchedUsers = $matchedUsers;
     }
+    public function getMoocs() {
+        return $this->moocs;
+    }
+
+    public function setMoocs(\Doctrine\Common\Collections\ArrayCollection $moocs) {
+        $this->moocs = $moocs;
+    }
+
 
 
 

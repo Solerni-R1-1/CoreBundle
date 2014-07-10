@@ -217,6 +217,18 @@ class Mooc
     private $owner;
     
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * 
+     * @ORM\ManyToMany(
+     * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
+     * inversedBy="moocs",
+     * cascade={"persist", "remove"}
+     * )
+     * 
+     */
+    private $accessConstraints;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -715,8 +727,15 @@ class Mooc
     public function getIsPublic() {
         return $this->isPublic;
     }
+    public function getAccessConstraints() {
+        return $this->accessConstraints;
+    }
 
-        
+    public function setAccessConstraints(\Doctrine\Common\Collections\ArrayCollection $accessContraints) {
+        $this->accessConstraints = $accessContraints;
+    }
+
+            
     /* FILE UPLOAD METHODS */
     /**
      * @return string
