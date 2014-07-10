@@ -1,0 +1,44 @@
+{% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
+
+{% block content -%}
+    <h1>Mooc\MoocOwner</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Logopath</th>
+                <td>{{ entity.logoPath }}</td>
+            </tr>
+            <tr>
+                <th>Dressingpath</th>
+                <td>{{ entity.dressingPath }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_parameters_mooc_owners') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('admin_parameters_mooc_owner_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

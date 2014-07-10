@@ -1,23 +1,23 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
 {% block content -%}
-    <h1>{{ 'mooc_categories'|trans({}, 'platform') }}</h1>
+    <h1>{{ 'mooc_owners'|trans({}, 'platform') }}</h1>
     
-    <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_category_new') }}">
-      {{ 'mooc_categories_create'|trans({}, 'platform') }}
+    <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_owner_new') }}">
+      {{ 'mooc_owner_create'|trans({}, 'platform') }}
     </a>
-
-    <h2>{{ 'mooc_categories_list'|trans({}, 'platform') }}</h2>
-
+    
+     <h2>{{ 'mooc_owner_list'|trans({}, 'platform') }}</h2>
+     
     <table class="slrn-categories-list">
         {% if entities|length == 0 %}
-            {{ 'mooc_categories_list_empty'|trans({}, 'platform') }}
+            {{ 'mooc_owner_list_empty'|trans({}, 'platform') }}
         {% else  %}
             {% for entity in entities %}
                 <tr>
                     <td>{{ entity.name }}</td>
                     <td>
-                       <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
+                       <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_owner_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
                     </td>
                     <td>
                             {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
@@ -30,7 +30,7 @@
         {% endif %}
     </table>
 {% endblock %}
-
+     
 {% block javascripts %}
     {{ parent() }} 
     <script>

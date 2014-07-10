@@ -199,6 +199,7 @@ class MoocController extends Controller
             return  $this->redirect($url);
             
         }
+        
         private function sessionLolPage($session) {
 
             //TODO : make inner redirection instead JS redirect

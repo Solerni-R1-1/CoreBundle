@@ -115,7 +115,7 @@
             var sessionPrototype = $('.slrn-mooc_sessions').data('prototype');
             var newForm = sessionPrototype.replace( /__name__/g, $('.slrn-mooc_sessions__item').length );
 
-            jQuery(document).ready(function() {
+            jQuery(document).ready(function() { 
 
                 /* Add empty session form  */
                 $('#js-mooc_sessions__add').on('click', function(e) {
@@ -130,7 +130,7 @@
                     $(this).closest('.slrn-mooc_sessions__item').remove();
                 });
 
-                /* Populate illustration field when upload file is set up to avoid empty field error */
+                /* Populate illustration field when upload file */
                 $('#claroline_corebundle_mooc_file').on( "change", function() {
                     $('#claroline_corebundle_mooc_illustrationPath').val( 'dummy' );
                 });
@@ -155,7 +155,6 @@
                         videoCheckbox.prop('checked', true);
                     }
                 });
-
             });
         </script>
     {% endif %}

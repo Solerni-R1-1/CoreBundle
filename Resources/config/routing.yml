@@ -303,6 +303,12 @@ claro_admin_category:
     resource: "@ClarolineCoreBundle/Controller/Mooc/MoocCategoryController.php"
     prefix: admin/parameters/mooc/categories
     type: annotation
+    
+claro_admin_owner:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocOwnerController.php"
+    prefix: admin/parameters/mooc/owners
+    type: annotation
+    
 claro_tranfo:
     resource: "@ClarolineCoreBundle/Controller/TransfoController.php"
     type: annotation

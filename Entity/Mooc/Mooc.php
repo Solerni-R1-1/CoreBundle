@@ -205,6 +205,18 @@ class Mooc
     private $lesson;
     
     /**
+     * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
+     * 
+     * @ORM\ManyToOne(
+     * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner",
+     * inversedBy="moocs",
+     * cascade={"persist", "remove"}
+     * )
+     * 
+     */
+    private $owner;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -695,7 +707,14 @@ class Mooc
     public function setLesson( $lesson ) {
         $this->lesson = $lesson;
     }
-            
+    public function getOwner() {
+        return $this->owner;
+    }
+    public function setOwner($owner) {
+        $this->owner = $owner;
+    }
+
+    
     /**
      * @return string
      */

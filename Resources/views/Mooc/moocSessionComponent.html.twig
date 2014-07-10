@@ -1,5 +1,10 @@
 {# display session component #}
 {% set mooc = session.getMooc() %}
+{% if mooc.getCost() == 0 or mooc.getCost() is null %}
+    {% set price = 'gratuit' %}
+{% else %}
+    {% set price = mooc.getCost() ~ '€' %}
+{% endif %}
 <div class='presentation__mooc'>
 
 	<div class="presentation__mooc__pic">
