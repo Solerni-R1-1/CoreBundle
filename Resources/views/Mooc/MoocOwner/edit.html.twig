@@ -5,7 +5,6 @@
         {{ form_start(edit_form) }}
             {{ form_errors(edit_form) }}
             {{ form_widget(edit_form._token) }}
-            {% do edit_form.submit.setRendered %}
             {{ form(edit_form) }}
     
             <a class="btn btn-primary js-submit-button" href="#">{{ 'validate'|trans({}, 'platform') }}</a>
@@ -20,8 +19,8 @@
             /* action button */
             $('.js-submit-button').on('click', function(event) {
                 event.preventDefault();
-                $(this).siblings('form').submit();
-            });
+                $('#claroline_corebundle_mooc_owner_save').trigger('click');
+            })
             
             /* display logo */
             {% if logo != null %}

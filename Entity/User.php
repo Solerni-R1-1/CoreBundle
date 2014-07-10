@@ -294,7 +294,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $isFirstVisit = true;
     
-    
      /**
      * @var ArrayCollection
      *

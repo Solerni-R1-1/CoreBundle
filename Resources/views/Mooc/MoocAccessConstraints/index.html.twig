@@ -2,23 +2,24 @@
 
 {% block content -%}
     <a class="btn btn-gris" href="{{ path('claro_admin_index') }}">{{ 'back_to_parameters'|trans({}, 'platform') }}</a>
-    <h1>{{ 'mooc_categories'|trans({}, 'platform') }}</h1>
+    <h1>{{ 'mooc_accessconstraints'|trans({}, 'platform') }}</h1>
     
-    <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_category_new') }}">
-      {{ 'mooc_categories_create'|trans({}, 'platform') }}
+    
+    <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_accessconstraints_new') }}">
+      {{ 'mooc_accessconstraints_create'|trans({}, 'platform') }}
     </a>
+    
+     <h2>{{ 'mooc_accessconstraints_list'|trans({}, 'platform') }}</h2>
 
-    <h2>{{ 'mooc_categories_list'|trans({}, 'platform') }}</h2>
-
-    <table class="slrn-categories-list">
+       <table class="slrn-categories-list">
         {% if entities|length == 0 %}
-            {{ 'mooc_categories_list_empty'|trans({}, 'platform') }}
+            {{ 'mooc_accessconstraints_list_empty'|trans({}, 'platform') }}
         {% else  %}
             {% for entity in entities %}
                 <tr>
                     <td>{{ entity.name }}</td>
                     <td>
-                       <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_category_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
+                       <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_accessconstraints_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
                     </td>
                     <td>
                             {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
@@ -31,7 +32,7 @@
         {% endif %}
     </table>
 {% endblock %}
-
+     
 {% block javascripts %}
     {{ parent() }} 
     <script>

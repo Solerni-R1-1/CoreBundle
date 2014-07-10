@@ -695,7 +695,6 @@ class Mooc
     public function getCategories() {
         return $this->categories;
     }
-
     public function setCategories($categories) {
         $this->categories = $categories;
     }
@@ -713,8 +712,12 @@ class Mooc
     public function setOwner($owner) {
         $this->owner = $owner;
     }
+    public function getIsPublic() {
+        return $this->isPublic;
+    }
 
-    
+        
+    /* FILE UPLOAD METHODS */
     /**
      * @return string
      */

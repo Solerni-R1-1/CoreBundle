@@ -79,7 +79,7 @@ class MoocCategoryController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('save', 'submit', array('label' => 'Create', 'attr' => array ( 'class' => 'hide' ) ));
 
         return $form;
     }
@@ -168,7 +168,7 @@ class MoocCategoryController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('save', 'submit', array('label' => 'Update', 'attr' => array( 'class' => 'hide' ) ));
 
         return $form;
     }
@@ -243,7 +243,7 @@ class MoocCategoryController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('admin_parameters_mooc_category_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('save', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }

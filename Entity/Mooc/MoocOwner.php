@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Mooc
+ * MoocOwner
  *
  * @ORM\Table(name="claro_mooc_owner")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\MoocOwnerRepository")
@@ -27,7 +27,7 @@ class MoocOwner
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
@@ -109,10 +109,6 @@ class MoocOwner
 
     public function getDressingFile() {
         return $this->dressingFile;
-    }
-
-    public function setId($id) {
-        $this->id = $id;
     }
 
     public function setName($name) {

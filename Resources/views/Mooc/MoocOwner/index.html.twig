@@ -1,6 +1,7 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
 {% block content -%}
+    <a class="btn btn-gris" href="{{ path('claro_admin_index') }}">{{ 'back_to_parameters'|trans({}, 'platform') }}</a>
     <h1>{{ 'mooc_owners'|trans({}, 'platform') }}</h1>
     
     <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_owner_new') }}">

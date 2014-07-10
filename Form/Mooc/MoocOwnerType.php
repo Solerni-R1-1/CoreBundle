@@ -15,12 +15,12 @@ class MoocOwnerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('required' => true, 'label_attr' => array ( 'class' => 'align-right' ) ) )
-            ->add('description', 'textarea', array('required' => true, 'label_attr' => array ( 'class' => 'align-right' ) ) )
-            ->add('logoPath', 'text', array('required' => false, 'attr' => array( 'class' => 'hide' ), 'label_attr' => array ( 'class' => 'align-right' ) ) )
-            ->add('logoFile', 'file', array('required' => false, 'label_attr' => array ( 'class' => 'align-right' )))
-            ->add('dressingPath', 'text', array('required' => false, 'attr' => array( 'class' => 'hide' ), 'label_attr' => array ( 'class' => 'align-right' ) ))
-            ->add('dressingFile', 'file', array('required' => false, 'label_attr' => array ( 'class' => 'align-right' )))
+            ->add('name', 'text', array( 'required' => true, 'label_attr' => array ( 'class' => 'align-right' ) ) )
+            ->add('description', 'textarea', array( 'required' => true, 'label_attr' => array ( 'class' => 'align-right' ) ) )
+            ->add('logoPath', 'text', array( 'required' => false, 'attr' => array( 'class' => 'hide' ), 'label_attr' => array ( 'class' => 'align-right' ) ) )
+            ->add('logoFile', 'file', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' )))
+            ->add('dressingPath', 'text', array( 'required' => false, 'attr' => array( 'class' => 'hide' ), 'label_attr' => array ( 'class' => 'align-right' ) ))
+            ->add('dressingFile', 'file', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ) ) )
         ;
     }
     

@@ -7,16 +7,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Claroline\CoreBundle\Entity\Mooc\MoocOwner;
-use Claroline\CoreBundle\Form\Mooc\MoocOwnerType;
+use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
+use Claroline\CoreBundle\Form\Mooc\MoocAccessConstraintsType;
 
-class MoocOwnerController extends Controller
+/**
+ * Mooc\MoocAccessConstraints controller.
+ */
+class MoocAccessConstraintsController extends Controller
 {
 
     /**
-     * Lists all Mooc\MoocOwner entities.
+     * Lists all Mooc\MoocAccessConstraints entities.
      *
-     * @Route("/", name="admin_parameters_mooc_owners")
+     * @Route("/", name="admin_parameters_mooc_accessconstraints")
      * @Method("GET")
      * @Template()
      */
@@ -24,31 +27,30 @@ class MoocOwnerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('ClarolineCoreBundle:Mooc\MoocOwner')->findAll();
+        $entities = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->findAll();
         
-         $forms = array();
+        $forms = array();
         
         foreach( $entities as $entity ) {
             $deleteForm = $this->createDeleteForm( $entity->getId() );
             $forms[] = $deleteForm->createView();
         }
 
-
         return array(
             'entities' => $entities,
-            'forms' => $forms
+            'forms'    => $forms
         );
     }
     /**
-     * Creates a new Mooc\MoocOwner entity.
+     * Creates a new Mooc\MoocAccessConstraints entity.
      *
-     * @Route("/", name="admin_parameters_mooc_owner_create")
+     * @Route("/", name="admin_parameters_mooc_accessconstraints_create")
      * @Method("POST")
-     * @Template("ClarolineCoreBundle:Mooc\MoocOwner:new.html.twig")
+     * @Template("ClarolineCoreBundle:Mooc\MoocAccessConstraints:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new MoocOwner();
+        $entity = new MoocAccessConstraints();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -57,7 +59,7 @@ class MoocOwnerController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameters_mooc_owners'));
+            return $this->redirect($this->generateUrl('admin_parameters_mooc_accessconstraints', array('id' => $entity->getId())));
         }
 
         return array(
@@ -67,34 +69,34 @@ class MoocOwnerController extends Controller
     }
 
     /**
-     * Creates a form to create a Mooc\MoocOwner entity.
+     * Creates a form to create a Mooc\MoocAccessConstraints entity.
      *
-     * @param MoocOwner $entity The entity
+     * @param MoocAccessConstraints $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(MoocOwner $entity)
+    private function createCreateForm(MoocAccessConstraints $entity)
     {
-        $form = $this->createForm(new MoocOwnerType(), $entity, array(
-            'action' => $this->generateUrl('admin_parameters_mooc_owner_create'),
+        $form = $this->createForm(new MoocAccessConstraintsType(), $entity, array(
+            'action' => $this->generateUrl('admin_parameters_mooc_accessconstraints_create'),
             'method' => 'POST',
         ));
 
-        $form->add('save', 'submit', array('label' => 'Create', 'attr' => array('class' =>'hide') ));
+        $form->add('save', 'submit', array('label' => 'Create', 'attr' => array('class' => 'hide')));
 
         return $form;
     }
 
     /**
-     * Displays a form to create a new Mooc\MoocOwner entity.
+     * Displays a form to create a new Mooc\MoocAccessConstraints entity.
      *
-     * @Route("/new", name="admin_parameters_mooc_owner_new")
+     * @Route("/new", name="admin_parameters_mooc_accessconstraints_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new MoocOwner();
+        $entity = new MoocAccessConstraints();
         $form   = $this->createCreateForm($entity);
 
         return array(
@@ -104,9 +106,9 @@ class MoocOwnerController extends Controller
     }
 
     /**
-     * Finds and displays a Mooc\MoocOwner entity.
+     * Finds and displays a Mooc\MoocAccessConstraints entity.
      *
-     * @Route("/{id}", name="admin_parameters_mooc_owner_show")
+     * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_show")
      * @Method("GET")
      * @Template()
      */
@@ -114,10 +116,10 @@ class MoocOwnerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocOwner')->find($id);
+        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Mooc\MoocOwner entity.');
+            throw $this->createNotFoundException('Unable to find Mooc\MoocAccessConstraints entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -129,9 +131,9 @@ class MoocOwnerController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Mooc\MoocOwner entity.
+     * Displays a form to edit an existing Mooc\MoocAccessConstraints entity.
      *
-     * @Route("/{id}/edit", name="admin_parameters_mooc_owner_edit")
+     * @Route("/{id}/edit", name="admin_parameters_mooc_accessconstraints_edit")
      * @Method("GET")
      * @Template()
      */
@@ -139,10 +141,10 @@ class MoocOwnerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocOwner')->find($id);
+        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Mooc\MoocOwner entity.');
+            throw $this->createNotFoundException('Unable to find Mooc\MoocAccessConstraints entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -152,44 +154,42 @@ class MoocOwnerController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'logo'        => $entity->getLogoWebPath(),
-            'habillage'   => $entity->getDressingWebPath()
         );
     }
 
     /**
-    * Creates a form to edit a Mooc\MoocOwner entity.
+    * Creates a form to edit a Mooc\MoocAccessConstraints entity.
     *
-    * @param MoocOwner $entity The entity
+    * @param MoocAccessConstraints $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(MoocOwner $entity)
+    private function createEditForm(MoocAccessConstraints $entity)
     {
-        $form = $this->createForm(new MoocOwnerType(), $entity, array(
-            'action' => $this->generateUrl('admin_parameters_mooc_owner_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new MoocAccessConstraintsType(), $entity, array(
+            'action' => $this->generateUrl('admin_parameters_mooc_accessconstraints_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
-        $form->add('save', 'submit', array('label' => 'Update', 'attr' => array('class' => 'hide') ));
+        $form->add('save', 'submit', array('label' => 'Update', 'attr' => array('class' => 'hide')));
 
         return $form;
     }
     /**
-     * Edits an existing Mooc\MoocOwner entity.
+     * Edits an existing Mooc\MoocAccessConstraints entity.
      *
-     * @Route("/{id}", name="admin_parameters_mooc_owner_update")
+     * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_update")
      * @Method("PUT")
-     * @Template("ClarolineCoreBundle:Mooc\MoocOwner:edit.html.twig")
+     * @Template("ClarolineCoreBundle:Mooc\MoocAccessConstraints:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocOwner')->find($id);
+        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Mooc\MoocOwner entity.');
+            throw $this->createNotFoundException('Unable to find Mooc\MoocAccessConstraints entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -199,7 +199,7 @@ class MoocOwnerController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameters_mooc_owners', array('id' => $id)));
+            return $this->redirect($this->generateUrl('admin_parameters_mooc_accessconstraints', array('id' => $id)));
         }
 
         return array(
@@ -209,9 +209,9 @@ class MoocOwnerController extends Controller
         );
     }
     /**
-     * Deletes a Mooc\MoocOwner entity.
+     * Deletes a Mooc\MoocAccessConstraints entity.
      *
-     * @Route("/{id}", name="admin_parameters_mooc_owner_delete")
+     * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -221,21 +221,21 @@ class MoocOwnerController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocOwner')->find($id);
+            $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Mooc\MoocOwner entity.');
+                throw $this->createNotFoundException('Unable to find Mooc\MoocAccessConstraints entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('admin_parameters_mooc_owners'));
+        return $this->redirect($this->generateUrl('admin_parameters_mooc_accessconstraints'));
     }
 
     /**
-     * Creates a form to delete a Mooc\MoocOwner entity by id.
+     * Creates a form to delete a Mooc\MoocAccessConstraints entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -244,7 +244,7 @@ class MoocOwnerController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('admin_parameters_mooc_owner_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('admin_parameters_mooc_accessconstraints_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('save', 'submit', array('label' => 'Delete'))
             ->getForm()

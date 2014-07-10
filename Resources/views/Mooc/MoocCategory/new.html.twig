@@ -10,6 +10,7 @@
             <tr>
                 <td class="slrn-bold"">{{ 'mooc_category_create'|trans({}, 'platform') }}</td>
                 <td>{{ form_widget(form.name) }}</td>
+                <td>{{ form_widget(form.save) }}</td>
                 <td><a class="btn btn-primary js-submit-button" href="#">{{ 'validate'|trans({}, 'platform') }}</a></td>
                 <td><a class="btn btn-gris" href="{{ path('admin_parameters_mooc_categories') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
             </tr>
@@ -21,7 +22,7 @@
     <script>
         $('.js-submit-button').on('click', function(event) {
             event.preventDefault();
-            $(this).parents('form').submit();
+            $('#claroline_corebundle_mooc_category_save').trigger('click');
         })
     </script>
     

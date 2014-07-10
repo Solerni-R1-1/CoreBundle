@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Mooc;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * moocCategory
+ * MoocCategory
  *
  * @ORM\Table(name="claro_mooc_category")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\MoocCategoryRepository")

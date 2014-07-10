@@ -309,6 +309,11 @@ claro_admin_owner:
     prefix: admin/parameters/mooc/owners
     type: annotation
     
+claro_admin_accessconstraints:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocAccessConstraintsController.php"
+    prefix: admin/parameters/mooc/access_constraints
+    type: annotation
+    
 claro_tranfo:
     resource: "@ClarolineCoreBundle/Controller/TransfoController.php"
     type: annotation
