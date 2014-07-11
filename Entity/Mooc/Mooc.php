@@ -222,9 +222,8 @@ class Mooc
      * @ORM\ManyToMany(
      * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
      * inversedBy="moocs",
-     * cascade={"persist", "remove"}
      * )
-     * 
+     * @ORM\JoinTable(name="claro_mooc_constraints_to_moocs")
      */
     private $accessConstraints;
     

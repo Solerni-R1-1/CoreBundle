@@ -16,8 +16,6 @@ class MoocAccessConstraintsType extends AbstractType
     {
         $builder
             ->add('name', 'text', array( 'required' => true, 'label_attr' => array ( 'class' => 'align-right' ) ))
-            ->add('whitelist', 'textarea', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 ) ))
-            ->add('patterns', 'textarea', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 )  ))
             ->add('moocOwner', 'entity', array( 
                 'class' => 'ClarolineCoreBundle:Mooc\MoocOwner',
                 'property' => 'name',
@@ -25,6 +23,9 @@ class MoocAccessConstraintsType extends AbstractType
                 'empty_value' => '-- Choisir le propriétaire des règles d\'accès --',
                 'label_attr' => array ( 'class' => 'align-right' )
             ) )
+            ->add('whitelist', 'textarea', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 ) ))
+            ->add('patterns', 'textarea', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 )  ))
+
         ;
     }
     

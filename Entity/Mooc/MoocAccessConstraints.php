@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="claro_mooc_access_constraints")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\MoocAccessConstraintsRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class MoocAccessConstraints
 {
@@ -67,8 +68,10 @@ class MoocAccessConstraints
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc")
-     * @ORM\JoinTable(name="claro_mooc_constraints_to_moocs")
+     *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
+     *     mappedBy="accessConstraints",
+     *     cascade={"persist", "remove"}
+     * )
      */
     private $moocs;
     
@@ -115,18 +118,23 @@ class MoocAccessConstraints
         $this->patterns = $patterns;
     }
 
-    public function setMatchedUsers(\Doctrine\Common\Collections\ArrayCollection $matchedUsers) {
+    public function setMatchedUsers($matchedUsers) {
         $this->matchedUsers = $matchedUsers;
     }
     public function getMoocs() {
         return $this->moocs;
     }
 
-    public function setMoocs(\Doctrine\Common\Collections\ArrayCollection $moocs) {
+    public function setMoocs($moocs) {
         $this->moocs = $moocs;
     }
-
-
-
-
+    
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function updateMoocAccessConstraintsAgainstUsers()
+    {
+        /* create function to check this user upon all MoocAccessConstraints and update thos accordingly */
+    }
 }

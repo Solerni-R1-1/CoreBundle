@@ -1008,6 +1008,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->moocSessions = $moocSessions;
     }
 
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function updateUserUponMoocAccessConstraints()
+    {
+        /* create function to check this user upon all MoocAccessConstraints and update thos accordingly */
+    }
 
 
 }
