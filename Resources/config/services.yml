@@ -88,3 +88,8 @@ services:
         class: Claroline\CoreBundle\Controller\Badge\Tool\BadgeController
         calls:
             - [ setContainer, [@service_container] ]
+            
+    orange.moocaccessconstraints_listener:
+        class: Claroline\CoreBundle\Listener\Mooc\MoocAccessConstraintsListener
+        tags:
+            - { name: doctrine.event_listener, event: postUpdate }

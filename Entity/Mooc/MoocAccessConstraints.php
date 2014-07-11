@@ -59,15 +59,6 @@ class MoocAccessConstraints
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinTable(name="claro_mooc_constraints_to_users")
-     */
-    private $matchedUsers;
-    
-    /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
      *     mappedBy="accessConstraints",
      *     cascade={"persist", "remove"}
@@ -128,13 +119,5 @@ class MoocAccessConstraints
     public function setMoocs($moocs) {
         $this->moocs = $moocs;
     }
-    
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function updateMoocAccessConstraintsAgainstUsers()
-    {
-        /* create function to check this user upon all MoocAccessConstraints and update thos accordingly */
-    }
+
 }

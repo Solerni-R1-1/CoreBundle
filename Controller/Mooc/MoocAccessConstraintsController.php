@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
 use Claroline\CoreBundle\Form\Mooc\MoocAccessConstraintsType;
 
+
 /**
  * Mooc\MoocAccessConstraints controller.
  */
@@ -250,4 +251,5 @@ class MoocAccessConstraintsController extends Controller
             ->getForm()
         ;
     }
+     
 }

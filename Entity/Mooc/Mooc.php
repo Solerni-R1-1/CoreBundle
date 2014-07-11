@@ -730,7 +730,7 @@ class Mooc
         return $this->accessConstraints;
     }
 
-    public function setAccessConstraints(\Doctrine\Common\Collections\ArrayCollection $accessContraints) {
+    public function setAccessConstraints($accessContraints) {
         $this->accessConstraints = $accessContraints;
     }
 

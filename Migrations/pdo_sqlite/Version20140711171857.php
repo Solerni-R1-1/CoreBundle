@@ -8,21 +8,49 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/09 05:07:00
+ * Generation date: 2014/07/11 05:18:58
  */
-class Version20140709170658 extends AbstractMigration
+class Version20140711171857 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
+            CREATE TABLE claro_mooc_constraints_to_moocs (
+                mooc_id INTEGER NOT NULL, 
+                moocaccessconstraints_id INTEGER NOT NULL, 
+                PRIMARY KEY(
+                    mooc_id, moocaccessconstraints_id
+                )
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_99FD2CF2255EEB87 ON claro_mooc_constraints_to_moocs (mooc_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_99FD2CF2DDA4386D ON claro_mooc_constraints_to_moocs (moocaccessconstraints_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_mooc_owner (
                 id INTEGER NOT NULL, 
-                name VARCHAR(255) DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
                 description CLOB DEFAULT NULL, 
                 logo_path VARCHAR(255) DEFAULT NULL, 
                 dressing_path VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_mooc_access_constraints (
+                id INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                whitelist CLOB DEFAULT NULL, 
+                patterns CLOB DEFAULT NULL, 
+                moocOwner_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8C229ACDA96EF72D ON claro_mooc_access_constraints (moocOwner_id)
         ");
         $this->addSql("
             DROP INDEX IDX_D4EF03A0A76ED395
@@ -76,8 +104,8 @@ class Version20140709170658 extends AbstractMigration
         $this->addSql("
             CREATE TEMPORARY TABLE __temp__claro_mooc AS 
             SELECT id, 
-            lesson_id, 
             workspace_id, 
+            lesson_id, 
             title, 
             alias, 
             description, 
@@ -105,8 +133,8 @@ class Version20140709170658 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_mooc (
                 id INTEGER NOT NULL, 
-                lesson_id INTEGER DEFAULT NULL, 
                 workspace_id INTEGER DEFAULT NULL, 
+                lesson_id INTEGER DEFAULT NULL, 
                 owner_id INTEGER DEFAULT NULL, 
                 title VARCHAR(255) DEFAULT NULL, 
                 alias VARCHAR(255) DEFAULT NULL, 
@@ -128,17 +156,17 @@ class Version20140709170658 extends AbstractMigration
                 has_linkin_share BOOLEAN DEFAULT NULL, 
                 about_page_description CLOB DEFAULT NULL, 
                 PRIMARY KEY(id), 
-                CONSTRAINT FK_FB43C54ECDF80196 FOREIGN KEY (lesson_id) 
-                REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE, 
                 CONSTRAINT FK_FB43C54E82D40A1F FOREIGN KEY (workspace_id) 
                 REFERENCES claro_workspace (id) NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_FB43C54ECDF80196 FOREIGN KEY (lesson_id) 
+                REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE, 
                 CONSTRAINT FK_FB43C54E7E3C61F9 FOREIGN KEY (owner_id) 
                 REFERENCES claro_mooc_owner (id) NOT DEFERRABLE INITIALLY IMMEDIATE
             )
         ");
         $this->addSql("
             INSERT INTO claro_mooc (
-                id, lesson_id, workspace_id, title, 
+                id, workspace_id, lesson_id, title, 
                 alias, description, illustration_path, 
                 post_end_action, is_public, duration, 
                 weekly_time, cost, language, has_video, 
@@ -148,8 +176,8 @@ class Version20140709170658 extends AbstractMigration
                 about_page_description
             ) 
             SELECT id, 
-            lesson_id, 
             workspace_id, 
+            lesson_id, 
             title, 
             alias, 
             description, 
@@ -188,7 +216,13 @@ class Version20140709170658 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
+            DROP TABLE claro_mooc_constraints_to_moocs
+        ");
+        $this->addSql("
             DROP TABLE claro_mooc_owner
+        ");
+        $this->addSql("
+            DROP TABLE claro_mooc_access_constraints
         ");
         $this->addSql("
             DROP INDEX UNIQ_FB43C54E82D40A1F
