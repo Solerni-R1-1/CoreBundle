@@ -296,7 +296,6 @@ class DesktopController extends Controller
      */
     public function openToolAction(User $user, $toolName)
     {
-
         $isFirstVisit = false;
         if($user->isFirstVisit()){
             $isFirstVisit = true;

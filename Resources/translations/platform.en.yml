@@ -181,6 +181,7 @@ csv_users_import_infos_required: Required
 curl_facebook_application_validation_error: 'Curl extension is missing.'
 current_category: 'Current category'
 cut: Cut
+mes moocs: 'My Moocs'
 dashboard: Dashboard
 data_col: 'Database id column'
 database: Database

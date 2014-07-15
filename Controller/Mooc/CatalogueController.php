@@ -52,7 +52,22 @@ class CatalogueController extends Controller
         $this->router = $router;
     }
     
-        
+    /**
+     * @Route("/mes_moocs", name="solerni_mes_moocs")
+     *
+     * @ParamConverter("user", options={"authenticatedUser" = true })
+     */    
+    public function pageMesMoocs( $user ){
+        return $this->render(
+            'ClarolineCoreBundle:Tool\desktop\moocs:desktopMoocsLayout.html.twig',
+            array(
+               // 'mooc'      => $mooc,
+                //'sessions'  => $sessions,
+                //'user'      => $user
+            )
+        );
+
+    }
         
     /**
      * @Route("/catalogue", name="solerni_catalogue")

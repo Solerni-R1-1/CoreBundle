@@ -183,6 +183,7 @@ csv_users_import_infos_required: Requis
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
 cut: Couper
+mes moocs: 'Mes Moocs'
 dashboard: 'Tableau de bord'
 data_col: 'Colonne des données'
 database: 'Base de données'

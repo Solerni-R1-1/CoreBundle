@@ -1,0 +1,27 @@
+
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+
+{% block bodyClasses %}dsk{% endblock %}
+
+{% block section_content %}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'mes_moocs' }
+        ) %}
+<div class='col-xs-9 col-md-9'>
+    <div class='dsk__article__mooc'>
+        <div class='clearfix'></div>
+        <h2>
+            {{ 'mes moocs'|trans({}, 'platform') }}
+        </h2>
+        {% render controller(
+            'ClarolineCoreBundle:Mooc\\Mooc:getUserSessionsList',
+            {}
+        ) %}
+    </div>
+
+    <div class='clearfix'></div>
+{% endblock %}
