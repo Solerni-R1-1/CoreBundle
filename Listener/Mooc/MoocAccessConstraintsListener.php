@@ -27,4 +27,28 @@ class MoocAccessConstraintsListener
     public function postPersist( LifecycleEventArgs $args) {
         
     }
+
+    public function postPersist( LifecycleEventArgs $args ) {
+        
+        $entity = $args->getEntity();
+        $entityManager = $args->getEntityManager();
+        
+        if ( $entity instanceof MoocAccessConstraints ) {
+            $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
+        }
+        
+        
+    }
+
+    public function postRemove( LifecycleEventArgs $args ) {
+        
+        $entity = $args->getEntity();
+        $entityManager = $args->getEntityManager();
+        
+        if ( $entity instanceof MoocAccessConstraints ) {
+            $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
+        }
+        
+        
+    }
 }

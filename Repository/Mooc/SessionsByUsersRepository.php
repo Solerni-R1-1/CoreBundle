@@ -12,4 +12,32 @@ use Doctrine\ORM\EntityRepository;
  */
 class SessionsByUsersRepository extends EntityRepository
 {
+
+	/**
+	 *
+	 *
+	 * @param moocAccessConstraints
+	 * @param user
+	 *
+	 * @return integer number of entity deleted
+	 *
+	 **/
+	public function deleteByConstraintIdAndUserId(SessionsByUsers $moocAccessConstraints = null, User $user = null){
+		$qb = $em->createQueryBuilder();
+		$qb->delete('SessionsByUsers', 's');
+
+		if($moocAccessConstraints != null){
+			$qb->andWhere($qb->expr()->eq('s.moocAccessConstraints', ':moocAccessConstraints'));
+			$qb->setParameter(':moocAccessConstraints', $moocAccessConstraints);
+		}
+
+		if($user != null){
+			$qb->andWhere($qb->expr()->eq('s.user', ':user'));
+			$qb->setParameter(':user', $user);
+		}
+
+		$numDeleted = $qb->execute();
+
+		return $numDeleted;
+	}
 }
