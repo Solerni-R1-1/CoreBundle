@@ -22,6 +22,9 @@ class MoocAccessConstraintsListener
             $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
         }
         
+    }
+    
+    public function postPersist( LifecycleEventArgs $args) {
         
     }
 }
