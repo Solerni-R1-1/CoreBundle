@@ -303,6 +303,17 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * )
      */
     protected $moocSessions;
+
+
+    /**
+     * @var SessionsByUsers[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", 
+     *      mappedBy="user", 
+     *      cascade={"all"}
+     * )
+     */
+    protected $sessionsByUsers;
     
 
     public function __construct()
@@ -318,6 +329,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
         $this->moocSessions      = new ArrayCollection();
+        $this->sessionsByUsers   = new ArrayCollection();
     }
 
     /**
@@ -1006,5 +1018,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setMoocSessions(ArrayCollection $moocSessions)
     {
         $this->moocSessions = $moocSessions;
+    }
+
+    public function getSessionsByUsers(){
+        return $this->sessionsByUsers;
+    }
+
+    public function setSessionsByUsers(ArrayCollection $sessionsByUsers){
+        $this->sessionsByUsers = $sessionsByUsers;
     }
 }

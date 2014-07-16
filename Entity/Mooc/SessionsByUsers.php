@@ -3,6 +3,10 @@
 namespace Claroline\CoreBundle\Entity\Mooc;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
+use Claroline\CoreBundle\Entity\Mooc\MoocOwner;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * MoocOwner
@@ -24,21 +28,24 @@ class SessionsByUsers
     /**
      * @var Claroline\CoreBundle\Entity\User
      *
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocSession
      *
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession", cascade={"persist"})
+     * @ORM\JoinColumn(name="moocSession_id", referencedColumnName="id")
      */
     private $moocSession;
 
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      *
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner", cascade={"persist"})
+     * @ORM\JoinColumn(name="moocOwner_id", referencedColumnName="id")
      */
     private $moocOwner;
     
@@ -46,7 +53,8 @@ class SessionsByUsers
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints
      *
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints", cascade={"persist"})
+     * @ORM\JoinColumn(name="moocAccessConstraints_id", referencedColumnName="id")
      */
     private $moocAccessConstraints;
     
@@ -73,19 +81,19 @@ class SessionsByUsers
         return $this->moocAccessConstraints;
     }
 
-    public function setUser(Claroline\CoreBundle\Entity\User $user) {
+    public function setUser(User $user) {
         $this->user = $user;
     }
 
-    public function setMoocSession(Claroline\CoreBundle\Entity\Mooc\MoocSession $moocSession) {
+    public function setMoocSession(MoocSession $moocSession) {
         $this->moocSession = $moocSession;
     }
 
-    public function setMoocOwner(Claroline\CoreBundle\Entity\Mooc\MoocOwner $moocOwner) {
+    public function setMoocOwner(MoocOwner $moocOwner) {
         $this->moocOwner = $moocOwner;
     }
 
-    public function setMoocAccessConstraints(Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints $moocAccessConstraints) {
+    public function setMoocAccessConstraints(MoocAccessConstraints $moocAccessConstraints) {
         $this->moocAccessConstraints = $moocAccessConstraints;
     }
 

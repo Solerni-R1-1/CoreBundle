@@ -93,6 +93,14 @@ class MoocSession extends AbstractIndexable
      */
     private $forum;
 
+
+    /**
+     * @var SessionsByUsers[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", mappedBy="moocSession", cascade={"all"})
+     */
+    protected $sessionsByUsers;
+
     /**
      * Get id
      *
@@ -292,6 +300,16 @@ class MoocSession extends AbstractIndexable
 
     public function setForum( $forum ) {
         $this->forum = $forum;
+    }
+
+    
+
+    public function getSessionsByUsers(){
+        return $this->sessionsByUsers;
+    }
+
+    public function setSessionsByUsers(ArrayCollection $sessionsByUsers){
+        $this->sessionsByUsers = $sessionsByUsers;
     }
 
     public function fillIndexableDocument(&$doc)

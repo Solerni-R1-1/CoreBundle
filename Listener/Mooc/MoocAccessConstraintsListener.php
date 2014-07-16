@@ -20,12 +20,9 @@ class MoocAccessConstraintsListener extends ContainerAware
         $entityManager = $args->getEntityManager();
         
         if ( $entity instanceof MoocAccessConstraints ) {
-            $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
             $service = $this->container->get('orange.moocaccesscontraints_service');
             $service->process(array($entity));
         }
-        //$this->container->get('logger')->error("test1.2");
-        //die("end MoocAccessConstraintsListener->postUpdate()");
     }
 
     public function postPersist( LifecycleEventArgs $args ) {
@@ -34,16 +31,10 @@ class MoocAccessConstraintsListener extends ContainerAware
         $entityManager = $args->getEntityManager();
         
         if ( $entity instanceof MoocAccessConstraints ) {
-            $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
             $service = $this->container->get('orange.moocaccesscontraints_service');
             $service->process(array($entity));
-        	//$this->container->get('logger')->error("test2.1");
-        	    //die('ok');
-        }
-        //$this->container->get('logger')->error("test2.2");
-        //echo get_class($entity).'<hr/>' ;
-        //die("end MoocAccessConstraintsListener->postPersist() ". get_class($entity));
-        
+
+        }       
         
     }
 
@@ -53,7 +44,7 @@ class MoocAccessConstraintsListener extends ContainerAware
         $entityManager = $args->getEntityManager();
         
         if ( $entity instanceof MoocAccessConstraints ) {
-            $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
+        	
         }
         
         

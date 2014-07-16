@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Claroline\CoreBundle\Entity\Mooc\SessionsByUsers;
+use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
 
 /**
  * MoocSessionRepository
@@ -24,9 +24,10 @@ class SessionsByUsersRepository extends EntityRepository
 	 * @return integer number of entity deleted
 	 *
 	 **/
-	public function deleteByConstraintIdAndUserId(SessionsByUsers $moocAccessConstraints = null, User $user = null){
-		$qb = $em->createQueryBuilder();
-		$qb->delete('SessionsByUsers', 's');
+	public function deleteByConstraintIdAndUserId(MoocAccessConstraints $moocAccessConstraints = null, User $user = null) {
+
+		$qb = $this->_em->createQueryBuilder();
+		$qb->delete('ClarolineCoreBundle:Mooc\SessionsByUsers', 's');
 
 		if($moocAccessConstraints != null){
 			$qb->andWhere($qb->expr()->eq('s.moocAccessConstraints', ':moocAccessConstraints'));
@@ -37,8 +38,9 @@ class SessionsByUsersRepository extends EntityRepository
 			$qb->andWhere($qb->expr()->eq('s.user', ':user'));
 			$qb->setParameter(':user', $user);
 		}
+		$query = $qb->getQuery();
 
-		$numDeleted = $qb->execute();
+		$numDeleted = $query->execute();
 
 		return $numDeleted;
 	}

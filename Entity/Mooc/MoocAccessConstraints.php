@@ -3,6 +3,9 @@
 namespace Claroline\CoreBundle\Entity\Mooc;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Mooc\MoocOwner;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
+
 
 /**
  * MoocAccessConstraints
@@ -65,6 +68,15 @@ class MoocAccessConstraints
      * )
      */
     private $moocs;
+
+    /**
+     * @var SessionsByUsers[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", 
+     * mappedBy="moocAccessConstraints", 
+     * cascade={"all"})
+     */
+    protected $sessionsByUsers;
     
     
     /* GETTERS and SETTERS */
@@ -97,7 +109,7 @@ class MoocAccessConstraints
         $this->name = $name;
     }
 
-    public function setMoocOwner($moocOwner) {
+    public function setMoocOwner(MoocOwner $moocOwner) {
         $this->moocOwner = $moocOwner;
     }
 
@@ -116,8 +128,16 @@ class MoocAccessConstraints
         return $this->moocs;
     }
 
-    public function setMoocs($moocs) {
+    public function setMoocs(Mooc $moocs) {
         $this->moocs = $moocs;
+    }
+
+    public function getSessionsByUsers(){
+        return $this->sessionsByUsers;
+    }
+
+    public function setSessionsByUsers(ArrayCollection $sessionsByUsers){
+        $this->sessionsByUsers = $sessionsByUsers;
     }
 
 }

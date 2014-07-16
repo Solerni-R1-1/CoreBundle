@@ -92,6 +92,14 @@ class MoocOwner
      * )
      */
     protected $dressingFile;
+
+
+    /**
+     * @var SessionsByUsers[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", mappedBy="moocOwner", cascade={"all"})
+     */
+    protected $sessionsByUsers;
     
     /* GETTERS/SETTERS */
 
@@ -151,6 +159,14 @@ class MoocOwner
     }
     public function setMoocs(\Doctrine\Common\Collections\ArrayCollection $moocs) {
         $this->moocs = $moocs;
+    }
+    
+    public function getSessionsByUsers(){
+        return $this->sessionsByUsers;
+    }
+
+    public function setSessionsByUsers(\Doctrine\Common\Collections\ArrayCollection $sessionsByUsers){
+        $this->sessionsByUsers = $sessionsByUsers;
     }
     
     /* FILE UPLOADS */
