@@ -64,7 +64,7 @@ class MoocAccessConstraints
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
      *     mappedBy="accessConstraints",
-     *     cascade={"persist"}
+     *     cascade={"persist", "remove"}
      * )
      */
     private $moocs;

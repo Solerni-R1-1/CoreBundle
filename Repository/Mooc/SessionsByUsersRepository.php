@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Repository\Mooc;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * MoocSessionRepository

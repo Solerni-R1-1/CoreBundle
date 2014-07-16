@@ -28,7 +28,7 @@ class MoocAccessConstraintsService extends Controller {
 				$sessionsByUsersRepository->deleteByConstraintIdAndUserId($constraint,$user); //delete for user_id AND constraintsID
 			}
 		} else if($user != null){
-			$this->container->get('logger')->error("delete  constraint n°".$constraint->getId());
+			$this->container->get('logger')->error("delete  user n°".$user->getId());
 			$sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
 		}
 
@@ -79,7 +79,7 @@ $this->container->get('logger')->error($email." match "."/".$pattern."/i");
 			}
 		}
 
-		$bucksize = 1;
+		$bucksize = 5;
 		$i = 0;
 
 		foreach ($constraints as $constraint) {
@@ -131,7 +131,7 @@ $this->container->get('logger')->error($email." match "."/".$pattern."/i");
 
 
         $em->flush();
-        $em->clear();
+        //$em->clear();
 
 		//$this->container->get('logger')->error("TOTAL : $i");
 
