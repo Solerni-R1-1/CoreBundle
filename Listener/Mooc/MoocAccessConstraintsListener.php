@@ -17,23 +17,22 @@ class MoocAccessConstraintsListener extends ContainerAware
     public function postUpdate( LifecycleEventArgs $args ) {
         
         $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        //$entityManager = $args->getEntityManager();
         
         if ( $entity instanceof MoocAccessConstraints ) {
             $service = $this->container->get('orange.moocaccesscontraints_service');
-            $service->process(array($entity));
+            $service->processUpgrade(array($entity));
         }
     }
 
     public function postPersist( LifecycleEventArgs $args ) {
         
         $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        //$entityManager = $args->getEntityManager();
         
         if ( $entity instanceof MoocAccessConstraints ) {
             $service = $this->container->get('orange.moocaccesscontraints_service');
-            $service->process(array($entity));
-
+            $service->processUpgrade(array($entity));
         }       
         
     }
@@ -41,10 +40,11 @@ class MoocAccessConstraintsListener extends ContainerAware
     public function postRemove( LifecycleEventArgs $args ) {
         
         $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        //$entityManager = $args->getEntityManager();
         
         if ( $entity instanceof MoocAccessConstraints ) {
-        	
+        	//$service = $this->container->get('orange.moocaccesscontraints_service');
+            //$service->processDelete(array($entity));
         }
         
         
