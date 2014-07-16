@@ -348,7 +348,8 @@ class MoocSession extends AbstractIndexable
                                       ));
       
        $doc->mooc_category_ids      = array_map(function($obj) { return $obj->getId(); }, $mooc->getCategories()->toArray());
-       $doc->mooc_owner_ids         = array_map(function($obj) { return $obj->getId(); }, $mooc->getOwner()->toArray());
+       $doc->mooc_owner_id          = $mooc->getOwner()->getId();
+       $doc->mooc_owner_name        = $mooc->getOwner()->getName();
        $doc->wks_id                 = $mooc->getWorkspace()->getId();
        
        return $doc;
