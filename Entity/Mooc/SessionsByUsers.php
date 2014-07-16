@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * MoocOwner
  *
  * @ORM\Table(name="claro_mooc_sessions_by_users")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\SessionsByUsers")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Mooc\SessionsByUsersRepository")
  */
 class SessionsByUsers
 {

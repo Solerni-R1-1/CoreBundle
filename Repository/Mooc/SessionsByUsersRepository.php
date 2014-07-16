@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Claroline\CoreBundle\Entity\Mooc\SessionsByUsers;
 
 /**
  * MoocSessionRepository

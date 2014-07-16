@@ -91,9 +91,14 @@ services:
 
     orange.moocaccessconstraints_listener:
         class: Claroline\CoreBundle\Listener\Mooc\MoocAccessConstraintsListener
+        calls:
+            - [ setContainer, [@service_container] ]
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
             - { name: doctrine.event_listener, event: postRemove }
 
     orange.moocaccesscontraints_service:
         class: Claroline\CoreBundle\Controller\Mooc\MoocAccessConstraintsService
+        calls:
+            - [ setContainer, [@service_container] ]

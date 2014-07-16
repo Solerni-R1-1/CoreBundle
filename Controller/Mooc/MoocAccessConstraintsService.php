@@ -3,20 +3,25 @@
 
 namespace Claroline\CoreBundle\Controller\Mooc;
 
-
-use Claroline\CoreBundle\Repository\Mooc\MoocAccessConstraintsRepository;
-use Claroline\CoreBundle\Repository\Mooc\SessionsByUsersRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Entity\Mooc\SessionsByUsers;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\Mooc\SessionsByUsersRepository;
 /**
- * Mooc\MoocAccessConstraints controller.
+ * Mooc\MoocAccessConstraints service.
  */
 class MoocAccessConstraintsService extends Controller {
 
 	public function process(array $constraints, User $user = null){
-		
-		$em = $this->getDoctrine()->getManager();
-		$sessionsByUsersRepository = $em->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsersRepository');
 
+
+		$this->container->get('logger')->error("test4");
+		$em = $this->getDoctrine()->getManager();
+		
+		$sessionsByUsersRepository = $em->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers');
+		//getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')
+$this->container->get('logger')->error("test5");
 		//Clean existing informations
 		if(!empty($constraints)){
 			foreach ($constraints as $constraint) {
@@ -25,7 +30,7 @@ class MoocAccessConstraintsService extends Controller {
 		} else if($user != null){
 			$sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
 		}
-
+$this->container->get('logger')->error("test6");
 
 		if($user == null) {
 			$userRepository = $em->getRepository('ClarolineCoreBundle:User');
@@ -33,12 +38,12 @@ class MoocAccessConstraintsService extends Controller {
 		} else {
 			$users = array($user);
 		}
-
+$this->container->get('logger')->error("test7");
 		if(empty($constraints)){
-			$constraintsRepository = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->findAll()
-			$constraints = null // get all constraints
+			$constraintsRepository = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints');
+			$constraints = $constraintsRepository->findAll(); // get all constraints
 		}
-
+$this->container->get('logger')->error("test8");
 		//Process the matching between constraint and user
 		$matchings = array();
 		foreach ($constraints as $constraint) {
