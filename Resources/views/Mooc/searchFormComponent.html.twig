@@ -9,6 +9,7 @@
 		query = $("#q").val();
 
 		window.location.href = "{{ path('orange_search') }}#?q=" + query;
+                location.reload();
 	    return false;
 	});
 </script>
