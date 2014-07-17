@@ -136,7 +136,7 @@ class MoocAccessConstraints
         return $this->sessionsByUsers;
     }
 
-    public function setSessionsByUsers(ArrayCollection $sessionsByUsers){
+    public function setSessionsByUsers(\Doctrine\Common\Collections\ArrayCollection $sessionsByUsers){
         $this->sessionsByUsers = $sessionsByUsers;
     }
 
