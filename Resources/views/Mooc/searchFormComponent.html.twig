@@ -6,10 +6,9 @@
 </li>
 <script>
 	$("#search_form").submit(function(e){
-		query = $("#q").val();
-
-		window.location.href = "{{ path('orange_search') }}#?q=" + query;
-                location.reload();
+		keywords = $("#q").val();
+                query = 'page=1&rpp=10&q='+ keywords +'&fs=&ss=&afs=mcat,owner,type&sb=false';
+		window.location.href = "{{ path('orange_search') }}#?" + query;
 	    return false;
 	});
 </script>
