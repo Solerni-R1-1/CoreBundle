@@ -187,7 +187,7 @@ body.subnavbar-fixed { padding-top: 110px }
 .slrn-header__bgimage {
     width: 100%; 
     height: auto;
-    min-width: 1024px;
+    min-width: 1110px;
 }
 .slrn-header_w {
     position: absolute;
@@ -215,6 +215,20 @@ body.subnavbar-fixed { padding-top: 110px }
     font-size: 1.6em;
     margin: 0;
     text-shadow: 1px 1px 2px #333;
+}
+
+.slrn-header--slim {
+    min-height: 216px;
+    height:     216px;
+    overflow:   hidden;
+}
+
+.slrn-header--slim .slrn-header__body {
+    margin-top: 4em;
+}
+
+.slrn-header--slim .slrn-header__content {
+    padding-top: .6em;
 }
 
 /* SECTION CONTENT */
