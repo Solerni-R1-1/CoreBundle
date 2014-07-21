@@ -83,16 +83,16 @@ class Mooc
     private $isPublic;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="duration", type="string", length=255, nullable=true)
+     * @ORM\Column(name="duration", type="integer", length=255, nullable=true)
      */
     private $duration;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="weekly_time", type="string", length=255, nullable=true)
+     * @ORM\Column(name="weekly_time", type="integer", length=255, nullable=true)
      */
     private $weeklyTime;
 
@@ -373,7 +373,7 @@ class Mooc
     /**
      * Set duration
      *
-     * @param string $duration
+     * @param integer $duration
      * @return Mooc
      */
     public function setDuration($duration)
@@ -386,7 +386,7 @@ class Mooc
     /**
      * Get duration
      *
-     * @return string 
+     * @return integer 
      */
     public function getDuration()
     {
@@ -396,7 +396,7 @@ class Mooc
     /**
      * Set weeklyTime
      *
-     * @param string $weeklyTime
+     * @param integer $weeklyTime
      * @return Mooc
      */
     public function setWeeklyTime($weeklyTime)
@@ -409,7 +409,7 @@ class Mooc
     /**
      * Get weeklyTime
      *
-     * @return string 
+     * @return integer 
      */
     public function getWeeklyTime()
     {

@@ -36,7 +36,7 @@ class SolerniExtension extends \Twig_Extension
         return array(
             'isCurrentPage' => new \Twig_Function_Method( $this, 'solerniCompareRoute' ),
             'isCurrentLoginPage' => new \Twig_Function_Method( $this, 'solerniCompareLoginRoute' ),
-            'checkChapterLevel' => new \Twig_Function_Method( $this, 'solerniCheckChapterLevel' )
+            'checkChapterLevel' => new \Twig_Function_Method( $this, 'solerniCheckChapterLevel' ),
         );
     }
     
@@ -44,8 +44,9 @@ class SolerniExtension extends \Twig_Extension
     {
         return array(
             'widgetForumDate' => new \Twig_Filter_Method( $this, 'solerniWidgetForumDate' ),
-            'textTruncate' => new \Twig_Filter_Method( $this, 'TwigTruncateFilter' )
-        );
+            'textTruncate' => new \Twig_Filter_Method( $this, 'TwigTruncateFilter' ),
+            'minsToHoursMins' => new \Twig_Filter_Method( $this, 'solerniMinsToHoursMins' )
+,        );
     }
     /**
      * Twig function
@@ -174,6 +175,26 @@ class SolerniExtension extends \Twig_Extension
         }
        return $text;
     }
+    
+    /**
+     * Convert number of minutes into hours & minutes
+     * 
+     * @param integer $time number of mins
+     * @param string $format sprintf format
+     * 
+     * @return string
+     */
+    function solerniMinsToHoursMins($time, $format = '%d:%d')
+    {
+        settype($time, 'integer');
+        if ($time < 1) {
+            return;
+        }
+        $hours = floor($time / 60);
+        $minutes = ($time % 60);
+        return sprintf($format, $hours, $minutes);
+    }
+    
     
     public function getName()
     {

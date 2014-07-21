@@ -18,7 +18,9 @@
 <section class="col-xs-12 col-md-12 mooc__section">
 	<div class="row mooc__section__left">
 		<div class="col-xs-3 col-md-3 mooc__section__left__logo">
-			<img src="http://www.nowebagency.com/wp-content/uploads/2013/06/01144352-photo-logo-o-range.jpg" alt="{{ mooc.getTitle() }}" width='86' height='64' alt='Mocked' class='mock'/>
+                    {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
+                    <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,100)}}"  alt="{{ mooc.getTitle() }}">
+                    {% endif %}
 		</div>
 		<div class="col-xs-9 col-md-9 mooc__section__right">
 			<h1>{{ mooc.getTitle() }}</h1>
@@ -66,10 +68,10 @@
 			<li>
 				<i class='essentiels__duree'></i>
 				{% if mooc.getDuration() is not empty %}
-					Durée : {{mooc.getDuration()}}
+					Durée : {{mooc.getDuration() }} semaines
 				{% endif %}
 				{% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}<br/>{% endif %}
-				{% if mooc.getWeeklyTime() is not empty %}Temps de travail hebdomadaire : {{mooc.getWeeklyTime()}}{% endif %}
+				{% if mooc.getWeeklyTime() is not empty %}Temps de travail hebdomadaire : {{mooc.getWeeklyTime() | minsToHoursMins('%dh%dmin')}}{% endif %}
 			</li>
 			{% endif%}
 

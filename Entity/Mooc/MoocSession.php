@@ -320,7 +320,7 @@ class MoocSession extends AbstractIndexable
        $doc->end_date               = $this->getEndDate();
        $doc->start_inscription_date = $this->getStartInscriptionDate();
        $doc->end_inscription_date   = $this->getEndInscriptionDate();
-       $doc->max_users              = $this->getMaxUsers();
+       $doc->max_users_i            = $this->getMaxUsers();
        $doc->title                  = $this->getTitle();
        
        $mooc                        = $this->getMooc();
@@ -330,8 +330,8 @@ class MoocSession extends AbstractIndexable
        $doc->mooc_alias             = $mooc->getAlias();
        $doc->content                = $mooc->getDescription();
        $doc->mooc_is_public_b       = $mooc->isPublic();
-       $doc->mooc_duration          = $mooc->getDuration();
-       $doc->mooc_weekly_time       = $mooc->getWeeklyTime();
+       $doc->mooc_duration_i        = $mooc->getDuration();
+       $doc->mooc_weekly_time_i     = $mooc->getWeeklyTime();
        $doc->mooc_cost_i            = $mooc->getCost();
        $doc->mooc_language          = $mooc->getLanguage();
        $doc->mooc_has_video_b       = $mooc->getHasVideo();
@@ -348,10 +348,13 @@ class MoocSession extends AbstractIndexable
                                       ));
       
        $doc->mooc_category_ids      = array_map(function($obj) { return $obj->getId(); }, $mooc->getCategories()->toArray());
-       $doc->mooc_owner_id          = $mooc->getOwner()->getId();
-       $doc->mooc_owner_name        = $mooc->getOwner()->getName();
-       $doc->wks_id                 = $mooc->getWorkspace()->getId();
        
+       if ($mooc->getOwner()) {
+            $doc->mooc_owner_id          = $mooc->getOwner()->getId();
+            $doc->mooc_owner_name        = $mooc->getOwner()->getName();
+       }
+       $doc->wks_id                 = $mooc->getWorkspace()->getId();
+
        return $doc;
     }
 }
