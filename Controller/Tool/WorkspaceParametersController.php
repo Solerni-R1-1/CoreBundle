@@ -248,12 +248,13 @@ class WorkspaceParametersController extends Controller
                
         /* Store current sessions to compare with submitted form */
         $originalSessions = new ArrayCollection();
-        foreach ( $mooc->getMoocSessions() as $session ) {
-            $originalSessions->add( $session );
-        }
+        if($mooc != null){
+            foreach ( $mooc->getMoocSessions() as $session ) {
+                $originalSessions->add( $session );
+            }
+        }        
         
         /* Get lessons and forums from current workspace*/
-        $mooc = $workspace->getMooc();
         $doctrine = $this->getDoctrine();
         $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
@@ -321,7 +322,7 @@ class WorkspaceParametersController extends Controller
             'url' => $url,
             'user' => $user,
             'count' => $count,
-            'illustration' => $mooc->getIllustrationWebPath()
+            'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
         );
     }
 
