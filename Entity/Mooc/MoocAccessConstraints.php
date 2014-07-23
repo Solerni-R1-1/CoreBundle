@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Mooc;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Mooc\MoocOwner;
 use Claroline\CoreBundle\Entity\Mooc\Mooc;
-
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * MoocAccessConstraints
@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Mooc\Mooc;
  */
 class MoocAccessConstraints
 {
+
     /**
      * @var integer
      *
@@ -31,7 +32,7 @@ class MoocAccessConstraints
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-    
+
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      * 
@@ -43,21 +44,21 @@ class MoocAccessConstraints
      * 
      */
     private $moocOwner;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="whitelist", type="text", nullable=true)
      */
     private $whitelist;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="patterns", type="text", nullable=true)
      */
     private $patterns;
-    
+
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
@@ -77,67 +78,96 @@ class MoocAccessConstraints
      * cascade={"all"})
      */
     protected $sessionsByUsers;
-    
-    
+
     /* GETTERS and SETTERS */
-    
-    public function getId() {
+
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getMoocOwner() {
+    public function getMoocOwner()
+    {
         return $this->moocOwner;
     }
 
-    public function getWhitelist() {
+    public function getWhitelist()
+    {
         return $this->whitelist;
     }
 
-    public function getPatterns() {
+    public function getPatterns()
+    {
         return $this->patterns;
     }
 
-    public function getMatchedUsers() {
+    public function getMatchedUsers()
+    {
         return $this->matchedUsers;
     }
 
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
     }
 
-    public function setMoocOwner(MoocOwner $moocOwner) {
+    public function setMoocOwner(MoocOwner $moocOwner)
+    {
         $this->moocOwner = $moocOwner;
     }
 
-    public function setWhitelist($whitelist) {
+    public function setWhitelist($whitelist)
+    {
         $this->whitelist = $whitelist;
     }
 
-    public function setPatterns($patterns) {
+    public function setPatterns($patterns)
+    {
         $this->patterns = $patterns;
     }
 
-    public function setMatchedUsers($matchedUsers) {
+    public function setMatchedUsers($matchedUsers)
+    {
         $this->matchedUsers = $matchedUsers;
     }
-    public function getMoocs() {
+
+    public function getMoocs()
+    {
         return $this->moocs;
     }
 
-    public function setMoocs(Mooc $moocs) {
+    public function setMoocs(Mooc $moocs)
+    {
         $this->moocs = $moocs;
     }
 
-    public function getSessionsByUsers(){
+    public function getSessionsByUsers()
+    {
         return $this->sessionsByUsers;
     }
 
-    public function setSessionsByUsers(\Doctrine\Common\Collections\ArrayCollection $sessionsByUsers){
+    public function setSessionsByUsers(\Doctrine\Common\Collections\ArrayCollection $sessionsByUsers)
+    {
         $this->sessionsByUsers = $sessionsByUsers;
+    }
+
+    
+    public function getRoles()
+    {
+        $roles = new ArrayCollection();
+        foreach ($this->getMoocs() as $mooc) {
+            foreach ($mooc->getWorkspace()->getRoles as $role) {
+               if (!$roles->contains($role)) {
+                    $roles->add($role);
+                }
+            }
+        }
+        return $roles;
     }
 
 }

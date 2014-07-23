@@ -26,8 +26,13 @@ interface IndexableInterface
     public function fillIndexableDocument(&$doc);
 
     
-    /*
+    /**
      * @return string return uniq document id
      */
     public function getIndexableDocId();
+    
+    /**
+     * 
+     */
+    public function getAccessRoles();
 }

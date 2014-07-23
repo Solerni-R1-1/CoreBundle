@@ -654,7 +654,7 @@ class Mooc
     /**
      * Get workspace 
      * 
-     * @return AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     public function getWorkspace()
     {
@@ -835,5 +835,34 @@ class Mooc
             unlink($file);
         }
     }
+    
+    
+    
+    public function getAccessRoles() {
+        
+        /* @var Doctrine\Common\Collections\ArrayCollection roles */ 
+        $roles = $this->getWorkspace()->getRoles(); 
+        $roleManager = $this->get('claroline.manager.role_manager');
+        $roles->add($roleManager->getRoleByName('ROLE_ADMIN'));
+        if ($this->isPublic()) {
+            $roles->add($roleManager->getRoleByName('ROLE_ANONYMOUS'));
+        }
+        foreach ($this->getAccessConstraints() as $constraint) {
+            foreach ($constraint->getRoles() as $role) {
+                if (!$roles->contains($role)) {
+                    $roles->add($role);
+                }
+            }
+        }
+        return $roles;
+    }
  
+    private function get($serviceName) 
+    {
+        global $kernel;
+        if ('AppCache' == get_class($kernel)) {
+            $kernel = $kernel->getKernel();
+        }
+        return $kernel->getContainer()->get($serviceName);
+    }
 }

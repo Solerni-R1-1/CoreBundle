@@ -29,18 +29,10 @@ abstract class AbstractIndexable implements IndexableInterface
         $doc->id = $this->getIndexableDocId();
         $doc->entity_id = $this->getId();
         $doc->type_name = $this->getTypeName();
+        $doc->access_role_ids = $this->getAccessRoles();
+        
         return $doc;
     }
 
-    
-    public function fillIndexableDocResourceNodeInfo(&$doc, $resourceNode)
-    {
-        $doc->resource_id = $resourceNode->getId();
-        $doc->resource_url = $this->get('router')->generate('claro_resource_open', array(
-            'resourceType' => $resourceNode->getResourceType()->getName(),
-            'node' => $resourceNode->getId()
-        ));
-        $doc->wks_id = $resourceNode->getWorkspace()->getId();
-    }
-
+    abstract public function getAccessRoles();
 }
