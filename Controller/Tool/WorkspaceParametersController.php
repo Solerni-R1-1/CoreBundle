@@ -252,7 +252,15 @@ class WorkspaceParametersController extends Controller
             foreach ( $mooc->getMoocSessions() as $session ) {
                 $originalSessions->add( $session );
             }
-        }        
+        } 
+        
+        /* Store current contraints to compare with submitted form */
+        $originalConstraints = new ArrayCollection();
+        if($mooc != null){
+            foreach ( $mooc->getAccessConstraints() as $constraint ) {
+                $originalConstraints->add( $constraint );
+            }
+        }  
         
         /* Get lessons and forums from current workspace*/
         $doctrine = $this->getDoctrine();
@@ -280,6 +288,20 @@ class WorkspaceParametersController extends Controller
                     $this->getDoctrine()->getManager()->remove($moocSession);
                 }
             }
+            
+           /* Setting current mooc for each constraint */
+            foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {              
+                $accessConstraint->addMooc($mooc);
+            }
+            
+            
+            /*Remove mooc from constraint deleted from mooc*/
+            foreach ( $originalConstraints as $constraint) {
+                if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
+                    $constraint->removeMooc($mooc);
+                }
+            }
+            
             
             $this->workspaceManager->createWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());

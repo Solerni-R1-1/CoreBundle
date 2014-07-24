@@ -28,7 +28,11 @@ class SessionsByUsers
     /**
      * @var Claroline\CoreBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *          targetEntity="Claroline\CoreBundle\Entity\User",
+     *          inversedBy= "sessionsByUsers",  
+     *          cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
@@ -36,7 +40,11 @@ class SessionsByUsers
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocSession
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *          targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession",
+     *          inversedBy="sessionsByUsers",
+     *          cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="moocSession_id", referencedColumnName="id")
      */
     private $moocSession;
@@ -44,7 +52,11 @@ class SessionsByUsers
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *          targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner",
+     *          inversedBy="sessionsByUsers",
+     *          cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="moocOwner_id", referencedColumnName="id")
      */
     private $moocOwner;
@@ -53,7 +65,11 @@ class SessionsByUsers
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *          targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
+     *          inversedBy="sessionsByUsers",
+     *          cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="moocAccessConstraints_id", referencedColumnName="id")
      */
     private $moocAccessConstraints;

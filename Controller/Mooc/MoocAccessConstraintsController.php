@@ -198,6 +198,15 @@ class MoocAccessConstraintsController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            
+            foreach ( $entity->getMoocs() as $mooc ) {
+                foreach ( $mooc->getMoocSessions() as $session ) {
+                    //TODO By the listener
+                    $this->get('orange.search.indexer_todo_manager')
+                         ->toIndex($session);
+                }
+            }
+            
             $em->flush();
 
             return $this->redirect($this->generateUrl('admin_parameters_mooc_accessconstraints', array('id' => $id)));

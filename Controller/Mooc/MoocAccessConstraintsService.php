@@ -26,12 +26,12 @@ class MoocAccessConstraintsService extends Controller
         if (!empty($constraints)) {
             foreach ($constraints as $constraint) {
                 $this->container
-                     ->get('logger')->error("delete  constraint n°" . $constraint->getId()
+                     ->get('logger')->info("delete  constraint n°" . $constraint->getId()
                         . " and user n°" . ($user == null ? 'xx' : $user->getId()));
                 $sessionsByUsersRepository->deleteByConstraintIdAndUserId($constraint, $user); //delete for user_id AND constraintsID
             }
         } else if ($user != null) {
-            $this->container->get('logger')->error("delete  user n°" . $user->getId());
+            $this->container->get('logger')->info("delete  user n°" . $user->getId());
             $sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
         }
 
@@ -68,7 +68,7 @@ class MoocAccessConstraintsService extends Controller
                 $email = $user->getMail();
                 if (in_array($email, $whitelist)) {
 
-                    $this->container->get('logger')->error($email . " in " . print_r($whitelist, true));
+                    $this->container->get('logger')->info($email . " in " . print_r($whitelist, true));
                     $matchings = $this->addItem($matchings, $constraint, $user);
                     continue;
                 }
@@ -76,7 +76,7 @@ class MoocAccessConstraintsService extends Controller
                 foreach ($patterns as $pattern) {
                     //TODO change pattern for xxxx$/i
                     if (!empty($pattern) && preg_match("/" . $pattern . "/i", $email)) {
-                        $this->container->get('logger')->error($email . " match " . "/" . $pattern . "/i");
+                        $this->container->get('logger')->info($email . " match " . "/" . $pattern . "/i");
                         $matchings = $this->addItem($matchings, $constraint, $user);
                         continue;
                     }
@@ -102,26 +102,39 @@ class MoocAccessConstraintsService extends Controller
                 continue;
             }
             foreach ($constraint->getMoocs() as $mooc) {
-                //$this->container->get('logger')->error('MoocId :  '.$mooc->getId());
+                $this->container->get('logger')->info('MoocId :  '.$mooc->getId());
+                
+                
                 if ($mooc->getMoocSessions() == null) {
                     continue;
                 }
 
                 foreach ($mooc->getMoocSessions() as $session) {
-                    //$this->container->get('logger')->error('SessionId :  '.$session->getId());
+                    $this->container->get('logger')->info('SessionId :  '.$session->getId());
                     foreach ($users as $user_id => $user) {
-
-                        /* $this->container->get('logger')->error('> '.$user->getId(). ','
+                        
+                        $this->container->get('logger')->info('> '.$user->getId(). ','
                           .$session->getId(). ','
                           .$owner->getId(). ','
-                          .$constraint->getId()); */
+                          .$constraint->getId());
 
                         $item = new SessionsByUsers();
                         $item->setUser($user);
                         $item->setMoocSession($session);
                         $item->setMoocOwner($owner);
                         $item->setMoocAccessConstraints($constraint);
-
+                        
+                        $workspace = $mooc->getWorkspace();
+                        $roleManager = $this->container->get('claroline.manager.role_manager');
+                        $userRoles = $user->getEntityRoles();
+                        
+                        if ( ! $userRoles->contains($roleManager->getManagerRole($workspace)) &&
+                             ! $userRoles->contains($roleManager->getCollaboratorRole($workspace)) &&
+                             ! $userRoles->contains($roleManager->getRoleByName('ROLE_ADMIN'))) {
+                            
+                            $role = $roleManager->getCollaboratorRole($workspace);
+                            $user->addRole($role);
+                        }
 
                         $i++;
                         //TODO : decomment here
@@ -132,12 +145,10 @@ class MoocAccessConstraintsService extends Controller
                     }
                 }
             }
+            
         }
-
-
+        $this->container->get('logger')->info("Flush $i");
         $em->flush();
-        //$em->clear();
-        //$this->container->get('logger')->error("TOTAL : $i");
     }
 
     public function processDelete(array $constraints, User $user = null)

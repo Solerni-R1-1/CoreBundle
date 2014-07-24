@@ -138,16 +138,11 @@ class MoocController extends Controller
 	        		return $this->sessionPartagerPage($mooc->getWorkspace());
 	        		break;
                 
-               case "subscribe" :
+                        case "subscribe" :
 	        		return $this->sessionAddUserAction( $moocSession, $user );
 	        		break;
 
-        		case "vomir" :
-        		case "subir" :
-	        		return $this->sessionLolPage( $moocSession );
-	        		break;
-
-        		default:return $this->inner404("le word est inconnu : ".$word);
+                        default:return $this->inner404("le word est inconnu : ".$word);
         	}
 
         }

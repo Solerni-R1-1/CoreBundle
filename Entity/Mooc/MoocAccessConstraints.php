@@ -65,7 +65,7 @@ class MoocAccessConstraints
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
      *     mappedBy="accessConstraints",
-     *     cascade={"persist", "remove"}
+     *     cascade={"persist"}
      * )
      */
     private $moocs;
@@ -141,7 +141,7 @@ class MoocAccessConstraints
         return $this->moocs;
     }
 
-    public function setMoocs(Mooc $moocs)
+    public function setMoocs($moocs)
     {
         $this->moocs = $moocs;
     }
@@ -168,6 +168,24 @@ class MoocAccessConstraints
             }
         }
         return $roles;
+    }
+    
+    public function addMooc($mooc) 
+    {
+        $moocs = $this->getMoocs();
+        if (!$moocs->contains($mooc)) {
+            $moocs->add($mooc);
+            $this->setMoocs($moocs);
+        }
+    }
+    
+    public function removeMooc($mooc) 
+    {
+        $moocs = $this->getMoocs();
+        if (!$moocs->contains($mooc)) {
+            $moocs->remove($mooc);
+            $this->setMoocs($moocs);
+        }
     }
 
 }

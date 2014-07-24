@@ -220,8 +220,9 @@ class Mooc
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
      * @ORM\ManyToMany(
-     * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
-     * inversedBy="moocs",
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
+     *      inversedBy="moocs",
+     *      cascade={"persist"}
      * )
      * @ORM\JoinTable(name="claro_mooc_constraints_to_moocs")
      */

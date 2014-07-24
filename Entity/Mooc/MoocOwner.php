@@ -97,7 +97,11 @@ class MoocOwner
     /**
      * @var SessionsByUsers[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", mappedBy="moocOwner", cascade={"all"})
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", 
+     *      mappedBy="moocOwner", 
+     *      cascade={"all"}
+     * )
      */
     protected $sessionsByUsers;
     
