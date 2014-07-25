@@ -191,7 +191,10 @@ class Mooc
     /**
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      * 
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="mooc")
+     * @ORM\OneToOne(
+     *  targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", 
+     *  inversedBy="mooc"
+     * )
      * 
      */
     private $workspace;

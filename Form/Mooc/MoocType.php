@@ -28,19 +28,50 @@ class MoocType extends AbstractType
         $builder
             ->add('title', 'text', array('required' => true))
             ->add('alias', 'text', array('required' => false))
-            ->add('description','textarea', array('required' => true))
-            ->add('owner','entity', array( 'class' => 'ClarolineCoreBundle:Mooc\MoocOwner', 'property' => 'name', 'multiple'=> false, 'expanded' => false, 'required' => true, 'empty_value' => '-- Choisir un propriétaire pour ce MOOC --'))
+            ->add('description','textarea', array('required' => true, 'attr' => array( 'rows' => 6 ) ))
+            ->add('owner','entity', array( 
+                    'class' => 'ClarolineCoreBundle:Mooc\MoocOwner',
+                    'property' => 'name',
+                    'multiple'=> false,
+                    'expanded' => false,
+                    'required' => true,
+                    'empty_value' => '-- Choisir un propriétaire pour ce MOOC --'
+                ))
             ->add('isPublic', 'checkbox', array('required' => false))
-            ->add('accessConstraints', 'entity', array('class' => 'ClarolineCoreBundle:Mooc\MoocAccessConstraints', 'property'=> 'name', 'multiple'=> true, 'expanded' => true))
-            ->add('categories','entity', array( 'class' => 'ClarolineCoreBundle:Mooc\MoocCategory', 'property'=> 'name', 'multiple'=> true, 'expanded' => true ))
+            ->add('accessConstraints', 'entity', array(
+                    'class' => 'ClarolineCoreBundle:Mooc\MoocAccessConstraints',
+                    'property'=> 'name',
+                    'multiple'=> true, 
+                    'expanded' => true
+                ))
+            ->add('categories','entity', array( 
+                    'class' => 'ClarolineCoreBundle:Mooc\MoocCategory',
+                    'property'=> 'name',
+                    'multiple'=> true,
+                    'expanded' => true 
+                ))
             ->add('aboutPageDescription','tinymce', array('required' => false))
             ->add('file', 'file', array('required' => false))
             ->add('illustrationPath', 'text', array('required' => true, 'attr' => array( 'class' => 'hide' )))
-            ->add('postEndAction', 'choice', array('choices' => array('empty_value' => '-- Choisir une action -- ', '1' => 'Fermer', '2' => 'Supprimer' ), 'required' => false))
+            ->add('postEndAction', 'choice', array(
+                    'choices' => array(
+                        'empty_value' => '-- Choisir une action -- ',
+                        '1' => 'Fermer',
+                        '2' => 'Supprimer'
+                    ), 
+                    'required' => false
+                ))
             ->add('duration', 'integer', array('required' => false))
             ->add('weeklyTime', 'integer', array('required' => false))
             ->add('cost', 'integer', array('required' => false))
-            ->add('language', 'choice', array('choices' => array('empty_value' => '-- Choisir une langue --', 'fr_FR' => 'Français', 'en_EN' => 'Anglais' ), 'required' => true))
+            ->add('language', 'choice', array(
+                    'choices' => array(
+                        'empty_value' => '-- Choisir une langue --',
+                        'fr_FR' => 'Français',
+                        'en_EN' => 'Anglais'
+                    ), 
+                    'required' => true
+                ))
             ->add('hasVideo', 'checkbox', array('required' => false))
             ->add('hasSubtitle', 'checkbox', array('required' => false))
             ->add('prerequisites','tinymce', array('required' => false))
@@ -59,7 +90,12 @@ class MoocType extends AbstractType
                             return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->lessonResourceType);
                     }
             ))
-            ->add('moocSessions', 'collection', array('type' => new MoocSessionType( $this->workspace, $this->forumResourceType ), 'allow_add' => true, 'allow_delete' => true, 'by_reference' => false))
+            ->add('moocSessions', 'collection', array(
+                    'type' => new MoocSessionType( $this->workspace, $this->forumResourceType ),
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false
+                ))
         ;
     }
     

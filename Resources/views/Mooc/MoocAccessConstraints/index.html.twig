@@ -1,9 +1,8 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
 {% block content -%}
-    <a class="btn btn-gris" href="{{ path('claro_admin_index') }}">{{ 'back_to_parameters'|trans({}, 'platform') }}</a>
+    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc') }}">{{ 'back_to_mooc_parameters'|trans({}, 'platform') }}</a>
     <h1>{{ 'mooc_accessconstraints'|trans({}, 'platform') }}</h1>
-    
     
     <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_accessconstraints_new') }}">
       {{ 'mooc_accessconstraints_create'|trans({}, 'platform') }}
@@ -22,24 +21,15 @@
                        <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_accessconstraints_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
                     </td>
                     <td>
-                            {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
-                                {{ form_widget( forms[loop.index0]._token ) }}
-                                <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
-                            </form>
+                        {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
+                            {{ form_widget( forms[loop.index0]._token ) }}
+                            <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}
         {% endif %}
     </table>
+    {% include('ClarolineCoreBundle:Partials/Administration:deleteModal.html.twig') %}
 {% endblock %}
-     
-{% block javascripts %}
-    {{ parent() }} 
-    <script>
-        $('.js-submit-button').on('click', function(event) {
-            event.preventDefault();
-            $(this).parents('form').submit();
-        })
-    </script>
     
-{% endblock %}

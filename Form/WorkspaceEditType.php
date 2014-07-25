@@ -61,7 +61,7 @@ class WorkspaceEditType extends AbstractType
         } else {
             $builder->add('description', 'tinymce', array('required' => false));
         }
-        $builder->add('displayable', 'checkbox', array('required' => false));
+        //$builder->add('displayable', 'checkbox', array( 'required' => false )); // to not confuse with mooc property
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
         $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));

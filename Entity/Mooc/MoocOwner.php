@@ -59,7 +59,7 @@ class MoocOwner
      * @ORM\OneToMany(
      * targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
      * mappedBy="owner",
-     * cascade={"persist", "remove"}
+     * cascade={"persist"}
      * )
      * 
      */
@@ -70,10 +70,8 @@ class MoocOwner
      * 
      * @ORM\OneToMany(
      * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints",
-     * mappedBy="moocOwner",
-     * cascade={"persist", "remove"}
+     * mappedBy="moocOwner"
      * )
-     * 
      */
     private $moocAccessConstraints;
     

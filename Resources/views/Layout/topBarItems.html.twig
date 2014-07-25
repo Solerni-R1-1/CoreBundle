@@ -133,18 +133,19 @@
         {% if is_granted('ROLE_ADMIN') %}
             {{ topbar.item({ 'name':'administration', 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'css':'slrn-topbar-item__sub'  }) }}
         	<li class="divider"></li>
+            {{ topbar.item({ 'name':'Moocs', 'href':path('admin_parameters_mooc'), 'icon':'cog', 'route':'/admin/parameters/mooc/', 'css':'slrn-topbar-item__sub'  }) }}
+        	<li class="divider"></li>
         {% endif %}	
         
         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
         	{% import _self as topbar %}
             
-            	{{ topbar.item({ 'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
-            	<li class="divider"></li>
-            	{{ topbar.item({ 'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
-	        	<li class="divider"></li>
-	            {{ topbar.item({ 'name':'create_workspace', 'href':path('claro_workspace_creation_form'), 'icon':'pencil', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
+            	{#{{ topbar.item({ 'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
+            	<li class="divider"></li>#}
+	            {{ topbar.item({ 'name':'create_mooc', 'href':path('claro_workspace_creation_form'), 'icon':'pencil', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
 	            <li class="divider"></li>
-		        
+            	{{ topbar.item({ 'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
+	        	<li class="divider"></li>    
         {% endif %}
 
         {% if isImpersonated %}

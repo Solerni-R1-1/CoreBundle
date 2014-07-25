@@ -103,31 +103,6 @@ class MoocCategoryController extends Controller
     }
 
     /**
-     * Finds and displays a Mooc\MoocCategory entity.
-     *
-     * @Route("/{id}", name="admin_parameters_mooc_category_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocCategory')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Mooc\MoocCategory entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
      * Displays a form to edit an existing Mooc\MoocCategory entity.
      *
      * @Route("/{id}/edit", name="admin_parameters_mooc_category_edit")

@@ -38,8 +38,7 @@ class MoocAccessConstraints
      * 
      * @ORM\ManyToOne(
      *  targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner",
-     *  inversedBy="moocAccessConstraints",
-     *  cascade={"persist", "remove"}
+     *  inversedBy="moocAccessConstraints"
      * )
      * 
      */

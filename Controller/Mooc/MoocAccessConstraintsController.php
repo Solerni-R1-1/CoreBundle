@@ -107,31 +107,6 @@ class MoocAccessConstraintsController extends Controller
     }
 
     /**
-     * Finds and displays a Mooc\MoocAccessConstraints entity.
-     *
-     * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Mooc\MoocAccessConstraints entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
      * Displays a form to edit an existing Mooc\MoocAccessConstraints entity.
      *
      * @Route("/{id}/edit", name="admin_parameters_mooc_accessconstraints_edit")

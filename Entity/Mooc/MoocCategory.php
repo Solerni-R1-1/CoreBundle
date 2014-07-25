@@ -34,7 +34,7 @@ class MoocCategory
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc",
      *     mappedBy="categories",
-     *     cascade={"persist", "remove"}
+     *     cascade={"persist"}
      * )
      */
     private $moocs;

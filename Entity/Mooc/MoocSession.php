@@ -97,7 +97,11 @@ class MoocSession extends AbstractIndexable
     /**
      * @var SessionsByUsers[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", mappedBy="moocSession", cascade={"all"})
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers",
+     *      mappedBy="moocSession",
+     *      cascade={"all"}
+     * )
      */
     protected $sessionsByUsers;
 

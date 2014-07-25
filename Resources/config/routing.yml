@@ -318,6 +318,11 @@ claro_admin_accessconstraints:
     prefix: admin/parameters/mooc/access_constraints
     type: annotation
     
+claro_mooc_admin:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/AdministrationController.php"
+    prefix: admin/parameters/mooc
+    type: annotation
+    
 claro_tranfo:
     resource: "@ClarolineCoreBundle/Controller/TransfoController.php"
     type: annotation

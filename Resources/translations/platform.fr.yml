@@ -766,7 +766,7 @@ workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" ét
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
 workspace_edit_form_creator : 'Créateur de l''espace'
-workspace_edit_form_description: Description
+workspace_edit_form_description: Description de l'espace
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
 workspace_edit_form_number : Nombre d'inscrits
@@ -882,7 +882,7 @@ workspace_form_isMooc: 'Mooc'
 claroline_corebundle_mooc: 'Formulaire d''édition du MOOC'
 claroline_corebundle_mooc_title: 'Titre'
 claroline_corebundle_mooc_alias: 'Alias'
-claroline_corebundle_mooc_description: 'Description'
+claroline_corebundle_mooc_description: 'Description du mooc'
 claroline_corebundle_mooc_owner: 'Propriétaire'
 claroline_corebundle_mooc_isPublic: 'MOOC public'
 claroline_corebundle_mooc_accessConstraints: 'Règles d''accès'
@@ -910,7 +910,7 @@ claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
 workspace_edit: 'Paramètres du workspace'
 mooc_edit: 'Paramètres du MOOC'
 sessions_edit: 'Gestion des sessions du MOOC'
-add_session: 'Ajouter une session'
+add_session: 'Créer une nouvelle session'
 delete_session: 'Supprimer la session'
 #categories
 
@@ -947,3 +947,9 @@ claroline_corebundle_mooc_accessconstraints_name: 'Nom de l''ensemble de règles
 claroline_corebundle_mooc_accessconstraints_whitelist: 'Liste blanche'
 claroline_corebundle_mooc_accessconstraints_patterns: 'Patterns'
 claroline_corebundle_mooc_accessconstraints_moocOwner: 'Propriétaire'
+
+create_mooc: Créer un mooc
+search_entities_to_index: Entités à indexer (moteur de recherche)
+mooc_administration: Administration générale des MOOCs
+back_to_mooc_parameters: Retour à l'administration des MOOCs
+mooc_list: Liste des MOOCs

@@ -136,7 +136,11 @@ abstract class AbstractWorkspace
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\Mooc
      * 
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc", cascade={"persist", "remove"}, mappedBy="workspace")
+     * @ORM\OneToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc", 
+     *      cascade={"persist", "remove"},
+     *      mappedBy="workspace"
+     * )
      */
     protected $mooc;
     
@@ -305,12 +309,17 @@ abstract class AbstractWorkspace
     public function isMooc() {
         return ( null !== $this->getMooc() );
     }
+    
+    public function getIsMooc() {
+        $this->isMooc();
+    }
 
     public function setIsMooc( $isMooc ) {
         if ( $isMooc && ! $this->getMooc() ) {
             $mooc = new Mooc();
             $mooc->setWorkspace($this);
             $this->setMooc($mooc);
+            return true;
         }
     }
 

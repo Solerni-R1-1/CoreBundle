@@ -56,8 +56,8 @@ class MoocAccessConstraintsListener extends ContainerAware
         //$entityManager = $args->getEntityManager();
 
         if ($entity instanceof MoocAccessConstraints) {
-            //$service = $this->container->get('orange.moocaccesscontraints_service');
-            //$service->processDelete(array($entity));
+            $service = $this->container->get('orange.moocaccesscontraints_service');
+            $service->processDelete(array($entity));
         }
     }
 

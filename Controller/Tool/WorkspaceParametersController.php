@@ -209,6 +209,7 @@ class WorkspaceParametersController extends Controller
                 'illustration' => $mooc->getIllustrationWebPath()
             ); 
         } else {
+            $form->add('isMooc', 'checkbox', array( 'required' => false, 'data' => false ));
             /* return only WS data if not MOOC */
             $returnArray = array(
                 'form' => $form->createView(),
@@ -240,91 +241,11 @@ class WorkspaceParametersController extends Controller
         if (!$this->security->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
-        
+
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
-        $mooc = $workspace->getMooc();
-               
-        /* Store current sessions to compare with submitted form */
-        $originalSessions = new ArrayCollection();
-        if($mooc != null){
-            foreach ( $mooc->getMoocSessions() as $session ) {
-                $originalSessions->add( $session );
-            }
-        } 
-        
-        /* Store current contraints to compare with submitted form */
-        $originalConstraints = new ArrayCollection();
-        if($mooc != null){
-            foreach ( $mooc->getAccessConstraints() as $constraint ) {
-                $originalConstraints->add( $constraint );
-            }
-        }  
-        
-        /* Get lessons and forums from current workspace*/
-        $doctrine = $this->getDoctrine();
-        $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
-        $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
-        
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-        $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType ), $mooc );
-        $form->handleRequest($this->request);
-        $form_mooc->handleRequest($this->request);
-              
-        if ( $form->isValid() && $form_mooc->isValid() ) {
-            
-            /* Setting current mooc for newly added sessions */
-            foreach ( $mooc->getMoocSessions() as $moocSession ) {
-                if (  ! $moocSession->getMooc() ) {
-                    $moocSession->setMooc( $mooc );
-                }
-            }
-
-            /* remove sessions from database if deleted */
-            foreach ( $originalSessions as $moocSession ) {
-                if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
-                    $this->getDoctrine()->getManager()->remove($moocSession);
-                }
-            }
-            
-           /* Setting current mooc for each constraint */
-            foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {              
-                $accessConstraint->addMooc($mooc);
-            }
-            
-            
-            /*Remove mooc from constraint deleted from mooc*/
-            foreach ( $originalConstraints as $constraint) {
-                if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
-                    $constraint->removeMooc($mooc);
-                }
-            }
-            
-            
-            $this->workspaceManager->createWorkspace($workspace);
-            $this->workspaceManager->rename($workspace, $workspace->getName());
-            $displayable = $workspace->isDisplayable();
-            
-            if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
-                $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
-            }
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_open_tool',
-                    array(
-                        'workspaceId' => $workspace->getId(),
-                        'toolName' => 'parameters'
-                    )
-                )
-            );
-        } else {
-            $workspace->setName($wsRegisteredName);
-            $workspace->setCode($wsRegisteredCode);
-        }
-        
+        $isMooc = $workspace->isMooc();   
         $user = $this->security->getToken()->getUser();
         $count = $this->workspaceManager->countUsers($workspace->getId());
         if ($workspace->getSelfRegistration()) {
@@ -337,15 +258,127 @@ class WorkspaceParametersController extends Controller
             $url = '';
         }
         
-        return array(
-            'form' => $form->createView(),
-            'form_mooc' => $form_mooc->createView(),
-            'workspace' => $workspace,
-            'url' => $url,
-            'user' => $user,
-            'count' => $count,
-            'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
-        );
+        // workspace form + possible checkbox isMooc
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
+        $form->add('isMooc', 'checkbox', array( 'required' => false, 'data' => false ));
+        $form->handleRequest($this->request);
+        
+        // Creating the mooc is we checkboxed isMooc
+        if ( $form->get('isMooc')->getData() && ! $isMooc ) {
+            $isMooc = $workspace->setIsMooc( $form->get('description')->getData() );
+        }
+        
+        if ( $isMooc ) { // 
+            $mooc = $workspace->getMooc();
+            /* Store current sessions to compare with submitted form */
+            $originalSessions = new ArrayCollection();
+            foreach ( $mooc->getMoocSessions() as $session ) {
+                $originalSessions->add( $session );
+            }
+
+            /* Store current contraints to compare with submitted form */
+            $originalConstraints = new ArrayCollection();
+            foreach ( $mooc->getAccessConstraints() as $constraint ) {
+                $originalConstraints->add( $constraint );
+            }
+        
+            /* Get lessons and forums from current workspace*/
+            $doctrine = $this->getDoctrine();
+            $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+            $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
+            $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+            
+            // Generate mooc form
+            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType ), $mooc );
+            $form_mooc->handleRequest($this->request);
+        }
+        
+        if ( $isMooc ) {
+            if ( $form->isValid() || && $form_mooc->isValid() ) {
+
+                /* Setting current mooc for newly added sessions */
+                foreach ( $mooc->getMoocSessions() as $moocSession ) {
+                   if (  ! $moocSession->getMooc() ) {
+                       $moocSession->setMooc( $mooc );
+                   }
+                }
+
+                /* remove sessions from database if deleted */
+                foreach ( $originalSessions as $moocSession ) {
+                    if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
+                        $this->getDoctrine()->getManager()->remove($moocSession);
+                    }
+                }
+
+               /* Setting current mooc for each constraint */
+                foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {              
+                    $accessConstraint->addMooc($mooc);
+                }
+
+
+                /*Remove mooc from constraint deleted from mooc*/
+                foreach ( $originalConstraints as $constraint) {
+                    if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
+                        $constraint->removeMooc($mooc);
+                    }
+                }
+
+                $this->workspaceManager->createWorkspace($workspace);
+                $this->workspaceManager->rename($workspace, $workspace->getName());
+                $displayable = $workspace->isDisplayable();
+
+                if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                    $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+                }
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'claro_workspace_open_tool',
+                        array(
+                            'workspaceId' => $workspace->getId(),
+                            'toolName' => 'parameters'
+                        )
+                    )
+                );
+            } else {
+                $workspace->setName($wsRegisteredName);
+                $workspace->setCode($wsRegisteredCode);
+            }
+
+
+            return array(
+                'form' => $form->createView(),
+                'form_mooc' => $form_mooc->createView(),
+                'workspace' => $workspace,
+                'url' => $url,
+                'user' => $user,
+                'count' => $count,
+                'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
+            );
+        } else {
+            if ( $form->isValid() ) {
+                $this->workspaceManager->createWorkspace($workspace);
+                $this->workspaceManager->rename($workspace, $workspace->getName());
+                $displayable = $workspace->isDisplayable();
+
+                if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                    $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+                }
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'claro_workspace_open_tool',
+                        array(
+                            'workspaceId' => $workspace->getId(),
+                            'toolName' => 'parameters'
+                        )
+                    )
+                );
+            } else {
+                $workspace->setName($wsRegisteredName);
+                $workspace->setCode($wsRegisteredCode);
+            }
+        }
     }
 
     /**
