@@ -17,6 +17,11 @@ class MoocAccessConstraintsService extends Controller
 
     public function processUpgrade(array $constraints, User $user = null)
     {
+        $log = $this->container->get('logger');
+        if(empty($constraints) && empty($user)){
+            $log->info('Both $constraints and $user are NULL. end of processUpgrade();');
+            return;
+        }
 
         $em = $this->getDoctrine()->getManager();
         $sessionsByUsersRepository = $em->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers');
@@ -24,13 +29,12 @@ class MoocAccessConstraintsService extends Controller
         //Clean existing informations
         if ( ! empty( $constraints ) ) {
             foreach ( $constraints as $constraint ) {
-                $this->container
-                     ->get('logger')->info("Delete rules for constraint n°" . $constraint->getId()
+                $log->info("Delete rules for constraint n°" . $constraint->getId()
                         . " and user n°" . ($user == null ? '(any)' : $user->getId()));
                 $sessionsByUsersRepository->deleteByConstraintIdAndUserId($constraint, $user); //delete for user_id AND constraintsID
             }
         } else if ( $user != null ) {
-            $this->container->get('logger')->info("delete rules for user n°" . $user->getId());
+            $log->info->info("delete rules for user n°" . $user->getId());
             $sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
         }
 
@@ -68,15 +72,14 @@ class MoocAccessConstraintsService extends Controller
                 $email = $user->getMail();
                 if (in_array($email, $whitelist)) {
 
-                    $this->container->get('logger')->info('Match found: ' . $email . " in " . print_r($whitelist, true));
+                    $log->info->info('Match found: ' . $email . " in " . print_r($whitelist, true));
                     $matchings = $this->addItem($matchings, $constraint, $user);
                     continue;
                 }
 
                 foreach ($patterns as $pattern) {
-                    //TODO change pattern for xxxx$/i - 
-                    if (!empty($pattern) && preg_match("/" . $pattern . "/i", $email)) {
-                        $this->container->get('logger')->info($email . " match " . "/" . $pattern . "/i");
+                    if (!empty($pattern) && preg_match("/" . $pattern . "$/i", $email)) {
+                        $log->info->info($email . " match " . "/" . $pattern . "$/i");
                         $matchings = $this->addItem($matchings, $constraint, $user);
                         continue;
                     }
@@ -97,29 +100,29 @@ class MoocAccessConstraintsService extends Controller
             $owner = $constraint->getMoocOwner();
             
             if ($owner == null) {
-                $this->container->get('logger')->error('This constraint has no owner. Match is invalid');
+                $log->info->error('This constraint has no owner. Match is invalid');
                 continue;
             }
-            $this->container->get('logger')->info('Owner found:  '.$owner->getId());
+            $log->info->info('Owner found:  '.$owner->getId());
             
             if ($constraint->getMoocs() == null) {
-                $this->container->get('logger')->error('This constraint has no mooc. Match is invalid');
+                $log->info->error('This constraint has no mooc. Match is invalid');
                 continue;
             }
             
             foreach ($constraint->getMoocs() as $mooc) {
-                $this->container->get('logger')->info('MoocId found:  '.$mooc->getId());
+                $log->info->info('MoocId found:  '.$mooc->getId());
 
                 if ($mooc->getMoocSessions() == null) {
-                    $this->container->get('logger')->error('The mooc has no session. Match is invalid');
+                    $log->info->error('The mooc has no session. Match is invalid');
                     continue;
                 }
 
                 foreach ($mooc->getMoocSessions() as $session) {
-                    $this->container->get('logger')->info('SessionId found:  '.$session->getId());
+                    $log->info->info('SessionId found:  '.$session->getId());
                     foreach ($users as $user_id => $user) {
                         
-                        $this->container->get('logger')->info('Generated rule (user, session, owner, constraint) > '.$user->getId(). ','
+                        $log->info->info('Generated rule (user, session, owner, constraint) > '.$user->getId(). ','
                           .$session->getId(). ','
                           .$owner->getId(). ','
                           .$constraint->getId());
@@ -148,7 +151,7 @@ class MoocAccessConstraintsService extends Controller
                         $i++;
                         $em->persist($item);
                         if (($i % $bucksize) == 0) {
-                            //$this->container->get('logger')->info("Flush $i");
+                            //$log->info->info("Flush $i");
                             $em->flush();
                         }
                     }
@@ -156,25 +159,25 @@ class MoocAccessConstraintsService extends Controller
             }
             
         }
-        //$this->container->get('logger')->info("EntityManager#Flush");
+        //$log->info->info("EntityManager#Flush");
         $em->flush();
     }
 
     public function processDelete(array $constraints, User $user = null)
     {
         $em = $this->getDoctrine()->getManager();
-
+        $log = $this->container->get('logger');
         $sessionsByUsersRepository = $em->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers');
 
         //Clean existing informations
         if (!empty($constraints)) {
             foreach ($constraints as $constraint) {
-                $this->container->get('logger')->error("delete  constraint n°" . $constraint->getId()
+                $log->info->error("delete  constraint n°" . $constraint->getId()
                         . " and user n°" . ($user == null ? 'xx' : $user->getId()));
                 $sessionsByUsersRepository->deleteByConstraintIdAndUserId($constraint, $user); //delete for user_id AND constraintsID
             }
         } else if ($user != null) {
-            $this->container->get('logger')->error("delete  constraint n°" . $constraint->getId());
+            $log->info->error("delete  constraint n°" . $constraint->getId());
             $sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
         }
     }
