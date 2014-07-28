@@ -7,8 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
 use Claroline\CoreBundle\Form\Mooc\MoocAccessConstraintsType;
+use Claroline\CoreBundle\Entity\User;
 
 
 /**
@@ -23,8 +25,9 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/", name="admin_parameters_mooc_accessconstraints")
      * @Method("GET")
      * @Template()
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function indexAction()
+    public function indexAction( User $user )
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -48,8 +51,9 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/", name="admin_parameters_mooc_accessconstraints_create")
      * @Method("POST")
      * @Template("ClarolineCoreBundle:Mooc\MoocAccessConstraints:new.html.twig")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, User $user )
     {
         $entity = new MoocAccessConstraints();
         $form = $this->createCreateForm($entity);
@@ -75,8 +79,9 @@ class MoocAccessConstraintsController extends Controller
      * @param MoocAccessConstraints $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    private function createCreateForm(MoocAccessConstraints $entity)
+    private function createCreateForm(MoocAccessConstraints $entity, User $user )
     {
         $form = $this->createForm(new MoocAccessConstraintsType(), $entity, array(
             'action' => $this->generateUrl('admin_parameters_mooc_accessconstraints_create'),
@@ -94,8 +99,9 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/new", name="admin_parameters_mooc_accessconstraints_new")
      * @Method("GET")
      * @Template()
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function newAction()
+    public function newAction( User $user )
     {
         $entity = new MoocAccessConstraints();
         $form   = $this->createCreateForm($entity);
@@ -112,8 +118,9 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/{id}/edit", name="admin_parameters_mooc_accessconstraints_edit")
      * @Method("GET")
      * @Template()
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function editAction($id)
+    public function editAction( $id, User $user )
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -137,10 +144,10 @@ class MoocAccessConstraintsController extends Controller
     * Creates a form to edit a Mooc\MoocAccessConstraints entity.
     *
     * @param MoocAccessConstraints $entity The entity
-    *
+    * @ParamConverter("user", options={"authenticatedUser" = true})
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(MoocAccessConstraints $entity)
+    private function createEditForm(MoocAccessConstraints $entity, User $user )
     {
         $form = $this->createForm(new MoocAccessConstraintsType(), $entity, array(
             'action' => $this->generateUrl('admin_parameters_mooc_accessconstraints_update', array('id' => $entity->getId())),
@@ -157,8 +164,9 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_update")
      * @Method("PUT")
      * @Template("ClarolineCoreBundle:Mooc\MoocAccessConstraints:edit.html.twig")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $id, User $user)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -198,8 +206,9 @@ class MoocAccessConstraintsController extends Controller
      *
      * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_delete")
      * @Method("DELETE")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $id, User $user)
     {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
@@ -225,8 +234,9 @@ class MoocAccessConstraintsController extends Controller
      * @param mixed $id The entity id
      *
      * @return \Symfony\Component\Form\Form The form
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm($id, User $user )
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('admin_parameters_mooc_accessconstraints_delete', array('id' => $id)))
