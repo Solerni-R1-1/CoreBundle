@@ -30,25 +30,26 @@ class MoocType extends AbstractType
             ->add('alias', 'text', array('required' => false))
             ->add('description','textarea', array('required' => true, 'attr' => array( 'rows' => 6 ) ))
             ->add('owner','entity', array( 
-                    'class' => 'ClarolineCoreBundle:Mooc\MoocOwner',
-                    'property' => 'name',
-                    'multiple'=> false,
-                    'expanded' => false,
-                    'required' => true,
+                    'class'     => 'ClarolineCoreBundle:Mooc\MoocOwner',
+                    'property'  => 'name',
+                    'multiple'  => false,
+                    'expanded'  => false,
+                    'required'  => true,
                     'empty_value' => '-- Choisir un propriétaire pour ce MOOC --'
                 ))
             ->add('isPublic', 'checkbox', array('required' => false))
             ->add('accessConstraints', 'entity', array(
                     'class' => 'ClarolineCoreBundle:Mooc\MoocAccessConstraints',
-                    'property'=> 'name',
-                    'multiple'=> true, 
-                    'expanded' => true
+                    'property'  => 'name',
+                    'multiple'  => true, 
+                    'expanded'  => true
                 ))
             ->add('categories','entity', array( 
-                    'class' => 'ClarolineCoreBundle:Mooc\MoocCategory',
-                    'property'=> 'name',
-                    'multiple'=> true,
-                    'expanded' => true 
+                    'class'     => 'ClarolineCoreBundle:Mooc\MoocCategory',
+                    'property'  => 'name',
+                    'multiple'  => true,
+                    'expanded'  => true,
+                    'required'  => true
                 ))
             ->add('aboutPageDescription','tinymce', array('required' => false))
             ->add('file', 'file', array('required' => false))
@@ -61,8 +62,8 @@ class MoocType extends AbstractType
                     ), 
                     'required' => false
                 ))
-            ->add('duration', 'integer', array('required' => false))
-            ->add('weeklyTime', 'integer', array('required' => false))
+            ->add('duration', 'integer', array('required' => false, 'precision' => 0 ))
+            ->add('weeklyTime', 'integer', array('required' => false, 'precision' => 0 ))
             ->add('cost', 'integer', array('required' => false))
             ->add('language', 'choice', array(
                     'choices' => array(

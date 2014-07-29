@@ -7,8 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Claroline\CoreBundle\Entity\Mooc\MoocOwner;
 use Claroline\CoreBundle\Form\Mooc\MoocOwnerType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class MoocOwnerController extends Controller
 {
@@ -19,6 +21,7 @@ class MoocOwnerController extends Controller
      * @Route("/", name="admin_parameters_mooc_owners")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function indexAction()
     {
@@ -45,8 +48,9 @@ class MoocOwnerController extends Controller
      * @Route("/", name="admin_parameters_mooc_owner_create")
      * @Method("POST")
      * @Template("ClarolineCoreBundle:Mooc\MoocOwner:new.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
      */
-    public function createAction(Request $request)
+    public function createAction( Request $request )
     {
         $entity = new MoocOwner();
         $form = $this->createCreateForm($entity);
@@ -73,7 +77,7 @@ class MoocOwnerController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(MoocOwner $entity)
+    private function createCreateForm( MoocOwner $entity )
     {
         $form = $this->createForm(new MoocOwnerType(), $entity, array(
             'action' => $this->generateUrl('admin_parameters_mooc_owner_create'),
@@ -91,6 +95,7 @@ class MoocOwnerController extends Controller
      * @Route("/new", name="admin_parameters_mooc_owner_new")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction()
     {
@@ -109,8 +114,9 @@ class MoocOwnerController extends Controller
      * @Route("/{id}/edit", name="admin_parameters_mooc_owner_edit")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN")
      */
-    public function editAction($id)
+    public function editAction( $id )
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -139,7 +145,7 @@ class MoocOwnerController extends Controller
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(MoocOwner $entity)
+    private function createEditForm( MoocOwner $entity )
     {
         $form = $this->createForm(new MoocOwnerType(), $entity, array(
             'action' => $this->generateUrl('admin_parameters_mooc_owner_update', array('id' => $entity->getId())),
@@ -150,14 +156,16 @@ class MoocOwnerController extends Controller
 
         return $form;
     }
+    
     /**
      * Edits an existing Mooc\MoocOwner entity.
      *
      * @Route("/{id}", name="admin_parameters_mooc_owner_update")
      * @Method("PUT")
      * @Template("ClarolineCoreBundle:Mooc\MoocOwner:edit.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction( Request $request, $id )
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -188,6 +196,7 @@ class MoocOwnerController extends Controller
      *
      * @Route("/{id}", name="admin_parameters_mooc_owner_delete")
      * @Method("DELETE")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function deleteAction(Request $request, $id)
     {

@@ -160,7 +160,7 @@ class MoocAccessConstraints
     {
         $roles = new ArrayCollection();
         foreach ($this->getMoocs() as $mooc) {
-            foreach ($mooc->getWorkspace()->getRoles as $role) {
+            foreach ($mooc->getWorkspace()->getRoles() as $role) {
                if (!$roles->contains($role)) {
                     $roles->add($role);
                 }

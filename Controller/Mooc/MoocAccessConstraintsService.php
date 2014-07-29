@@ -34,7 +34,7 @@ class MoocAccessConstraintsService extends Controller
                 $sessionsByUsersRepository->deleteByConstraintIdAndUserId($constraint, $user); //delete for user_id AND constraintsID
             }
         } else if ( $user != null ) {
-            $log->info->info("delete rules for user n°" . $user->getId());
+            $log->info("delete rules for user n°" . $user->getId());
             $sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
         }
 
@@ -72,14 +72,14 @@ class MoocAccessConstraintsService extends Controller
                 $email = $user->getMail();
                 if (in_array($email, $whitelist)) {
 
-                    $log->info->info('Match found: ' . $email . " in " . print_r($whitelist, true));
+                    $log->info('Match found: ' . $email . " in " . print_r($whitelist, true));
                     $matchings = $this->addItem($matchings, $constraint, $user);
                     continue;
                 }
 
                 foreach ($patterns as $pattern) {
                     if (!empty($pattern) && preg_match("/" . $pattern . "$/i", $email)) {
-                        $log->info->info($email . " match " . "/" . $pattern . "$/i");
+                        $log->info($email . " match " . "/" . $pattern . "$/i");
                         $matchings = $this->addItem($matchings, $constraint, $user);
                         continue;
                     }
@@ -100,29 +100,29 @@ class MoocAccessConstraintsService extends Controller
             $owner = $constraint->getMoocOwner();
             
             if ($owner == null) {
-                $log->info->error('This constraint has no owner. Match is invalid');
+                $log->error('This constraint has no owner. Match is invalid');
                 continue;
             }
-            $log->info->info('Owner found:  '.$owner->getId());
+            $log->info('Owner found:  '.$owner->getId());
             
             if ($constraint->getMoocs() == null) {
-                $log->info->error('This constraint has no mooc. Match is invalid');
+                $log->error('This constraint has no mooc. Match is invalid');
                 continue;
             }
             
             foreach ($constraint->getMoocs() as $mooc) {
-                $log->info->info('MoocId found:  '.$mooc->getId());
+                $log->info('MoocId found:  '.$mooc->getId());
 
                 if ($mooc->getMoocSessions() == null) {
-                    $log->info->error('The mooc has no session. Match is invalid');
+                    $log->error('The mooc has no session. Match is invalid');
                     continue;
                 }
 
                 foreach ($mooc->getMoocSessions() as $session) {
-                    $log->info->info('SessionId found:  '.$session->getId());
+                    $log->info('SessionId found:  '.$session->getId());
                     foreach ($users as $user_id => $user) {
                         
-                        $log->info->info('Generated rule (user, session, owner, constraint) > '.$user->getId(). ','
+                        $log->info('Generated rule (user, session, owner, constraint) > '.$user->getId(). ','
                           .$session->getId(). ','
                           .$owner->getId(). ','
                           .$constraint->getId());
@@ -151,7 +151,7 @@ class MoocAccessConstraintsService extends Controller
                         $i++;
                         $em->persist($item);
                         if (($i % $bucksize) == 0) {
-                            //$log->info->info("Flush $i");
+                            //$log->info("Flush $i");
                             $em->flush();
                         }
                     }
@@ -159,7 +159,7 @@ class MoocAccessConstraintsService extends Controller
             }
             
         }
-        //$log->info->info("EntityManager#Flush");
+        //$log->info("EntityManager#Flush");
         $em->flush();
     }
 
@@ -172,12 +172,12 @@ class MoocAccessConstraintsService extends Controller
         //Clean existing informations
         if (!empty($constraints)) {
             foreach ($constraints as $constraint) {
-                $log->info->error("delete  constraint n°" . $constraint->getId()
+                $log->error("delete  constraint n°" . $constraint->getId()
                         . " and user n°" . ($user == null ? 'xx' : $user->getId()));
                 $sessionsByUsersRepository->deleteByConstraintIdAndUserId($constraint, $user); //delete for user_id AND constraintsID
             }
         } else if ($user != null) {
-            $log->info->error("delete  constraint n°" . $constraint->getId());
+            $log->error("delete  constraint n°" . $constraint->getId());
             $sessionsByUsersRepository->deleteByConstraintIdAndUserId(null, $user); //delete for user_id
         }
     }

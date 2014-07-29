@@ -7,8 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Claroline\CoreBundle\Entity\Mooc\MoocCategory;
 use Claroline\CoreBundle\Form\Mooc\MoocCategoryType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class MoocCategoryController extends Controller
 {
@@ -19,6 +21,7 @@ class MoocCategoryController extends Controller
      * @Route("/", name="admin_parameters_mooc_categories")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function indexAction()
     {
@@ -44,6 +47,7 @@ class MoocCategoryController extends Controller
      * @Route("/", name="admin_parameters_mooc_category_create")
      * @Method("POST")
      * @Template("ClarolineCoreBundle:Mooc\MoocCategory:new.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction(Request $request)
     {
@@ -90,6 +94,7 @@ class MoocCategoryController extends Controller
      * @Route("/new", name="admin_parameters_mooc_category_new")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction()
     {
@@ -108,6 +113,7 @@ class MoocCategoryController extends Controller
      * @Route("/{id}/edit", name="admin_parameters_mooc_category_edit")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id)
     {
@@ -153,6 +159,7 @@ class MoocCategoryController extends Controller
      * @Route("/{id}", name="admin_parameters_mooc_category_update")
      * @Method("PUT")
      * @Template("ClarolineCoreBundle:Mooc\MoocCategory:edit.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction(Request $request, $id)
     {
@@ -185,6 +192,7 @@ class MoocCategoryController extends Controller
      *
      * @Route("/{id}", name="admin_parameters_mooc_category_delete")
      * @Method("DELETE")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function deleteAction(Request $request, $id)
     {

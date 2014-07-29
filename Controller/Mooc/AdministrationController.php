@@ -23,7 +23,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Entity\User;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Description of StaticController
@@ -42,9 +42,9 @@ class AdministrationController extends Controller
      * @Route("/", name="admin_parameters_mooc")
      * @Method("GET")
      * @Template()
-     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Secure(roles="ROLE_ADMIN")
      */
-    public function indexAction( User $user )
+    public function indexAction()
     {
         $moocs = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\Mooc')->findAll();
 

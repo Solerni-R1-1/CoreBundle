@@ -1,0 +1,9 @@
+{% if entity.getMoocs() is not empty %}
+    {{ 'entity_cannot_be_deleted'|trans({'%entity%': entity.getName() }, 'platform') }}
+    {% for mooc in entity.getMoocs() %}
+        {% if not loop.first %} | {% endif %}
+        <a href="{{ path('claro_workspace_edit_form', { 'workspace': mooc.getWorkspace().getId() }) }}">{{ mooc.getTitle() }}</a>
+    {% endfor %}
+{% else %}
+    <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
+{% endif %}

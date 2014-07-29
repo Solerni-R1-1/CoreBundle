@@ -332,13 +332,7 @@ class WorkspaceParametersController extends Controller
                 }
 
                 return $this->redirect(
-                    $this->generateUrl(
-                        'claro_workspace_open_tool',
-                        array(
-                            'workspaceId' => $workspace->getId(),
-                            'toolName' => 'parameters'
-                        )
-                    )
+                    $this->generateUrl( 'admin_parameters_mooc')
                 );
             } else {
                 $workspace->setName($wsRegisteredName);

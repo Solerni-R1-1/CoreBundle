@@ -4,13 +4,13 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h3>{{ 'delete_category_confirm_message'|trans({}, 'platform') }}</h3>
+                  <h3>{{ ('delete_' ~ entityType ~ '_confirm_message')|trans({}, 'platform') }}</h3>
               </div>
               <div class="modal-body">
-                  <p>{{ 'delete_category_confirm_title'|trans({}, 'platform') }}</p>
+                  <p>{{ ('delete_' ~ entityType ~ '_confirm_title')|trans({}, 'platform') }}</p>
               </div>
               <div class="modal-footer">
-                  <input type="button" id="delete-category-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                  <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
                   <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
               </div>
           </div>
@@ -26,7 +26,7 @@
             function deleteModal(el) {
                 $('#delete-validation-box')
                     .modal()
-                    .one('click', '#delete-category-confirm-ok', function() {
+                    .one('click', '#delete-confirm-ok', function() {
                     el.closest('form').submit();
                 });
             }

@@ -19,7 +19,7 @@ class MoocAccessConstraintsType extends AbstractType
             ->add('moocOwner', 'entity', array( 
                 'class' => 'ClarolineCoreBundle:Mooc\MoocOwner',
                 'property' => 'name',
-                'required' => false,
+                'required' => true,
                 'empty_value' => '-- Choisir le propriétaire des règles d\'accès --',
                 'label_attr' => array ( 'class' => 'align-right' )
             ) )

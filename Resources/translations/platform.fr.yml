@@ -772,6 +772,7 @@ workspace_edit_form_name: Nom
 workspace_edit_form_number : Nombre d'inscrits
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
+workspace_edit_form_isMooc: Est un MOOC
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
@@ -922,6 +923,8 @@ mooc_category_name: 'catégorie'
 mooc_categories_edit: 'Editer une catégorie'
 mooc_category_edit: 'Nom de la catégorie'
 mooc_category_create: 'Nom de la catégorie'
+delete_category_confirm_message: Supprimer une catégorie
+delete_category_confirm_title: Supprimer cette catégorie
 
 mooc_owners: 'Propriétaires de MOOCs'
 mooc_owner_create: 'Créer un propriétaire'
@@ -929,6 +932,8 @@ mooc_owner_list: 'Liste des propriétaires'
 mooc_owner_list_empty: 'Aucun propriétaire'
 mooc_owner_edit: 'Propriétaire à éditer'
 mooc_owner_create: 'Créer un propriétaire'
+delete_owner_confirm_message: Supprimer un propriétaire
+delete_owner_confirm_title: Supprimer ce propriétaire
 
 claroline_corebundle_mooc_owner_name: 'Nom du propriétaire'
 claroline_corebundle_mooc_owner_description: 'Slogan ou description'
@@ -942,15 +947,21 @@ mooc_accessconstraints_create: 'Créer un ensemble de règles d''accès'
 mooc_accessconstraints_list: 'Liste des règles d''accès'
 mooc_accessconstraints_list_empty: 'Aucun ensemble de règles d''accès'
 mooc_accessconstraints_edit: 'Modifier une Règle d''accès'
+delete_accessConstraint_confirm_message: Supprimer une règle d'accès
+delete_accessConstraint_confirm_title: Supprimer cette règle d'accès
 
 claroline_corebundle_mooc_accessconstraints_name: 'Nom de l''ensemble de règles'
 claroline_corebundle_mooc_accessconstraints_whitelist: 'Liste blanche'
 claroline_corebundle_mooc_accessconstraints_patterns: 'Patterns'
 claroline_corebundle_mooc_accessconstraints_moocOwner: 'Propriétaire'
 
+
 create_mooc: Créer un mooc
-search_entities_to_index: Entités à indexer (moteur de recherche)
+search_engine: Moteur de recherche
+search_entities_to_index: Entités à indexer
 mooc_administration: Administration générale des MOOCs
 back_to_mooc_parameters: Retour à l'administration des MOOCs
 mooc_list: Liste des MOOCs
 mooc_parameters: Editer le MOOC
+entity_cannot_be_deleted: 'Cette entité ne peut pas supprimée car associée aux MOOCs suivants :'
+workspace_parameters: 'Paramètres du workspace'

@@ -29,7 +29,7 @@ class MoocSessionType extends AbstractType
                     array( 
                         'label' => 'Début de session',
                         'widget' => 'single_text',
-                        'required' => false
+                        'required' => true
                     )
                 )
             ->add('endDate',
@@ -37,7 +37,7 @@ class MoocSessionType extends AbstractType
                     array(
                         'label' => 'Fin de session',
                         'widget' => 'single_text',
-                        'required' => false
+                        'required' => true
                     )
                 )
             ->add('startInscriptionDate', 
@@ -45,7 +45,7 @@ class MoocSessionType extends AbstractType
                     array(
                         'label' => 'Début d\'inscription',
                         'widget' => 'single_text',
-                        'required' => false
+                        'required' => true
                     )
                 )
             ->add('endInscriptionDate', 
@@ -53,14 +53,14 @@ class MoocSessionType extends AbstractType
                     array(
                         'label' => 'Fin d\'inscription',
                         'widget' => 'single_text',
-                        'required' => false
+                        'required' => true
                     )
                 )
             ->add('title', 
                     'text', 
                     array(
                         'label' => 'Titre de la session',
-                        'required' => false
+                        'required' => true
                     )
                 )
             ->add('maxUsers', 

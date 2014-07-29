@@ -23,13 +23,13 @@
                     <td>
                         {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
                             {{ form_widget( forms[loop.index0]._token ) }}
-                            <a class="btn btn-gris js-submit-button" href="#">{{ 'delete'|trans({}, 'platform') }}</a>
+                            {% include 'ClarolineCoreBundle:Partials/Administration:entityDeleteButton.html.twig' %}
                         </form>
                     </td>
                 </tr>
             {% endfor %}
         {% endif %}
     </table>
-    {% include('ClarolineCoreBundle:Partials/Administration:deleteModal.html.twig') %}
+    {% include 'ClarolineCoreBundle:Partials/Administration:deleteModal.html.twig' with { 'entityType': 'accessConstraint' } %}
 {% endblock %}
     
