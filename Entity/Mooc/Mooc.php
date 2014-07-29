@@ -84,21 +84,21 @@ class Mooc
 
     /**
      * @var integer
-     *
+     * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
      * @ORM\Column(name="duration", type="integer", length=255, nullable=true)
      */
     private $duration;
 
     /**
      * @var integer
-     *
+     * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
      * @ORM\Column(name="weekly_time", type="integer", length=255, nullable=true)
      */
     private $weeklyTime;
 
     /**
      * @var integer
-     *
+     * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
      * @ORM\Column(name="cost", type="integer", nullable=true)
      */
     private $cost;
@@ -842,23 +842,21 @@ class Mooc
     
     
     
-    public function getAccessRoles() {
+    public function getAccessRoleIds() {
         
-        /* @var Doctrine\Common\Collections\ArrayCollection roles */ 
-        $roles = $this->getWorkspace()->getRoles(); 
+        $accessRolesIds = array();
         $roleManager = $this->get('claroline.manager.role_manager');
-        $roles->add($roleManager->getRoleByName('ROLE_ADMIN'));
+        $accessRolesIds [] = $roleManager->getRoleByName('ROLE_ADMIN')->getId();
         if ($this->isPublic()) {
-            $roles->add($roleManager->getRoleByName('ROLE_ANONYMOUS'));
+            $accessRolesIds [] = $roleManager->getRoleByName('ROLE_ANONYMOUS')->getId();
+            $accessRolesIds [] = $roleManager->getRoleByName('ROLE_USER')->getId();
         }
         foreach ($this->getAccessConstraints() as $constraint) {
             foreach ($constraint->getRoles() as $role) {
-                if (!$roles->contains($role)) {
-                    $roles->add($role);
-                }
+                $accessRolesIds [] = $role->getId();
             }
         }
-        return $roles;
+        return $accessRolesIds;
     }
  
     private function get($serviceName) 

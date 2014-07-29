@@ -29,10 +29,10 @@ abstract class AbstractIndexable implements IndexableInterface
         $doc->id = $this->getIndexableDocId();
         $doc->entity_id = $this->getId();
         $doc->type_name = $this->getTypeName();
-        $doc->access_role_ids = $this->getAccessRoles();
+        $doc->access_role_ids = $this->getAccessRoleIds();
         
         return $doc;
     }
 
-    abstract public function getAccessRoles();
+    abstract public function getAccessRoleIds();
 }

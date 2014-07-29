@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity\Mooc;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractIndexable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * MoocSession
@@ -73,6 +74,7 @@ class MoocSession extends AbstractIndexable
      * @var integer
      *
      * @ORM\Column(name="max_users", type="integer", nullable=true)
+     * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
      */
     private $maxUsers;
 
@@ -362,8 +364,8 @@ class MoocSession extends AbstractIndexable
        return $doc;
     }
     
-    public function getAccessRoles()
+    public function getAccessRoleIds()
     {
-        return array_map(function($obj) { return $obj->getId(); }, $this->getMooc()->getAccessRoles()->toArray());
+        return $this->getMooc()->getAccessRoleIds();
     }
 }

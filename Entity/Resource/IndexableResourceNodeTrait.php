@@ -39,7 +39,7 @@ trait IndexableResourceNodeTrait
         return $doc;
     }
     
-    public function getAccessRoles()
+    public function getAccessRoleIds()
     {   
         $roleManager = $this->get('claroline.manager.role_manager');
         $workspace = $this->getResourceNode()->getWorkspace();

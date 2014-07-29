@@ -34,5 +34,5 @@ interface IndexableInterface
     /**
      * 
      */
-    public function getAccessRoles();
+    public function getAccessRoleIds();
 }
