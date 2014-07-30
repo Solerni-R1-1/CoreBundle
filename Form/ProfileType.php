@@ -54,13 +54,13 @@ class ProfileType extends AbstractType
 
         if (!$this->isAdmin) {
             $builder
-                ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
+                ->add('username', 'text', array('label' => 'User name'))
                 ->add(
                     'administrativeCode',
                     'text',
                     array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
                 )
-                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('mail', 'email', array('read_only' => true, 'disabled' => true, 'required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
         } else {

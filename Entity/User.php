@@ -306,6 +306,19 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
 
     /**
+     * @ORM\Column(name="is_validate", type="boolean")
+     */
+    protected $isValidate = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="key_validate", type="string", nullable=true, unique=false)
+     */
+    protected $keyValidate;
+
+
+    /**
      * @var SessionsByUsers[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", 
@@ -330,6 +343,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->badgeClaims       = new ArrayCollection();
         $this->moocSessions      = new ArrayCollection();
         $this->sessionsByUsers   = new ArrayCollection();
+        $this->keyValidate       = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
     /**
@@ -1018,6 +1032,22 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setMoocSessions(ArrayCollection $moocSessions)
     {
         $this->moocSessions = $moocSessions;
+    }
+
+    public function getIsValidate(){
+        return $this->isValidate;
+    }
+
+    public function setIsValidate($isValidate){
+        $this->isValidate = $isValidate;
+    }
+
+    public function getKeyValidate(){
+        return $this->keyValidate;
+    }
+
+    public function setKeyValidate($keyValidate){
+        $this->keyValidate = $keyValidate;
     }
 
     public function getSessionsByUsers(){

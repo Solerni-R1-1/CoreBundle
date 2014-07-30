@@ -1,0 +1,11 @@
+Bonjour {{user.getLastName()}} {{user.getFirstName()}},
+
+Nous vous remercions d'avoir ouvert un compte Solerni. Pour activer votre compte, veuillez cliquer sur le lien suivant :
+
+{{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate} ) }}
+
+Si l'activation ne fonctionne pas après avoir cliqué sur le lien, vous pouvez copier le lien dans votre fenêtre de navigateur ou le saisir directement.
+
+Cordialement.
+
+L'équipe de Solerni.org

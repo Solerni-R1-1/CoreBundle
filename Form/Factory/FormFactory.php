@@ -58,6 +58,7 @@ class FormFactory
     const TYPE_PLATFORM_MAIL_INSCRIPTION = 'platform_mail_inscription';
     const TYPE_AGENDA_IMPORTER = 'import_agenda_file';
     const TYPE_MOOC = 'mooc';
+    const TYPE_ACCOUNT_VALIDATOR = 'account_validator';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -198,6 +199,9 @@ class FormFactory
         self::TYPE_MOOC => array(
             'formType' => 'Claroline\CoreBundle\Form\Mooc\MoocType',
             'entity' => 'Claroline\CoreBundle\Entity\Mooc\Mooc'
+        ),self::TYPE_ACCOUNT_VALIDATOR => array(
+            'formType' => 'Claroline\CoreBundle\Form\AccountValidatorType',
+            'entity' => 'Claroline\CoreBundle\Entity\User'
         )
     );
 

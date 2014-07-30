@@ -302,27 +302,42 @@ claro_admin_plugins:
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
-    
+
 claro_admin_category:
     resource: "@ClarolineCoreBundle/Controller/Mooc/MoocCategoryController.php"
     prefix: admin/parameters/mooc/categories
     type: annotation
-    
+
 claro_admin_owner:
     resource: "@ClarolineCoreBundle/Controller/Mooc/MoocOwnerController.php"
     prefix: admin/parameters/mooc/owners
     type: annotation
-    
+
 claro_admin_accessconstraints:
     resource: "@ClarolineCoreBundle/Controller/Mooc/MoocAccessConstraintsController.php"
     prefix: admin/parameters/mooc/access_constraints
     type: annotation
-    
+
 claro_mooc_admin:
     resource: "@ClarolineCoreBundle/Controller/Mooc/AdministrationController.php"
     prefix: admin/parameters/mooc
     type: annotation
-    
+
 claro_tranfo:
     resource: "@ClarolineCoreBundle/Controller/TransfoController.php"
+    type: annotation
+
+claro_registration_send_mail:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    prefix: register
+    type: annotation
+
+claro_registration_validate_user:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    prefix: register
+    type: annotation
+
+claro_registration_validate_user_form:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    prefix: register
     type: annotation

@@ -9,6 +9,7 @@
         </div>
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
+        {{ macros.flashBox() }}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
                 {# FIRST NAME #}
@@ -16,6 +17,7 @@
                     {{ form_label(form.firstName) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.firstName) }}
+                        {{ form_errors(form.firstName) }} 
                     </div>
                 </div>
                 {# LAST  NAME #}
@@ -23,6 +25,7 @@
                     {{ form_label(form.lastName) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.lastName) }}
+                        {{ form_errors(form.lastName) }} 
                     </div>
                 </div>
                 {# USERNAME #}
@@ -30,6 +33,7 @@
                     {{ form_label(form.username) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.username) }}
+                        {{ form_errors(form.username) }} 
                     </div>
                 </div>
                 {# MAIL  #}
@@ -37,6 +41,7 @@
                     {{ form_label(form.mail) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.mail) }}
+                        {{ form_errors(form.mail) }} 
                     </div>
                 </div>
                 {# PICTURE FILE #}
@@ -44,6 +49,7 @@
                     {{ form_label(form.pictureFile) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.pictureFile) }}
+                        {{ form_errors(form.pictureFile) }} 
                     </div>
                 </div>
                 {# DESCRIPTION #}
@@ -51,6 +57,7 @@
                     {{ form_label(form.description) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }} 
                     </div>
                 </div>
                 {# OPTIN #}
@@ -58,7 +65,8 @@
                 <div class="form-group row">
                     {{ form_label(form.accepted_com_terms) }}
                     <div class="col-md-9 col-xs-9">
-                       {{ form_widget(form.accepted_com_terms) }}
+                        {{ form_widget(form.accepted_com_terms) }}
+                        {{ form_errors(form.accepted_com_terms) }} 
                     </div>
                 </div>
                 {% endif %}
