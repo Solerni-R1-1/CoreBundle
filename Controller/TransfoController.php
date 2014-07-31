@@ -40,6 +40,7 @@ class TransfoController extends Controller
         if (@fopen($imageURI, "r")) {
             $image = $this->filter($this->get('image.handling')->open($imageURI), $filters);
             $image_mime = image_type_to_mime_type(exif_imagetype($imageURI));
+
             /**
              *  To Do :
              *  $ds = DIRECTORY_SEPARATOR;
@@ -47,6 +48,7 @@ class TransfoController extends Controller
              *  $cacheData = file_get_contents($webDir.$image->cacheFile('guess'));
              */
             $cacheData = file_get_contents('http://' . $this->getRequest()->getHost() . $image->cacheFile('guess'));
+
             if ( $cacheData ) {
                 $response = new Response($cacheData);
                 $response->headers->set('Content-Type', $image_mime);
