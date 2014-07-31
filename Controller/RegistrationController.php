@@ -168,7 +168,6 @@ class RegistrationController extends Controller
         }
         
         $log->error(" mail = {$mail} && key = {$key}");
-        //return $this->validateUserAction($mail, $key);
 
         $msg = 'accountValidation_key_empty';
         $log->error("Prepare Form Creation");

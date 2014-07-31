@@ -174,7 +174,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
             $uri = $this->router->generate('claro_registration_validate_user_form', array('mail' => $user->getMail()));
             $response = new RedirectResponse($uri);
-            $event->setResponse(new Response($response));
+            $event->setResponse($response);
             $this->breakChain = true;
         }
         return $event;
