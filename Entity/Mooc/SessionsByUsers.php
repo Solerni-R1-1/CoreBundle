@@ -92,7 +92,9 @@ class SessionsByUsers
     public function getMoocOwner() {
         return $this->moocOwner;
     }
-
+    /*
+     * Return ONE moocAccessConstraints entity
+     */
     public function getMoocAccessConstraints() {
         return $this->moocAccessConstraints;
     }

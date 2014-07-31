@@ -57,8 +57,8 @@ class MoocType extends AbstractType
             ->add('postEndAction', 'choice', array(
                     'choices' => array(
                         'empty_value' => '-- Choisir une action -- ',
-                        '1' => 'Fermer',
-                        '2' => 'Supprimer'
+                        '1' => 'Rejouable',
+                        '2' => 'Non rejouable'
                     ), 
                     'required' => false
                 ))
