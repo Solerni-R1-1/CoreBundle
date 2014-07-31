@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% block bodyClasses %}sign-in{% endblock %}
+
 {% block title %}{{ 'validateAccount' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
 
@@ -11,7 +13,7 @@
                 <h1 class="slrn-header__content" ></h1>
             </div>
         </div>
-        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/logging_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/account_validation_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
     </div>
 {% endblock %}
 
