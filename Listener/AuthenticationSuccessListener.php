@@ -164,7 +164,13 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $authorizedUrl = array(
                     'claro_registration_send_mail',
                     'claro_registration_validate_user_form', 
-                    'claro_registration_validate_user');
+                    'claro_registration_validate_user',
+                    'orange_cms_api_user',
+                    'orange_cms_api_route',
+                    'orange_cms_api_moocs',
+                    'orange_search',
+                    'solerni_catalogue',
+            );
 
         if ($event->isMasterRequest() and
             $user = $this->getUser($event->getRequest()) and
@@ -240,7 +246,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'login',
             'orange_cms_api_user',
             'orange_cms_api_route',
-            'orange_cms_api_moocs'
+            'orange_cms_api_moocs',
         );
     }
 
