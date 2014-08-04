@@ -74,11 +74,30 @@ class CatalogueController extends Controller
      * 
      * @ParamConverter("user", options={"authenticatedUser" = false })
      */
-    public function pageCatalogueAction( $user ){
+    public function pageCatalogueAction( $user )
+    {
 
         return $this->render(
             'ClarolineCoreBundle:Mooc:catalogue.html.twig',
             array()
+        );
+    }
+    
+    /**
+     * @Route("/entreprise/catalogue/{ownerName}/{ownerId}", name="solerni_owner_catalogue")
+     * 
+     * @ParamConverter("user", options={"authenticatedUser" = false })
+     * @ParamConverter("owner", class="ClarolineCoreBundle:Mooc\MoocOwner", options={"id" = "ownerId"})
+     */
+    public function moocOwnerCatalogueAction( $user, $owner, $ownerName )
+    {
+             
+        return $this->render(
+            'ClarolineCoreBundle:Mooc:ownerCatalogue.html.twig',
+            array(
+                'owner' => $owner,
+                'user'  => $user
+            )
         );
     }
 

@@ -23,8 +23,8 @@ class MoocAccessConstraintsType extends AbstractType
                 'empty_value' => '-- Choisir le propriétaire des règles d\'accès --',
                 'label_attr' => array ( 'class' => 'align-right' )
             ) )
-            ->add('whitelist', 'textarea', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 ) ))
-            ->add('patterns', 'textarea', array( 'required' => false, 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 )  ))
+            ->add('whitelist', 'textarea', array( 'required' => false, 'label' => 'Liste blanche<span style="font-weight:normal"><br>(1 adresse email par ligne)</span>', 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 ) ))
+            ->add('patterns', 'textarea', array( 'required' => false, 'label' => 'Domaines autorisés<span style="font-weight:normal"><br>(@domaine.ext, 1 par ligne)</span>', 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 )  ))
 
         ;
     }

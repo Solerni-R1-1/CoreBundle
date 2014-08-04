@@ -965,3 +965,15 @@ mooc_list: Liste des MOOCs
 mooc_parameters: Editer le MOOC
 entity_cannot_be_deleted: 'Cette entité ne peut pas supprimée car associée aux MOOCs suivants :'
 workspace_parameters: 'Paramètres du workspace'
+
+mooc_by_entreprise: Les Moocs proposés par %entreprise%
+proposed_by: Proposé par
+know_more: En savoir +
+mooc_archives: Accéder aux archives du cours
+get_warned_next_session: M'avertir de la prochaine session
+mooc_is_over: Mooc terminé
+go_to_mooc: Accéder au mooc
+subscribe_to_mooc: S'inscrire au mooc
+inscription_closed: Inscription terminée
+session_full: Mooc complet
+mooc_private: mooc privé

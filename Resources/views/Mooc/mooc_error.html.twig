@@ -15,8 +15,7 @@
 {% block title %} {{ 'title page error' | trans({}, 'solerni') }} {% endblock %}
 
 {% block section_content %}
-	<p>Oups, Mooc ou session inconnue. Voir le message ci dessous pour + d'information</p>
-	<pre>{{warn}}</pre>
+    <p class="inner404_content"><pre>{{warn}}</pre></p>
 
 {% endblock %}
 

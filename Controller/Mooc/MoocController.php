@@ -76,7 +76,7 @@ class MoocController extends Controller
             
             //Check pattern
             if(  ( ! preg_match ( $this->patternId, $mooc->getId() ) ) || ! $mooc ) {
-            	return $this->inner404("parametre moocId invalid : " . $mooc->getId() );
+            	return $this->inner404("MoocId invalid : " . $mooc->getId() );
             }
 
             $sessions = $mooc->getMoocSessions();
@@ -92,6 +92,9 @@ class MoocController extends Controller
         }
         
         /**
+         * Redirect the user towards another action depending of a keyword
+         * 
+         * 
          * @Route("/{moocId}/{moocName}/session/{sessionId}/{word}", name="mooc_view_session")
          * @ParamConverter("user", options={"authenticatedUser" = true})
          * @EXT\ParamConverter(
@@ -138,15 +141,18 @@ class MoocController extends Controller
 	        		return $this->sessionPartagerPage($mooc->getWorkspace());
 	        		break;
                 
-                        case "subscribe" :
+                case "subscribe" :
 	        		return $this->sessionAddUserAction( $moocSession, $user );
 	        		break;
 
-                        default:return $this->inner404("le word est inconnu : ".$word);
+                default:return $this->inner404("le word est inconnu : ".$word);
         	}
 
         }
-
+        
+        /**
+         * Display a error warning message in a Solerni interface
+         */
         private function inner404($warn){
             return $this->render(
                 'ClarolineCoreBundle:Mooc:mooc_error.html.twig',
@@ -156,9 +162,16 @@ class MoocController extends Controller
             );
         }
 
+        /**
+         * Redirect user to the lesson object of the mooc
+         */
         private function sessionApprendrePage($mooc, $user) {
 
             $node = $mooc->getLesson();
+            
+            if ( ! $node ) {
+                return $this->inner404('La leçon n\'est pas définie pour ce mooc');
+            }
 
             $repo = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
             $lesson = $repo->findOneByResourceNode($node);
@@ -168,6 +181,9 @@ class MoocController extends Controller
 
         }
         
+        /**
+         * Redirect user to the forum object of the mooc session
+         */
         private function sessionDiscuterPage($session) {
 
             $node = $session->getForum();
@@ -185,6 +201,10 @@ class MoocController extends Controller
             return $this->inner404($warn);
 
         }
+        
+        /**
+         * Redirect user to the resource manager of the workspace
+         */
         private function sessionPartagerPage($workspace) {
 
             $workspaceId = $workspace->getId();
@@ -193,18 +213,6 @@ class MoocController extends Controller
                          ->generate('claro_workspace_open_tool', array('workspaceId' => $workspaceId, "toolName" => "resource_manager"));
             return  $this->redirect($url);
             
-        }
-        
-        private function sessionLolPage($session) {
-
-            //TODO : make inner redirection instead JS redirect
-            return $this->render(
-                'ClarolineCoreBundle:Mooc:redirect_tmp.html.twig',
-                array(
-                    'session'     => $session,
-                    'redirection'     => 'Bon ben là ....'
-                )
-            );
         }
 
     /**
@@ -313,7 +321,9 @@ class MoocController extends Controller
             return new RedirectResponse($route);
         }
         
-        /**
+       /**
+        * Render a session list (called from twig)
+        * 
         * @ParamConverter("user", options={"authenticatedUser" = true })
         */
         public function getUserSessionsListAction( $user )
@@ -328,43 +338,52 @@ class MoocController extends Controller
         }
         
         /**
-        * @ParamConverter("user", options={"authenticatedUser" = true })
-        */
-        public function renderSessionComponentAction( $session, $user )
+         * Render a session Component (called from twig)
+         * 
+         * @ParamConverter("user", options={"authenticatedUser" = true })
+         */
+        public function renderSessionComponentAction( $session, $user, $sessionComponentLayout = '2-column', $showUserProgression = false )
         {
-            $doctrine = $this->getDoctrine();
-            $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-            $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
-            $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
-            
-            /* get lesson progression */
-            $lessonNode = $session->getMooc()->getLesson();
-            $lesson = $lessonRepository->findOneByResourceNode($lessonNode);
-            $totalProgression = 0;
-            $currentProgression = 0;
-            $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
-            $firstChapter = null;
-            foreach($allChapters as $chapter){
-                if($chapter->getLevel() > 1){
-                    if($firstChapter == null){
-                        $firstChapter = $chapter;
+                      
+            // If we want progression
+            if ( $showUserProgression ) {
+                $doctrine = $this->getDoctrine();
+                $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
+                $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
+                $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
+
+                /* get lesson progression */
+                $lessonNode = $session->getMooc()->getLesson();
+                $lesson = $lessonRepository->findOneByResourceNode($lessonNode);
+                $totalProgression = 0;
+                $currentProgression = 0;
+                $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
+                $firstChapter = null;
+                foreach($allChapters as $chapter){
+                    if($chapter->getLevel() > 1){
+                        if($firstChapter == null){
+                            $firstChapter = $chapter;
+                        }
+                        $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
+                        if($done && $done->getDone()){
+                            $currentProgression++;
+                        }
+                        $totalProgression++;
                     }
-                    $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
-                    if($done && $done->getDone()){
-                        $currentProgression++;
-                    }
-                    $totalProgression++;
                 }
+
+                $progression = ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
+            } else {
+                $progression = null;
             }
-            
-            $progression = ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
          
             return $this->render(
             'ClarolineCoreBundle:Mooc:moocSessionComponent.html.twig',
             array( 
-                'session' => $session,
-                'user' => $user,
-                'progression' => $progression
+                'session'                   => $session,
+                'user'                      => $user,
+                'progression'               => $progression,
+                'sessionComponentLayout'    => $sessionComponentLayout
                 )
             );
         }

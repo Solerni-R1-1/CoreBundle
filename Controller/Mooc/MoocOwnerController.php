@@ -184,11 +184,14 @@ class MoocOwnerController extends Controller
 
             return $this->redirect($this->generateUrl('admin_parameters_mooc_owners', array('id' => $id)));
         }
-
+        // refresh data from database
+        $em->refresh($entity);
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'logo'        => $entity->getLogoWebPath(),
+            'habillage'   => $entity->getDressingWebPath()
         );
     }
     /**

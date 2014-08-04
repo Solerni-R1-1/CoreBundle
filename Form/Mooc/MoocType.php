@@ -83,19 +83,19 @@ class MoocType extends AbstractType
             ->add('hasLinkedinShare', 'checkbox', array('required' => false))
             ->add('hasLinkedinShare', 'checkbox', array('required' => false))
             ->add('lesson', 'entity', array( 
-                    'required' => false,
-                    'property' => 'name',
-                    'empty_value' => '-- Choisir un cours pour le mooc --',
-                    'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
+                    'required'      => false,
+                    'property'      => 'name',
+                    'empty_value'   => '-- Choisir un cours pour le mooc --',
+                    'class'         => 'ClarolineCoreBundle:Resource\ResourceNode',
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
                             return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->lessonResourceType);
                     }
             ))
             ->add('moocSessions', 'collection', array(
                     'type' => new MoocSessionType( $this->workspace, $this->forumResourceType ),
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'by_reference' => false
+                    'allow_add'     => true,
+                    'allow_delete'  => true,
+                    'by_reference'  => false
                 ))
         ;
     }

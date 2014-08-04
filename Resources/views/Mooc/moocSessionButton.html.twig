@@ -1,4 +1,5 @@
-{# empty Twig template #}
+{# INSERT CORRECT BUTTON AND STATUS FOR ENCART MOOC #}
+{# WE FIND OUT IF USER IS REGISTERED #}
 {% set isRegistered = false %}
 {% set sessionUsers = session.getUsers() %}
 {% for sessionUser in sessionUsers %}
@@ -7,17 +8,54 @@
     {% endif %}
 {% endfor %}
 
+{# session is over #}
 {% if session.getEndDate() < date() %}
-    <a class="btn btn-gris disabled top-margin bottom-margin" href="#">Mooc terminé</a>
+    <span class="mooc_status">
+        {{ 'mooc_is_over'|trans({}, 'platform') }}
+    </span>
+    {% if isRegistered %}
+        {# give access to mooc archives if the user was subscribed #}
+        <a href="" class="link-btn-spacing pink_link">{{ 'mooc_archives'|trans({}, 'platform') }}</a>
+    {% else %}
+        {# if the mooc is redoable, ask for notification #}
+        {% if session.getMooc().getPostEndAction() == 1 %}
+            <a href="#" title="Non fonctionnel" class="btn btn-primary">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
+        {% else %}
+            {# otherwise just display invisible button for spacing #}
+            <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
+        {% endif %}
+    {% endif %}
+            
+ {# session is not started yet #}    
 {% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() %}
-    <a class="btn btn-gris disabled top-margin bottom-margin" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
+    <a class="btn btn-gris disabled" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
+
+{# user is not subscribed and date is over #}
+{% elseif session.getEndInscriptionDate() < date() and not isRegistered %}
+    <span class="mooc_status">
+        {{ 'inscription_closed'|trans({}, 'platform') }}
+    </span>
+    <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
+    
+{# inscription is open but session is full #}
+{% elseif session.getUsers()|length >= session.getMaxUsers() %}
+    <span class="mooc_status">
+        {{ 'session_full'|trans({}, 'platform') }}
+    </span>
+    <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
+    
+{# Inscription is open, user is registered #}
 {% elseif isRegistered %}
-    <a class="btn btn-blue top-margin bottom-margin" href="{{ path( 'mooc_view_session', { 
+    {# button go to mooc #}
+    <a class="btn btn-blue" href="{{ path( 'mooc_view_session', { 
         'moocId': session.getMooc().getId(), 
         'moocName': session.getMooc().getAlias(), 
         'sessionId': session.getId(), 
         'word': 'apprendre'
-    }) }}">Accéder au mooc</a>
+    }) }}">{{ 'go_to_mooc'|trans({}, 'platform') }}</a>
+{# registration is started, so subscribe #}
 {% else %}
-    <a class="btn btn-primary top-margin bottom-margin" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">S'inscrire au mooc</a>
+    <a class="btn btn-primary" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">
+        {{ 'subscribe_to_mooc'|trans({}, 'platform') }}
+    </a>
 {% endif %}
