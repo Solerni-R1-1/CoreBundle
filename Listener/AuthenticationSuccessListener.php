@@ -172,6 +172,20 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                     'solerni_catalogue',
             );
 
+        ;
+
+        //Case of FB account
+        if ($event->isMasterRequest() and
+            $user = $this->getUser($event->getRequest()) and
+            !$user->getIsValidate() && 
+            !$user->hasAcceptedTerms()){
+            
+            $user->setIsValidate(true);
+            $this->manager->persist($user);
+            $this->manager->flush();
+            return $event;
+        }
+
         if ($event->isMasterRequest() and
             $user = $this->getUser($event->getRequest()) and
             !$user->getIsValidate() and
