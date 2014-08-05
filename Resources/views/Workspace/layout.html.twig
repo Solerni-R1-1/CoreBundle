@@ -57,7 +57,7 @@
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
     {% if params %}
-        {% render controller( "ClarolineCoreBundle:Solerni:renderSolerniTabs", params ) %}
+        {% render controller( "ClarolineCoreBundle:Mooc\\Mooc:renderSolerniTabs", params ) %}
     {% endif %}
 {% endblock %}
 

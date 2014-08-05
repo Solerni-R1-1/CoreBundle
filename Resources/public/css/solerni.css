@@ -994,9 +994,14 @@ body.dsk .alert { display: none; }
     text-transform:     uppercase;
     font-weight:        bold;
     text-align:         center;
+    -ms-transform:      rotate(-40deg)
+                        translate(-70px, -15px);
+    -moz-transform:     rotate(-40deg)
+                        translate(-70px, -15px);
+    -webkit-transform:  rotate(-40deg)
+                        translate(-70px, -15px);
     transform:          rotate(-40deg)
                         translate(-70px, -15px);
-    transform-style:    preserve-3d;
     width:              250px;
 }
 
