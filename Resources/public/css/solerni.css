@@ -776,6 +776,9 @@ body.dsk .alert { display: none; }
 .presentation__mooc--3-column {
     height: 232px;
 }
+.presentation__mooc--slider-small {
+    height: 239px;
+}
 
 .presentation__mooc__block {
     float:          left;
@@ -837,6 +840,10 @@ body.dsk .alert { display: none; }
 
 .presentation__mooc--3-column .presentation__mooc__text {
     width:          325px;
+}
+
+.presentation__mooc--slider-small .presentation__mooc__text {
+    width:          240px;
 }
 
 .presentation__mooc__text__title {

@@ -328,11 +328,23 @@ class MoocController extends Controller
         */
         public function getUserSessionsListAction( $user )
         {
+            $userSession = $user->getMoocSessions();
+            
+            if ( ! $userSession->count() ) {
+                // no session, display slideshow with propositions, so populate userSessions
+                $sessionComponentLayout = 'slider-small';
+            } elseif ( $userSession->count() == 1 ) {
+               $sessionComponentLayout = '2-column';
+            } else {
+                $sessionComponentLayout = 'slider-small';
+            }
+            
             return $this->render(
             'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
             array( 
-                'sessions' => $user->getMoocSessions(),
-                'user' => $user
+                'sessions'                  => $userSession,
+                'user'                      => $user,
+                'sessionComponentLayout'    => $sessionComponentLayout
                 )
             );
         }

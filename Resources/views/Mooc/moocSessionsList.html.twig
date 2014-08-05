@@ -6,8 +6,10 @@
     {% for session in sessions %}
         {% render controller(
             'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
-            { 'session': session,
-              'showUserProgression': true
+            {   'session':                   session,
+                'showUserProgression':       true,
+                'sessionComponentLayout':    sessionComponentLayout,
+                'showUserProgression':       false
             }
         ) %}
     {% endfor %}
