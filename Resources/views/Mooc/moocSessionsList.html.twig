@@ -3,7 +3,16 @@
 {% if sessions|length == 0 %}
     <span>Vous n'êtes inscrit à aucun mooc pour l'instant</span>
 {% else %}
+
+{% if sessionComponentLayout == 'slider-small' %}
+	<ul class="bxslider">
+{% endif %}
     {% for session in sessions %}
+
+    	{% if sessionComponentLayout == 'slider-small' %}
+			<li>
+		{% endif %}
+
         {% render controller(
             'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
             {   'session':                   session,
@@ -12,5 +21,33 @@
                 'showUserProgression':       false
             }
         ) %}
+
+    	{% if sessionComponentLayout == 'slider-small' %}
+			</li>
+		{% endif %}
+
     {% endfor %}
+
+
+
+
+{% if sessionComponentLayout == 'slider-small' %}
+	</ul>
+	<script type="text/javascript">
+	    
+	$(document).ready(function(){
+
+	  $('.bxslider').bxSlider({
+	      /*pause: 200,*/
+	      /*auto: true,*/
+	      mode: 'fade',
+	      infiniteLoop: false, 
+	      hideControlOnEnd: true
+	    });
+	});
+
+	</script>
+{% endif %}
+
+
 {% endif %}
