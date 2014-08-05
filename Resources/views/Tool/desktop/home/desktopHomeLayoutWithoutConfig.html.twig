@@ -2,7 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
-
 {% block bodyClasses %}dsk{% endblock %}
 
 {% block section_content %}
@@ -13,12 +12,26 @@
 <div class='col-xs-9 col-md-9'>
     <div class='dsk__article__mooc'>
         <div class='clearfix'></div>
-        <h2>
+        <h2 class="slrn-content-main-title">
             {{ 'dashboard'|trans({}, 'platform') }}
         </h2>
+
+        <div class="dsk__my_moocs_header">
+            <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>
+            <a class="slrn-link-right pink_link"href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'display_all_my_moocs'|trans({}, 'platform') }}</a>
+        </div>
+                
+        {# change display if we have more than one active mooc #}
+        {% if app.user.getMoocSessions()|length == 1 %}
+            {% set sessionComponentLayout = '2-column' %}
+        {% else %}
+            {% set sessionComponentLayout = 'slider-small' %}
+        {% endif %}
         {% render controller(
             'ClarolineCoreBundle:Mooc\\Mooc:getUserSessionsList',
-            {}
+            {
+                'sessionComponentLayout': sessionComponentLayout
+            }
         ) %}
     </div>
         {% render controller(

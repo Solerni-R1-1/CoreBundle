@@ -1,12 +1,4 @@
 {# INSERT CORRECT BUTTON AND STATUS FOR ENCART MOOC #}
-{# WE FIND OUT IF USER IS REGISTERED #}
-{% set isRegistered = false %}
-{% set sessionUsers = session.getUsers() %}
-{% for sessionUser in sessionUsers %}
-    {% if sessionUser.getId() == user.getId() %}
-        {% set isRegistered = true %}
-    {% endif %}
-{% endfor %}
 
 {# session is over #}
 {% if session.getEndDate() < date() %}
@@ -27,7 +19,7 @@
     {% endif %}
             
  {# session is not started yet #}    
-{% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() %}
+{% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() or session.getStartDate() > date() and isRegistered %}
     <a class="btn btn-gris disabled" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
 
 {# user is not subscribed and date is over #}
@@ -38,7 +30,7 @@
     <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
     
 {# inscription is open but session is full #}
-{% elseif session.getUsers()|length >= session.getMaxUsers() %}
+{% elseif session.getUsers()|length >= session.getMaxUsers() and not isRegistered %}
     <span class="mooc_status">
         {{ 'session_full'|trans({}, 'platform') }}
     </span>
@@ -53,7 +45,7 @@
         'sessionId': session.getId(), 
         'word': 'apprendre'
     }) }}">{{ 'go_to_mooc'|trans({}, 'platform') }}</a>
-{# registration is started, so subscribe #}
+{# not registered and registration is started, so subscribe #}
 {% else %}
     <a class="btn btn-primary" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">
         {{ 'subscribe_to_mooc'|trans({}, 'platform') }}

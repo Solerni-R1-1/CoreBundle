@@ -744,20 +744,24 @@ body.dsk .alert { display: none; }
 	margin: 10px auto;
 }
 
-
-/* Presentation d'un mooc */
-.button__link__span {
-    display: inline-block;
-    margin: 8px 15px;
-    color: #FFFFFF;
+/* BLOC MES MOOCS DESKTOP */
+.slrn-content-main-title {
+    margin-top:     45px;
+    margin-bottom:  25px;
 }
-.button__link {
-    background-color: #FF004F;
-    border-radius: 4px;
-    display: inline-block;
-    font-size: 15px;
-    font-weight: bold;
-    margin: .2em 0;
+
+.slrn-content-secondary-title {
+    margin: 0;
+}
+
+.dsk__my_moocs_header {
+    position:       relative;
+    margin-bottom:  10px;
+}
+
+.dsk__my_moocs_header .slrn-link-right {
+    position:   absolute;
+    right:  0; bottom: 0;
 }
 
 /* ENCART MOOC */
@@ -1008,6 +1012,39 @@ body.dsk .alert { display: none; }
 
 .panel-heading .btn-primary.float-right-top {
     display: block !important;
+}
+
+/* MES MOOCS */
+.my-moocs-nav {
+    list-style: none;
+    text-align: justify;
+    padding:    0;
+    margin: 20px 0;
+}
+
+.my-moocs-nav::after {
+    content:    "";
+    display:    inline-block;
+    width:      100%;
+}
+
+.my-moocs-nav__item {
+    text-align:         center;
+    display:            inline-block;
+    width:              24.5%;
+    height:             100%;
+    background-color:   #EEEEEF;
+    padding:            1em 0;
+    color:              #606060;
+    font-weight:        bold;
+    text-transform:     uppercase;
+    cursor:             pointer;
+}
+
+.my-moocs-nav__item:hover,
+.my-moocs-nav__item--active {
+    background-color:   #4B667C;
+    color:              #FFF;
 }
 
 /* FIX BUG IN FIREFOX FOR INPUT TYPE */

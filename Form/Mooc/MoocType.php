@@ -27,7 +27,7 @@ class MoocType extends AbstractType
     {
         $builder
             ->add('title', 'text', array('required' => true))
-            ->add('alias', 'text', array('required' => false))
+            ->add('alias', 'text', array('required' => true))
             ->add('description','textarea', array('required' => true, 'attr' => array( 'rows' => 6 ) ))
             ->add('owner','entity', array( 
                     'class'     => 'ClarolineCoreBundle:Mooc\MoocOwner',

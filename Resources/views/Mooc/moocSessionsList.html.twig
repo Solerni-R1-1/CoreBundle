@@ -4,9 +4,10 @@
     <span>Vous n'êtes inscrit à aucun mooc pour l'instant</span>
 {% else %}
 
-{% if sessionComponentLayout == 'slider-small' %}
-	<ul class="bxslider">
-{% endif %}
+    {% if sessionComponentLayout == 'slider-small' %}
+        <ul class="bxslider">
+    {% endif %}
+            
     {% for session in sessions %}
 
     	{% if sessionComponentLayout == 'slider-small' %}
@@ -18,7 +19,7 @@
             {   'session':                   session,
                 'showUserProgression':       true,
                 'sessionComponentLayout':    sessionComponentLayout,
-                'showUserProgression':       false
+                'showUserProgression':       showUserProgression
             }
         ) %}
 
@@ -31,23 +32,22 @@
 
 
 
-{% if sessionComponentLayout == 'slider-small' %}
-	</ul>
-	<script type="text/javascript">
-	    
-	$(document).ready(function(){
+    {% if sessionComponentLayout == 'slider-small' %}
+        </ul>
+        <script type="text/javascript">
 
-	  $('.bxslider').bxSlider({
-	      /*pause: 200,*/
-	      /*auto: true,*/
-	      mode: 'fade',
-	      infiniteLoop: false, 
-	      hideControlOnEnd: true
-	    });
-	});
+        $(document).ready(function(){
 
-	</script>
-{% endif %}
+          $('.bxslider').bxSlider({
+              /*pause: 200,*/
+              /*auto: true,*/
+              mode: 'fade',
+              infiniteLoop: false, 
+              hideControlOnEnd: true
+            });
+        });
 
+        </script>
+    {% endif %}
 
 {% endif %}

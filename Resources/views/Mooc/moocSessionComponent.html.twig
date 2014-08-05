@@ -1,9 +1,25 @@
+{# WE FIND OUT IF USER IS REGISTERED #}
+{% set isRegistered = false %}
+{% set sessionUsers = session.getUsers() %}
+{% for sessionUser in sessionUsers %}
+    {% if sessionUser.getId() == user.getId() %}
+        {% set isRegistered = true %}
+    {% endif %}
+{% endfor %}
 {# display session component #}
 {% set mooc = session.getMooc() %}
 {% if mooc.getCost() == 0 or mooc.getCost() is null %}
     {% set price = 'gratuit' %}
 {% else %}
     {% set price = mooc.getCost() ~ '€' %}
+{% endif %}
+{# determine mooc status for classification #}
+{% if session.getEndDate() < date() %}
+    {% set moocStatus = 'mooc-over' %}
+{% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() or session.getStartDate() > date() and isRegistered %}
+    {% set moocStatus = 'mooc-to-come' %}
+{% else %}
+    {% set moocStatus = 'mooc-running' %}
 {% endif %}
 {# define image size and number of words in description #}
 {% if sessionComponentLayout == '3-column' %}
@@ -17,7 +33,7 @@
     {% set descriptionWords = 12 %}  
 {% endif %}
 
-<div class='presentation__mooc presentation__mooc--{{ sessionComponentLayout }}'>
+<div class="presentation__mooc presentation__mooc--{{ sessionComponentLayout }}" data-mooc-status="{{ moocStatus }}">
     {# first column : pic & progression #}
 	<div class="presentation__mooc__block presentation__mooc__pic">
         <img class="presentation__mooc__block__image" 
@@ -28,7 +44,7 @@
         >
         {# owner logo #}
         <img class="presentation__mooc__block__logo" src="{{ image( mooc.getOwner().getLogoWebPath() ).scaleResize( null, 35 ) }}" >
-        {% if progression is defined and progression is not null %}
+        {% if progression is defined and progression is not null and isRegistered %}
             <span class='presentation__mooc__progression__wrapper'>
                 <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
                 <span class='presentation__mooc__progression__100'>

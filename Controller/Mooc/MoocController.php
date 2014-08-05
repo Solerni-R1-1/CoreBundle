@@ -270,25 +270,17 @@ class MoocController extends Controller
     * 
     * @ParamConverter("user", options={"authenticatedUser" = true })
     */
-    public function getUserSessionsListAction( $user )
+    public function getUserSessionsListAction( $user, $sessionComponentLayout = '2-column', $showUserProgression = false )
     {
         $userSession = $user->getMoocSessions();
-
-        if ( ! $userSession->count() ) {
-            // no session, display slideshow with propositions, so populate userSessions
-            $sessionComponentLayout = 'slider-small';
-        } elseif ( $userSession->count() == 1 ) {
-           $sessionComponentLayout = '2-column';
-        } else {
-            $sessionComponentLayout = 'slider-small';
-        }
 
         return $this->render(
         'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
         array( 
             'sessions'                  => $userSession,
             'user'                      => $user,
-            'sessionComponentLayout'    => $sessionComponentLayout
+            'sessionComponentLayout'    => $sessionComponentLayout,
+            'showUserProgression'       => true
             )
         );
     }
