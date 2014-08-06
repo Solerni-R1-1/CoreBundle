@@ -832,6 +832,10 @@ body.dsk .alert { display: none; }
     bottom:     34px;
 }
 
+.lesson-progression .presentation__mooc__progression__100 {
+    width: 80%;
+}
+
 /* encart -> description */
 .presentation__mooc__text {
     position:       relative;

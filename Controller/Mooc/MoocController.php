@@ -163,9 +163,11 @@ class MoocController extends Controller
     }
 
     /**
+     * 
      * Redirect user to the lesson object of the mooc
+     * 
      */
-    private function sessionApprendrePage($mooc, $user) {
+    private function sessionApprendrePage( $mooc, $user ) {
 
         $node = $mooc->getLesson();
 
@@ -173,10 +175,9 @@ class MoocController extends Controller
             return $this->inner404('La leçon n\'est pas définie pour ce mooc');
         }
 
-        $repo = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
-        $lesson = $repo->findOneByResourceNode($node);
+        $lesson = $this->getLessonFromWorkspace( $mooc->getWorkspace() );
 
-        $url = $this->getRouteToTheLastChapter($lesson, $user);
+        $url = $this->getRouteToTheLastChapter( $lesson, $user );
         return  $this->redirect($url);
 
     }
@@ -295,32 +296,7 @@ class MoocController extends Controller
 
         // If we want progression
         if ( $showUserProgression ) {
-            $doctrine = $this->getDoctrine();
-            $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-            $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
-            $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
-
-            /* get lesson progression */
-            $lessonNode = $session->getMooc()->getLesson();
-            $lesson = $lessonRepository->findOneByResourceNode($lessonNode);
-            $totalProgression = 0;
-            $currentProgression = 0;
-            $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
-            $firstChapter = null;
-            foreach($allChapters as $chapter){
-                if($chapter->getLevel() > 1){
-                    if($firstChapter == null){
-                        $firstChapter = $chapter;
-                    }
-                    $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
-                    if($done && $done->getDone()){
-                        $currentProgression++;
-                    }
-                    $totalProgression++;
-                }
-            }
-
-            $progression = ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
+            $progression = $this->getUserProgressionInLesson( $user, $session->getMooc()->getWorkspace() );
         } else {
             $progression = null;
         }
@@ -356,7 +332,7 @@ class MoocController extends Controller
         );
 
         //get the mooc lesson
-        $lesson = $this->getDoctrine()->getRepository( 'IcapLessonBundle:Lesson' )->findOneByResourceNode( $workspace->getMooc()->getLesson() );
+        $lesson = $this->getLessonFromWorkspace($workspace);
         // get the mooc lesson link
         if ($lesson) {
             $firstSubChapter = $this->getFirstSubChapter($lesson);
@@ -371,12 +347,9 @@ class MoocController extends Controller
         }
         
         //get the session forum (only the last one)
-        $moocSessions = $workspace->getMooc()->getMoocSessions();
-        foreach( $moocSessions as $moocSession ) {
-            $forumResourceNode = $moocSession->getForum();
-        }
-        
-        $forum = $this->getDoctrine()->getRepository( 'ClarolineForumBundle:Forum' )->findOneByResourceNode( $forumResourceNode );
+        $forum = $this->getDoctrine()
+                ->getRepository( 'ClarolineForumBundle:Forum' )
+                ->findOneByResourceNode( $this->getSessionFromWorkspace($workspace)->getForum() );
         // get the forum link
         if ($forum) {
             // generate tab
@@ -470,6 +443,89 @@ class MoocController extends Controller
         }
         
         return $url;
+    }
+    
+    /*
+     * Return user progression in lesson from workspace
+     */
+    private function getUserProgressionInLesson( $user, $workspace ) {
+        
+        $doctrine = $this->getDoctrine();
+        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
+        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
+        $lesson = $this->getLessonFromWorkspace($workspace);
+        
+        $totalProgression = 0;
+        $currentProgression = 0;
+        $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
+        $firstChapter = null;
+        foreach($allChapters as $chapter){
+            if($chapter->getLevel() > 1){
+                if($firstChapter == null){
+                    $firstChapter = $chapter;
+                }
+                $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
+                if($done && $done->getDone()){
+                    $currentProgression++;
+                }
+                $totalProgression++;
+            }
+        }
+
+        return ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
+        
+    }
+    
+    /**
+     * 
+     * Render presentation widget for the mooc (left column of designs) 
+     * 
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
+    {
+        $lesson = $this->getLessonFromWorkspace($workspace);
+
+        if ( $renderProgression ) {
+            $progression = $this->getUserProgressionInLesson($user, $workspace);
+        } else {
+           $progression = null; 
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
+            array(
+            'session' => $this->getSessionFromWorkspace($workspace),
+            'progression' => $progression
+            )
+        );
+    }
+    
+    /*
+     * Get the lesson from a workspace
+     */
+    private function getLessonFromWorkspace( $workspace ) {
+        
+        $doctrine = $this->getDoctrine();
+        $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
+        
+        $lessonNode = $this->getSessionFromWorkspace($workspace)->getMooc()->getLesson();
+        
+        return $lessonRepository->findOneByResourceNode($lessonNode);
+    }
+    
+    /*
+     * Get the session from a workspace
+     */
+    private function getSessionFromWorkspace( $workspace ) {
+        
+        $moocSessions = $workspace->getMooc()->getMoocSessions();
+        foreach ( $moocSessions as $moocSession ) {
+            $session = $moocSession;
+        }
+               
+        return $session;
     }
 
 }
