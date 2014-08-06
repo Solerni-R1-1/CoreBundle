@@ -91,12 +91,29 @@ class CatalogueController extends Controller
      */
     public function moocOwnerCatalogueAction( $user, $owner, $ownerName )
     {
-             
+     
+        // We need to check if the user have the right to see each session
+        $sessionsByUsersRepository = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers');
+        $autorizedSessions = array();
+        
+        foreach(  $owner->getMoocs() as $mooc ) {
+            foreach( $mooc->getMoocSessions() as $session ) {
+                // Mooc is public, OR user is member of the session OR user is admin = add session to the list
+                if ( $mooc->getIsPublic() || $user->hasRole('ROLE_ADMIN') || $session->getUsers()->contains( $user ) ) {
+                    $autorizedSessions[] = $session;
+                // If User is authorized by the whitelist = add session to the list
+                } elseif ( $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) ) {
+                    $autorizedSessions[] = $session;
+                }
+            }
+        }
+        
         return $this->render(
             'ClarolineCoreBundle:Mooc:ownerCatalogue.html.twig',
             array(
-                'owner' => $owner,
-                'user'  => $user
+                'owner'     => $owner,
+                'user'      => $user,
+                'sessions'  => $autorizedSessions
             )
         );
     }

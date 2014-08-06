@@ -39,26 +39,20 @@
 {% block section_content %}
 <section class="mooc-list mooc-list--owner">
  	<h3 class="list-title slrn-bold">{{'mooc_by_entreprise'|trans({'%entreprise%': owner.getName() }, 'platform')}}</h3>
-        {% if ( owner.getMoocs()|length == 0 ) %}
-                No mooc for this entreprise
-        {% else %}
-            {% for mooc in owner.getMoocs() %}
-                {% if mooc.getMoocSessions()|length == 0 %}
-                    No session in mooc
-                {% else %}
-                    {% for session in mooc.getMoocSessions() %}
-                         {% render controller(
-                            'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
-                            { 
-                                'session': session, 
-                                'sessionComponentLayout': '3-column',
-                                'showUserProgression': true 
-                            }
-                        ) %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+            {% if sessions|length == 0 %}
+                {{ 'no_moocs_owner'|trans({}, 'platform') }}
+            {% else %}
+                {% for session in sessions %}
+                     {% render controller(
+                        'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
+                        { 
+                            'session': session, 
+                            'sessionComponentLayout': '3-column',
+                            'showUserProgression': true 
+                        }
+                    ) %}
+                {% endfor %}
+            {% endif %}
 </section>
 {% endblock %}
 

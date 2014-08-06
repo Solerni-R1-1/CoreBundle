@@ -982,3 +982,4 @@ display_all_my_moocs: Afficher mes moocs
 running: En cours
 to_come: A venir
 over: Terminé
+no_moocs_owner: Pas de Mooc disponible pour cette entreprise

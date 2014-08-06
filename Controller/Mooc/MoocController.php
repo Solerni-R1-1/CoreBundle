@@ -330,36 +330,43 @@ class MoocController extends Controller
             'solerniTabs' => array(),
             'workspace' => $workspace,
         );
-
-        //get the mooc lesson
-        $lesson = $this->getLessonFromWorkspace($workspace);
-        // get the mooc lesson link
-        if ($lesson) {
-            $firstSubChapter = $this->getFirstSubChapter($lesson);
-            if ($firstSubChapter ) {
-                // generate tab
-                $solerniTabs['solerniTabs'][] = array(
-                    'name' => 'Apprendre',
-                    'url' => $this->getRouteToTheLastChapter($lesson, $user),
-                    'title' => 'Suivre les cours'
-                );
+        
+        // Check Session
+        $session = $this->getSessionFromWorkspace($workspace);
+        
+        if ( $session ) {
+            //get the mooc lesson
+            $lesson = $this->getLessonFromWorkspace($workspace);
+            // get the mooc lesson link
+            if ($lesson) {
+                $firstSubChapter = $this->getFirstSubChapter($lesson);
+                if ($firstSubChapter ) {
+                    // generate tab
+                    $solerniTabs['solerniTabs'][] = array(
+                        'name' => 'Apprendre',
+                        'url' => $this->getRouteToTheLastChapter($lesson, $user),
+                        'title' => 'Suivre les cours'
+                    );
+                }
             }
         }
         
-        //get the session forum (only the last one)
-        $forum = $this->getDoctrine()
-                ->getRepository( 'ClarolineForumBundle:Forum' )
-                ->findOneByResourceNode( $this->getSessionFromWorkspace($workspace)->getForum() );
-        // get the forum link
-        if ($forum) {
-            // generate tab
-            $solerniTabs['solerniTabs'][] = array(
-                'name' => 'Discuter',
-                'url' => $this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId())),
-                'title' => 'Participer au forum'
-            );
-        }
         
+        //get the session forum (only the last one)
+        if ( $session ) {
+            $forum = $this->getDoctrine()
+                    ->getRepository( 'ClarolineForumBundle:Forum' )
+                    ->findOneByResourceNode( $session->getForum() );
+            // get the forum link
+            if ($forum) {
+                // generate tab
+                $solerniTabs['solerniTabs'][] = array(
+                    'name' => 'Discuter',
+                    'url' => $this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId())),
+                    'title' => 'Participer au forum'
+                );
+            }
+        }
         // Generate tab for resource manager
         $solerniTabs['solerniTabs'][] = array(
             'name' => 'Partager',
@@ -504,21 +511,31 @@ class MoocController extends Controller
     
     /*
      * Get the lesson from a workspace
+     * Return a Lesson Entity or Null
      */
     private function getLessonFromWorkspace( $workspace ) {
         
         $doctrine = $this->getDoctrine();
         $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
+        $lesson = null;
+        $session = $this->getSessionFromWorkspace($workspace);
         
-        $lessonNode = $this->getSessionFromWorkspace($workspace)->getMooc()->getLesson();
+        if ( $session ) {
+            $lessonNode = $session->getMooc()->getLesson();
+            $lesson = $lessonRepository->findOneByResourceNode($lessonNode);
+        } 
         
-        return $lessonRepository->findOneByResourceNode($lessonNode);
+        return $lesson;
+        
     }
     
     /*
      * Get the session from a workspace
+     * Return MoocSession Entity or null
      */
     private function getSessionFromWorkspace( $workspace ) {
+        
+        $session = null;
         
         $moocSessions = $workspace->getMooc()->getMoocSessions();
         foreach ( $moocSessions as $moocSession ) {
