@@ -4,6 +4,18 @@
 
 {% block formTitle %}J'ai déjà un compte, je me connecte{% endblock %}
 
+{% block solerniHeaderImage %}
+     <div class="slrn-header">
+        <div class="container slrn-header_w">
+            <div class="slrn-header__body">
+                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/registration_title.png') }}" alt="" width="" height="" />
+                <h1 class="slrn-header__content" >Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs</h1>
+            </div>
+        </div>
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/registration_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+    </div>
+{% endblock %}
+
 {% block signinForm %}
     <div class='content-element panel panel-default'>
         <div class="panel-heading">
