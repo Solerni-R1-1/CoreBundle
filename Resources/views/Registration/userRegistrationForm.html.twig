@@ -29,23 +29,6 @@
                 {% set errorClasses = 'slrn-input slrn-input--error' %}
                 {% set RegularClasses = 'slrn-input' %}
                 
-                {# UserName #}
-                {% if form.username.vars.errors %}
-                    {% set usernameClasses = errorClasses %}
-                {% else %}
-                    {% set usernameClasses = RegularClasses %}
-                {% endif %}
-                {% set usernamePlaceholder %}{{ 'user_form_username'|trans({}, 'platform')}}{% endset %}
-                {% set usernameInvalidMsg %}{{ 'user_form_username_invalid'|trans({}, 'platform') }}{% endset %}
-                {{ form_label( form.username, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
-                {{ form_widget( form.username, {'attr': {
-                                                            'placeholder' : usernamePlaceholder,
-                                                            'class' : usernameClasses,
-                                                            'data-validation': 'alphanumeric length',
-                                                            'data-validation-length': 'min3',
-                                                            'data-validation-error-msg' : usernameInvalidMsg
-                } }) }} 
-
                 {# First Name #}
                 {% if form.firstName.vars.errors %}
                     {% set firstNameClasses = errorClasses %}
@@ -80,6 +63,22 @@
                                                             'data-validation-error-msg' : lastNameInvalidMsg 
                 } }) }}
                
+                {# UserName #}
+                {% if form.username.vars.errors %}
+                    {% set usernameClasses = errorClasses %}
+                {% else %}
+                    {% set usernameClasses = RegularClasses %}
+                {% endif %}
+                {% set usernamePlaceholder %}{{ 'user_form_username'|trans({}, 'platform')}}{% endset %}
+                {% set usernameInvalidMsg %}{{ 'user_form_username_invalid'|trans({}, 'platform') }}{% endset %}
+                {{ form_label( form.username, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
+                {{ form_widget( form.username, {'attr': {
+                                                            'placeholder' : usernamePlaceholder,
+                                                            'class' : usernameClasses,
+                                                            'data-validation': 'alphanumeric length',
+                                                            'data-validation-length': 'min3',
+                                                            'data-validation-error-msg' : usernameInvalidMsg
+                } }) }} 
                 
                 {# email  #}
                 {% if form.mail.vars.errors %}

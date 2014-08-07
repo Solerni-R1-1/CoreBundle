@@ -351,7 +351,6 @@ class MoocController extends Controller
             }
         }
         
-        
         //get the session forum (only the last one)
         if ( $session ) {
             $forum = $this->getDoctrine()
