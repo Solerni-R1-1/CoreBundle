@@ -99,10 +99,13 @@ class CatalogueController extends Controller
         foreach(  $owner->getMoocs() as $mooc ) {
             foreach( $mooc->getMoocSessions() as $session ) {
                 // Mooc is public, OR user is member of the session OR user is admin = add session to the list
-                if ( $mooc->getIsPublic() || $user->hasRole('ROLE_ADMIN') || $session->getUsers()->contains( $user ) ) {
-                    $autorizedSessions[] = $session;
-                // If User is authorized by the whitelist = add session to the list
-                } elseif ( $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) ) {
+                if (
+                    $mooc->getIsPublic() ||
+                    $user instanceof \Claroline\CoreBundle\Entity\User &&
+                    $user->hasRole('ROLE_ADMIN') || 
+                    $session->getUsers()->contains( $user ) ||
+                    $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) ) 
+                {
                     $autorizedSessions[] = $session;
                 }
             }

@@ -289,13 +289,13 @@ class MoocController extends Controller
     /**
      * Render a session Component (called from twig)
      * 
-     * @ParamConverter("user", options={"authenticatedUser" = true })
+     * @ParamConverter("user", options={"authenticatedUser" = false })
      */
     public function renderSessionComponentAction( $session, $user, $sessionComponentLayout = '2-column', $showUserProgression = false )
     {
 
         // If we want progression
-        if ( $showUserProgression ) {
+        if ( $showUserProgression && $user != 'anon.' ) {
             $progression = $this->getUserProgressionInLesson( $user, $session->getMooc()->getWorkspace() );
         } else {
             $progression = null;

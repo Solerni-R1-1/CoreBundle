@@ -1,11 +1,13 @@
 {# WE FIND OUT IF USER IS REGISTERED #}
 {% set isRegistered = false %}
-{% set sessionUsers = session.getUsers() %}
-{% for sessionUser in sessionUsers %}
-    {% if sessionUser.getId() == user.getId() %}
-        {% set isRegistered = true %}
-    {% endif %}
-{% endfor %}
+{% if user != 'anon.' %}
+    {% set sessionUsers = session.getUsers() %}
+    {% for sessionUser in sessionUsers %}
+        {% if sessionUser.getId() == user.getId() %}
+            {% set isRegistered = true %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
 {# display session component #}
 {% set mooc = session.getMooc() %}
 {% if mooc.getCost() == 0 or mooc.getCost() is null %}
