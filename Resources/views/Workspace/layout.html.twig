@@ -65,7 +65,7 @@
     {% if _resource is defined and workspace is not defined %}
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
-    {% if params and app.user.getPersonalWorkspace().getId() != workspace.getId()  %}
+    {% if params and workspace is defined and app.user.getPersonalWorkspace().getId() != workspace.getId()  %}
         {% render controller( "ClarolineCoreBundle:Mooc\\Mooc:renderSolerniTabs", params ) %}
     {% endif %}
 {% endblock %}

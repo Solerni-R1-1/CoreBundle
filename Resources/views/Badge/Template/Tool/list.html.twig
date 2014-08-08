@@ -6,7 +6,6 @@
             {% set badge = workspaceBadge.badge %}
             {% set buttonLink = workspaceBadge.associatedResourceUrl %}
             {# local variables #}
-            {% set atLeastOne = true %}
             {% set isOver = false %}
             {% set isNotStarted = false %}
             {% set userResult = false %}
@@ -63,9 +62,6 @@
             </li>
         {% endif %}
     {% endfor %}
-    {% if atLeastOne == false %}
-        <p>Vous n'avez aucun badge de compétences en cours d'évaluation pour le moment. Découvrez les badges de compétences proposée par le MOOC &laquo; Le digital, vivons-le ensemble &raquo;.</p>
-    {% endif %}
 {% else %}
     {# this is the badges de competences pages #}
     <ul class="panel-body my_badges slrn-my_badges-list">

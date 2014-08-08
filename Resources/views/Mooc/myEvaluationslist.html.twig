@@ -11,18 +11,18 @@
 {% block bodyClasses %}{{ parent() }} body-without-subnavbar{% endblock %}
 
 {% block section_body %}
-    {# for each badgePager render all badges #}
-    {% for BadgeList in WorkspacesBadgeList %}
-        {% set badgePager = BadgeList.badgePager %}
-        {% set workspace = BadgeList.workspace %}
-        {% set badgePage = BadgeList.badgePage %}
-        {% set nbTotalBadges = BadgeList.nbTotalBadges %}
-        {% set nbAcquiredBadges = BadgeList.nbAcquiredBadges %}
 
-
-
-        {% include 'ClarolineCoreBundle:Badge/Template/Tool:list.html.twig' %}
-
-    {% endfor %}
-
+    {% if WorkspacesBadgeList|length == 0 %}
+        {{ 'no_evals_yet'|trans({'%url%': path( 'solerni_static_page', { 'name': 'static_eval' } ) }, 'platform')|raw }}
+    {% else %}
+        {# for each badgePager render all badges #}
+        {% for BadgeList in WorkspacesBadgeList %}
+            {% set badgePager = BadgeList.badgePager %}
+            {% set workspace = BadgeList.workspace %}
+            {% set badgePage = BadgeList.badgePage %}
+            {% set nbTotalBadges = BadgeList.nbTotalBadges %}
+            {% set nbAcquiredBadges = BadgeList.nbAcquiredBadges %}
+            {% include 'ClarolineCoreBundle:Badge/Template/Tool:list.html.twig' %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}
