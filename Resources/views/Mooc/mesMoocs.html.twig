@@ -2,7 +2,10 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    <style>.presentation__mooc { display: none; }</style>
+{% endblock %}
 
 {% block bodyClasses %}dsk{% endblock %}
 
@@ -17,7 +20,6 @@
         <h2 class="slrn-content-main-title">
             {{ 'my_moocs'|trans({}, 'platform') }}
         </h2>
-        
         <ul class="my-moocs-nav">
             <li class="my-moocs-nav__item moocs-all" data-target="mooc-all">{{ 'all'|trans({}, 'platform' )}} (<span class="count">0</span>)</li>
             <li class="my-moocs-nav__item moocs-running  my-moocs-nav__item--active" data-target="mooc-running">{{ 'running'|trans({}, 'platform' )}} (<span class="count">0</span>)</li>
@@ -79,7 +81,7 @@
                     }
                 });
                 
-                jQuery('.presentation__mooc').not('[data-mooc-status="mooc-running"]').hide();
+                jQuery('.moocs-running').click();
                 
         });
         
