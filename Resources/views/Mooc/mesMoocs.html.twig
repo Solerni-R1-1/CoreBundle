@@ -1,7 +1,10 @@
 {# Mes moocs template #}
-{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ parent() }}{{ 'my_moocs'|trans({}, 'platform') }}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <style>.presentation__mooc { display: none; }</style>
