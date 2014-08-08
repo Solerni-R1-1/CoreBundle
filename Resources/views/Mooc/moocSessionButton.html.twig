@@ -1,5 +1,19 @@
 {# INSERT CORRECT BUTTON AND STATUS FOR ENCART MOOC #}
 
+{# Special case if button is called outside of encart mooc #}
+{# WE FIND OUT IF USER IS REGISTERED #}
+{% if isRegistered is not defined %}
+    {% set isRegistered = false %}
+    {% if user != 'anon.' %}
+        {% set sessionUsers = session.getUsers() %}
+        {% for sessionUser in sessionUsers %}
+            {% if sessionUser.getId() == user.getId() %}
+                {% set isRegistered = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
 {# session is over #}
 {% if session.getEndDate() < date() %}
     <span class="mooc_status">
