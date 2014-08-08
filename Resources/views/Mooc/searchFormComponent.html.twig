@@ -7,6 +7,7 @@
 <script>
     $( document ).ready(function() {
         
+        
         function getQueryStringParams(sParam)
         {
             var sPageURL = window.location.hash;
@@ -21,7 +22,7 @@
                 }
             }
         }
-        
+        // Check if params contains q so we populate the input field
         var queryKeywords = getQueryStringParams('q');
         if ( queryKeywords ) {
             $("#q").val(queryKeywords);

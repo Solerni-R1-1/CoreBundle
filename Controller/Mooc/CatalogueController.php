@@ -59,12 +59,8 @@ class CatalogueController extends Controller
      */    
     public function pageMesMoocs( $user ){
         return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\moocs:desktopMoocsLayout.html.twig',
-            array(
-               // 'mooc'      => $mooc,
-                //'sessions'  => $sessions,
-                //'user'      => $user
-            )
+            'ClarolineCoreBundle:Mooc:mesMoocs.html.twig',
+            array()
         );
 
     }
