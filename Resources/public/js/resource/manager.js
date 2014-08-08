@@ -135,8 +135,10 @@
                     } else {
                         $('ul.ressource-breadcrumb li:not(:first)').remove();
                     }
-                    console.log(nodes);
-                    $('ul.ressource-breadcrumb').html(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
+                    //console.log(nodes);
+                    if ( ! this.parameters.isPersonnalWorkspace ) {
+                        $('ul.ressource-breadcrumb').html(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
+                    }
                     $('body').on('click', 'ul.ressource-breadcrumb li a', function () {
                         event.preventDefault();
                         window.Claroline.ResourceManager.Controller.dispatcher.trigger('breadcrumb-click', {
@@ -146,8 +148,10 @@
                         });
                     });
 
-                    // add current folder to the title of the panel
-                    $('.panel .panel-heading .panel-title').html( $('ul.ressource-breadcrumb li').last().text() );
+                    // add current folder to the title of the panel if this is not a personnal workspace
+                    if ( ! this.parameters.isPersonnalWorkspace ) {
+                        $('.panel .panel-heading .panel-title').html( $('ul.ressource-breadcrumb li').last().text() );
+                    }
                     /*if (nodes.length > 1) {
                         $('.panel .panel-heading .panel-title').html( $('ul.ressource-breadcrumb li').last().text() );
                         console.log ( 'update title' );

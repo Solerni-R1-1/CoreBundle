@@ -589,11 +589,16 @@ body.dsk .alert { display: none; }
 .dsk__avatar {
     width: 60px;
     border: 3px solid #CCC;
-    border-radius: 30px;
+    border-radius: 100%;
     height: 60px;
     margin: 0 auto;
     overflow: hidden;
 }
+
+.dsk__avatar__thumb {
+    margin-left: -3px;
+}
+
 .dsk__hello {
     text-transform: uppercase;
     margin-top:8px;
@@ -1201,7 +1206,7 @@ input[type="file"] { height: auto; }
 
 /* RESOURCE THUMBNAILS */
 
-.slrn-resource-manager-main { margin-top: 2em; }
+.slrn-resource-manager-main { margin-top: 40px; }
 
 .slrn-resource-manager-main .nodes .node-thumbnail { 
     width: 150px;
@@ -1360,7 +1365,7 @@ input[type="file"] { height: auto; }
 }
 
 /* BADGES */
-.slrn-badges-main { margin-top: 2em; }
+.slrn-badges-main { margin-top: 40px; }
 .slrn-custom-badge {
    height: 47px;
    width: 47px;

@@ -3,7 +3,11 @@
         <div class="row dsk__avatar__wrapper">
             <div class="dsk__avatar">
             {% if userThumbnail.src  is not null %}
-                <img src="{{ asset('thumbnails/') ~  userThumbnail.src }}" alt='{{ userThumbnail.alt }} {{ userFirstname }} {{ userLastname }}'/>
+                <img 
+                    class="dsk__avatar__thumb" 
+                    src="{{ image( 'thumbnails/' ~ userThumbnail.src ).scaleResize(60,60)}}"  
+                    alt="{{ userThumbnail.alt }} {{ userFirstname }} {{ userLastname }}"
+                 >
             {% endif %}
             </div>
             <div class="dsk__hello">Bonjour {{ userFirstname }} {{ userLastname }}</div>

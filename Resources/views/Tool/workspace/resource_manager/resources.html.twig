@@ -8,35 +8,43 @@
 
 {% endblock %}
 {% block section_content %}
-        {% if app.user.getPersonalWorkspace().getId() != workspace.getId() %}
-            <div class="col-xs-3 col-md-3">
-                {# MOOC  WIDGET #}
-                {% render controller(
-                    'ClarolineCoreBundle:Mooc\\Mooc:getWorkspacePresentationWidget',
-                    { 'workspaceId': workspace.getId(), 'renderProgression': false  }
-                ) %}
-            </div>
-         {% else %}
+    {# title is not the if it"s a personnal workspace or not #}
+    {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+        {% set isPersonnalWorkspace = true %}
+    {% else %}
+        {% set isPersonnalWorkspace = false %}
+    {% endif %}
+
+    {% if not isPersonnalWorkspace %}
+        <div class="col-xs-3 col-md-3">
+            {# MOOC  WIDGET #}
+            {% render controller(
+                'ClarolineCoreBundle:Mooc\\Mooc:getWorkspacePresentationWidget',
+                { 'workspaceId': workspace.getId(), 'renderProgression': false  }
+            ) %}
+        </div>
+        {% else %}
             {# OR PROFILE WIDGET #}
             {% render controller(
                 'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
                 { 'renderingContext': 'my_library' }
-            ) %}       
-         {% endif %}
+        ) %}       
+    {% endif %}
 
     <div class="col-xs-9 col-md-9 slrn-resource-manager-main">
         <div id="data-attributes" data-max-post-size="{{ maxPostSize }}"></div>
         <div class="panel-heading">
-            <div class="">
-              {{
-                    macros.workspaceBreadcrumbs(
-                        workspace,
-                        []
-                    )
-                }}  
-            
-            </div>
+            {% if not isPersonnalWorkspace %}
+                <div class="">
+                  {{
+                        macros.workspaceBreadcrumbs(
+                            workspace,
+                            []
+                        )
+                    }}  
 
+                </div>
+            {% endif %}
             <a class="slrn-read-faq pink_link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'read_faq'|trans({}, 'platform') }}</a>
             <h3 class="panel-title slrn-panel-title">
                 {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
@@ -52,6 +60,12 @@
   </div>
 {% endblock %}
 {% block javascripts %}
+    {# title is not the same if it"s a personnal workspace or not #}
+    {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+        {% set isPersonnalWorkspace = 1 %}
+    {% else %}
+        {% set isPersonnalWorkspace = 0 %}
+    {% endif %}
     {{ parent() }}
     <script type="text/javascript">
         $(function() {
@@ -61,6 +75,7 @@
                 "parentElement": $('.slrn-resource-manager-main'),
                 "isPickerMultiSelectAllowed": true,
                 "isWorkspace": true,
+                "isPersonnalWorkspace" : {{ isPersonnalWorkspace }},
                 "appPath": "{{ app.request.getBaseUrl() }}",
                 "webPath": "{{ asset('') }}",
                 "language": "{{ app.request.locale }}",

@@ -535,10 +535,11 @@ class MoocController extends Controller
     private function getSessionFromWorkspace( $workspace ) {
         
         $session = null;
-        
-        $moocSessions = $workspace->getMooc()->getMoocSessions();
-        foreach ( $moocSessions as $moocSession ) {
-            $session = $moocSession;
+        if ( $workspace->isMooc() ) {
+            $moocSessions = $workspace->getMooc()->getMoocSessions();
+            foreach ( $moocSessions as $moocSession ) {
+                $session = $moocSession;
+            }
         }
                
         return $session;
