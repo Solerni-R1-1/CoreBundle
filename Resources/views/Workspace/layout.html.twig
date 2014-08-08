@@ -8,8 +8,17 @@
         {{ parent() }}
     {% endif %}
 {% endspaceless %}{% endblock %}
-{# no subnavbar for personnal workspaces #}
-{% block bodyClasses %}{% if app.user.getPersonalWorkspace().getId() != workspace.getId() %}subnavbar-fixed{% endif %}{% endblock %}
+
+{# no subnavbar for personnal workspaces. We need to find out workspace #}
+{% if workspace is not defined %}
+    {% if mooc is defined %}
+        {% set workspace = mooc.getWorkspace() %}
+    {% endif %}
+    {% if session is defined %}
+        {% set workspace = session.getMooc().getWorkspace() %}
+    {% endif %}
+{% endif %}
+{% block bodyClasses %}{% if workspace is defined and app.user.getPersonalWorkspace().getId() != workspace.getId() %}subnavbar-fixed{% endif %}{% endblock %}
 
 {# WE DO NOT USE BREADCRUMB 
 {% block breadcrumb %}
