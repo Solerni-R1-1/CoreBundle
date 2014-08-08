@@ -5,8 +5,10 @@
             {% if userThumbnail.src  is not null %}
                 <img 
                     class="dsk__avatar__thumb" 
-                    src="{{ image( 'thumbnails/' ~ userThumbnail.src ).scaleResize(60,60)}}"  
+                    src="{{ image( 'thumbnails/' ~ userThumbnail.src ).scaleResize(66,66)}}"  
                     alt="{{ userThumbnail.alt }} {{ userFirstname }} {{ userLastname }}"
+                    width="66"
+                    height="66"
                  >
             {% endif %}
             </div>

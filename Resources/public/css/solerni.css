@@ -596,7 +596,8 @@ body.dsk .alert { display: none; }
 }
 
 .dsk__avatar__thumb {
-    margin-left: -3px;
+    margin-left:    -4px;
+    margin-top:     -4px;
 }
 
 .dsk__hello {
