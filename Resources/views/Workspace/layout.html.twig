@@ -8,8 +8,8 @@
         {{ parent() }}
     {% endif %}
 {% endspaceless %}{% endblock %}
-
-{% block bodyClasses %}subnavbar-fixed{% endblock %}
+{# no subnavbar for personnal workspaces #}
+{% block bodyClasses %}{% if app.user.getPersonalWorkspace().getId() != workspace.getId() %}subnavbar-fixed{% endif %}{% endblock %}
 
 {# WE DO NOT USE BREADCRUMB 
 {% block breadcrumb %}
@@ -56,7 +56,7 @@
     {% if _resource is defined and workspace is not defined %}
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
-    {% if params %}
+    {% if params and app.user.getPersonalWorkspace().getId() != workspace.getId()  %}
         {% render controller( "ClarolineCoreBundle:Mooc\\Mooc:renderSolerniTabs", params ) %}
     {% endif %}
 {% endblock %}
