@@ -1,0 +1,28 @@
+{% extends 'ClarolineCoreBundle:Badge/Tool/MyWorkspace:layout.html.twig' %}
+
+{% set pageContext = 'my_evals' %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}
+    {{ parent() }}{{ 'my_evals'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block bodyClasses %}{{ parent() }} body-without-subnavbar{% endblock %}
+
+{% block section_body %}
+    {# for each badgePager render all badges #}
+    {% for BadgeList in WorkspacesBadgeList %}
+        {% set badgePager = BadgeList.badgePager %}
+        {% set workspace = BadgeList.workspace %}
+        {% set badgePage = BadgeList.badgePage %}
+        {% set nbTotalBadges = BadgeList.nbTotalBadges %}
+        {% set nbAcquiredBadges = BadgeList.nbAcquiredBadges %}
+
+
+
+        {% include 'ClarolineCoreBundle:Badge/Template/Tool:list.html.twig' %}
+
+    {% endfor %}
+
+{% endblock %}

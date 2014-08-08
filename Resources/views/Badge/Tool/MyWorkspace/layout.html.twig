@@ -15,31 +15,34 @@
     <!--{{ macros.flashBox() }}-->
     {# left column #}
     {# different depending on context #}
-        {% if app.request.get('myBadgesFilter') == 'my_evals' %}
-            
-            {# PROFILE WIDGET #}
+    {% if pageContext == 'my_evals' %}
+
+        {# PROFILE WIDGET #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'my_badges' }
+        ) %}
+
+    {% else %}
+        <div class="col-xs-3 col-md-3">
+            {# MOOC WIDGET #}
             {% render controller(
-                'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
-                { 'renderingContext': 'my_badges' }
+                'ClarolineCoreBundle:Mooc\\Mooc:getWorkspacePresentationWidget',
+                { 'workspaceId': workspace.getId(), 'renderProgression': false }
             ) %}
-        
-        {% else %}
-            <div class="col-xs-3 col-md-3">
-                {# MOOC WIDGET #}
-                {% render controller(
-                    'ClarolineCoreBundle:Mooc\\Mooc:getWorkspacePresentationWidget',
-                    { 'workspaceId': workspace.getId(), 'renderProgression': false }
-                ) %}
-                {# back button #}
-                <div class='col-xs-12 col-md-12 slrn-widget'>
-                    <div class='row slrn-back bg-color-grey-2'>
-                        <a href="{{ app.session.get('solerni_apprendre_url') }}" class='slrn-back__link'><i class="icon-chevron-left no_underline"></i>{{ 'returnMOOC' | trans({}, 'solerni') }}</a>
-                    </div>
+            {# back button #}
+            <div class='col-xs-12 col-md-12 slrn-widget'>
+                <div class='row slrn-back bg-color-grey-2'>
+                    <a href="{{ app.session.get('solerni_apprendre_url') }}" class='slrn-back__link'><i class="icon-chevron-left no_underline"></i>{{ 'returnMOOC' | trans({}, 'solerni') }}</a>
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
-    <div class="panel-body col-xs-9 col-md-9">
-        {% block section_body %}{% endblock %}
+    <div class="col-xs-9 col-md-9">
+        <h2 class="slrn-content-main-title"> {{'my_evals'|trans({}, 'platform') }}</h2>
+        <div class="slrn-my_badges-list-wrapper">
+            {% block section_body %}{% endblock %}
+        </div>
     </div>
 {% endblock %}

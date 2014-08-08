@@ -62,7 +62,6 @@ class CatalogueController extends Controller
             'ClarolineCoreBundle:Mooc:mesMoocs.html.twig',
             array()
         );
-
     }
         
     /**

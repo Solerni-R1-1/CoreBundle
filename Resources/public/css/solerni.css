@@ -342,7 +342,8 @@ body.subnavbar-fixed { padding-top: 110px }
 .dsk .content,
 .body-resource-manager .content,
 .body-badges .content,
-.body-my_badges .content { padding-top: 0; }
+.body-my_badges .content,
+.body-without-subnavbar .content { padding-top: 0; }
 .body-forum .content { padding-top: 0; }
 
 /* HIDE FLASHBOX ON DASHBOARD */
@@ -598,8 +599,8 @@ body.dsk .alert { display: none; }
 }
 
 .dsk__avatar__thumb {
-    margin-left:    -4px;
-    margin-top:     -4px;
+    margin-left:    -6px;
+    margin-top:     -6px;
 }
 
 .dsk__hello {
@@ -1315,8 +1316,13 @@ input[type="file"] { height: auto; }
     font-size: 1.2em;
 }
 
-.slrn-my_badges-list {
-    padding-left: 0;
+.slrn-my_badges-list-wrapper {
+    border-top:     1px solid #EEEEEF;
+    padding-top:    25px;
+}
+
+.slrn-my_badges-list-wrapper {
+    padding-left:       0;
     list-type-position: inside;
 }
 

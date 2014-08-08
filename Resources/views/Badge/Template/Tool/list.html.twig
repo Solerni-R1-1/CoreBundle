@@ -1,5 +1,5 @@
 {# this the mes evaluations block #}
-{% if app.request.get('myBadgesFilter') == 'my_evals' %}
+{% if pageContext == 'my_evals' %}
     {% set atLeastOne = false %}
     {% for workspaceBadge in badgePager %}
         {% if workspaceBadge.type == 'inprogress' %}

@@ -15,11 +15,19 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class BadgeController extends Controller
 {
-    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage, $resourceType = 'all', $resourceId = null, $needEcho = true )
-    {
+    public function myWorkspaceBadgeAction(
+            AbstractWorkspace $workspace, 
+            User $loggedUser, 
+            $badgePage, 
+            $resourceType = 'all', 
+            $resourceId = null, 
+            $needEcho = true 
+    ) {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
 
@@ -231,4 +239,28 @@ class BadgeController extends Controller
         
         return $associatedResource;
     }
+    
+    /**
+     * Display the page that aggregates all badges associated to a specific resource type
+     * 
+     * @Route("/mes_evaluations", name="solerni_user_evaluations")
+     * @ParamConverter( "user", options={"authenticatedUser" = true })
+     */
+    public function userEvaluationsPageAction( $user ) {
+        
+        $WorkspacesBadgeList = array();
+        
+        // get all badges associated to dropzone for each session subscribed
+        foreach( $user->getMoocSessions() as $session ) {
+            $workspace = $session->getMooc()->getWorkspace();
+            $WorkspacesBadgeList[] = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false);
+        }
+        
+        return $this->render(
+            'ClarolineCoreBundle:Mooc:myEvaluationslist.html.twig',
+            array( 'WorkspacesBadgeList' => $WorkspacesBadgeList )
+        );
+        
+    }
+
 }
