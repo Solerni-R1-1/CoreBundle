@@ -27,7 +27,7 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="action-button btn-tools btn-tools-trash" data-action="remove" />
+        <button class="action-button btn-tools btn-tools-trash" data-action="remove"> </button>
     {% endif %}
 {% endmacro %}
 
@@ -42,34 +42,16 @@
     <div class="search-bar row margin-bottom-md">
         <div class='col-xs-12 col-md-12'>
             {{ displayControls() }}
-
-       {#      <div class="input-group">
-                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
-                <span class="input-group-btn">
-                    <button class="filter btn btn-default" type="button" id="search-button">
-                        <i class="icon-search"></i>
-                    </button>
-                </span>
-            </div>
-            {% if isMailerAvailable %}
-                <div>
-                    <input id="check-notifications" type="checkbox"
-                       {%  if app.user.isMailNotified() %}
-                           checked
-                       {%  endif %}
-                    >
-                        {{ 'get_mail_notifications'|trans({'%adress%': app.user.getMail() }, 'platform') }}
-                    </input>
-                </div>
-            {% endif %}#}
         </div>
     </div>
     <div id="flashbox">
 
     </div>
+    <div>
     {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}
     {% endif %}
+    </div>
     <div class="table-responsive">
         <table class="table table-condensed table-solerni" id="messages-table"> 
             <thead> 
@@ -91,7 +73,7 @@
                             {% if userMessage.isRead() %} active {% endif %}
                             pointer-hand"
                             href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
-                        ">
+                        >
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                             <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
                             <td> {{ userMessage.getMessage().getObject() }} </td>
@@ -159,7 +141,7 @@
 
             if ( $( this )[0].checked) {
                 $( this ).parent().parent().addClass('selected');
-                $( '.btn-tools-trash' ).show();
+                $( '.btn-tools' ).show();
             } else {
                 $( this ).parent().parent().removeClass('selected');
                 
@@ -171,7 +153,7 @@
                 });
 
                 if(needHide){
-                    $( '.btn-tools-trash' ).hide();
+                    $( '.btn-tools' ).hide();
                 }
                 
             }
@@ -181,12 +163,12 @@
             if ($('#check-all-items').is(':checked')) {
                 $('.chk-item').prop('checked', true);
                 $('.chk-item').parent().parent().addClass('selected');
-                $( '.btn-tools-trash' ).show();
+                $( '.btn-tools' ).show();
             }
             else {
                 $('.chk-item').prop('checked', false);
                 $('.chk-item').parent().parent().removeClass('selected');
-                $( '.btn-tools-trash' ).hide();
+                $( '.btn-tools' ).hide();
             }
         });
 

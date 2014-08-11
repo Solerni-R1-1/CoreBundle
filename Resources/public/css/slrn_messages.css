@@ -43,18 +43,18 @@
 	float: right;
 	margin-right: 10px;
 	outline: 0;
+	display:none;
 }
 
-
-.btn-tools-trash{
-	background-position: -135px -504px;
-}
-.btn-tools-trash:hover { background-position: -135px -542px; }
 .search-bar{
 	min-height: 40px;
 }
 
+.btn-tools-trash{ background-position: -135px -504px; }
+.btn-tools-trash:hover { background-position: -135px -542px; }
 
+.btn-tools-restore{ background-position: -135px -504px; }
+.btn-tools-restore:hover { background-position: -135px -542px; }
 
 .table-solerni > thead > tr > th,
 .table-solerni > thead > tr > td,

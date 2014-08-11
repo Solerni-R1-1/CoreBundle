@@ -24,16 +24,12 @@
         }}
     {% endif %}
 {% endmacro %}
+
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-default action-delete-button" data-action="remove">
-            <i class="icon-trash"></i>
-            {{ 'delete'|trans({}, 'platform') }}
-        </button>
-        <button class="btn btn-default action-restore-button" data-action="restore">
-            <i class="icon-refresh"></i>
-            {{ 'restore'|trans({}, 'platform') }}
-        </button>
+        <button class="action-button btn-tools btn-tools-trash" data-action="remove" > </button>
+        <button class="action-button btn-tools btn-tools-restore" data-action="restore" > </button> 
+
     {% endif %}
 {% endmacro %}
 
@@ -46,19 +42,12 @@
 
 {% block section_content %}
     <div class="search-bar row margin-bottom-md">
-        <div class="col-md-6">
+        <div class='col-xs-12 col-md-12'>
             {{ displayControls() }}
         </div>
-        <div class="col-md-6">
-             <div class="input-group">
-                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
-                <span class="input-group-btn">
-                    <button class="filter btn btn-default" type="button" id="search-button">
-                        <i class="icon-search"></i>
-                    </button>
-                </span>
-            </div>
-        </div>
+    </div>
+    <div id="flashbox">
+
     </div>
     <div>
     {% if pager.getNbPages() > 1 %}
@@ -66,38 +55,38 @@
     {% endif %}
     </div>
     <div class="table-responsive">
-        <table class="table table-striped table-bordered table-condensed" id="messages-table">
-            <thead>
+        <table class="table table-condensed table-solerni" id="messages-table"> 
+            <thead> 
                 <tr>
-                    <th><input type="checkbox" name="all" id="check-all-items"></input></th>
-                    <th>{{ 'object'|trans({}, 'platform') }}</th>
-                    <th>{{ 'from_message'|trans({}, 'platform') }}</th>
-                    <th>{{ 'date'|trans({}, 'platform') }}</th>
-                    <th></th>
+                    <th style='width:4%;'><input type="checkbox" name="all" id="check-all-items"></input></th>
+                    <th style='width:20%;'>{{ 'from_message'|trans({}, 'platform') }}</th>
+                    <th style='width:60%;'>{{ 'object'|trans({}, 'platform') }}</th>
+                    <th style='width:16%;'>{{ 'date'|trans({}, 'platform') }}</th>
+                    {#<th style='width:3%;'></th>#}
                 </tr>
             </thead>
             <tbody id="message-table-body">
                 {% if pager|length > 0 %}
-                    {% for userMessage in  pager.currentPageResults %}
-                        <tr class=
+                    {% for userMessage in pager.currentPageResults %}
+                        <tr
+                            class=
                             "row-user-message
+                            {% if not userMessage.isRead() %} unread {% endif %}
                             {% if userMessage.isRead() %} active {% endif %}
-                            {% if not userMessage.isRead() %} bold {% endif %}
-                            pointer-hand
-                            "
+                            pointer-hand"
                             href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
                         >
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td> {{ userMessage.getMessage().getObject() }} </td>
                             <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
-                            <td> {{ userMessage.getMessage().getDate()|intl_date_format() }} </td>
-                            <td>
+                            <td> {{ userMessage.getMessage().getObject() }} </td>
+                            <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
+                         {#   <td>
                                 {% if userMessage.isRead() %}
                                     <div style="color: green" class="icon-ok-sign"></div>
                                 {% else %}
                                     <a href="{{ path('claro_message_mark_as_read', {'message': userMessage.getMessage().getId()}) }}" class="mark-as-read"><i class="icon-envelope"></i></a>
                                 {% endif %}
-                            </td>
+                            </td>#}
                         </tr>
                     {% endfor %}
                 {% else %}
@@ -113,7 +102,7 @@
     {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}
     {% endif %}
-    <div>{{ displayControls() }}</div>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -125,11 +114,11 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_message_list_removed", "parameters": {}};
         parameters.route.search = {"route": "claro_message_list_removed_search", "parameters": {}};
-        parameters.route.action.remove = {"route": "claro_message_delete", "parameters": {}, "btn": "action-delete-button", "type": "DELETE", 'confirmTemplate': removeMessageConfirm, "delete": true};
-        parameters.route.action.restore = {"route": "claro_message_restore_from_trash", "parameters": {}, "btn": "action-restore-button", 'confirmTemplate': restoreMessageConfirm, "delete": true};
+        parameters.route.action.remove = {"route": "claro_message_delete", "parameters": {}, "btn": "btn-tools-trash", "type": "DELETE", 'confirmTemplate': removeMessageConfirm, "delete": true};
+        parameters.route.action.restore = {"route": "claro_message_restore_from_trash", "parameters": {}, "btn": "btn-tools-restore", 'confirmTemplate': restoreMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
 
-        $('tr.pointer-hand').on('click', function() {
+        $('tr.pointer-hand').on('click', function(event) {
             var targetClass = event.target.className;
             if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
                 window.document.location = $(this).attr("href");
@@ -149,5 +138,42 @@
                 }
             });
         });
+
+        $('.chk-item').on('click', function (e) {
+
+            if ( $( this )[0].checked) {
+                $( this ).parent().parent().addClass('selected');
+                $( '.btn-tools' ).show();
+            } else {
+                $( this ).parent().parent().removeClass('selected');
+                
+                needHide = true;
+                $('.chk-item').each(function( index ) {
+                  if($( this )[0].checked){
+                    needHide = false;
+                  }
+                });
+
+                if(needHide){
+                    $( '.btn-tools' ).hide();
+                }
+                
+            }
+        });
+
+        $('#check-all-items').click(function () {
+            if ($('#check-all-items').is(':checked')) {
+                $('.chk-item').prop('checked', true);
+                $('.chk-item').parent().parent().addClass('selected');
+                $( '.btn-tools' ).show();
+            }
+            else {
+                $('.chk-item').prop('checked', false);
+                $('.chk-item').parent().parent().removeClass('selected');
+                $( '.btn-tools' ).hide();
+            }
+        });
+
+        
     </script>
 {% endblock %}

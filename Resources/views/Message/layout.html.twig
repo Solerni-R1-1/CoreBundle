@@ -37,7 +37,7 @@
                             {#<i class="icon-trash"></i>#} {{ 'trash'|trans({}, 'platform') }}</a>
                         </li>
                     </ul>
-                    <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_message_removed_layout" class='btn btn-primary action-button' {% if 'claro_message_show' == app.request.get('_route') %}disabled='disabled'{% endif %}>
+                    <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_new_message_layout" class='btn btn-primary action-button' {% if 'claro_message_show' == app.request.get('_route') %}disabled='disabled'{% endif %}>
                              {{ 'new message'|trans({}, 'platform') }}
                     </a>
                 
