@@ -54,6 +54,7 @@
                     </span>
                 </li>
                 {% if renderingContext == 'my_library' %}{% set myLibraryIsActive = 'active ' %}{% endif %}
+
                 <li class="dsk__menu__item">
                     <span class='dsk__menu__span'>
                         <a class='{% if myLibraryIsActive is defined %}{{ myLibraryIsActive }}{% endif %}dsk__menu__link' 
@@ -61,9 +62,11 @@
                         </a>
                     </span>
                 </li>
+                {% if renderingContext == 'my_messages' %}{% set myMessagesIsActive = 'active ' %}{% endif %}
+
                 <li class="dsk__menu__item">
                    <span class='dsk__menu__span'>
-                      <a class='dsk__menu__link' href="{{ urls.message }}">{% if nbMessages != 0 %} <span class='dsk__menu__span__right'>{{ nbMessages }}</span> {% endif %}
+                      <a class='{% if myMessagesIsActive is defined %}{{ myMessagesIsActive }}{% endif %} dsk__menu__link' href="{{ urls.message }}">{% if nbMessages != 0 %} <span class='dsk__menu__span__right'>{{ nbMessages }}</span> {% endif %}
                        Ma messagerie</a>
                    </span>
                 </li>

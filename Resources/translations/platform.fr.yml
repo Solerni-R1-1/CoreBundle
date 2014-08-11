@@ -28,13 +28,9 @@
 'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'This placeholder is optional and will be replaced by the author first name': 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
-'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
 'This placeholder is optional and will be replaced by the author last name': 'Ce placeholder est optionnel et sera remplacé par le nom de l''auteur'
-'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
 'This placeholder is optional and will be replaced by your platform name': 'Ce placeholder est optionnel et sera remplacé par le nom de la plateforme'
-'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
 'This placeholder is required and will be replaced by the actual mail content': 'Ce placeholder est requis et sera remplacé par le contenu du mail'
-'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
 'This variable is optional and will be replaced by your platform name': 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 'This variable is required and will be replaced by the actual mail content': 'Ce variable est requis et sera replacé par le contenu du mail'
 'Upload a file': 'Télécharger un fichier'
@@ -984,3 +980,5 @@ to_come: A venir
 over: Terminé
 no_moocs_owner: Pas de Mooc disponible pour cette entreprise
 no_evals_yet: <p>Vous n'avez pas encore effectué d'évaluations.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
+
+new message: Nouveau message

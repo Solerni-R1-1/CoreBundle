@@ -19,6 +19,8 @@
     {# ADDING BXslider STYLESHEETS #}
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/bxslider.css') }}" screen="media" />
     
+    {% block stylesheetsAdditionnals %}{% endblock %}
+
     {# Font-Awesome CSS + Fonts #}
       {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
     '../vendor/fortawesome/font-awesome/less/font-awesome.less'
