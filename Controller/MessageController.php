@@ -33,6 +33,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Symfony\Component\Translation\TranslatorInterFace;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -51,6 +52,7 @@ class MessageController
     private $utils;
     private $pagerFactory;
     private $mailManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -64,7 +66,8 @@ class MessageController
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -78,7 +81,8 @@ class MessageController
         SecurityContextInterface $securityContext,
         Utilities $utils,
         PagerFactory $pagerFactory,
-        MailManager $mailManager
+        MailManager $mailManager,
+        TranslatorInterface $translator
     )
     {
         $this->request = $request;
@@ -92,6 +96,7 @@ class MessageController
         $this->utils = $utils;
         $this->pagerFactory = $pagerFactory;
         $this->mailManager = $mailManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -158,7 +163,7 @@ class MessageController
      */
     public function sendAction(User $sender, Message $parent = null)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE);
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -319,6 +324,7 @@ class MessageController
      * @param array   $groups
      * @param array   $workspaces
      * @param Message $message
+     * @param string    $form
      *
      * @return Response
      */
@@ -343,7 +349,7 @@ class MessageController
             $ancestors = array();
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object));
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object, $this->translator));
 
         return array(
             'ancestors' => $ancestors,

@@ -1,10 +1,10 @@
-.message_block{
+.flat_block{
 	padding:0;
 	display: inline-block;
 	vertical-align: top;
 }
 
-.message_block > li{
+.flat_block > li{
 	display:inline-block;
 	vertical-align: top;
 	padding: 20px 20px;
@@ -14,15 +14,15 @@
 	text-transform: uppercase;
 }
 
-.message_block > li.active{
+.flat_block > li.active{
 	background-color: #4B667C;
 }
 
-.message_block > li > a {
+.flat_block > li > a {
 	color:#999999;
 }
 
-.message_block > li.active > a{
+.flat_block > li.active > a{
 	color:#FFFFFF;
 }
 
@@ -69,6 +69,7 @@
 .table-solerni > tbody > tr > td, 
 .table-solerni > tbody > tr.active > td{
 	background-color: #FFFFFF;
+	word-break: break-all;
 }
 
 .table-solerni > tbody > tr.unread > td{
@@ -87,4 +88,53 @@
 	padding: 10px 5px;
 	background-color: #EEEEEF;
 	text-transform: uppercase;
+}
+
+
+#message_form label{
+	display: none;
+}
+#message_form .col-md-9{
+	width: 100%;
+}
+
+table.scrollable {
+    width: 100%;
+}
+
+table.scrollable thead, 
+table.scrollable tbody, 
+table.scrollable tr, 
+table.scrollable td, 
+table.scrollable th { display: block; }
+
+table.scrollable tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+table.scrollable thead th {
+    height: 40px;
+}
+
+table.scrollable tbody {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+table.scrollable thead {
+    /* fallback */
+}
+
+
+table.scrollable tbody td, 
+table.scrollable thead th {
+    float: left;
+	overflow: hidden;
+}
+
+.counter_b{
+	font-weight: bold;
 }

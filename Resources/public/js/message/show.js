@@ -83,10 +83,19 @@
         });
     }
 
+    function cleanToList(toList){
+        //Clean meta information
+        var reg = new RegExp("/\([^\)]*\)/", "g");
+        return toList.replace(reg, toList);
+    }
+
     function displayPager(type, normalRoute, searchRoute)
     {
         currentType = type;
         var toList = $('#message_form_to').val();
+
+        var toList = cleanToList(toList);
+
         var toListArray = toList.split(';');
         var search = toListArray[toListArray.length - 1].trim();
         var route;
@@ -159,6 +168,7 @@
 
     $('#users-nav-tab').on('click', function () {
         $('#groups-nav-tab').attr('class', '');
+        $('#workspaces-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
         displayPager(
             'user',
@@ -169,6 +179,7 @@
 
     $('#groups-nav-tab').on('click', function () {
         $('#users-nav-tab').attr('class', '');
+        $('#workspaces-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
         displayPager(
             'group',
@@ -178,7 +189,8 @@
     });
 
     $('#workspaces-nav-tab').on('click', function () {
-        $('#workspaces-nav-tab').attr('class', '');
+        $('#groups-nav-tab').attr('class', '');
+        $('#users-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
         displayPager(
             'workspace',

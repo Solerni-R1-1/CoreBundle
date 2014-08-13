@@ -599,7 +599,7 @@ see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
-select_contacts_title: 'Sélectionnez les destinataires'
+select_contacts_title: 'Sélectionnez le(s) destinataire(s)'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
@@ -903,6 +903,7 @@ claroline_corebundle_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
 claroline_corebundle_mooc_lesson: 'Cours du MOOC'
 
 claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
+claroline_corebundle_moocs : 'Moocs'
 
 workspace_edit: 'Paramètres du workspace'
 mooc_edit: 'Paramètres du MOOC'
@@ -982,3 +983,4 @@ no_moocs_owner: Pas de Mooc disponible pour cette entreprise
 no_evals_yet: <p>Vous n'avez pas encore effectué d'évaluations.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
 
 new message: Nouveau message
+add_destinataires : Ajouter le(s) destinataire(s)

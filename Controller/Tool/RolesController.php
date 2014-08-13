@@ -588,7 +588,9 @@ class RolesController extends Controller
         $usernames = '';
 
         foreach ($users as $user) {
-            $usernames .= $user->getUsername() . ';';
+            //$usernames .= $user->getUsername() . ' ('.$user->getUsername().' '.$user->getUsername().');';
+            //TODO kevin voir pour réactiver au dessus ?
+            $usernames .= $user->getUsername().';';
         }
 
         return new Response($usernames, 200);

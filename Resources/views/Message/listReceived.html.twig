@@ -3,7 +3,7 @@
     {{
         pagerfanta(
             pager,
-            'twitter_bootstrap_translated',
+            'twitter_bootstrap',
             {
                 'proximity' : 1,
                 'routeName': 'claro_message_list_received'
@@ -47,11 +47,11 @@
     <div id="flashbox">
 
     </div>
-    <div>
+    {#<div>
     {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}
     {% endif %}
-    </div>
+    </div>#}
     <div class="table-responsive">
         <table class="table table-condensed table-solerni" id="messages-table"> 
             <thead> 
@@ -76,7 +76,7 @@
                         >
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                             <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
-                            <td> {{ userMessage.getMessage().getObject() }} </td>
+                            <td> {{ userMessage.getMessage().getObject() | truncate(80, false, ' [...]') }} </td>
                             <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
                          {#   <td>
                                 {% if userMessage.isRead() %}
@@ -159,7 +159,7 @@
             }
         });
 
-        $('#check-all-items').click(function () {
+        $('#check-all-items').on('click', function (e) {
             if ($('#check-all-items').is(':checked')) {
                 $('.chk-item').prop('checked', true);
                 $('.chk-item').parent().parent().addClass('selected');

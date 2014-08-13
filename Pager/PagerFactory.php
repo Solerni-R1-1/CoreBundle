@@ -24,21 +24,22 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class PagerFactory
 {
-    public function createPager(Query $query, $currentPage, $max = 20)
+
+    public function createPager(Query $query, $currentPage, $max = 2)
     {
         $adapter = new DoctrineORMAdapter($query);
 
         return $this->createPagerfanta($adapter, $currentPage, $max);
     }
 
-    public function createPagerFromArray(array $datas, $currentPage, $max = 20)
+    public function createPagerFromArray(array $datas, $currentPage, $max = 2)
     {
         $adapter = new ArrayAdapter($datas);
 
         return $this->createPagerfanta($adapter, $currentPage, $max);
     }
 
-    private function createPagerfanta(AdapterInterface $adapter, $currentPage, $max = 20)
+    private function createPagerfanta(AdapterInterface $adapter, $currentPage, $max = 2)
     {
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($max); // should be configurable

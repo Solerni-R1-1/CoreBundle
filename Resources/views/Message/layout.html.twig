@@ -22,8 +22,9 @@
 
                 <h2>Messagerie</h2>
 
-                
-                    <ul class="message_block">
+                {% if 'claro_message_show' != app.request.get('_route') %}
+
+                    <ul class="flat_block">
                         <li class="{% if 'claro_message_list_received' == app.request.get('_route') %}active{% endif %}">
                             <a href="{{ path('claro_message_list_received') }}" id="link_message_list_received_layout">
                             {#<i class="icon-envelope-alt"></i>#} {{ 'messages_received'|trans({}, 'platform') }}</a>
@@ -37,10 +38,11 @@
                             {#<i class="icon-trash"></i>#} {{ 'trash'|trans({}, 'platform') }}</a>
                         </li>
                     </ul>
-                    <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_new_message_layout" class='btn btn-primary action-button' {% if 'claro_message_show' == app.request.get('_route') %}disabled='disabled'{% endif %}>
+                    <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_new_message_layout" class='btn btn-primary action-button'>
                              {{ 'new message'|trans({}, 'platform') }}
                     </a>
-                
+                {% endif %}
+
                 {% block section_content %}{% endblock %}
             </div>
         </div>
