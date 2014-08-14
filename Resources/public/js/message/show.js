@@ -139,7 +139,11 @@
                         }
 
                         currentValue += datas;
+
+                        //Fix selection of user
                         $('#message_form_to').attr('value', currentValue);
+                        $('#message_form_to').val(currentValue);
+
                     }
                 },
                 type: 'GET',
