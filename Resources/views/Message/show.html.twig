@@ -14,11 +14,14 @@
             {% for ancestor in ancestors %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class='panel-title'>{{ ancestor.getObject() | raw }}</h3>
+                        <h3 class='panel-title'>#{{ ancestor.getId() }} {{ ancestor.getObject() | raw }}</h3>
                     </div>
                     <div class="panel-body">
                         <p class="text-muted">
                             {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getSenderUsername() }}
+                        </p>
+                        <p class="text-muted">
+                            {{ 'to_message'|trans({}, 'platform') }}: {% for dest in ancestor.getUserMessages() %} {{ dest.getUser().getUserName() }} - {% endfor %}
                         </p>
                         <div>
                             {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
