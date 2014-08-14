@@ -337,9 +337,58 @@ class MessageController
     )
     {
         if ($message) {
+
+            //Quickfix : we only authorize 1 child per message
+            while($message
+                    && $message->getChildren() != null 
+                    && !empty($message->getChildren())){
+                $childs = $message->getChildren();
+                if($childs[0] == null){
+                    break;
+                }
+                $message = $childs[0];
+            }
+
+            //echo $message->getId().'<hr/>';
+
             $this->messageManager->markAsRead($user, array($message));
             $ancestors = $this->messageManager->getConversation($message);
-            $sendString = $message->getSenderUsername();
+
+            $receivers = array();
+
+            // We add the send
+            // except if the sender is ourself
+            if( $message->getSenderUsername() !== $user->getUserName()) {
+                $userSender = $this->userManager->getUserByUsername($message->getSenderUsername()); 
+                $receivers[$userSender->getId()] = $userSender; 
+            }
+
+            $dests = $message->getUserMessages();
+            foreach ($dests as $dest) {
+
+                $user_receivers = $dest->getUser();
+
+                // We add the receiver
+                // except if it's ourself
+                // except if the receiver is also the sender to avoid spam
+                if($user_receivers->getId() !== $user->getId()
+                    && !array_key_exists($user_receivers->getId(), $receivers)) {
+                    $receivers[$user_receivers->getId()] = $user_receivers;    
+                    //echo 'inclus : '.$user_receivers->getUserName().'<hr/>';
+                } else {
+                    //echo 'exclus : '.$user_receivers->getUserName().'<hr/>';
+                }
+            }
+
+            /*foreach ($receivers as $id => $user_tmp) {
+                echo $user_tmp->getUsername().' ';
+            }
+            echo '<hr/>';*/
+
+            $sendString = $this->messageManager->generateStringTo(array_values($receivers), $groups, $workspaces);
+        //die($sendString);
+            
+
             $object = 'Re: ' . $message->getObject();
             $this->checkAccess($message, $user);
         } else {
