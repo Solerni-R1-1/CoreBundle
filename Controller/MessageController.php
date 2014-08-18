@@ -339,10 +339,11 @@ class MessageController
         if ($message) {
 
             //Quickfix : we only authorize 1 child per message
+            $childs = $message->getChildren();
             while($message
-                    && $message->getChildren() != null 
-                    && !empty($message->getChildren())){
-                $childs = $message->getChildren();
+                    && $childs != null 
+                    && !empty($childs)){
+                
                 if($childs[0] == null){
                     break;
                 }
