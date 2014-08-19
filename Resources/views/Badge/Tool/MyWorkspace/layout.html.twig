@@ -15,7 +15,7 @@
     <!--{{ macros.flashBox() }}-->
     {# left column #}
     {# different depending on context #}
-    {% if pageContext == 'my_evals' %}
+    {% if pageContext is defined and pageContext == 'my_evals' %}
 
         {# PROFILE WIDGET #}
         {% render controller(

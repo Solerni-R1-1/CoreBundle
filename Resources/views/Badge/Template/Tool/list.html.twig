@@ -1,5 +1,5 @@
 {# this is the mes evaluations block #}
-{% if pageContext == 'my_evals' %}
+{% if pageContext is defined and pageContext == 'my_evals' %}
     {% set atLeastOne = false %}
     {% for workspaceBadge in badgePager %}
         {% if workspaceBadge.type == 'inprogress' %}
