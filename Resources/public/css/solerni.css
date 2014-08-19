@@ -190,7 +190,7 @@ body.subnavbar-fixed { padding-top: 110px }
     width:      100%; 
     height:     auto;
     min-width:  1110px;
-    max-height: 224px;
+    min-height: 224px;
 }
 .slrn-header_w {
     position: absolute;
@@ -236,9 +236,10 @@ body.subnavbar-fixed { padding-top: 110px }
 
 /* SECTION CONTENT */
 .slrn-section-title { 
-    font-size: 1.4em; 
-    font-weight: 800;
-    margin: 1.4em 0 .6em;;
+    font-size:      1.4em; 
+    font-weight:    800;
+    margin:         1.4em 0 .6em;
+    color:          #333;
 }
 .slrn-section-title--sub {
     font-size: 1.2em;
@@ -771,10 +772,12 @@ body.dsk .alert { display: none; }
 .slrn-content-main-title {
     margin-top:     45px;
     margin-bottom:  25px;
+    color:          #333;
 }
 
 .slrn-content-secondary-title {
     margin: 0;
+    color:  #333;
 }
 
 .dsk__my_moocs_header {
@@ -1317,37 +1320,45 @@ input[type="file"] { height: auto; }
 }
 
 .slrn-my_badges-list-wrapper {
-    border-top:     1px solid #EEEEEF;
-    padding-top:    25px;
-}
-
-.slrn-my_badges-list-wrapper {
+    border-top:         1px solid #EEEEEF;
+    padding-top:        25px;
     padding-left:       0;
     list-type-position: inside;
 }
 
+.slrn-my_badges-list {
+    padding-bottom: 25px;
+    border-bottom:  1px solid #EEEEEF;
+    margin-bottom:  50px;
+}
+
+.slrn-my_badges-list:last-of-type {
+    border-bottom:  0;
+}
+
 .slrn-my_badges-list__item {
-    background-color: #EEEEEF;
-    padding: 1em;
-    display: block;
-    overflow: hidden;
-    margin-bottom: 2em;
+    background-color:   #EEEEEF;
+    padding:            20px;
+    display:            block;
+    overflow:           hidden;
+    margin-bottom:      25px;
 }
 
 .slrn-my_badges-list__item__image {
-    width: 120px;
-    height: auto;
-    float: left;
+    width:  100px;
+    height: 100px;
+    float:  left;
 }
 
 .slrn-my_badges-list__body {
-    margin-left: 150px;
+    margin-left: 140px;
 }
 
 .slrn-my_badges-list__item__title {
-    font-size: 1.5em;
-    margin: 0 0 .5em 0;
-    font-weight: bold;
+    font-size:      1.3em;
+    margin:         0 0 .5em 0;
+    font-weight:    bold;
+    color: #333;
 }
 
 .slrn-my_badges-list__content a {
@@ -1390,12 +1401,22 @@ input[type="file"] { height: auto; }
 }
 
 .slrn-my_badges-list__content--my_evals {
-    float: left;
-    line-height: 1.5;
-    margin: -.5em 0 0 0;
-    padding-top: .5em;
+    font-size:      12px;     
+    float:          left;
+    text-transform: uppercase;
+    line-height:    32px;
 }
-.chromeframe{
+
+.slrn-my_badges-list__content--my_evals::before {
+    content:        "";
+    width:          32px;
+    height:         32px;
+    background:     transparent url(../images/sprites_solerni.png) no-repeat 0 -5px;
+    float:          left;
+    margin-right:   1em;
+}
+
+.chromeframe {
     display: block;
     background-color: #ff266b;
     color: #FFF;
@@ -1406,7 +1427,7 @@ input[type="file"] { height: auto; }
     top: 0;
     height:30px;
 }
-.chromeframe a{
+.chromeframe a {
     color:#FFF;
     text-decoration: underline;
 }

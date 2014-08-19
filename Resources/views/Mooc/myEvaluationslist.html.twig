@@ -22,7 +22,23 @@
             {% set badgePage = BadgeList.badgePage %}
             {% set nbTotalBadges = BadgeList.nbTotalBadges %}
             {% set nbAcquiredBadges = BadgeList.nbAcquiredBadges %}
-            {% include 'ClarolineCoreBundle:Badge/Template/Tool:list.html.twig' %}
+            {% set mooc = BadgeList.workspace.getMooc() %}
+            {# echo name and owner #}
+            <div class="dsk__my_moocs_header">       
+                <h2 class="slrn-section-title">{{ mooc.getTitle() }}</h2>
+                <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">
+                    <img class="slrn-link-right"
+                         src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,40) }}" 
+                         alt="{{ mooc.getOwner().getName() }}"
+                         width=""
+                         height="40"
+                    >
+                </a>
+            </div>
+            {# echo all badges #}
+            <div class="slrn-my_badges-list">
+                {% include 'ClarolineCoreBundle:Badge/Template/Tool:list.html.twig' %}
+            </div>
         {% endfor %}
     {% endif %}
 {% endblock %}

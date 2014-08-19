@@ -1,4 +1,8 @@
-{% set mooc = session.getMooc() %}
+{% if session is defined %}
+    {% set mooc = session.getMooc() %}
+{% elseif workspace is defined %}
+    {% set mooc = workspace.getMooc() %}
+{% endif %}
 <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--workspace">
     {# HEADER FOND + POLICE #}
     <div class="londrina-solid row slrn-widget__header bg-color-second">

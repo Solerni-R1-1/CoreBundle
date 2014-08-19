@@ -30,101 +30,12 @@ use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 class SolerniController extends Controller
 {
 
-    /**
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     */
-    public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
-    {
-        $doctrine = $this->getDoctrine();
-        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
-
-        $lesson = $this->getFirstLessonFromWorkspace($workspace);
-        $image = $this->getFirstImageFromWorkspace($workspace, 'image/.*');
-
-        if($image != null){
-        list ($imageWidth, $imageHeight) = getimagesize($this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $image->getHashName());
-            $workspaceThumbnail = array(
-                'src' => $this->get('router')->generate('claro_image', array('node' => $image->getResourceNode()->getId())),
-                'alt' => $image->getName(),
-                'width' => $imageWidth,
-                'height' => $imageHeight
-            );
-        } else {
-            $workspaceThumbnail = null;
-        }
-
-        if ( $renderProgression ) {
-            $root = $lesson->getRoot();
-            if ($root != null) {
-                // Count lesson chapters
-                $chapters = $doctrine->getRepository('IcapLessonBundle:Chapter')->getChapterTree($root);
-                if ((count($chapters) == 1) && $chapters[0]['id'] == $root->getId()) {
-                    // Remove root if present.
-                    $chapters = $chapters[0]['__children'];
-                }
-
-                // Convert Table without recursive system
-                $nodeToTreat = array();
-                $currentTreatment = 0;
-                foreach ($chapters as &$chapter) {
-                    $nodeToTreat[] = $chapter;
-                    unset($chapter);
-                }
-                $lastChapter = count($nodeToTreat) - 1;
-
-                $elementsDone = 0;
-                $totalElements = 0;
-                $skippingChapters = true;
-                while (isset($nodeToTreat[$currentTreatment])) {
-                    if (! $skippingChapters) {
-                        $done = $doneRepository
-                            ->find(array(
-                            'lesson' => $nodeToTreat[$currentTreatment]['id'],
-                            'user' => $user->getId()
-                        ));
-                        if ($done != null && $done->getDone()) {
-                            $elementsDone ++;
-                        }
-                        $totalElements ++;
-                    } else {
-                        $skippingChapters = $lastChapter > $currentTreatment;
-                    }
-                    foreach ($nodeToTreat[$currentTreatment]['__children'] as $child) {
-                        $nodeToTreat[] = &$child;
-                        // Free pointer, avoiding overrides
-                        unset($child);
-                    }
-                    $currentTreatment ++;
-                    // Free pointer
-                    unset($nodeValue);
-                }
-                $progression = 0;
-                if ($totalElements) {
-                    $progression = round($elementsDone / $totalElements * 100);
-                }
-            } else {
-                $progression = 0;
-            }
-        } else {
-           $progression = null; 
-        }
-        
-        $return = array(
-            'workspaceName' => $workspace->getName(),
-            'workspaceThumbnail' => $workspaceThumbnail,
-            'workspaceUserProgression' => $progression,
-            'renderProgression' => $renderProgression
-        );
-
-        return $this->render(
-            'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
-            $return
-        );
-    }
-
     
+      
     /**
+     * Get and separate all badges in two categories depending if they are 
+     * associated to dropzones or exercices
+     * 
      * @param AbstractWorkspace workspace
      * @param User user
      */
@@ -182,6 +93,9 @@ class SolerniController extends Controller
     }
     
     /**
+     * 
+     * Render widget in lesson bundle for the Apprendre Tab
+     * 
      * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
@@ -195,8 +109,10 @@ class SolerniController extends Controller
                 )
         ); 
     }
-
-
+    
+    /*
+     * get static page url from parameters.yml (Ooh that's evil)
+     */
     private function getStaticPage($name){
 
         // check values into parameters.yml. Also take a look inside README.md for example
@@ -209,21 +125,21 @@ class SolerniController extends Controller
 
      }
 
-
     /**
+     * 
+     * Renders the profil widget on dashboard and any other page that could use it 
+     * (the rendering context is used just to activate the right item in the menu for current page)
+     * 
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function getDesktopAsideBlockWidgetAction(User $user, $renderingContext = null )
     {
         $router = $this->get('router');
-        //Get the static pages controller
         $static = $this->get('orange.static.controller');
-
         $thumbnail = $this->get('claroline.utilities.thumbnail_creator');
-
         $picDft = 'avatar.jpg';
 
-
+        // Check for user picture or generate default avatar
         $pathDft = realpath($this->container->getParameter('claroline.param.thumbnails_directory').'/../bundles/clarolinecore/images/'.$picDft);
         $path = realpath($this->container->getParameter('claroline.param.thumbnails_directory').'/../uploads/pictures/' . $user->getPicture()) ;
         $pathDest = realpath($this->container->getParameter('claroline.param.thumbnails_directory')) . DIRECTORY_SEPARATOR . 'tmb_54_54_' . $user->getPicture();
@@ -239,42 +155,17 @@ class SolerniController extends Controller
             $thumbnail->fromImage($pathDft, $pathDftDest, 54, 54);
             $thb = 'tmb_54_54_' . $picDft;
         }
-        
-        $workspace = $this->getDefaultWorskpace();
-
-        $return = array(
-            'userFirstname' => $user->getFirstName(),
-            'userLastname' => $user->getLastName(),
-            'userThumbnail' => array(
-                'src' => $thb,
-                'alt' => 'avatar de ' . $user->getFirstName() . ' ' . $user->getLastName()
-            ),
-            'urls' => array(
-                'profil' => $router->generate('claro_profile_view', array(
-                    'userId' => $user->getId()
-                )),
-                'badges' => $router->generate('claro_profile_view_badges'),
-                'message' => $router->generate('claro_message_list_received'),
-
-                'eval' => $static->getStaticPage('static_eval'),
-                'resource' => $router->generate('claro_workspace_open_tool', array(
-                    'workspaceId' => $user->getPersonalWorkspace()
-                        ->getId(),
-                    'toolName' => 'resource_manager'
-                ))
-            ),
-            'nbMessages' => $this->getDoctrine()
-                ->getRepository('ClarolineCoreBundle:Message')
-                ->countUnread($user),
-            
-            'renderingContext' => $renderingContext,
-            'workspace' => $workspace,
-            'isRegistered' => $this->isUserRegisteredinWorkspace( $user, $workspace )
-        );
 
     	return $this->render(
     			'ClarolineCoreBundle:Partials:desktopAsideBlockWidget.html.twig',
-    			$return
+    			array(
+                    'user'  => $user,
+                    'userThumbnailSrc' => $thb,
+                    'nbMessages' => $this->getDoctrine()
+                        ->getRepository('ClarolineCoreBundle:Message')
+                        ->countUnread($user),
+                    'renderingContext' => $renderingContext
+                )
     	);
     }
 
@@ -452,14 +343,10 @@ class SolerniController extends Controller
             );
         }
         
-        /* Need to find workspace associated. */
-        $workspace =  $this->getDefaultWorskpace();
-        $workspaceReturn = array( 'workspace' => $workspace );
-        $isRegistered = array ('isRegistered' => $this->isUserRegisteredinWorkspace( $user, $workspace ) );
 
         return $this->render(
             'ClarolineCoreBundle:Partials:desktopMessagesBadgesAndEvalBlockWidget.html.twig',
-            $messageReturn + $badgeReturn + $evalReturn + $workspaceReturn + $isRegistered
+            $messageReturn + $badgeReturn + $evalReturn
         );
     }
 
@@ -581,177 +468,6 @@ class SolerniController extends Controller
     }
 
     /**
-     * GENERATE TABS
-     *      - NEED TO FIND CURRENT WORKSPACE
-     *      - if time : ability to choose a resource from a resource list
-     *      - NEED TO CALCULATE URL FROM A RESOURCE ROUTE ( evaluate how to configure )
-     *
-     * @ParamConverter("workspace",
-     *                 class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *                 options={"id" = "workspaceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = false})
-     */
-    public function renderSolerniTabsAction($workspace, $user)
-    {
-        
-        // USER WORKSPACES
-        $doctrine = $this->getDoctrine();
-        $roleRepository = $doctrine->getRepository('ClarolineCoreBundle:Role');
-        $workspacesUsed = array();
-        if($user instanceof User){
-            $userRoles = $user->getRoles(false);
-            foreach($userRoles as $roleName){
-                $userWorkspace = $roleRepository->findOneByName($roleName)->getWorkspace();
-                if($userWorkspace != null){
-                    $workspacesUsed[] = $userWorkspace->getId();
-                }
-            }
-        }
-        $is_registered = in_array($workspace->getId(), $workspacesUsed);
-        
-        $solerniTabs = array(
-            'solerniTabs' => array(),
-            'workspace' => $workspace,
-            'is_registered'=> $is_registered
-        );
-        
-        //get the first lesson
-        $lesson = $this->getFirstLessonFromWorkspace($workspace);
-        if ($lesson) {
-            $firstSubChapter = $this->getFirstSubChapter($lesson);
-            if ($firstSubChapter ) {
-
-                $firstSubChapterUrl = $this->getRouteToTheLastChapter($lesson, $user);
-                $solerniTabs['solerniTabs'][] = array(
-                    'name' => 'Apprendre',
-                    'url' => $firstSubChapterUrl,
-                    'title' => 'Suivre les cours'
-                );
-                $this->get('session')->set('solerni_apprendre_url', $firstSubChapterUrl);
-            }
-        }
-
-        //get the first forum
-        $forum = $this->getFirstForumFromWorkspace($workspace);
-        if ($forum) {
-            $forumUrl = $this->get('router')
-                             ->generate('claro_forum_categories', array('forum' => $forum->getId()));
-            $solerniTabs['solerniTabs'][] = array(
-                    'name' => 'Discuter',
-                    'url' => $forumUrl,
-                    'title' => 'Participer au forum'
-            );
-            $this->get('session')->set('solerni_discuter_url', $forumUrl);
-        }
-
-        $workspaceUrl = $this->get('router')
-                             ->generate('claro_workspace_open_tool',
-                                   array(
-                                       'workspaceId' => $workspace->getId(),
-                                       'toolName'    => 'resource_manager'
-                                   )
-                               );
-        $solerniTabs['solerniTabs'][] = array(
-                    'name' => 'Partager',
-                    'url' => $workspaceUrl,
-                    'title' => 'Accéder au gestionnaire de ressources'
-        );
-        $this->get('session')->set('solerni_partager_url', $workspaceUrl);
-
-        return $this->render(
-            'ClarolineCoreBundle:Partials:includeSolerniTabs.html.twig',
-            $solerniTabs
-        );
-    }
-
-
-    /**
-     * @param AbstractWorkspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    protected function getFirstLessonFromWorkspace(AbstractWorkspace $workspace)
-    {
-        $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
-        $resource = $this->getFirstResourceFromWorkspace($workspace, 'icap_lesson');
-
-        if ($resource != null) {
-            return $lessonRepository->findOneByResourceNode($resource);
-        }
-        return $resource;
-    }
-
-    /**
-     * @param Lesson $lesson
-     *
-     * @return \Icap\LessonBundle\Entity\Chapter
-     */
-    protected function getFirstSubChapter(\Icap\LessonBundle\Entity\Lesson $lesson)
-    {
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
-        $firstChapter = $chapterRepository->getFirstChapter($lesson);
-        $subChapter = null;
-        if ($firstChapter) {
-            $subChapter = $chapterRepository->getChapterFirstChild($firstChapter);
-        }
-        return $subChapter;
-    }
-
-    /**
-     * @param AbstractWorkspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    protected function getFirstImageFromWorkspace(AbstractWorkspace $workspace, $type)
-    {
-        $fileRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\File');
-        $resource = $this->getFirstResourceFromWorkspace($workspace, 'file', $type);
-
-        if ($resource != null) {
-            return $fileRepository->findOneByResourceNode($resource);
-        }
-
-
-        return $resource;
-    }
-    /**
-     * @param AbstractWorkspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    protected function getSecondImageFromWorkspace(AbstractWorkspace $workspace, $type)
-    {
-        $fileRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\File');
-        $resources = $this->getXResourcesFromWorkspace($workspace, 'file', $type, 2);
-
-        $resource = null;
-        if(count($resources) > 1){
-            $resource = $resources[1];
-        }
-
-        if ($resource != null) {
-            $resource = $fileRepository->findOneByResourceNode($resource);
-        }
-        return $resource;
-    }
-
-    /**
-     * @param AbstractWorkspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    protected function getFirstForumFromWorkspace(AbstractWorkspace $workspace)
-    {
-        $fileRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Forum');
-        $resource = $this->getFirstResourceFromWorkspace($workspace, 'claroline_forum');
-
-        if ($resource != null) {
-            return $fileRepository->findOneByResourceNode($resource);
-        }
-        return $resource;
-    }
-
-    /**
      * Return the first element of the required type
      *
      * @param AbstractWorkspace $workspace
@@ -825,99 +541,4 @@ class SolerniController extends Controller
         return $results;
     }
 
-    /**
-     * get the route to the last chapter read, according to the log.
-     *
-     * @param Lesson $lesson
-     * @param User|string $user
-     * @return string
-     */
-    private function getRouteToTheLastChapter(Lesson $lesson, $user){
-        $router = $this->get('router');
-        $doctrine = $this->get('doctrine');
-        $logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
-        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-        // TODO see if it can be parametered
-        $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_lesson');
-        if ($resourceType == null) {
-            // TODO manage error
-            die('must not be executed');
-        }
-
-        if($user instanceof User){
-            $log = $logRepository->findOneBy(
-                    array(
-                        'resourceType' => $resourceType->getId(),
-                        'doer' => $user->getId(),
-                        'action' => LogChapterReadEvent::ACTION,
-                    ),
-                    array('dateLog' => 'DESC')
-                );
-        } else {
-            $log = null;
-        }
-
-        $firstChapter = null;
-        if($log == null){
-            $allChapters = $chapterRepository->findByLesson(array('lesson' => $lesson), array('left' => 'ASC'));
-            foreach($allChapters as $chapter){
-                if($chapter->getLevel() > 1){
-                    if($firstChapter == null){
-                        $firstChapter = $chapter;
-                        break;
-                    }
-                }
-            }
-            if($firstChapter != null){
-                $url = $router->generate('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterId' => $firstChapter->getId()));
-            } else {
-                $url = $router->generate('icap_lesson', array('resourceId' => $lesson->getId()));
-            }
-        } else {
-            $details = $log->getDetails();
-            $url = $router->generate('icap_lesson_chapter', array('resourceId' => $details['chapter']['lesson'], 'chapterId' => $details['chapter']['chapter']));
-        }
-        
-        return $url;
-    }
-    /*
-     * returns ClarolineCoreBundle:Workspace\AbstractWorkspace Object
-     * Just the first one found, for Solerni
-     */
-    private function getDefaultWorskpace() {
-        
-        /* Need to find workspace associated.
-         * pasted from getDesktopLessonBlockWidgetAction methode
-         * TODO: refactor. Create method instead of duplicate. Need better way to find and store data.
-         */
-        $doctrine = $this->getDoctrine();
-        $workspaceRepository = $doctrine->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-        $allWorkspaces = $workspaceRepository->findNonPersonal();
-        /* there should be only one */
-        foreach ( $allWorkspaces as $workspace ) {
-            return $workspace;
-        }
-    }
-    /*
-     * Check if the user is registered to the workspace
-     * 
-     * @param $user Entity
-     * @param $workspace Entity
-     * 
-     * @return bool
-     */
-    
-    public function isUserRegisteredinWorkspace( User $user, AbstractWorkspace $workspace ) {
-        
-        $workspacesUsed = array();
-        
-        $userRoles = $user->getRoles(false);
-        foreach($userRoles as $roleName){
-            $userWorkspace = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Role')->findOneByName($roleName)->getWorkspace();
-            if($userWorkspace != null){
-                $workspacesUsed[] = $userWorkspace->getId();
-            }
-        }
-        return in_array($workspace->getId(), $workspacesUsed);
-    }
 }

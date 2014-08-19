@@ -1,4 +1,4 @@
-{# this the mes evaluations block #}
+{# this is the mes evaluations block #}
 {% if pageContext == 'my_evals' %}
     {% set atLeastOne = false %}
     {% for workspaceBadge in badgePager %}
@@ -28,13 +28,17 @@
             {% endif %}
             
             <li class="slrn-my_badges-list__item">
-                <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="slrn-my_badges-list__item__image" />
+                <img src="{{ image(badge.webPath).zoomCrop(100,100) }}" 
+                     alt="{{ badge.name }}" 
+                     class="slrn-my_badges-list__item__image"
+                     width="100"
+                     height="100"
+                >
                 <section class="slrn-my_badges-list__body">
                     <h6 class="slrn-my_badges-list__item__title slrn-my_badges-list__item__title--my_evals">Badge &laquo; {{ badge.name }} &raquo;</h6>
-                    <article class="slrn-my_badges-list__content slrn-my_badges-list__content--my_evals presentation__mooc__meta__date">
-                        <p>{{'start_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.dropzone.getStartAllowDrop()|date('d/m/Y') }}<br />
-                        {{'end_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.dropzone.getEndReview()|date('d/m/Y') }}</p>
-                    </article>
+                    <div class="slrn-my_badges-list__content slrn-my_badges-list__content--my_evals">
+                        {{'start_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.dropzone.getStartAllowDrop()|date('d/m/y') }}
+                    </div>
                     <footer class="slrn-my_badges-list__footer">
                          {% if userResult == 'succeed' %}
                             <a class="btn btn-gris pull-right" href="{{ buttonLink }}">
