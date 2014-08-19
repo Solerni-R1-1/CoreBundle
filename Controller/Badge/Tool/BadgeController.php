@@ -20,6 +20,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class BadgeController extends Controller
 {
+    /*
+     * Returns or render (depending of needEcho) lists of badges related to resource_types
+     */
     public function myWorkspaceBadgeAction(
             AbstractWorkspace $workspace, 
             User $loggedUser, 
@@ -253,7 +256,7 @@ class BadgeController extends Controller
         // get all badges associated to dropzone for each session subscribed
         foreach( $user->getMoocSessions() as $session ) {
             $workspace = $session->getMooc()->getWorkspace();
-            $WorkspacesBadgeList[] = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false);
+            $WorkspacesBadgeList[] = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
         }
         
         return $this->render(

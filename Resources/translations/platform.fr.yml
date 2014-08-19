@@ -984,3 +984,18 @@ no_evals_yet: <p>Vous n'avez pas encore effectué d'évaluations.<br><a class="p
 
 new message: Nouveau message
 add_destinataires : Ajouter le(s) destinataire(s)
+
+mailsystem: Messagerie
+dashboard_widget_message_default_text: Retrouvez votre dernier message dans cet espace
+show_mailsystem: Afficher ma messagerie
+last_message: 'Dernier message :'
+@at: à
+
+no_badges: Aucun badge obtenu
+dashboard_widget_badges_default_text: Rejoignez un Mooc et tentez d'obtenir des badges !
+show_badges: Afficher mes badges
+last_badge: 'Dernier badge obtenu :'
+
+no_evals: Aucune évaluation en cours
+dashboard_widget_evals_default_text: Rejoignez un Mooc et passez un badge de compétences
+

@@ -1,4 +1,5 @@
-{% if session %}
+{# widget on top of the left column when we are inside a mooc #}
+{% if session is defined %}
     {% set mooc = session.getMooc() %}
 {% elseif workspace is defined %}
     {% set mooc = workspace.getMooc() %}
