@@ -348,6 +348,7 @@ class MessageController
                     break;
                 }
                 $message = $childs[0];
+                $childs = $message->getChildren();
             }
 
             //echo $message->getId().'<hr/>';
