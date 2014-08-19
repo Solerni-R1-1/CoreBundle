@@ -361,7 +361,9 @@ class MessageController
             // except if the sender is ourself
             if( $message->getSenderUsername() !== $user->getUserName()) {
                 $userSender = $this->userManager->getUserByUsername($message->getSenderUsername()); 
-                $receivers[$userSender->getId()] = $userSender; 
+                if($userSender != null){
+                    $receivers[$userSender->getId()] = $userSender; 
+                }
             }
 
             $dests = $message->getUserMessages();

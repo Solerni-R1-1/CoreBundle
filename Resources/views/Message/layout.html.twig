@@ -20,9 +20,11 @@
         <div class="panel panel-default">
             <div class="panel-body">
 
-                <h2>Messagerie</h2>
+                <h2 class='slrn-content-main-title'>Messagerie</h2>
 
                 {% if 'claro_message_show' != app.request.get('_route') %}
+                <div class="row">
+  <div class='col-xs-9 col-md-9'>
 
                     <ul class="flat_block">
                         <li class="{% if 'claro_message_list_received' == app.request.get('_route') %}active{% endif %}">
@@ -38,9 +40,11 @@
                             {#<i class="icon-trash"></i>#} {{ 'trash'|trans({}, 'platform') }}</a>
                         </li>
                     </ul>
+    </div><div class='col-xs-3 col-md-3'>
                     <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_new_message_layout" class='btn btn-primary action-button'>
                              {{ 'new message'|trans({}, 'platform') }}
                     </a>
+    </div></div>
                 {% endif %}
 
                 {% block section_content %}{% endblock %}
