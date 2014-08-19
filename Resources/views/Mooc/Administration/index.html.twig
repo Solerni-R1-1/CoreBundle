@@ -50,8 +50,8 @@
                 <tr>
                     <td class="slrn-bold">{{ mooc.getTitle() }}</td>
                     <td>
-                        {% if mooc.getOwner is defined %}
-                            {{ mooc.getOwner.getName() }}
+                        {% if mooc.getOwner() %}
+                            {{ mooc.getOwner().getName() }} 
                         {% endif %}
                     </td>
                     <td>
