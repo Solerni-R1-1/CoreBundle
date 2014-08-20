@@ -58,7 +58,7 @@ class Mooc
      *
      * @ORM\Column(name="illustration_path", type="string", length=255, nullable=true)
      */
-    private $illustrationPath;
+    private $illustrationPath = "../../default-images/logo-solerni-color.png";
     
      /**
      *
