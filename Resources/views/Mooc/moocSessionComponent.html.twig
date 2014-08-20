@@ -45,7 +45,7 @@
                  height="{{ imageSize.height }}"
         >
         {# owner logo #}
-        <img class="presentation__mooc__block__logo" src="{{ image( mooc.getOwner().getLogoWebPath() ).scaleResize( null, 35 ) }}" >
+        <img class="presentation__mooc__block__logo" src="{{ image( mooc.getOwner().getLogoWebPath() ).scaleResize( null, 35 ) }}" height=35>
         {% if progression is defined and progression is not null and isRegistered %}
             <span class='presentation__mooc__progression__wrapper'>
                 <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
