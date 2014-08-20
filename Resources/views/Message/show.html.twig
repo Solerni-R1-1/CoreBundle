@@ -25,7 +25,7 @@
                         </p>
                         <div>
                             {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
-                                <img src="{{ asset('uploads/pictures/') ~  ancestor.getSender().getPicture() }}" class="col-md-2" alt="{{ ancestor.getObject() }}">
+                                <img src="{{ image( 'thumbnails/tmb_54_54_' ~ ancestor.getSender().getPicture() ).scaleResize(54)}}" class="col-md-2" alt="{{ ancestor.getObject() }}">
                             {% endif %}
                         </div>
                         <p>
