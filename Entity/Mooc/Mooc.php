@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Mooc
 {
+	const DEFAULT_IMAGE_PATH = "../../default-images/logo-solerni-color.png";
     /**
      * @var integer
      *
@@ -58,7 +59,7 @@ class Mooc
      *
      * @ORM\Column(name="illustration_path", type="string", length=255, nullable=true)
      */
-    private $illustrationPath = "../../default-images/logo-solerni-color.png";
+    private $illustrationPath = self::DEFAULT_IMAGE_PATH;
     
      /**
      *
@@ -213,7 +214,7 @@ class Mooc
      * @ORM\ManyToOne(
      * targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocOwner",
      * inversedBy="moocs",
-     * cascade={"persist", "remove"}
+     * cascade={"persist"}
      * )
      * 
      */
@@ -835,7 +836,7 @@ class Mooc
      */
     public function removeUploadIllustration()
     {
-        if ($file = $this->getIllustrationAbsolutePath()) {
+        if (($file = $this->getIllustrationAbsolutePath()) && $this->getIllustrationPath() != self::DEFAULT_IMAGE_PATH) {
             unlink($file);
         }
     }

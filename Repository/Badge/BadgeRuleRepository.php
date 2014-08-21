@@ -37,4 +37,28 @@ class BadgeRuleRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+    
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param bool                                                     $executeQuery
+     *
+     * @return Query|int
+     */
+    public function deleteBadgeRulesAssociatedToWorkspaceResources($workspace, $executeQuery = true) {
+    	$resourceIds = array();
+    	foreach($workspace->getResources() as $resource) {
+    		$resourceIds[] = $resource->getId();
+    	}
+    	$query = $this->getEntityManager()
+    		->createQuery('
+    			DELETE
+    			FROM ClarolineCoreBundle:Badge\BadgeRule b
+    			WHERE b.resource IN (:resourceIds)
+    		')
+    		->setParameter('resourceIds', $resourceIds);
+    		
+    	
+    	return $executeQuery ? $query->getResult(): $query;
+    }
 }

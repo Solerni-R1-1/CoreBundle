@@ -257,4 +257,23 @@ class BadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param bool                                                     $executeQuery
+     *
+     * @return Query|int
+     */
+    public function dissociateFromWorkspace(AbstractWorkspace $workspace, $executeQuery = true) {
+
+    	$query = $this->getEntityManager()
+    	->createQuery(
+    			'UPDATE ClarolineCoreBundle:Badge\Badge b
+                SET b.workspace = NULL
+                WHERE b.workspace = :workspaceId'
+    	)
+    	->setParameter('workspaceId', $workspace->getId());
+    	
+    	return $executeQuery ? $query->getResult(): $query;
+    }
 }

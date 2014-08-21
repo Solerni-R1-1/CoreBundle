@@ -254,9 +254,33 @@ class WorkspaceManager
      */
     public function deleteWorkspace(AbstractWorkspace $workspace)
     {
+    	// Delete Mooc before resources
+    	$mooc = $workspace->getMooc();
+    	if ($mooc != null) {
+    		$mooc->setLesson(null);
+    		$sessions = $mooc->getMoocSessions();
+    		if ($sessions != null) {
+    			foreach ($sessions as $session) {
+    				$session->setForum(null);	
+    				$this->om->persist($session);
+    				$this->om->remove($session);
+    			}
+    		}
+    		$this->om->persist($mooc);
+    		$this->om->remove($mooc);
+    		$this->om->flush();
+    	}
+    	
+    	// Delete badge rules
+    	$this->om->getRepository("ClarolineCoreBundle:Badge\BadgeRule")->deleteBadgeRulesAssociatedToWorkspaceResources($workspace);
+    	
+    	// Dissociate badges from workspace
+    	$this->om->getRepository("ClarolineCoreBundle:Badge\Badge")->dissociateFromWorkspace($workspace);
+    	
+    	// Delete resources
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $children = $root->getChildren();
-
+        
         if ($children) {
             foreach ($children as $node) {
                 $this->resourceManager->delete($node);
