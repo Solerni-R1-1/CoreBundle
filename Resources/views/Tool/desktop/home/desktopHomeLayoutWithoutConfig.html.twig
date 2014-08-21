@@ -53,13 +53,13 @@
         {% render controller(
             'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
             {
-                'target':       'badges',
-                'mainTitle':    'my_badges'|trans({}, 'platform'),
-                'statusText':   'no_badges'|trans({}, 'platform'),
-                'iconClass':    'ico__badge',
-                'subText':      'dashboard_widget_badges_default_text'|trans({}, 'platform'),   
-                'footerUrl':    path('claro_profile_view_badges', {} ),
-                'footerText':   'show_badges'|trans({}, 'platform')
+                'target':           'badges',
+                'mainTitle':        'my_badges'|trans({}, 'platform'),
+                'statusText':       'no_badges'|trans({}, 'platform'),
+                'iconClass':        'ico__badge',
+                'subText':          'dashboard_widget_badges_default_text'|trans({}, 'platform'),   
+                'footerUrl':        path('claro_profile_view_badges', {} ),
+                'footerText':       'show_badges'|trans({}, 'platform')
             }
         ) %}
          

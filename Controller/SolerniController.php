@@ -178,14 +178,16 @@ class SolerniController extends Controller
     public function getDesktopFooterBlockMessageAction(
             $user,
             $target,
-            $mainTitle =    "Title",
-            $statusText =   "Status",
-            $iconClass =    "no_class",
-            $subTitle =     "",
-            $subText =      "Sub Text",
-            $subUrl =       "#",
-            $footerUrl =    "#",
-            $footerText =   "Footer Text"
+            $mainTitle =            "Title",
+            $containerClass =       "",
+            $statusText =           "Status",
+            $iconClass =            "no_class",
+            $iconImageSubstitute =  "",
+            $subTitle =             "",
+            $subText =              "Sub Text",
+            $subUrl =               "#",
+            $footerUrl =            "#",
+            $footerText =           "Footer Text"
     ) {
         
         $translator = $this->get('translator');
@@ -221,63 +223,129 @@ class SolerniController extends Controller
                         }
                     }
                     /* Special case : remove Soft Deletable Filter in case we have modified the badge after it was acquired */
-                    $doctrine->getEntityManager()->getFilters()->disable('softdeleteable');
+                    $doctrine->getManager()->getFilters()->disable('softdeleteable');
                     $lastBadge = $lastBadge->getBadge();
+                    $containerClass = 'footer__block__withImage';
                     $iconClass = $iconClass . '_actif';
+                    $iconImageSubstitute = $lastBadge->getWebPath();
                     $statusText = $translator->trans( 'last_badge', array(), 'platform');
                     $badgeTitle = $lastBadge->getName();
                     $subTitle = ( strlen ( $badgeTitle ) > 20 ) ? substr( $badgeTitle, 0, 15 ) . '...' : $badgeTitle;
                     $badgeText = $lastBadge->getDescription();
-                    $subText = ( strlen ( $badgeText ) > 30 ) ? substr( $badgeText, 0, 30 ) . '...' : $badgeText;
+                    $subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
                     $subUrl = $router->generate('claro_view_badge', array('slug' => $lastBadge->getSlug()));
+                    // Renable Soft Deletable Filter
+                    $doctrine->getManager()->getFilters()->enable('softdeleteable');
                 }
                 break;
             
             case 'evals':
-                $userSessions = $user->getMoocSessions();
                 
-                $badgeEvals = $this->get('orange.badge.controller')->myWorkspaceBadgeAction();
-                
-                $evals = $doctrine->getRepository('IcapDropzoneBundle:Drop')->findByUser($user);
+                $AllEvalsPaginated = array();
+                $inProgressBadges = array();
 
-                $lastEval = null;
-                foreach ( $evals as $eval ) {
-                    if( $lastEval == null || $eval->getDropDate() > $lastEval->getDropDate() ) {
-                        $lastEval = $eval;
+                // Get all evals badges from all sessions
+                foreach( $user->getMoocSessions() as $userSession ) {
+                    $AllEvalsPaginated[] = $this->get('orange.badge.controller')->myWorkspaceBadgeAction(
+                        $userSession->getMooc()->getWorkspace(),
+                        $user,
+                        1,
+                        'icap_dropzone',
+                        null,
+                        false
+                    );
+                }
+                
+                // Then we remove all expired and noted (finished) evals and store that in a new array
+                foreach ( $AllEvalsPaginated as $pagerFanta ) {
+                    foreach ( $pagerFanta['badgePager'] as $badgeArray ) {
+                        // Only meaning already started
+                        if ( $badgeArray['type'] == 'inprogress') {
+                            // If endDate is in the future, we don't have all corrections and no grade
+                            if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") ||
+                                ( $badgeArray['associatedResource']['drop']->countFinishedCorrections() < $badgeArray['associatedResource']['dropzone']->getExpectedTotalCorrection() &&
+                                ! $badgeArray['associatedResource']['drop']->getCalculatedGrade() ) ) {
+                                // Add the badge to the active badges in array indexed by resource Node ID
+                                $inProgressBadges[$badgeArray['associatedResource']['dropzone']->getResourceNode()->getId()] = $badgeArray;
+                            }
+                        }
                     }
                 }
-            
-                if ($lastEval == null) {
-                    $evalReturn = array (
-                        'evalsPageUrl' => $static->getStaticPage('static_eval'),
-                        'lastEval' => null
-                    );
-                } else {
-                    $evalReturn = array (
+                
+                // if that array exists
+                if ( $inProgressBadges ) {
+                    // change status to reflect the number of ongoing badges
+                    $plural = '';
+                    $evalsCount = count( $inProgressBadges );
+                    if ( $evalsCount > 1 ) {
+                        $plural = 's';
+                    }
+                    $statusText = $translator->trans( 'in_progress_badges', array( '%number%' => $evalsCount, '%plural%' => $plural ), 'platform');
+                    
+                    $lastDoerActions = array();
+                    $lastReceiverActions = array();
+                    
+                    // Get last action for each dropzone in claro_log
+                    foreach ( $inProgressBadges as $inProgressBadge ) {
+                                            
+                        // find the last action accessed
+                        $logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
+                        $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_dropzone');
+                        // Get last user action
+                        $lastDoerActions[] = $logRepository->findOneBy(
+                            array(
+                                'resourceType' => $resourceType->getId(),
+                                'doer' => $user->getId(),
+                                'resourceNode' => $inProgressBadge['associatedResource']['dropzone']->getResourceNode()->getId()
+                            ),
+                            array('dateLog' => 'DESC')
+                        );
+                        // Get last action to the user
+                        $lastReceiverActions[] = $logRepository->findOneBy(
+                            array(
+                                'resourceType' => $resourceType->getId(),
+                                'receiver' => $user->getId(),
+                                'resourceNode' => $inProgressBadge['associatedResource']['dropzone']->getResourceNode()->getId()
+                            ),
+                            array('dateLog' => 'DESC')
+                        );
                         
-                        'lastEval' => array(
-                            'title' => $lastEval->getDropzone()->getResourceNode()->getName(),
-                            'url' => $router->generate(
-                                    'icap_dropzone_drop',
-                                    array('resourceId' =>$lastEval->getDropzone()->getId())),
-                            'summary' => strip_tags($lastEval->getDropzone()->getInstruction())
-                        ),
-                    );
+                        $mostRecentAction = '';
+                        foreach ( $lastDoerActions as $lastDoerAction ) {
+                            if ( ! $mostRecentAction instanceof \Claroline\CoreBundle\Entity\Log\Log ) {
+                                $mostRecentAction = $lastDoerAction;
+                            } elseif ( $lastDoerAction->getDateLog()->format("Y-m-d H:i:s") > $mostRecentAction->getDateLog()->format("Y-m-d H:i:s") ) {
+                                $mostRecentAction = $lastDoerAction;
+                            }
+                        }
+                    }
+                        
+                    //show last eval 
+                    $mostRecentEval = $inProgressBadges[$mostRecentAction->getResourceNode()->getId()];
+                    $containerClass = 'footer__block__withImage';
+                    $iconClass .= '_actif';
+                    $iconImageSubstitute = $mostRecentEval['badge']->getWebPath();
+                    $subTitle = $mostRecentEval['badge']->getName();
+                    $subText = $mostRecentEval['badge']->getWorkspace()->getMooc()->getTitle();
+                    $subUrl = $mostRecentEval['associatedResourceUrl'];
                 }
+                    
                 break;
             }
         
         return $this->render(
             'ClarolineCoreBundle:Partials:desktopFooterBlock.html.twig',
             array(
-                'mainTitle'     => $mainTitle,
-                'statusText'    => $statusText,
-                'iconClass'     => $iconClass,
-                'subTitle'      => $subTitle,
-                'subText'       => $subText,
-                'subUrl'        => $subUrl,
-                'footerUrl'     => $footerUrl,
-                'footerText'    => $footerText
+                'containerClass'        => $containerClass,
+                'mainTitle'             => $mainTitle,
+                'statusText'            => $statusText,
+                'iconClass'             => $iconClass,
+                'iconImageSubstitute'   => $iconImageSubstitute,
+                'subTitle'              => $subTitle,
+                'subText'               => $subText,
+                'subUrl'                => $subUrl,
+                'footerUrl'             => $footerUrl,
+                'footerText'            => $footerText
             )
         );  
     }

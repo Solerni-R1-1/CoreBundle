@@ -24,12 +24,12 @@ class BadgeController extends Controller
      * Returns or render (depending of needEcho) lists of badges related to resource_types
      */
     public function myWorkspaceBadgeAction(
-            AbstractWorkspace $workspace, 
-            User $loggedUser, 
-            $badgePage, 
-            $resourceType = 'all', 
-            $resourceId = null, 
-            $needEcho = true 
+            AbstractWorkspace $workspace,
+            User $loggedUser,
+            $badgePage,
+            $resourceType = 'all',
+            $resourceId = null,
+            $needEcho = true
     ) {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");

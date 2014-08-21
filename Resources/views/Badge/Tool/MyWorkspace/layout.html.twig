@@ -40,7 +40,16 @@
     {% endif %}
 
     <div class="col-xs-9 col-md-9">
-        <h2 class="slrn-content-main-title"> {{'my_evals'|trans({}, 'platform') }}</h2>
+        {% if pageContext is defined and pageContext == 'my_evals' %}
+            <h2 class="slrn-content-main-title"> {{'my_evals'|trans({}, 'platform') }}</h2>
+        {% else %}
+            <div class="panel-heading">
+                <a class="slrn-read-faq pink_link" href="{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}">{{ 'more_about_badges'|trans({}, 'platform') }}</a>
+                <h2 class="slrn-content-main-title">
+                    {{ 'competence_badges' | trans({}, 'platform') }}
+                </h2>
+            </div>
+        {% endif %}
         <div class="slrn-my_badges-list-wrapper">
             {% block section_body %}{% endblock %}
         </div>

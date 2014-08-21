@@ -14,12 +14,12 @@
             'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
             { 'renderingContext': 'badges' }
         ) %}    
-        <div class="col-xs-9 col-md-9 slrn-badges-main">
+        <div class="col-xs-9 col-md-9">
             <div class="panel-heading">
-                <h1 class="panel-title slrn-panel-title">
+                <h2 class="slrn-content-main-title">
                     {{ 'my_badges'|trans({}, 'platform') }}
                     {#<a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs">{{ 'claim_badge'|trans }}</a>#}
-                </h1>
+                </h2>
             </div>
             {#<div class="panel-body">#}
                 {#{% if 0 < badgeClaims|length %}

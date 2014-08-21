@@ -999,3 +999,5 @@ last_badge: 'Dernier badge obtenu :'
 no_evals: Aucune évaluation en cours
 dashboard_widget_evals_default_text: Rejoignez un Mooc et passez un badge de compétences
 
+in_progress_badges: %number% évaluation%plural% en cours
+
