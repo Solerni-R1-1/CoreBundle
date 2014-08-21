@@ -356,8 +356,13 @@ class MoocSession extends AbstractIndexable
        $doc->mooc_category_ids      = array_map(function($obj) { return $obj->getId(); }, $mooc->getCategories()->toArray());
        
        if ($mooc->getOwner()) {
-            $doc->mooc_owner_id     = $mooc->getOwner()->getId();
-            $doc->mooc_owner_name   = $mooc->getOwner()->getName();
+          $doc->mooc_owner_id       = $mooc->getOwner()->getId();
+          $doc->mooc_owner_name     = $mooc->getOwner()->getName();
+          $doc->mooc_owner_logo_url = $mooc->getOwner()->getLogoWebPath();
+          $doc->mooc_owner_cat_url  = $this->get('router')->generate('solerni_owner_catalogue', array(
+                                        'ownerName' => $mooc->getOwner()->getName(),
+                                        'ownerId'   => $mooc->getOwner()->getId()
+                                      ));
        }
        $doc->wks_id                 = $mooc->getWorkspace()->getId();
        

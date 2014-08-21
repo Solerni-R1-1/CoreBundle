@@ -53,6 +53,10 @@ class TransfoController extends Controller
             if ( $cacheData ) {
                 $response = new Response($cacheData);
                 $response->headers->set('Content-Type', $image_mime);
+                
+                $response->setMaxAge(1200);
+                $response->setSharedMaxAge(1200);
+                
                 $response->setPublic(); 
             } else {
                 $response = new Response();
@@ -122,6 +126,9 @@ class TransfoController extends Controller
             case 'sep':
                 //sepia()
                 return 'sepia';
+            case 'sr':
+                // scaleResize
+                return 'scaleResize';
             default:
                 return false;
         }
