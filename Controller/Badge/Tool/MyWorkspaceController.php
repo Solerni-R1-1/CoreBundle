@@ -107,7 +107,7 @@ class MyWorkspaceController extends Controller
         }
 
         return array(
-            'workspace'    => $workspace,
+            'workspace'      => $workspace,
             'userBadge'      => $userBadge,
             'badge'          => $badge,
             'validatedRules' => $validatedRules

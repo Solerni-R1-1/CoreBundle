@@ -46,14 +46,14 @@
                 </div>
             {% endif %}
             <a class="slrn-read-faq pink_link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'read_faq'|trans({}, 'platform') }}</a>
-            <h3 class="panel-title slrn-panel-title">
+            <h2 class="slrn-content-main-title">
                 {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
                     {{ 'my_library' | trans({}, 'platform') }}
                 {% else %}
                     {{ 'mooc_resources' | trans({}, 'platform') }}
                 {% endif %}    
                 <span></span>
-            </h3>
+            </h2>
         </div>
     </div>
 

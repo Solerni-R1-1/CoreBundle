@@ -34,9 +34,49 @@
             }
         ) %}
     </div>
+     <div class='dsk__article__footer'>
+        {# Inject message block widget #}
         {% render controller(
-            'ClarolineCoreBundle:Solerni:getDesktopMessagesBadgesAndEvalBlockWidget',
-            {}
+            'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
+            {
+                'target':       'message',
+                'mainTitle':    'mailsystem'|trans({}, 'platform'),
+                'statusText':   'no_message'|trans({}, 'platform'),
+                'iconClass':    'ico__messagerie',
+                'subText':      'dashboard_widget_message_default_text'|trans({}, 'platform'),   
+                'footerUrl':    path('claro_message_list_received', {} ),
+                'footerText':   'show_mailsystem'|trans({}, 'platform')
+            }
         ) %}
-    <div class='clearfix'></div>
+         
+        {# Inject badges block widget #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
+            {
+                'target':           'badges',
+                'mainTitle':        'my_badges'|trans({}, 'platform'),
+                'statusText':       'no_badges'|trans({}, 'platform'),
+                'iconClass':        'ico__badge',
+                'subText':          'dashboard_widget_badges_default_text'|trans({}, 'platform'),   
+                'footerUrl':        path('claro_profile_view_badges', {} ),
+                'footerText':       'show_badges'|trans({}, 'platform')
+            }
+        ) %}
+         
+        {# Inject evaluations block widget #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
+            {
+                'target':       'evals',
+                'mainTitle':    'my_evals'|trans({}, 'platform'),
+                'statusText':   'no_evals'|trans({}, 'platform'),
+                'iconClass':    'ico__eval',
+                'subText':      'dashboard_widget_evals_default_text'|trans({}, 'platform'), 
+                'footerUrl':    path('solerni_user_evaluations', {} ),
+                'footerText':   'page_my_badges'|trans({}, 'platform')
+            }
+        ) %}
+     </div>
+</div>
+<div class='clearfix'></div>
 {% endblock %}

@@ -43,7 +43,7 @@ class MoocOwner
      *
      * @ORM\Column(name="logo_path", type="string", length=255, nullable=true)
      */
-    private $logoPath;
+    private $logoPath = "../../default-images/logo-solerni-color.png";
     
 
     /**
@@ -51,7 +51,7 @@ class MoocOwner
      *
      * @ORM\Column(name="dressing_path", type="string", length=255, nullable=true)
      */
-    private $dressingPath;
+    private $dressingPath = "../../default-images/logo-solerni-color.png";
     
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection

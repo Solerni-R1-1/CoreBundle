@@ -1,0 +1,21 @@
+{# empty Twig template #}
+<div class="dsk__article__footer__block {{ containerClass }}">
+    <h3 class="dsk__article__footer__block__h3">{{ mainTitle }}</h3>
+    <div class="footer__content">
+        <p class="footer__text">{{ statusText }}</p>
+        <a {% if subUrl != '#' %}href="{{ subUrl }}"{% endif %} class="dsk__article__footer__block__ico {{ iconClass }}">
+            {% if iconImageSubstitute is not empty %}
+                <img src="{{ image(iconImageSubstitute).zoomCrop(47, 47) }}" alt="{{ subTitle }} Badge Icon" width=""47" height="47">
+            {% endif %}
+        </a>
+        <div class="footer__text">
+            <a class="footer__text__link" {% if subUrl != '#' %}href="{{ subUrl }}"{% endif %}>
+                <strong>{{ subTitle|raw }}</strong>
+            </a>
+            <p class="footer__text__content">
+                {{ subText|raw }}
+            </p>
+        </div>
+    </div>
+    <span><a class="footer__link" href="{{ footerUrl }}">{{ footerText }}</a></span>
+</div>

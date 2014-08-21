@@ -37,6 +37,10 @@ class SendToNamesValidator extends ConstraintValidator
     {
         $to = trim($value);
 
+        if( empty($to) ){
+            return;
+        }
+
         if (substr($to, -1, 1) === ';') {
             $to = substr_replace($to, "", -1);
         }

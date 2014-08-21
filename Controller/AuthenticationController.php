@@ -232,7 +232,7 @@ class AuthenticationController
             );
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $currentTime = time();
 
         // the link is valid for 24h
@@ -259,7 +259,7 @@ class AuthenticationController
     public function newPasswordAction($hash)
     {
         $user = $this->userManager->getResetPasswordHash($hash);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

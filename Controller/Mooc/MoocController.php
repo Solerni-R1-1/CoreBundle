@@ -313,10 +313,7 @@ class MoocController extends Controller
     }
     
     /**
-     * GENERATE TABS
-     *      - NEED TO FIND CURRENT WORKSPACE
-     *      - if time : ability to choose a resource from a resource list
-     *      - NEED TO CALCULATE URL FROM A RESOURCE ROUTE ( evaluate how to configure )
+     * Generate tabs on any mooc (onglet Apprendre, Discuter, etc) if the resource is set
      *
      * @ParamConverter("workspace",
      *                 class="ClarolineCoreBundle:Workspace\AbstractWorkspace",

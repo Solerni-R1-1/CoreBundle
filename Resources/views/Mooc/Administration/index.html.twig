@@ -50,7 +50,9 @@
                 <tr>
                     <td class="slrn-bold">{{ mooc.getTitle() }}</td>
                     <td>
-                        {{ mooc.getOwner.getName() }}
+                        {% if mooc.getOwner() %}
+                            {{ mooc.getOwner().getName() }} 
+                        {% endif %}
                     </td>
                     <td>
                         {% if mooc.isPublic() %}
@@ -58,7 +60,6 @@
                         {% else %}
                             Privé
                         {% endif %}
-                        
                     </td>
                     <td>
                         <a class="btn btn-gris js-submit-button" href="{{ path('claro_workspace_edit_form', { 'workspace': mooc.getWorkspace().getId() }) }}">

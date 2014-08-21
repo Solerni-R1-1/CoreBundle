@@ -348,6 +348,7 @@ class MessageController
                     break;
                 }
                 $message = $childs[0];
+                $childs = $message->getChildren();
             }
 
             //echo $message->getId().'<hr/>';
@@ -361,7 +362,9 @@ class MessageController
             // except if the sender is ourself
             if( $message->getSenderUsername() !== $user->getUserName()) {
                 $userSender = $this->userManager->getUserByUsername($message->getSenderUsername()); 
-                $receivers[$userSender->getId()] = $userSender; 
+                if($userSender != null){
+                    $receivers[$userSender->getId()] = $userSender; 
+                }
             }
 
             $dests = $message->getUserMessages();
@@ -738,6 +741,10 @@ class MessageController
             if (strtolower($user->getUsername()) === strtolower($username)) {
                 return true;
             }
+        }
+
+        if($message->getParent() != null){
+            return $this->checkAccess($message->getParent(), $user);
         }
 
         throw new AccessDeniedException("This isn't your message");

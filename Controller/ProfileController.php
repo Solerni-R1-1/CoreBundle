@@ -312,14 +312,16 @@ class ProfileController extends Controller
      */
     public function editPasswordAction(User $loggedUser)
     {
-        $form = $this->createForm(new ResetPasswordType(), $loggedUser);
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
+
+        $form = $this->createForm(new ResetPasswordType($translator), $loggedUser);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
-            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-            $translator = $this->get('translator');
+            
 
             try {
                 /** @var \Claroline\CoreBundle\Entity\User $user */

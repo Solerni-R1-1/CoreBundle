@@ -74,9 +74,9 @@
                         </p>
                     </div>
                     <p>
-                    {% if publicProfilePreferences.allowMailSending %}
+                    {#% if publicProfilePreferences.allowMailSending %}
                         <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                    {% endif %}
+                    {% endif %#}
                     {% if publicProfilePreferences.allowMessageSending %}
                         <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                     {% endif %}

@@ -190,7 +190,7 @@ body.subnavbar-fixed { padding-top: 110px }
     width:      100%; 
     height:     auto;
     min-width:  1110px;
-    max-height: 224px;
+    min-height: 224px;
 }
 .slrn-header_w {
     position: absolute;
@@ -236,9 +236,10 @@ body.subnavbar-fixed { padding-top: 110px }
 
 /* SECTION CONTENT */
 .slrn-section-title { 
-    font-size: 1.4em; 
-    font-weight: 800;
-    margin: 1.4em 0 .6em;;
+    font-size:      1.4em; 
+    font-weight:    800;
+    margin:         1.4em 0 .6em;
+    color:          #333;
 }
 .slrn-section-title--sub {
     font-size: 1.2em;
@@ -682,12 +683,12 @@ body.dsk .alert { display: none; }
     text-decoration: none !important;
 }
 
-.dsk__article{
-    display: block;
-    width: 660px;
-    margin-left: 277px;
-    position: absolute;
-    top: 60px;
+.dsk__article {
+    display:        block;
+    width:          660px;
+    margin-left:    277px;
+    position:       absolute;
+    top:            60px;
 }
 
 .dsk__article__footer{
@@ -695,86 +696,106 @@ body.dsk .alert { display: none; }
     text-align: justify;
 }
 .dsk__article__footer:after {
-    content:"";
-    display: inline-block;
-    width: 100%
+    content:    "";
+    display:    inline-block;
+    width:      100%
 }
 .dsk__article__footer__block{
-    width: 212px;
-    background-color:#F6F6F6;
-    display: inline-block;
-    padding : 0 10px;
-    text-align: center;
+    width:              215px;
+    height:             280px;
+    background-color:   #F6F6F6;
+    display:            inline-block;
+    padding :           25px 10px 15px;
+    text-align:         center;
 }
 
-.dsk__article__footer__block__h3{
-    font-size: 20px;
-    border-bottom: 1px solid #CCC;
-    margin: 10px auto;
+.dsk__article__footer__block__h3 {
+    font-size:      20px;
+    border-bottom:  1px solid #CCC;
     padding-bottom: 10px;
+    margin:         0 0 15px 0;
 }
-.footer__content{
-	border-bottom: 1px solid #CCC;
-	margin: 0 auto;
+.footer__content {
+	border-bottom:  1px solid #CCC;
+	margin:         0;
     padding-bottom: 10px;
-    height: 160px;
-	line-height: 1.13;
+    height:         160px;
+	line-height:    1.13;
 }
-.footer__text{
-	overflow: hidden;
-	max-height: 70px;
-}
-.footer__text__link, .footer__text__link:active, .footer__text__link:hover{
-	color:#606060;
-	
-}
-.footer__big{
-    font-weight: bold;
+.footer__text {
+	overflow:       hidden;
+	max-height:     70px;
 }
 
-.ico__messagerie, .ico__badge, .ico__eval
-, .ico__messagerie_actif, .ico__badge_actif, .ico__eval_actif {
-	background-image: url("../images/sprites_solerni.png");
-	background-repeat: no-repeat;
-        height: 47px;
-	width: 47px;
-	margin: 10px auto;
+.footer__text__link,
+.footer__text__link:active,
+.footer__text__link:hover {
+    display:        inline-block;
+	color:          #606060;
+    margin-bottom:  3px;
 }
 
-.ico__messagerie{
+.footer__block__withImage .footer__text__content {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.ico__messagerie,
+.ico__badge, 
+.ico__eval,
+.ico__messagerie_actif,
+.ico__badge_actif,
+.ico__eval_actif {
+    display:            block;
+	background-image:   url("../images/sprites_solerni.png");
+	background-repeat:  no-repeat;
+    height:             47px;
+	width:              47px;
+	margin:             15px auto;
+}
+
+.ico__messagerie {
 	background-position: 0 -168px;
 }
-.ico__badge{
+.ico__badge {
 	background-position: 0 -215px;
 }
-.ico__eval{
+.ico__eval {
 	background-position: 0 -262px;
 }
-.ico__messagerie_actif{
+.ico__messagerie_actif {
 	background-position: -48px -168px;
 }
-.ico__badge_actif{
+.ico__badge_actif {
 	background-position: -48px -215px;
 }
-.ico__eval_actif{
+.ico__eval_actif {
 	background-position: -48px -262px;
 }
 
-.footer__link, .footer__link:hover, .footer__link:focus{
-	font-size: 15px;
-	color: #D90045;
-	display: block;
-	margin: 10px auto;
+.footer__link,
+.footer__link:hover,
+.footer__link:focus {
+	font-size:  15px;
+	color:      #D90045;
+	display:    block;
+	margin:     10px auto 15px;
+}
+
+.footer__text__content {
+    
 }
 
 /* BLOC MES MOOCS DESKTOP */
 .slrn-content-main-title {
     margin-top:     45px;
     margin-bottom:  25px;
+    color:          #333;
 }
 
 .slrn-content-secondary-title {
     margin: 0;
+    color:  #333;
 }
 
 .dsk__my_moocs_header {
@@ -1210,8 +1231,6 @@ input[type="file"] { height: auto; }
 
 /* RESOURCE THUMBNAILS */
 
-.slrn-resource-manager-main { margin-top: 40px; }
-
 .slrn-resource-manager-main .nodes .node-thumbnail { 
     width: 150px;
     margin: 1em 0 0 1.5em;
@@ -1317,37 +1336,45 @@ input[type="file"] { height: auto; }
 }
 
 .slrn-my_badges-list-wrapper {
-    border-top:     1px solid #EEEEEF;
-    padding-top:    25px;
-}
-
-.slrn-my_badges-list-wrapper {
+    border-top:         1px solid #EEEEEF;
+    padding-top:        25px;
     padding-left:       0;
     list-type-position: inside;
 }
 
+.slrn-my_badges-list {
+    padding-bottom: 25px;
+    border-bottom:  1px solid #EEEEEF;
+    margin-bottom:  50px;
+}
+
+.slrn-my_badges-list:last-of-type {
+    border-bottom:  0;
+}
+
 .slrn-my_badges-list__item {
-    background-color: #EEEEEF;
-    padding: 1em;
-    display: block;
-    overflow: hidden;
-    margin-bottom: 2em;
+    background-color:   #EEEEEF;
+    padding:            20px;
+    display:            block;
+    overflow:           hidden;
+    margin-bottom:      25px;
 }
 
 .slrn-my_badges-list__item__image {
-    width: 120px;
-    height: auto;
-    float: left;
+    width:  100px;
+    height: 100px;
+    float:  left;
 }
 
 .slrn-my_badges-list__body {
-    margin-left: 150px;
+    margin-left: 140px;
 }
 
 .slrn-my_badges-list__item__title {
-    font-size: 1.5em;
-    margin: 0 0 .5em 0;
-    font-weight: bold;
+    font-size:      1.3em;
+    margin:         0 0 .5em 0;
+    font-weight:    bold;
+    color: #333;
 }
 
 .slrn-my_badges-list__content a {
@@ -1390,12 +1417,22 @@ input[type="file"] { height: auto; }
 }
 
 .slrn-my_badges-list__content--my_evals {
-    float: left;
-    line-height: 1.5;
-    margin: -.5em 0 0 0;
-    padding-top: .5em;
+    font-size:      12px;     
+    float:          left;
+    text-transform: uppercase;
+    line-height:    32px;
 }
-.chromeframe{
+
+.slrn-my_badges-list__content--my_evals::before {
+    content:        "";
+    width:          32px;
+    height:         32px;
+    background:     transparent url(../images/sprites_solerni.png) no-repeat 0 -5px;
+    float:          left;
+    margin-right:   1em;
+}
+
+.chromeframe {
     display: block;
     background-color: #ff266b;
     color: #FFF;
@@ -1406,16 +1443,18 @@ input[type="file"] { height: auto; }
     top: 0;
     height:30px;
 }
-.chromeframe a{
+.chromeframe a {
     color:#FFF;
     text-decoration: underline;
 }
 
 
 .ressource-breadcrumb {
-    padding: 0;
-    margin-bottom: 1em;
-    background-color: transparent;
+    padding:            0;
+    margin-bottom:      1em;
+    background-color:   transparent;
+    position:           relative;
+    top:                1em;
 }
 
 .ressource-breadcrumb li{

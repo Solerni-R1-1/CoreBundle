@@ -138,7 +138,7 @@
                         {% set acceptedTermsClasses = RegularClasses %}
                     {% endif %}
                     {% set acceptedTermsInvalidMsg %}{{ 'cgu_terms_invalid'|trans({}, 'platform') }}{% endset %}
-                    <span class="slrn-checkbox-label"><label class="slrn-checkbox-label--cgu" for="profile_form_accepted_terms">{{ 'cgu_terms_label_partial'|trans({}, 'platform') }}</label> <a class="js-open" href="{{ path( 'solerni_static_page', { 'name': 'static_cgu' } ) }}">{{ 'cgu_terms_link'|trans({}, 'platform') }}</a></span>
+                    <span class="slrn-checkbox-label"><label class="slrn-checkbox-label--cgu" for="profile_form_accepted_terms">{{ 'cgu_terms_label_partial'|trans({}, 'platform') }}</label> <a class="js-open" href="{{ path( 'solerni_static_page', { 'name': 'cms_cgu' } ) }}">{{ 'cgu_terms_link'|trans({}, 'platform') }}</a></span>
                     {{ form_widget( form.accepted_terms, {'attr': { 
                                                             'class' : acceptedTermsClasses, 
                                                             'data-validation': 'required',

@@ -20,13 +20,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class BadgeController extends Controller
 {
+    /*
+     * Returns or render (depending of needEcho) lists of badges related to resource_types
+     */
     public function myWorkspaceBadgeAction(
-            AbstractWorkspace $workspace, 
-            User $loggedUser, 
-            $badgePage, 
-            $resourceType = 'all', 
-            $resourceId = null, 
-            $needEcho = true 
+            AbstractWorkspace $workspace,
+            User $loggedUser,
+            $badgePage,
+            $resourceType = 'all',
+            $resourceId = null,
+            $needEcho = true
     ) {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
@@ -253,7 +256,7 @@ class BadgeController extends Controller
         // get all badges associated to dropzone for each session subscribed
         foreach( $user->getMoocSessions() as $session ) {
             $workspace = $session->getMooc()->getWorkspace();
-            $WorkspacesBadgeList[] = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false);
+            $WorkspacesBadgeList[] = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
         }
         
         return $this->render(

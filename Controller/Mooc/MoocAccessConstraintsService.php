@@ -34,12 +34,13 @@ class MoocAccessConstraintsService extends Controller
            
             foreach ( $constraints as $constraint ) {
                 
-                // Store current users of the contraint to check before output if someone was erased
-                foreach( $constraint->getSessionsByUsers() as $sessionByUser ) {
-                    $beforeUser = $sessionByUser->getUser();
-                    $constraintOriginalUsers[$constraint->getId()][$beforeUser->getId()] = $beforeUser;
-                }
-
+            	if ($constraint->getSessionsByUsers() != NULL) {
+	                // Store current users of the contraint to check before output if someone was erased
+	                foreach( $constraint->getSessionsByUsers() as $sessionByUser ) {
+	                    $beforeUser = $sessionByUser->getUser();
+	                    $constraintOriginalUsers[$constraint->getId()][$beforeUser->getId()] = $beforeUser;
+	                }
+            	}
                 $this->getLogger()->info("**** Case entity is Constraint : clean rules for constraint ID " . $constraint->getId()
                         . " and user n°" . ($user == null ? '(any)' : $user->getId()));
                 //delete for user_id AND constraintsID
