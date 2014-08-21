@@ -743,6 +743,10 @@ class MessageController
             }
         }
 
+        if($message->getParent() != null){
+            return $this->checkAccess($message->getParent(), $user);
+        }
+
         throw new AccessDeniedException("This isn't your message");
     }
 }
