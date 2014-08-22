@@ -37,15 +37,15 @@ class MoocAccessConstraintsListener extends ContainerAware
             $service = $this->container->get('orange.moocaccesscontraints_service');
             $service->processUpgrade(array(), $entity);
         }
-        if ($entity instanceof MoocSession) {
-            $constraints = array();
-            $accessContraints = $entity->getMooc()->getAccessConstraints();
-            if (!empty($accessContraints)) {
-                $constraints = $accessContraints->toArray();
-            }
-            $service = $this->container->get('orange.moocaccesscontraints_service');
-            $service->processUpgrade($constraints);
-        }
+        //if ($entity instanceof MoocSession) {
+//             $constraints = array();
+//             $accessContraints = $entity->getMooc()->getAccessConstraints();
+//             if (!empty($accessContraints)) {
+//                 $constraints = $accessContraints->toArray();
+//             }
+//             $service = $this->container->get('orange.moocaccesscontraints_service');
+//             $service->processUpgrade($constraints);
+        //}
     }
 
     public function preRemove(LifecycleEventArgs $args)

@@ -245,6 +245,16 @@ class WorkspaceManager
     {
         $this->om->persist($workspace);
         $this->om->flush();
+        
+        if ($workspace->getMooc() != null) {
+        	$constraints = array();
+        	$accessContraints = $workspace->getMooc()->getAccessConstraints();
+        	if (!empty($accessContraints)) {
+        		$constraints = $accessContraints->toArray();
+        	}
+        	$service = $this->container->get('orange.moocaccesscontraints_service');
+        	$service->processUpgrade($constraints);
+        }
     }
 
     /**
