@@ -231,6 +231,7 @@ class AuthenticationController
                 'error' => $this->translator->trans('url_invalid', array(), 'platform'),
             );
         }
+        die("#".count($user));
 
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $currentTime = time();
@@ -266,6 +267,7 @@ class AuthenticationController
             $data = $form->getData();
             $plainPassword = $data->getPlainPassword();
             $user->setPlainPassword($plainPassword);
+            $user->setResetPasswordHash(null);
             $this->om->persist($user);
             $this->om->flush();
             $this->request->getSession()
