@@ -73,12 +73,18 @@ class SolerniExtension extends \Twig_Extension
      */
     public function solerniCompareLoginRoute( $currentItemRoute )
     {
-        if ( strpos( $_SERVER['REQUEST_URI'], $currentItemRoute ) === false )
-        {
-            return false;
-        } else {
-            return true;
+        if ( is_string( $currentItemRoute ) ) {
+            $currentItemRoute = str_split( $currentItemRoute, 99 );
         }
+         
+        foreach( $currentItemRoute as $route ) {
+            if ( strpos( $_SERVER['REQUEST_URI'], $route ) !== false ) {
+                return true;
+            }
+        }
+        
+        return false;
+        
     }
     
     /*
