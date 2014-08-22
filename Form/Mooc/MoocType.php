@@ -85,11 +85,10 @@ class MoocType extends AbstractType
             ->add('hasSubtitle', 'checkbox', array('required' => false))
             ->add('prerequisites','tinymce', array('required' => false))
             ->add('teamDescription','tinymce',array('required' => false))
-            ->add('hasFacebookShare', 'checkbox', array('required' => false))
-            ->add('hasTweeterShare', 'checkbox', array('required' => false))
-            ->add('hasGplusShare', 'checkbox', array('required' => false))
-            ->add('hasLinkedinShare', 'checkbox', array('required' => false))
-            ->add('hasLinkedinShare', 'checkbox', array('required' => false))
+            ->add('hasFacebookShare', 'checkbox', array('required' => false, 'read_only' => true, 'disabled' => true))
+            ->add('hasTweeterShare', 'checkbox', array('required' => false, 'read_only' => true, 'disabled' => true))
+            ->add('hasGplusShare', 'checkbox', array('required' => false, 'read_only' => true, 'disabled' => true))
+            ->add('hasLinkedinShare', 'checkbox', array('required' => false, 'read_only' => true, 'disabled' => true))
             ->add('lesson', 'entity', array( 
                     'required'      => false,
                     'property'      => 'name',

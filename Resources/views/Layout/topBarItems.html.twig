@@ -21,7 +21,7 @@
                 {{ params.dropdown | raw }}
             </ul>
         {% endif %}
-        {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) is not empty %}<span class="slrn-item__marqueur"></span>{% endif %}
+        {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) %}<span class="slrn-item__marqueur"></span>{% endif %}
     </li>
 {% endmacro %}
     
@@ -49,14 +49,13 @@
             'marqueur': true, 
             'route': '/catalogue', 
             'css':'slrn-topbar-item' }) }}
-
     {% endblock %}
         
     {% block rightSide %}
         {% import _self as topbar %}
     
         {# DISPLAY LINK TO DASHBOARD & MESSAGES AND NUMBER OF #}
-        {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':'desktop/tool/open/home', 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
+        {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':['desktop/tool/open/home', 'mes_moocs', 'profile/badge', 'mes_evaluations', 'workspaces/' ~ app.user.getPersonalWorkspace().getId() ~ '/open/tool/resource_manager', 'message'], 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
         {% if countUnreadMessages == 0 %}
             {% set countUnreadMessages = '' %}
             {% set messagesTitle = 'no_message' | trans({'%count%': countUnreadMessages}, 'platform') %}

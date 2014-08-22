@@ -256,7 +256,16 @@ class BadgeController extends Controller
         // get all badges associated to dropzone for each session subscribed
         foreach( $user->getMoocSessions() as $session ) {
             $workspace = $session->getMooc()->getWorkspace();
-            $WorkspacesBadgeList[] = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
+            $WorkspacesBadges = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
+            foreach ( $WorkspacesBadges['badgePager'] as $WorkspacesBadgePager ) {
+                foreach( $WorkspacesBadgePager as $WorkspacesBadge ) {
+                    // Only return returns with inprogress badges
+                    if ( $WorkspacesBadge == 'inprogress' ) {
+                         $WorkspacesBadgeList[] = $WorkspacesBadges;
+                         break 2;
+                    }
+                }
+            }
         }
         
         return $this->render(

@@ -980,7 +980,7 @@ running: En cours
 to_come: A venir
 over: Terminé
 no_moocs_owner: Pas de Mooc disponible pour cette entreprise
-no_evals_yet: <p>Vous n'avez pas encore effectué d'évaluations.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
+no_evals_yet: <p>Vous n'avez pas d'évaluations en cours.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
 
 new message: Nouveau message
 add_destinataires : Ajouter le(s) destinataire(s)

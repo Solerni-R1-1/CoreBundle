@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * MoocSessionRepository
@@ -44,5 +45,28 @@ class SessionsByUsersRepository extends EntityRepository
 		$numDeleted = $query->execute();
 
 		return $numDeleted;
+	}
+
+	/**
+	 *
+	 *
+	 * @param AbstractWorkspace
+	 *
+	 * @return integer number of entity deleted
+	 *
+	 **/
+	public function deleteAllByWorkspace(AbstractWorkspace $workspace) {
+		$qb = $this->_em->createQueryBuilder();
+		$qb->delete('ClarolineCoreBundle:Mooc\SessionsByUsers', 's');
+		
+		$sessionsIds[] = array();
+		foreach ($workspace->getMooc()->getMoocSessions() as $session) {
+			$sessionsIds[] = $session->getId();
+		}
+		
+		
+		$qb->where('s.moocSession IN (:sessionsIds)');
+		$qb->setParameter('sessionsIds', $sessionsIds);
+		$qb->getQuery()->execute();
 	}
 }

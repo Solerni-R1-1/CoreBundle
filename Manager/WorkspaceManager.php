@@ -245,6 +245,16 @@ class WorkspaceManager
     {
         $this->om->persist($workspace);
         $this->om->flush();
+        
+        if ($workspace->getMooc() != null) {
+        	$constraints = array();
+        	$accessContraints = $workspace->getMooc()->getAccessConstraints();
+        	if (!empty($accessContraints)) {
+        		$constraints = $accessContraints->toArray();
+        	}
+        	$service = $this->container->get('orange.moocaccesscontraints_service');
+        	$service->processUpgrade($constraints);
+        }
     }
 
     /**
@@ -257,6 +267,8 @@ class WorkspaceManager
     	// Delete Mooc before resources
     	$mooc = $workspace->getMooc();
     	if ($mooc != null) {
+	    	// Delete all SessionByUser tuple associated to the sessions of this workspace
+	    	$this->om->getRepository("ClarolineCoreBundle:Mooc\SessionsByUsers")->deleteAllByWorkspace($workspace);
     		$mooc->setLesson(null);
     		$sessions = $mooc->getMoocSessions();
     		if ($sessions != null) {
