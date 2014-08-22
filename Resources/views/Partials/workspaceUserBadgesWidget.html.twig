@@ -1,3 +1,4 @@
+{# widget with the number of skills/knowledge badges on the left column when we are in a mooc #}
 {% macro badgeItem( allBadges, userBadges ) %}
     {% for itemBadge in allBadges %}
          {% if itemBadge.id in userBadges %}

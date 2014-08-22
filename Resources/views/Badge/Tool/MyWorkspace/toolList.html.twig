@@ -25,33 +25,17 @@
 {% endblock %}
 
 {% block section_body %}
-    {# change layout depending on context #}
-    {% if app.request.get('myBadgesFilter') == 'my_evals' %}
-        <div class="panel-heading">
-            <a class="slrn-read-faq pink_link" href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">{{ 'get_more_badges'|trans({}, 'platform') }}</a>
-            <h3 class="slrn-panel-title">
-                {{ 'my_evals' | trans({}, 'platform') }}
-            </h3>
-        </div>
-        {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', {'workspace': workspace, 'loggedUser': user, 'badgePage': 1, 'resourceType' : 'icap_dropzone', 'myBadgesFilter': 'my_evals' })) }}
-    {% else %}
-        <div class="panel-heading">
-            <a class="slrn-read-faq pink_link" href="{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}">{{ 'more_about_badges'|trans({}, 'platform') }}</a>
-            <h3 class="slrn-panel-title">
-                {{ 'competence_badges' | trans({}, 'platform') }}
-            </h3>
-        </div>
-        <hr>
-        <div class="panel-body">
-            <h4 class="slrn-subtitle">Pour obtenir un badge de compétence vous devez</h4>
-            <ol class="slrn-my-badges-o-list">
-                <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Présenter des dossiers d'évaluation.</span> Les travaux attendus sont décrits ci-dessous.</li>
-                <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Evaluer les dossiers d'évaluation</span>  de trois autres participants préparant les mêmes badges que vous.</li>
-                <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Obtenir une évaluation</span> de vos travaux de <span class="slrn-bold">12/20</span>  au moins.</li>
-                <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Obtenir au moins une note de 10/20 aux quizz</span> des séquences associées au(x) badge(s) que vous préparez.</li>
-            </ol>
-        </div>
-        <hr>
-        {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', {'workspace': workspace, 'loggedUser': user, 'badgePage': 1, 'resourceType' : 'icap_dropzone' })) }}
-    {% endif %}    
+    <div class="panel-body">
+        <h4 class="slrn-subtitle">Pour obtenir un badge de compétence vous devez</h4>
+        <ol class="slrn-my-badges-o-list">
+            <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Présenter des dossiers d'évaluation.</span> Les travaux attendus sont décrits ci-dessous.</li>
+            <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Evaluer les dossiers d'évaluation</span>  de trois autres participants préparant les mêmes badges que vous.</li>
+            <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Obtenir une évaluation</span> de vos travaux de <span class="slrn-bold">12/20</span>  au moins.</li>
+            <li class="slrn-my-badges-o-list__item"><span class="slrn-bold">Obtenir au moins une note de 10/20 aux quizz</span> des séquences associées au(x) badge(s) que vous préparez.</li>
+        </ol>
+    </div>
+    <hr>
+    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', 
+        {'workspace': workspace, 'loggedUser': user, 'badgePage': 1, 'resourceType' : 'icap_dropzone' })) 
+    }}  
 {% endblock %}

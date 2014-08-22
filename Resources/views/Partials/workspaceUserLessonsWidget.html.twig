@@ -1,3 +1,4 @@
+{# widget with the list of the chapter inside a lesson in a mooc (chemin de fer / railroad) #}
 {% macro lessonItem( lesson, chapter ) %}
     {% set itemClassDone = '' %}
     {% if chapter.done %}{% set itemClassDone = ' chapter-done' %}{%endif %}

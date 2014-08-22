@@ -10,6 +10,24 @@
 (function () {
     'use strict';
 
+    //If errors
+    if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
+
+        var css = '';
+        if($('#message_form_to').offsetParent().hasClass( "col-md-9" )){
+            css = "col-md-9";
+        } else {
+            css = "col-md-6";
+        }
+        $('#message_form_to').offsetParent().after('<div id="message_form_to_error" class="' + css + '">' + 
+            '<div class="help-block field-error">' + 
+            $('#message_form_to').next().html()
+            + '</div></div>');
+        ;
+
+        $('#message_form_to').next().remove();
+    }
+
     $('#message_form_to').offsetParent().html(
         '<div class="input-group">' +
             $('#message_form_to').offsetParent().html() +
@@ -20,6 +38,9 @@
             '</span>' +
         '</div>'
     );
+    
+
+    
 
     var currentType = 'user';
 
