@@ -1068,7 +1068,7 @@ body.dsk .alert { display: none; }
     list-style: none;
     text-align: justify;
     padding:    0;
-    margin: 20px 0;
+    margin:     20px 0;
 }
 
 .my-moocs-nav::after {

@@ -2,7 +2,7 @@
 
 {% if sessions|length == 0 %}
     <p>Vous n'êtes inscrit à aucun mooc pour l'instant</p>
-    <p><a class="pink_link" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false' }}">Consultez le catalogue</a> proposé par Solerni et sélectionnez le mooc de votre choix.</p>
+    <p><a class="pink_link" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}">Consultez le catalogue</a> proposé par Solerni et sélectionnez le mooc de votre choix.</p>
 {% else %}
 
     {% if sessionComponentLayout == 'slider-small' %}
