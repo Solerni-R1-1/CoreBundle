@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>Rappel de vos identifiants Solerni</title>
+    <title>Confirmation d’inscription au Mooc {{ session.getMooc().getTitle() }}</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
     
@@ -31,16 +31,10 @@
 
 Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Nous vous remercions pour votre inscription sur le site <strong>Solerni</strong>.<br/>
+Nous vous confirmons votre inscription au Mooc {{ session.getMooc().getTitle() }} qui débutera  le {{ session.getStartDate()|date('d/m/Y') }}{% if session.getMooc().getDuration() is not empty %} pour une durée de {{ session.getMooc().getDuration() }} semaines{% endif %}.<br/>
 <br/>
-Voici un rappel de vos identifiants de connexion pour acc&eacute;der &agrave; votre compte :<br/>
-<ul>
-	<li>Identifiant : {{user.getMail()}}</li>
-	<li>Mot de passe : vous seul le connaissez</li>
-</ul>
-Vous pouvez d&egrave;s &agrave; pr&eacute;sent acc&eacute;der &agrave; votre compte en cliquant <a href='{{ url('claro_security_login') }}'>ici</a>.<br/>
-<br/>
-A tr&egrave;s vite sur Solerni, votre nouvelle plateforme de Moocs francophone collaborative.<br/>
+Vous recevrez très prochainement un mail de l’équipe pédagogique vous informant du déroulement du Mooc.  
+En attendant, nous vous remercions pour votre inscription et vous souhaitons beaucoup de  plaisir à suivre ce nouveau parcours d’apprentissage sur Solerni, votre plateforme de Moocs francophone collaborative.
 <br/>
 <br/>
 <strong>L'&eacute;quipe de Solerni.org</strong><br/>

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Repository\Mooc\MoocRepository;
 use Claroline\CoreBundle\Repository\Mooc\MoocSessionRepository;
+use Claroline\CoreBundle\Manager\MailManager;
 use Icap\LessonBundle\Entity\Lesson;
 use Claroline\CoreBundle\Controller\SolerniController;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -41,6 +42,7 @@ class MoocController extends Controller
     private $security;
     private $router;
     private $workspaceManager;
+    private $mailManager;
     
     
     /**
@@ -48,19 +50,22 @@ class MoocController extends Controller
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "translator"         = @DI\Inject("translator"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct( 
             SecurityContextInterface $security, 
             UrlGeneratorInterface $router, 
             TranslatorInterface $translator,
-            WorkspaceManager $workspaceManager
+            WorkspaceManager $workspaceManager,
+            MailManager $mailManager
         ) {
         $this->translator = $translator;
         $this->security = $security;
         $this->router = $router;
         $this->workspaceManager = $workspaceManager;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -253,7 +258,13 @@ class MoocController extends Controller
                 $moocSession->setUsers( $users );
                 $this->getDoctrine()->getManager()->persist($moocSession);
                 $this->getDoctrine()->getManager()->flush();
+
+                //Send an email
+                if ($this->mailManager->isMailerAvailable()) {
+                    $this->mailManager->sendInscriptionMoocMessage($user, $moocSession);
+                }
             }
+
             /* redirect to lesson default page */
             $route = $this->router->generate('mooc_view_session', array ( 
                 'moocId' => $moocSession->getMooc()->getId(), 

@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\CacheWarmerInterface;
@@ -83,7 +84,7 @@ class MailManager
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
 
-        $subject = 'Réinitialisation de votre mot de passe';
+        $subject = 'Reinitialisation de votre mot de passe';
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
         );
@@ -117,6 +118,21 @@ class MailManager
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailValidationConfirmee.html.twig',  array('user' => $user));
 
+
+        return $this->send($subject, $body, array($user));
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\Mooc\MoocSession $session
+     *
+     * @return boolean
+     */
+    public function sendInscriptionMoocMessage(User $user, MoocSession $session){
+
+        $subject = 'Confirmation d’inscription au Mooc '.$session->getMooc()->getTitle();
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Registration:emailInscriptionMooc.html.twig',  array('user' => $user, 'session' => $session));
 
         return $this->send($subject, $body, array($user));
     }
