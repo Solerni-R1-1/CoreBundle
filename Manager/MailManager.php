@@ -82,8 +82,8 @@ class MailManager
     {
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
-        $subject = $this->translator->trans('resetting_your_password', array(), 'platform');
 
+        $subject = 'Réinitialisation de votre mot de passe';
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
         );
