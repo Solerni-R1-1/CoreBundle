@@ -10,21 +10,19 @@
 
 {% block title %} {{ mooc.getTitle() }} {% endblock %}
     
-{% block bodyClasses %}{% endblock %}
+{% block bodyClasses %}body-without-subnavbar{% endblock %}
 
 {% block subnavbar %}
-<section class="slrn-header slrn-header--slim slrn-header--mooc">
-	<div class="row slrn-mooc__header_content">
-		<div class="col-xs-3 col-md-3 slrn-mooc__header__left__logo">
-                    {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
-                    <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,100)}}"  alt="{{ mooc.getTitle() }}">
-                    {% endif %}
+<section class="slrn-header slrn-header--mooc">
+	<div class="row slrn-header__column">
+		<div class="col-xs-3 col-md-3 slrn-header__logo">
+            {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
+                <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,100)}}"  alt="{{ mooc.getTitle() }}">
+            {% endif %}
 		</div>
-		<div class="col-xs-9 col-md-9 v__right">
+		<div class="col-xs-9 col-md-9 slrn-header__description">
 			<h1>{{ mooc.getTitle() }}</h1>
-            {% for session in sessions %}
-                {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
-            {% endfor %}
+            {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
 		</div>
 	</div>
 </section>
@@ -42,7 +40,6 @@
 
 		<ul class='essentiels'>
 
-            {% for session in sessions %}
                 {# DATE #}
                 {% if session is not null and 
                     (session.getStartDate() is not empty or session.getEndDate() is not empty) %}
@@ -59,7 +56,6 @@
                     <i class='essentiels__date'></i> Aucune date de prévue
                 </li>
                 {% endif%}
-            {% endfor %}
                 
 			{# DUREE #}
 			{% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}
@@ -106,9 +102,7 @@
 			{% endif %}
 		</ul>
 		<center>
-            {% for session in sessions %}
-                <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
-            {% endfor %}
+            <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
         </center>
 	</div>
 	
@@ -170,9 +164,7 @@
  	{{ mooc.getAboutPageDescription() | raw }}
  </div>
  <div class="col-xs-9 col-md-9 contentBlock text-center">
-    {% for session in sessions %}
-        {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
-    {% endfor %}
+    {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
  </div>
 </section>
 {% endblock %}

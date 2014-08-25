@@ -16,20 +16,18 @@
 
 {% block subnavbar %}
     <section class="slrn-header slrn-header--slim slrn-header--owner">
-        <div class="row slrn-owner__header">
+        <div class="row slrn-header__column">
             {% if owner.getDressingWebPath() %}
                 <img class="header-background-img" src="{{ image(owner.getDressingWebPath()).zoomCrop(966,216) }}" alt="{{ owner.getName() }}">
             {% endif %}
-            <div class="col-xs-3 col-md-3 slrn-owner__logo">
+            <div class="col-xs-3 col-md-3 slrn-header__logo">
                 {% if owner.getLogoWebPath() %}
                     <img class="header-logo-img" src="{{ image(owner.getLogoWebPath()).scaleResize(null,100) }}"  alt="{{ owner.getName() }}">
                 {% endif %}
             </div>
-            <div class="col-xs-9 col-md-9 slrn-owner__content">
-                    <div class="slrn-mooc__header__description">
-                        <h1>{{ owner.getName() }}</h1>
-                        <div>{{ owner.getDescription() }}</div>
-                    </div>
+            <div class="col-xs-9 col-md-9 slrn-header__description">
+                <h1>{{ owner.getName() }}</h1>
+                <div>{{ owner.getDescription() }}</div>
             </div>
         </div>
     </section>

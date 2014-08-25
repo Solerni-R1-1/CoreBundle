@@ -84,13 +84,13 @@ class MoocController extends Controller
             return $this->inner404("MoocId invalid : " . $mooc->getId() );
         }
 
-        $sessions = $mooc->getMoocSessions();
+        $session = $this->getActiveSessionFromWorkspace( $mooc->getWorkspace() );
 
         return $this->render(
             'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
             array(
                 'mooc'      => $mooc,
-                'sessions'  => $sessions,
+                'session'   => $session,
                 'user'      => $user
             )
         );
@@ -340,7 +340,7 @@ class MoocController extends Controller
         );
         
         // Check Session
-        $session = $this->getSessionFromWorkspace($workspace);
+        $session = $this->getActiveSessionFromWorkspace($workspace);
         
         if ( $session ) {
             //get the mooc lesson
@@ -510,7 +510,7 @@ class MoocController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
-            'session' => $this->getSessionFromWorkspace($workspace),
+            'session' => $this->getActiveSessionFromWorkspace($workspace),
             'progression' => $progression
             )
         );
@@ -525,7 +525,7 @@ class MoocController extends Controller
         $doctrine = $this->getDoctrine();
         $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
         $lesson = null;
-        $session = $this->getSessionFromWorkspace($workspace);
+        $session = $this->getActiveSessionFromWorkspace($workspace);
         
         if ( $session ) {
             $lessonNode = $session->getMooc()->getLesson();
@@ -540,7 +540,7 @@ class MoocController extends Controller
      * Get the session from a workspace
      * Return MoocSession Entity or null
      */
-    private function getSessionFromWorkspace( $workspace ) {
+    private function getActiveSessionFromWorkspace( $workspace ) {
         
         $session = null;
         if ( $workspace->isMooc() ) {

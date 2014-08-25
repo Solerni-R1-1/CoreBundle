@@ -1,31 +1,11 @@
 
-/* Mooc Product page */
 
-.slrn-mooc__header {
-    height:         155px;
-	border-bottom:  1px solid #000;
-	padding:        15px 0;
-}
-
-.slrn-mooc__header__left{
-	width: 966px;
-	margin:0 auto;
-}
-.slrn-mooc__header__left__logo{
-	text-align: center;
-}
-.slrn-mooc__headern__right{
-	padding-left:35px;
-}
-
-/************************/
-
-.sider{
+.sider {
 	background-color: #EEEEEF;
 	padding: 0;
 }
 
-.sider h2{
+.sider h2 {
 	background-color: #4B667C;
 	color: #FFF;
 	pointer-events: none;
