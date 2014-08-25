@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Mooc
 {
 	const DEFAULT_IMAGE_PATH = "../../default-images/logo-solerni-color.png";
+        const DEFAULT_CERTIFICATION_TYPE = "badge";
     /**
      * @var integer
      *
@@ -102,7 +103,7 @@ class Mooc
      * 
      * @ORM\Column(name="certification_type", type="string", length=40)
      */
-    private $certificationType;
+    private $certificationType = self::DEFAULT_CERTIFICATION_TYPE;
     
     
     /**
@@ -110,7 +111,7 @@ class Mooc
      * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
      * @ORM\Column(name="cost", type="integer", nullable=true)
      */
-    private $cost;
+    private $cost = 0;
 
     /**
      * @var string
