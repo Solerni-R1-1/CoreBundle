@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Mooc
 {
 	const DEFAULT_IMAGE_PATH = "../../default-images/logo-solerni-color.png";
+        const DEFAULT_CERTIFICATION_TYPE = "badge";
     /**
      * @var integer
      *
@@ -98,11 +99,19 @@ class Mooc
     private $weeklyTime;
 
     /**
+     * @var string
+     * 
+     * @ORM\Column(name="certification_type", type="string", length=40)
+     */
+    private $certificationType = self::DEFAULT_CERTIFICATION_TYPE;
+    
+    
+    /**
      * @var integer
      * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
      * @ORM\Column(name="cost", type="integer", nullable=true)
      */
-    private $cost;
+    private $cost = 0;
 
     /**
      * @var string
@@ -443,6 +452,20 @@ class Mooc
     {
         return $this->cost;
     }
+    
+    /*
+     * Check if the is gratis
+     * 
+     * @return boolean
+     */
+    public function isGratis() 
+    {
+        if ($this->getCost() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Set language
@@ -700,7 +723,18 @@ class Mooc
         return $this->file;
     }
     
-    public function getAboutPageDescription() {
+    
+    public function getCertificationType()
+    {
+        return $this->certificationType;
+    }
+
+    public function setCertificationType($certificationType)
+    {
+        $this->certificationType = $certificationType;
+    }
+
+        public function getAboutPageDescription() {
         return $this->aboutPageDescription;
     }
 
@@ -739,6 +773,9 @@ class Mooc
         $this->accessConstraints = $accessContraints;
     }
 
+    public function setGratis($gratis) {
+        
+    }
             
     /* FILE UPLOAD METHODS */
     /**

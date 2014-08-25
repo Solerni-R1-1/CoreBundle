@@ -1,24 +1,20 @@
-/** OVERRIDE **/
-.subnavbar-fixed{
-	padding-top: 55px !important;
-}
-.content{
-	padding: 0 0 15px !important;
+
+/* Mooc Product page */
+
+.slrn-mooc__header {
+    height:         155px;
+	border-bottom:  1px solid #000;
+	padding:        15px 0;
 }
 
-/** END OVERRIDE **/
-.mooc__section{
-	border-bottom: 1px solid #000;
-	padding: 15px 0;
-}
-.mooc__section__left{
+.slrn-mooc__header__left{
 	width: 966px;
 	margin:0 auto;
 }
-.mooc__section__left__logo{
+.slrn-mooc__header__left__logo{
 	text-align: center;
 }
-.mooc__section__right{
+.slrn-mooc__headern__right{
 	padding-left:35px;
 }
 

@@ -64,6 +64,14 @@ class MoocType extends AbstractType
                 ))
             ->add('duration', 'integer', array('required' => false, 'precision' => 0 ))
             ->add('weeklyTime', 'integer', array('required' => false, 'precision' => 0 ))
+            ->add('certificationType', 'choice', array(
+                    'choices' => array(
+                        'badge' => 'Badge',
+                        'attestation' => 'Attestation'
+                    ), 
+                    'required' => true
+                ))
+            ->add('gratis', 'checkbox', array( 'required' => false ) )
             ->add('cost', 'integer', array('required' => false))
             ->add('language', 'choice', array(
                     'choices' => array(
