@@ -231,8 +231,11 @@ class SolerniController extends Controller
                     $statusText = $translator->trans( 'last_badge', array(), 'platform');
                     $badgeTitle = $lastBadge->getName();
                     $subTitle = ( strlen ( $badgeTitle ) > 20 ) ? substr( $badgeTitle, 0, 15 ) . '...' : $badgeTitle;
-                    $badgeText = $lastBadge->getDescription();
-                    $subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
+                    if ( $lastBadge->getWorkspace()->getMooc() ) {
+                        $subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
+                    } else {
+                        $subText = $lastBadge->getWorkspace()->getName();
+                    }
                     $subUrl = $router->generate('claro_view_badge', array('slug' => $lastBadge->getSlug()));
                     // Renable Soft Deletable Filter
                     $doctrine->getManager()->getFilters()->enable('softdeleteable');
