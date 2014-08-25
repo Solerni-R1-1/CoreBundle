@@ -125,6 +125,32 @@ class UserManager
     }
 
     /**
+     * Send an email validation
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function sendEmailValidation($user){
+        if ($this->mailManager->isMailerAvailable()) {
+            $this->mailManager->sendValidationMessage($user);
+        }
+    }
+
+    /**
+     * Send an email post-validation
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function sendEmailValidationConfirmee($user){
+        if ($this->mailManager->isMailerAvailable()) {
+            $this->mailManager->sendValidationConfirmeeMessage($user);
+        }
+    }
+
+    /**
      * Rename a user.
      *
      * @param User $user

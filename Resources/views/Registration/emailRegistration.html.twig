@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>R&eacute;initialisation de votre mot de passe</title>
+    <title>Bienvenue sur Solerni</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
     
@@ -29,17 +29,32 @@
                                     <td>
 
 
-Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
+Bienvenue {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe. Si vous n'&ecirc;tes pas &agrave; l'origine de cette action, veuillez ignorer ce message. <br/>
+Nous sommes ravis de vous accueillir sur Solerni, votre nouvelle plateforme de Moocs francophone collaborative.<br/>
+<br/> 
+Plus que l’acquisition de connaissances, nous souhaitons que cette plateforme vous aide &agrave; d&eacute;velopper vos comp&eacute;tences. Nous pensons en effet qu’aujourd’hui, l’apprentissage ne peut plus se faire seul face &agrave; un professeur ou un formateur mais aussi ensemble, en r&eacute;seau. C'est &agrave; travers un parcours favorisant les &eacute;changes et les activit&eacute;s que vous d&eacute;velopperez vos comp&eacute;tences. Vous serez &agrave; tout moment accompagn&eacute;(e) par vos pairs mais aussi par des p&eacute;dagogues dont l’objectif est de faciliter vos apprentissages en stimulant le partage d’information et l'enrichissement mutuel.<br/>
 <br/>
-Votre pseudo est : {{user.getUsername()}}<br/>
+<strong>C’est parti, inscrivez-vous &agrave; un Mooc</strong><br/>
 <br/>
-<a href='{{ link }}'>Veuillez cliquer sur ce lien pour r&eacute;initialiser votre mot de passe</a><br/>
+Notre plateforme vient tout juste d’&ecirc;tre lanc&eacute;e et s’enrichira au fil des semaines de nouveaux Moocs aux contenus vari&eacute;s. <br/>
+<br/>
+Vous pouvez d’ores et d&eacute;j&agrave; consulter <a href='{{ url('solerni_catalogue') }}'>notre catalogue</a> et vous inscrire &agrave; l’un des Moocs disponibles aujourd’hui. Notre plateforme est ouverte et gratuite, les inscriptions sont donc illimit&eacute;es ! <br/>
+<br/>
+<strong>Restez en contact, restez connect&eacute;</strong> <br/>
+<br/>
+Pour &ecirc;tre au courant des nouveaut&eacute;s et des &eacute;v&egrave;nements sur Solerni, rejoignez nous sur Facebook et Twitter, sans oublier d’aller faire un tour sur notre Blog qui vous informera des actualit&eacute;s li&eacute;es  &agrave; l’univers de ces nouvelles m&eacute;thodes d’apprentissage sociales et collaboratives.<br/>
+<br/>
+<strong>Pour bien communiquer, remplissez votre profil</strong><br/>
+<br/>
+Et pour &ecirc;tre s&ucirc;r(e) de pouvoir &eacute;changer avec les autres apprenants et les p&eacute;dagogues, n’oubliez pas de remplir et de param&eacute;trer votre <a href='{{ url('claro_user_profile_edit',  { 'user': user.getId() } ) }}'>profil public</a>.<br/>
+<br/>
+Voil&agrave;, vous &ecirc;tes pr&ecirc;t(e) &agrave; pr&eacute;sent pour vous lancer avec nous dans l’aventure des Moocs collaboratifs.
+En esp&eacute;rant vous retrouver tr&egrave;s vite sur Solerni où nous vous souhaitons de vivre de nouvelles exp&eacute;riences enrichissantes !<br/>
 <br/>
 <br/>
-<strong>L'&eacute;quipe de Solerni.org</strong><br/>
-Apprendre c'est toujours mieux ensemble
+<strong>L’&eacute;quipe Solerni</strong><br/>
+Apprendre c’est toujours mieux ensemble<br/>
 <a href='https://www.solerni.org'>www.solerni.org</a><br/>
 
 

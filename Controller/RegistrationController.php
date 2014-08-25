@@ -135,9 +135,9 @@ class RegistrationController extends Controller
         $mail = $user->getMail();
 
         $log = $this->container->get('logger');
-        $log->error("Send mail with key {$key} to {$mail}");
+        $log->debug("Send mail with key {$key} to {$mail}");
 
-        $this->sendEmailValidation($user);
+        $this->userManager->sendEmailValidation($user);
 
         // But in the end it doesn't even matter
         return array('mail'=> $mail, 'hash' => $hash);
@@ -157,7 +157,7 @@ class RegistrationController extends Controller
      */
     public function validateUserFormAction($mail) {
         $log = $this->container->get('logger');
-        $log->error("Calling Formulaire manualy");
+        $log->debug("Calling Formulaire manualy");
 
         $request = $this->get('request');
         $account_validator_form = $request->request->get('account_validator_form');
@@ -167,10 +167,10 @@ class RegistrationController extends Controller
             $key = $account_validator_form['keyValidate'];           
         }
         
-        $log->error(" mail = {$mail} && key = {$key}");
+        $log->debug(" mail = {$mail} && key = {$key}");
 
         $msg = 'accountValidation_key_empty';
-        $log->error("Prepare Form Creation");
+        $log->debug("Prepare Form Creation");
 
         $user = new User();
         if(!empty($mail)){
@@ -208,7 +208,7 @@ class RegistrationController extends Controller
         $form = null;
         $log = $this->container->get('logger');
 
-        $log->error("Trying validation {$mail} with key {$key}");
+        $log->debug("Trying validation {$mail} with key {$key}");
         $em = $this->getDoctrine()->getManager();
         $userRepository = $em->getRepository('ClarolineCoreBundle:User');
         $users = $userRepository->findByMail($mail); // get user
@@ -221,7 +221,7 @@ class RegistrationController extends Controller
 
         if($userDb == null || $userDb->getIsValidate() || $userDb->getKeyValidate() !== $key){
 
-            $log->error("key {$key} not valid for mail {$mail}");
+            $log->debug("key {$key} not valid for mail {$mail}");
             $msg = 'accountValidation_key_ko';
 
 
@@ -243,11 +243,14 @@ class RegistrationController extends Controller
             $userDb->setIsValidate(true);
             $em->persist($userDb);
             $em->flush();
-            $log->error("Auto-validation {$mail} with success with key {$key}");
+            $log->debug("Auto-validation {$mail} with success with key {$key}");
 
             $token = new UsernamePasswordToken($userDb, null, 'main', $userDb->getRoles());
             $this->get('security.context')->setToken($token);
             $this->get('session')->set('_security_main',serialize($token));
+
+            //Send post-validation
+            $this->userManager->sendEmailValidationConfirmee($userDb);
             
         }
 
@@ -263,7 +266,7 @@ class RegistrationController extends Controller
                     );
     }
 
-
+/*
     private function sendEmailValidation(User $user){
         $message = \Swift_Message::newInstance()
             ->setSubject('Validez votre compte Solerni')
@@ -273,7 +276,7 @@ class RegistrationController extends Controller
                     array('user' => $user)))
         ;
         $this->get('mailer')->send($message);
-    }
+    }*/
 
 /************************ END ******************************/
 

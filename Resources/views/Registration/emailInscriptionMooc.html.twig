@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>R&eacute;initialisation de votre mot de passe</title>
+    <title>Confirmation d’inscription au Mooc {{ session.getMooc().getTitle() }}</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
     
@@ -31,11 +31,10 @@
 
 Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe. Si vous n'&ecirc;tes pas &agrave; l'origine de cette action, veuillez ignorer ce message. <br/>
+Nous vous confirmons votre inscription au Mooc {{ session.getMooc().getTitle() }} qui débutera  le {{ session.getStartDate()|date('d/m/Y') }}{% if session.getMooc().getDuration() is not empty %} pour une durée de {{ session.getMooc().getDuration() }} semaines{% endif %}.<br/>
 <br/>
-Votre pseudo est : {{user.getUsername()}}<br/>
-<br/>
-<a href='{{ link }}'>Veuillez cliquer sur ce lien pour r&eacute;initialiser votre mot de passe</a><br/>
+Vous recevrez très prochainement un mail de l’équipe pédagogique vous informant du déroulement du Mooc.  
+En attendant, nous vous remercions pour votre inscription et vous souhaitons beaucoup de  plaisir à suivre ce nouveau parcours d’apprentissage sur Solerni, votre plateforme de Moocs francophone collaborative.
 <br/>
 <br/>
 <strong>L'&eacute;quipe de Solerni.org</strong><br/>
