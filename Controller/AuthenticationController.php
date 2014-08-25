@@ -231,7 +231,6 @@ class AuthenticationController
                 'error' => $this->translator->trans('url_invalid', array(), 'platform'),
             );
         }
-        die("#".count($user));
 
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $currentTime = time();

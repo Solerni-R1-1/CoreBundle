@@ -18,7 +18,7 @@
         {% set workspace = session.getMooc().getWorkspace() %}
     {% endif %}
 {% endif %}
-{% block bodyClasses %}{% if workspace is defined and app.user.getPersonalWorkspace().getId() != workspace.getId() %}subnavbar-fixed{% endif %}{% endblock %}
+{% block bodyClasses %}{% if workspace is defined and app.user and app.user.getPersonalWorkspace().getId() != workspace.getId() %}subnavbar-fixed{% endif %}{% endblock %}
 
 {# WE DO NOT USE BREADCRUMB 
 {% block breadcrumb %}

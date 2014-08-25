@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>R&eacute;initialisation de votre mot de passe</title>
+    <title>Confirmation de votre adresse email sur Solerni</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
     
@@ -31,12 +31,15 @@
 
 Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe. Si vous n'&ecirc;tes pas &agrave; l'origine de cette action, veuillez ignorer ce message. <br/>
+Nous avons reçu une demande d'inscription de votre part avec votre adresse e-mail "{{user.getMail()}}".<br/>
 <br/>
-Votre pseudo est : {{user.getUsername()}}<br/>
+Afin de valider cette demande nous vous invitons &agrave; cliquer sur le lien suivant :<br/>
 <br/>
-<a href='{{ link }}'>Veuillez cliquer sur ce lien pour r&eacute;initialiser votre mot de passe</a><br/>
+<a href='{{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate} ) }}'>valider mon inscription</a><br/>
 <br/>
+Si le bouton ne fonctionne pas, copiez-collez le lien suivant dans la barre d'adresse de votre navigateur :  {{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate} ) }}<br/>
+<br/>
+
 <br/>
 <strong>L'&eacute;quipe de Solerni.org</strong><br/>
 Apprendre c'est toujours mieux ensemble

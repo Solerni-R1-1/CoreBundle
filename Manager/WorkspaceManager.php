@@ -246,6 +246,9 @@ class WorkspaceManager
         $this->om->persist($workspace);
         $this->om->flush();
         
+        // Code moved from postUpdateListener.
+        // http://docs.doctrine-project.org/en/2.0.x/reference/events.html#postupdate-postremove-postpersist
+        // can't modify entity or entity relations in postUpdate of this entity...
         if ($workspace->getMooc() != null) {
         	$constraints = array();
         	$accessContraints = $workspace->getMooc()->getAccessConstraints();
@@ -267,6 +270,8 @@ class WorkspaceManager
     	// Delete Mooc before resources
     	$mooc = $workspace->getMooc();
     	if ($mooc != null) {
+	    	// Delete all SessionByUser tuple associated to the sessions of this workspace
+	    	$this->om->getRepository("ClarolineCoreBundle:Mooc\SessionsByUsers")->deleteAllByWorkspace($workspace);
     		$mooc->setLesson(null);
     		$sessions = $mooc->getMoocSessions();
     		if ($sessions != null) {

@@ -711,7 +711,7 @@ up: Monter
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
-url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
+url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
@@ -888,7 +888,7 @@ claroline_corebundle_mooc_aboutPageDescription: 'Page En savoir +'
 claroline_corebundle_mooc_file: 'Image d''illustration'
 claroline_corebundle_mooc_illustrationPath: 'Illustration du mooc'
 claroline_corebundle_mooc_postEndAction: 'Après fermeture'
-claroline_corebundle_mooc_duration: 'Durée'
+claroline_corebundle_mooc_duration: 'Durée <span style="font-weight:normal"><br>(en semaines)</span>'
 claroline_corebundle_mooc_weeklyTime: 'Durée hebdomadaire'
 claroline_corebundle_mooc_language: 'langue'
 claroline_corebundle_mooc_cost: 'Tarif'
@@ -901,9 +901,11 @@ claroline_corebundle_mooc_hasTweeterShare: 'Activer le partage Twitter'
 claroline_corebundle_mooc_hasGplusShare: 'Activer le partage G+'
 claroline_corebundle_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
 claroline_corebundle_mooc_lesson: 'Cours du MOOC'
-
 claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
 claroline_corebundle_moocs : 'Moocs'
+claroline_corebundle_mooc_certificationType : 'Certification'
+claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
+
 
 workspace_edit: 'Paramètres du workspace'
 mooc_edit: 'Paramètres du MOOC'

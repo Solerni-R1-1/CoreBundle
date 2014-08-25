@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>R&eacute;initialisation de votre mot de passe</title>
+    <title>Rappel de vos identifiants Solerni</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
     
@@ -31,11 +31,16 @@
 
 Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe. Si vous n'&ecirc;tes pas &agrave; l'origine de cette action, veuillez ignorer ce message. <br/>
+Nous vous remercions pour votre inscription sur le site <strong>Solerni</strong>.<br/>
 <br/>
-Votre pseudo est : {{user.getUsername()}}<br/>
+Voici un rappel de vos identifiants de connexion pour acc&eacute;der &agrave; votre compte :<br/>
+<ul>
+	<li>Identifiant : {{user.getMail()}}</li>
+	<li>Mot de passe : vous seul le connaissez</li>
+</ul>
+Vous pouvez d&egrave;s &agrave; pr&eacute;sent acc&eacute;der &agrave; votre compte en cliquant <a href='{{ url('claro_security_login') }}'>ici</a>.<br/>
 <br/>
-<a href='{{ link }}'>Veuillez cliquer sur ce lien pour r&eacute;initialiser votre mot de passe</a><br/>
+A tr&egrave;s vite sur Solerni, votre nouvelle plateforme de Moocs francophone collaborative.<br/>
 <br/>
 <br/>
 <strong>L'&eacute;quipe de Solerni.org</strong><br/>
