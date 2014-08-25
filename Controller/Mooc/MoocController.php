@@ -87,7 +87,7 @@ class MoocController extends Controller
         $sessions = $mooc->getMoocSessions();
 
         return $this->render(
-            'ClarolineCoreBundle:Mooc:mooc.html.twig',
+            'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
             array(
                 'mooc'      => $mooc,
                 'sessions'  => $sessions,

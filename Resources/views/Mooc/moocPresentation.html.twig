@@ -1,10 +1,6 @@
 
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-{% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-{% endif %}
-
 {% extends layout %}
 
 {% block stylesheets %}
@@ -13,16 +9,18 @@
 {% endblock %}
 
 {% block title %} {{ mooc.getTitle() }} {% endblock %}
+    
+{% block bodyClasses %}{% endblock %}
 
 {% block subnavbar %}
-<section class="col-xs-12 col-md-12 mooc__section">
-	<div class="row mooc__section__left">
-		<div class="col-xs-3 col-md-3 mooc__section__left__logo">
+<section class="slrn-header slrn-header--slim slrn-header--mooc">
+	<div class="row slrn-mooc__header_content">
+		<div class="col-xs-3 col-md-3 slrn-mooc__header__left__logo">
                     {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
                     <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,100)}}"  alt="{{ mooc.getTitle() }}">
                     {% endif %}
 		</div>
-		<div class="col-xs-9 col-md-9 mooc__section__right">
+		<div class="col-xs-9 col-md-9 v__right">
 			<h1>{{ mooc.getTitle() }}</h1>
             {% for session in sessions %}
                 {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
