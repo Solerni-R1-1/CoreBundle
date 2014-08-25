@@ -773,6 +773,9 @@ class Mooc
         $this->accessConstraints = $accessContraints;
     }
 
+    public function setGratis($gratis) {
+        
+    }
             
     /* FILE UPLOAD METHODS */
     /**
