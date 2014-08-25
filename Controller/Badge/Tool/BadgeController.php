@@ -259,7 +259,7 @@ class BadgeController extends Controller
             $WorkspacesBadges = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
             foreach ( $WorkspacesBadges['badgePager'] as $WorkspacesBadgePager ) {
                 foreach( $WorkspacesBadgePager as $WorkspacesBadge ) {
-                    // Only return returns with inprogress badges
+                    // Only return badges with inprogress badges
                     if ( $WorkspacesBadge == 'inprogress' ) {
                          $WorkspacesBadgeList[] = $WorkspacesBadges;
                          break 2;
