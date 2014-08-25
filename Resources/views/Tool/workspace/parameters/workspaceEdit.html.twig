@@ -155,6 +155,20 @@
                         videoCheckbox.prop('checked', true);
                     }
                 });
+                
+                /* manage gratis checkbox*/
+                if ($('#claroline_corebundle_mooc_gratis').is(':checked')) {
+                    $('#claroline_corebundle_mooc_cost').parent().parent().hide();
+                }
+                $('#claroline_corebundle_mooc_gratis').on('change', function() {
+                    if ($(this).is(':checked')) {
+                        $('#claroline_corebundle_mooc_cost').val('0');
+                        $('#claroline_corebundle_mooc_cost').parent().parent().hide();
+                    } else {
+                        $('#claroline_corebundle_mooc_cost').parent().parent().show();
+                    }
+                });
+                
             });
         </script>
     {% endif %}
