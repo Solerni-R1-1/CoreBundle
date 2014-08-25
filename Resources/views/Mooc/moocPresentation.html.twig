@@ -1,0 +1,184 @@
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/clarolinecore/css/slrn_mooc.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ mooc.getTitle() }} {% endblock %}
+    
+{% block bodyClasses %}{% endblock %}
+
+{% block subnavbar %}
+<section class="slrn-header slrn-header--slim slrn-header--mooc">
+	<div class="row slrn-mooc__header_content">
+		<div class="col-xs-3 col-md-3 slrn-mooc__header__left__logo">
+                    {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
+                    <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,100)}}"  alt="{{ mooc.getTitle() }}">
+                    {% endif %}
+		</div>
+		<div class="col-xs-9 col-md-9 v__right">
+			<h1>{{ mooc.getTitle() }}</h1>
+            {% for session in sessions %}
+                {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+            {% endfor %}
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+
+{% block section_content %}
+<section class="col-xs-12 col-md-12">
+ <div class="col-xs-3 col-md-3 sider">
+	<img class="slrn-widget__image" src="{{ image(mooc.getIllustrationWebPath()).zoomCrop(234,150) }}" alt="{{ mooc.getTitle() }}">
+
+ 	<h2>Les essentiels</h2>
+
+	<div class='sider__content'>
+
+		<ul class='essentiels'>
+
+            {% for session in sessions %}
+                {# DATE #}
+                {% if session is not null and 
+                    (session.getStartDate() is not empty or session.getEndDate() is not empty) %}
+                <li>
+                    <i class='essentiels__date'></i>
+                    {% if session.getStartDate() is not empty %}
+                        Date de début : {{session.getStartDate() | date("m/d/Y")}}
+                    {% endif %}
+                    {% if session.getStartDate() is not empty or session.getEndDate() is not empty %}<br/>{% endif %}
+                    {% if session.getEndDate() is not empty %}Date de fin : {{session.getEndDate() |date("m/d/Y") }}{% endif %}
+                </li>
+                {% else%}
+                <li>
+                    <i class='essentiels__date'></i> Aucune date de prévue
+                </li>
+                {% endif%}
+            {% endfor %}
+                
+			{# DUREE #}
+			{% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}
+			<li>
+				<i class='essentiels__duree'></i>
+				{% if mooc.getDuration() is not empty %}
+					Durée : {{mooc.getDuration() }} semaines
+				{% endif %}
+				{% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}<br/>{% endif %}
+				{% if mooc.getWeeklyTime() is not empty %}Temps de travail hebdomadaire : {{mooc.getWeeklyTime() | minsToHoursMins('%dh%dmin')}}{% endif %}
+			</li>
+			{% endif%}
+
+			{# COUT #}
+			{% if mooc.getCost() is not empty and mooc.getCost() != 0 %}
+			<li><i class='essentiels__tarif'></i>Tarif : Gratuit</li>
+			{% else %}
+			<li><i class='essentiels__tarif'></i>Tarif : {{mooc.getCost()}}€</li>
+			{% endif %}
+
+			{# CERTIFICATION #}
+			<li>
+				<i class='essentiels__certif'></i>Certification : xx
+				<br/>
+				<a href='#' class='link__more'>En savoir plus</a>
+			</li>
+
+			{# LANGUAGE #}
+			{% if mooc.getLanguage() is not empty %}
+			<li><i class='essentiels__lang'></i>Langue du cours : {{mooc.getLanguage()}}</li>
+			{% endif %}
+
+			{# VIDEO #}
+			{% if mooc.getHasVideo() is not empty %}
+			<li>
+				<i class='essentiels__video'></i>Vidéos<br/>
+				{% if mooc.getHasSubtitle() is not empty %}
+					Sous-Titrées
+					{% if mooc.getLanguage() is not empty %}
+						en {{mooc.getLanguage()}}
+					{% endif %}
+				{% endif %}
+			</li>
+			{% endif %}
+		</ul>
+		<center>
+            {% for session in sessions %}
+                <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
+            {% endfor %}
+        </center>
+	</div>
+	
+	<h2>Pré-requis</h2>
+	<div class='sider__content'>
+	{% if mooc.getPrerequisites() is not empty %}
+		{{ mooc.getPrerequisites() | raw }}
+	{% else %}
+		Aucun pré-requis
+	{% endif %}
+	</div>
+	
+
+	{% if mooc.getTeamDescription() is not empty %}
+		<h2>Equipe pédagogique</h2>
+		<div class='sider__content'>
+			{{ mooc.getTeamDescription() | raw }}
+		</div>
+	{% endif %}
+
+	{% if mooc.getHasFacebookShare()  or
+			mooc.getHasTweeterShare()  or
+			mooc.getHasGplusShare()  or
+			mooc.getHasLinkedinShare()  %}
+
+		<h2>Partager</h2>
+		<div class='sider__content content_center'>
+			{% if mooc.getHasFacebookShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_facebook">Facebook</span>
+	            </a>
+			{% endif %}
+
+			{% if mooc.getHasTweeterShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_twitter">Twitter</span>
+	            </a>
+			{% endif %}
+
+			{% if mooc.getHasGplusShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_googlep">Google+</span>
+	            </a>
+			{% endif %}
+
+			{% if mooc.getHasLinkedinShare() %}
+				<a href="#" class="sider_social_link" target="_blank">
+	                <span class="sider_social_link__icon social_linkedin">Linkedin</span>
+	            </a>
+			{% endif %}
+		</div>
+	{% endif %}
+
+
+
+ </div>
+
+ <div class="col-xs-9 col-md-9 contentBlock">
+ 	{{ mooc.getAboutPageDescription() | raw }}
+ </div>
+ <div class="col-xs-9 col-md-9 contentBlock text-center">
+    {% for session in sessions %}
+        {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+    {% endfor %}
+ </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/xxx.js') }}"></script> #}
+{% endblock %}
+
