@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * MoocSessionRepository
@@ -12,4 +13,47 @@ use Doctrine\ORM\EntityRepository;
  */
 class MoocSessionRepository extends EntityRepository
 {
+	/**
+	 * Retrieves the last session the user has joined (a current session if possible)
+	 * 
+	 * @param ClarolineCoreBundle\Entity\User $user
+	 */
+	public function getLastMoocSessionForUser($user, $mooc) {
+		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms ".
+				"WHERE :user MEMBER OF ms.users ".
+				"AND ms.mooc = :mooc ".
+				"AND ms.startDate < CURRENT_TIMESTAMP()".
+				"ORDER BY ms.endDate DESC ";
+		$qb = $this->_em->createQuery($query)->setParameters(array(
+				"user" => $user,
+				"mooc" => $mooc
+		));
+		
+		return $qb->getResult()[0];
+	}
+	
+	/**
+	 * Guess the mooc session which should be displayed for this workspace and user.
+	 * 
+	 * @param ClarolineCoreBundle\Entity\AbstractWorkspace $workspace
+	 * @param ClarolineCoreBundle\Entity\User $user
+	 */
+	public function guessMoocSession($workspace, $user) {
+		$session = new Session();
+		if ($workspace->isMooc()) {
+			$moocSessions = $workspace->getMooc()->getMoocSessions();
+			if ($session->has('moocSession')) {
+				$moocSessionId = $session->get('moocSession');
+				foreach($moocSessions as $ms) {
+					if ($ms->getId() == $moocSessionId) {
+						$moocSession = $ms;
+						break;
+					}
+				}
+			} else {
+				$moocSession = $this->getLastMoocSessionForUser($user, $workspace->getMooc());
+			}
+		}
+		return $moocSession;
+	}
 }

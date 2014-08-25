@@ -37,6 +37,9 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
+    public static $patternUrlPublic = '#^[0-9a-zA-Z\.\_]*$#';
+    public static $patternReplaceUrlPublic = '#[^0-9a-zA-Z\.\_]#';
+
     /**
      * @var integer
      *
@@ -1009,7 +1012,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function isPublicUrlValid(ExecutionContextInterface $context)
     {
         // Search for whitespaces
-        if (preg_match("/\s/", $this->getPublicUrl())) {
+        if (!preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
         }
     }

@@ -404,13 +404,29 @@ class ProfileController extends Controller
      * @EXT\Method({"POST"})
      */
     public function checkPublicUrlAction(Request $request)
-    {
-        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($request->request->get('publicUrl'));
-        $data = array('check' => false);
+    {   
+        $publicUrl = $request->request->get('publicUrl');   
+        $isValid = true;
 
-        if (null === $existedUser) {
-            $data['check'] = true;
+        // If it's always okay : 
+        //  We test the pattern
+        if($isValid){
+            $pattern = User::$patternUrlPublic;
+            if(!preg_match($pattern, $publicUrl)) {
+                $isValid = false;
+            }
         }
+
+        // If it's always okay : 
+        //  We test the unicity
+        if($isValid){
+            $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+            if (null !== $existedUser) {
+                $isValid = false;
+            }
+        }
+        
+        $data = array('check' => $isValid);
 
         $response = new JsonResponse($data);
         return $response;

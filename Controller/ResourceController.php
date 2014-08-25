@@ -460,6 +460,7 @@ class ResourceController
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
+            
 
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
@@ -473,6 +474,16 @@ class ResourceController
                     $adminTypes[$resourceType->getName()] = $this->translator
                         ->trans($resourceType->getName(), array(), 'resource');
                 }
+            } else {
+            	$session = $this->entityManager
+            			->getRepository('ClarolineCoreBundle:Mooc\MoocSession')
+            			->guessMoocSession($node->getWorkspace(), $user);
+            	foreach ($nodes as $i => $item) {
+            		if ($item['type'] == 'claroline_forum'
+            				&& $item['id'] != $session->getForum()->getId()) {
+            			unset ($nodes[$i]);
+            		}
+            	}
             }
 
             foreach ($nodes as $item) {
