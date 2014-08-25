@@ -24,6 +24,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Description of StaticController
@@ -115,6 +116,8 @@ class MoocController extends Controller
      */
     public function sessionPageAction( $mooc, $moocSession, $word, $user ){
 
+    	$session = new Session();
+    	$session->set('moocSession', $moocSession->getId());
         if(!preg_match($this->patternId, $mooc->getId() )){
             return $this->inner404("parametre moocId invalid : ". $mooc->getId() );
         }
@@ -180,7 +183,7 @@ class MoocController extends Controller
             return $this->inner404('La leçon n\'est pas définie pour ce mooc');
         }
 
-        $lesson = $this->getLessonFromWorkspace( $mooc->getWorkspace() );
+        $lesson = $this->getLessonFromWorkspace( $mooc->getWorkspace(), $user);
 
         $url = $this->getRouteToTheLastChapter( $lesson, $user );
         return  $this->redirect($url);
@@ -340,11 +343,11 @@ class MoocController extends Controller
         );
         
         // Check Session
-        $session = $this->getSessionFromWorkspace($workspace);
+        $session = $this->getSessionFromWorkspace($workspace, $user);
         
         if ( $session ) {
             //get the mooc lesson
-            $lesson = $this->getLessonFromWorkspace($workspace);
+            $lesson = $this->getLessonFromWorkspace($workspace, $user);
             // get the mooc lesson link
             if ($lesson) {
                 $firstSubChapter = $this->getFirstSubChapter($lesson);
@@ -467,7 +470,7 @@ class MoocController extends Controller
         $doctrine = $this->getDoctrine();
         $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
         $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
-        $lesson = $this->getLessonFromWorkspace($workspace);
+        $lesson = $this->getLessonFromWorkspace($workspace, $user);
         
         $totalProgression = 0;
         $currentProgression = 0;
@@ -499,7 +502,7 @@ class MoocController extends Controller
      */
     public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
     {
-        $lesson = $this->getLessonFromWorkspace($workspace);
+        $lesson = $this->getLessonFromWorkspace($workspace, $user);
 
         if ( $renderProgression ) {
             $progression = $this->getUserProgressionInLesson($user, $workspace);
@@ -510,7 +513,7 @@ class MoocController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
-            'session' => $this->getSessionFromWorkspace($workspace),
+            'session' => $this->getSessionFromWorkspace($workspace, $user),
             'progression' => $progression
             )
         );
@@ -520,12 +523,12 @@ class MoocController extends Controller
      * Get the lesson from a workspace
      * Return a Lesson Entity or Null
      */
-    private function getLessonFromWorkspace( $workspace ) {
+    private function getLessonFromWorkspace($workspace, $user) {
         
         $doctrine = $this->getDoctrine();
         $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
         $lesson = null;
-        $session = $this->getSessionFromWorkspace($workspace);
+        $session = $this->getSessionFromWorkspace($workspace, $user);
         
         if ( $session ) {
             $lessonNode = $session->getMooc()->getLesson();
@@ -540,17 +543,12 @@ class MoocController extends Controller
      * Get the session from a workspace
      * Return MoocSession Entity or null
      */
-    private function getSessionFromWorkspace( $workspace ) {
-        
-        $session = null;
-        if ( $workspace->isMooc() ) {
-            $moocSessions = $workspace->getMooc()->getMoocSessions();
-            foreach ( $moocSessions as $moocSession ) {
-                $session = $moocSession;
-            }
-        }
-               
-        return $session;
+    private function getSessionFromWorkspace($workspace, $user) {
+	    $moocSession = $this->getDoctrine()
+        	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
+      		->guessMoocSession($workspace, $user);
+    	
+    	return $moocSession;
     }
 
 }
