@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\ibm_db2;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,15 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/22 04:44:33
+ * Generation date: 2014/08/25 06:03:52
  */
-class Version20140822164432 extends AbstractMigration
+class Version20140825180350 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_mooc 
-            ADD COLUMN certification_type VARCHAR(40) NOT NULL
+            ADD certification_type TEXT NOT NULL COMMENT '(DC2Type:json_array)'
         ");
     }
 
@@ -24,7 +24,7 @@ class Version20140822164432 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_mooc 
-            DROP COLUMN certification_type
+            DROP certification_type
         ");
     }
 }

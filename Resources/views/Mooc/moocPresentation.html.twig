@@ -17,7 +17,7 @@
 	<div class="row slrn-header__column">
 		<div class="col-xs-3 col-md-3 slrn-header__logo">
             {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
-                <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,100)}}"  alt="{{ mooc.getTitle() }}">
+                <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,85)}}"  alt="{{ mooc.getTitle() }}">
             {% endif %}
 		</div>
 		<div class="col-xs-9 col-md-9 slrn-header__description">
@@ -32,14 +32,10 @@
 {% block section_content %}
 <section class="col-xs-12 col-md-12">
  <div class="col-xs-3 col-md-3 sider">
-	<img class="slrn-widget__image" src="{{ image(mooc.getIllustrationWebPath()).zoomCrop(234,150) }}" alt="{{ mooc.getTitle() }}">
-
+	<img class="slrn-widget__image" src="{{ image(mooc.getIllustrationWebPath()).zoomCrop( 234,165 ) }}" alt="{{ mooc.getTitle() }}"> 
  	<h2>Les essentiels</h2>
-
 	<div class='sider__content'>
-
-		<ul class='essentiels'>
-
+    	<ul class='essentiels'>
                 {# DATE #}
                 {% if session is not null and 
                     (session.getStartDate() is not empty or session.getEndDate() is not empty) %}

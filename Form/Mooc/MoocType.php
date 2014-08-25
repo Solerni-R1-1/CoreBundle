@@ -68,16 +68,18 @@ class MoocType extends AbstractType
                     'choices' => array(
                         'badge' => 'Badge',
                         'attestation' => 'Attestation'
-                    ), 
+                    ),
+                    'multiple' => true,
+                    'expanded' => true,
                     'required' => true
                 ))
             ->add('gratis', 'checkbox', array( 'required' => false ) )
             ->add('cost', 'integer', array('required' => false))
             ->add('language', 'choice', array(
                     'choices' => array(
-                        'empty_value' => '-- Choisir une langue --',
-                        'fr_FR' => 'Français',
-                        'en_EN' => 'Anglais'
+                        'empty_value' => 'choose_language_mooc',
+                        'fr_FR' => 'fr_FR',
+                        'en_EN' => 'en_EN'
                     ), 
                     'required' => true
                 ))
@@ -92,7 +94,7 @@ class MoocType extends AbstractType
             ->add('lesson', 'entity', array( 
                     'required'      => false,
                     'property'      => 'name',
-                    'empty_value'   => '-- Choisir un cours pour le mooc --',
+                    'empty_value'   => 'choose_lesson_mooc',
                     'class'         => 'ClarolineCoreBundle:Resource\ResourceNode',
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
                             return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->lessonResourceType);
@@ -114,7 +116,7 @@ class MoocType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Claroline\CoreBundle\Entity\Mooc\Mooc',
-             'translation_domain' => 'platform',
+            'translation_domain' => 'platform',
             'language' => 'fr'
         ));
     }

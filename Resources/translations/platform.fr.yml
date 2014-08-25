@@ -1003,3 +1003,8 @@ dashboard_widget_evals_default_text: Rejoignez un Mooc et passez un badge de com
 
 in_progress_badges: %number% évaluation%plural% en cours
 
+choose_lesson_mooc: -- Choisir un cours pour le mooc --
+choose_language_mooc: -- Choisir une langue --
+fr_FR: Français
+en_EN: Anglais
+

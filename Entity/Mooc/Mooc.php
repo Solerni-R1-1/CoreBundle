@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Mooc
 {
 	const DEFAULT_IMAGE_PATH = "../../default-images/logo-solerni-color.png";
-        const DEFAULT_CERTIFICATION_TYPE = "badge";
+
     /**
      * @var integer
      *
@@ -101,10 +101,9 @@ class Mooc
     /**
      * @var string
      * 
-     * @ORM\Column(name="certification_type", type="string", length=40)
+     * @ORM\Column(name="certification_type", type="json_array")
      */
-    private $certificationType = self::DEFAULT_CERTIFICATION_TYPE;
-    
+    private $certificationType;
     
     /**
      * @var integer
@@ -734,7 +733,7 @@ class Mooc
         $this->certificationType = $certificationType;
     }
 
-        public function getAboutPageDescription() {
+    public function getAboutPageDescription() {
         return $this->aboutPageDescription;
     }
 
