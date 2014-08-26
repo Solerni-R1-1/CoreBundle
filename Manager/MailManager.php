@@ -181,10 +181,11 @@ class MailManager
      * @param string $body
      * @param User[] $users
      * @param User   $from
+     * @param User   $replyTo
      *
      * @return boolean
      */
-    public function send($subject, $body, array $users, $from = null)
+    public function send($subject, $body, array $users, $from = null, $replyTo = null)
     {
         if ($this->isMailerAvailable()) {
             $to = [];
@@ -192,6 +193,7 @@ class MailManager
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
 
             $fromEmail = ($from === null) ? $this->ch->getParameter('support_email') : $from->getMail();
+            $replyToEmail = ($replyTo === null) ? null : $replyTo->getMail();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
@@ -229,6 +231,11 @@ class MailManager
             } else {
                 $message->setTo($to);
             }
+            
+            if ($replyToEmail !== null) {
+            	$message->setReplyTo($replyToEmail);
+            }
+            
 
             return $this->mailer->send($message) ? true : false;
         }
