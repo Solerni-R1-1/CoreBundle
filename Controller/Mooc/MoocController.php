@@ -85,7 +85,7 @@ class MoocController extends Controller
             return $this->inner404("MoocId invalid : " . $mooc->getId() );
         }
 
-        $session = $this->getActiveSessionFromWorkspace( $mooc->getWorkspace() );
+        $session = $this->getActiveSessionFromWorkspace( $mooc->getWorkspace(), $user );
 
         return $this->render(
             'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
@@ -549,6 +549,23 @@ class MoocController extends Controller
       		->guessMoocSession($workspace, $user);
     	
     	return $moocSession;
+    }
+    
+        /*
+     * Get the session from a workspace
+     * Return MoocSession Entity or null
+     */
+    private function getActiveSessionFromWorkspace( $workspace, $user ) {
+        
+        $session = null;
+        if ( $workspace->isMooc() ) {
+            $moocSessions = $workspace->getMooc()->getMoocSessions();
+            foreach ( $moocSessions as $moocSession ) {
+                $session = $moocSession;
+            }
+        }
+               
+        return $session;
     }
 
 }

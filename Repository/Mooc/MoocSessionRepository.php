@@ -28,8 +28,11 @@ class MoocSessionRepository extends EntityRepository
 				"user" => $user,
 				"mooc" => $mooc
 		));
+        
+        $result = $qb->getResult();
+        
+        return ( count($result) > 0 ) ? $result[0] : NULL;
 		
-		return $qb->getResult()[0];
 	}
 	
 	/**
