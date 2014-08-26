@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Icap\DropzoneBundle\Entity\Dropzone;
 
 class BadgeController extends Controller
 {
@@ -53,11 +54,11 @@ class BadgeController extends Controller
             /* filter badges from name and resource ID to check rules associated with the badge */
             if ( $resourceType != 'all' && $resourceId != null ) {
                 if ( ! $this->isOneRuleAssociatedWithResourceId( $workspaceBadge, $resourceId ) ) {
-                   continue;
+                   	continue;
                 }
             } elseif ( $resourceType != 'all' ) {
                 if ( ! $this->isOneRuleAssociatedWithResource( $workspaceBadge, $resourceType ) ) {
-                   continue;
+                   	continue;
                 }
             }
             
@@ -113,6 +114,15 @@ class BadgeController extends Controller
                 'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceType ),
                 'associatedResource' => $this->getResourceAssociatedWithBadge( $availableBadge, $resourceType, $loggedUser )
             );
+        }
+        
+        foreach ($displayedBadges as $displayedBadge) {
+        	$res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge'], $resourceType, $loggedUser );
+        	$dropzone = $res['dropzone'];
+        	$drop = $res['drop'];
+        	if ($drop != null && $drop->getCalculatedGrade() <= $dropzone->getMinimumScoreToPass()) {
+        		$nbTotalBadges--;
+        	}
         }
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
