@@ -22,7 +22,9 @@
 		</div>
 		<div class="col-xs-9 col-md-9 slrn-header__description">
 			<h1>{{ mooc.getTitle() }}</h1>
-            {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+            {% if session is defined and session is not null %}
+                {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+            {% endif %}
 		</div>
 	</div>
 </section>
@@ -37,7 +39,7 @@
 	<div class='sider__content'>
     	<ul class='essentiels'>
                 {# DATE #}
-                {% if session is not null and 
+                {% if session is defined and session is not null and 
                     (session.getStartDate() is not empty or session.getEndDate() is not empty) %}
                 <li>
                     <i class='essentiels__date'></i>
@@ -98,7 +100,9 @@
 			{% endif %}
 		</ul>
 		<center>
-            <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
+            {% if session is defined and session is not null %}
+                <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
+            {% endif %}
         </center>
 	</div>
 	
@@ -160,7 +164,9 @@
  	{{ mooc.getAboutPageDescription() | raw }}
  </div>
  <div class="col-xs-9 col-md-9 contentBlock text-center">
-    {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+    {% if session is defined and session is not null %}
+        {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+    {% endif %}
  </div>
 </section>
 {% endblock %}

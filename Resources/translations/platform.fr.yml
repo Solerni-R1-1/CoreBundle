@@ -888,9 +888,9 @@ claroline_corebundle_mooc_aboutPageDescription: 'Page En savoir +'
 claroline_corebundle_mooc_file: 'Image d''illustration'
 claroline_corebundle_mooc_illustrationPath: 'Illustration du mooc'
 claroline_corebundle_mooc_postEndAction: 'Après fermeture'
-claroline_corebundle_mooc_duration: 'Durée <span style="font-weight:normal"><br>(en semaines)</span>'
+claroline_corebundle_mooc_duration: 'Durée <br><span style="font-weight:normal">(en semaines)</span>'
 claroline_corebundle_mooc_weeklyTime: 'Durée hebdomadaire'
-claroline_corebundle_mooc_language: 'langue'
+claroline_corebundle_mooc_language: 'Langue'
 claroline_corebundle_mooc_cost: 'Tarif'
 claroline_corebundle_mooc_hasVideo: 'Vidéos'
 claroline_corebundle_mooc_hasSubtitle: 'Avec sous-titres'
@@ -1007,4 +1007,24 @@ choose_lesson_mooc: -- Choisir un cours pour le mooc --
 choose_language_mooc: -- Choisir une langue --
 fr_FR: Français
 en_EN: Anglais
+mooc__certif_badge: Badge
+mooc_certif_attestation: Attestation de réussite
+choose_replay_mooc: -- Choisir une action --
+mooc_can_replay: Rejouable
+mooc_cannot_replay: Non rejouable
+mooc_choose_owner: -- Choisir un propriétaire pour ce MOOC --
+
+session_start_date: Début de session
+session_end_date: Fin de session
+session_start_subscription: Début pour l'inscription
+session_end_subscription: Fin pour l'inscription
+session_title: Titre de la session
+session_max_users: Nombre maximum d'inscrits<br><span style="font-weight:normal">(0 pour aucune limite)</span>
+session_choose_forum: -- Choisir un forum de session --
+constraint_whitelist: Liste blanche<br><span style="font-weight:normal">(1 adresse email par ligne)</span>
+constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@domaine.ext, 1 par ligne)</span>
+constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
+
+
+
 
