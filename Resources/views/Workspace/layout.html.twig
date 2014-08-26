@@ -14,7 +14,7 @@
     {% if mooc is defined %}
         {% set workspace = mooc.getWorkspace() %}
     {% endif %}
-    {% if session is defined %}
+    {% if session is defined and session is not null %}
         {% set workspace = session.getMooc().getWorkspace() %}
     {% endif %}
 {% endif %}

@@ -80,11 +80,6 @@ class MoocController extends Controller
      */
     public function moocPageAction( $mooc, $user ) {
 
-        //Check pattern
-        if(  ( ! preg_match ( $this->patternId, $mooc->getId() ) ) || ! $mooc ) {
-            return $this->inner404("MoocId invalid : " . $mooc->getId() );
-        }
-
         $session = $this->getActiveSessionFromWorkspace( $mooc->getWorkspace(), $user );
 
         return $this->render(
@@ -557,15 +552,10 @@ class MoocController extends Controller
      */
     private function getActiveSessionFromWorkspace( $workspace, $user ) {
         
-        $session = null;
-        if ( $workspace->isMooc() ) {
-            $moocSessions = $workspace->getMooc()->getMoocSessions();
-            foreach ( $moocSessions as $moocSession ) {
-                $session = $moocSession;
-            }
-        }
+	    return $this->getDoctrine()
+        	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
+      		->guessActiveMoocSession( $workspace, $user );
                
-        return $session;
     }
 
 }

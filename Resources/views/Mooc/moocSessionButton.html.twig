@@ -44,7 +44,7 @@
     <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
     
 {# inscription is open but session is full #}
-{% elseif session.getUsers()|length >= session.getMaxUsers() and not isRegistered %}
+{% elseif session.getMaxUsers() != 0 and session.getUsers()|length >= session.getMaxUsers() and not isRegistered %}
     <span class="mooc_status">
         {{ 'session_full'|trans({}, 'platform') }}
     </span>
