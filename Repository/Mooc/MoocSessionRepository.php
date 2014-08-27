@@ -44,9 +44,10 @@ class MoocSessionRepository extends EntityRepository
 	public function guessMoocSession($workspace, $user) {
 		$session = new Session();
 		if ($workspace->isMooc()) {
-			$moocSessions = $workspace->getMooc()->getMoocSessions();
-			if ($session->has('moocSession')) {
-				$moocSessionId = $session->get('moocSession');
+			$mooc = $workspace->getMooc();
+			$moocSessions = $mooc->getMoocSessions();
+			if ($session->has($mooc->getId().'moocSession')) {
+				$moocSessionId = $session->get($mooc->getId().'moocSession');
 				foreach($moocSessions as $ms) {
 					if ($ms->getId() == $moocSessionId) {
 						$moocSession = $ms;
@@ -54,9 +55,12 @@ class MoocSessionRepository extends EntityRepository
 					}
 				}
 			} else {
-				$moocSession = $this->getLastMoocSessionForUser($user, $workspace->getMooc());
+				$moocSession = $this->getLastMoocSessionForUser($user, $mooc);
 			}
+		} else {
+			$moocSession = null;
 		}
+		
 		return $moocSession;
 	}
     
@@ -130,5 +134,32 @@ class MoocSessionRepository extends EntityRepository
      */
     public function guessActiveMoocSession( $workspace, $user ) {
         return $this->getActiveMoocSessionForUser( $workspace->getMooc(), $user );
+    }
+    
+    public function getMoocSessionByForum($forum) {
+    	$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms ".
+    			"WHERE ms.forum = :forum";
+    	$qb = $this->_em->createQuery($query)->setParameters(array(
+    			"forum" => $forum
+    	));
+    	
+    	$result = $qb->getResult();
+    	
+    	return ( count($result) > 0 ) ? $result[0] : NULL;
+    }
+    
+    public function isUserRegisteredToForumSession($forum, $user) {
+
+    	$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+    			WHERE ms.forum = :forum
+    			AND :user MEMBER OF ms.users";
+    	$qb = $this->_em->createQuery($query)->setParameters(array(
+    			"forum" => $forum,
+    			"user" => $user
+    	));
+    	 
+    	$result = $qb->getResult();
+    	 
+    	return ( count($result) > 0 ) ? true : false;
     }
 }

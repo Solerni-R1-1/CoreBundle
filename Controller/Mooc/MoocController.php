@@ -112,7 +112,7 @@ class MoocController extends Controller
     public function sessionPageAction( $mooc, $moocSession, $word, $user ){
 
     	$session = new Session();
-    	$session->set('moocSession', $moocSession->getId());
+    	$session->set($mooc->getId().'-moocSession', $moocSession->getId());
         if(!preg_match($this->patternId, $mooc->getId() )){
             return $this->inner404("parametre moocId invalid : ". $mooc->getId() );
         }
