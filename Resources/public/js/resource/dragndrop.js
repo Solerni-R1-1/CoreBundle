@@ -170,7 +170,7 @@
 
         FileAPI.each(files, function (file) {
 
-            alert(file.size +"  "+ size);
+            //alert(file.size +"  "+ size);
 
             if (file.size >= size) {
                 showErrorMessage(Translator.get('platform:max_size_is', {'size': maxSize}));
