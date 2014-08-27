@@ -540,7 +540,6 @@ class MoocController extends Controller
         } 
         
         return $lesson;
-        
     }
     
     /*
@@ -556,7 +555,7 @@ class MoocController extends Controller
     }
     
         /*
-     * Get the session from a workspace
+     * Get the active (or next) session from a workspace
      * Return MoocSession Entity or null
      */
     private function getActiveSessionFromWorkspace( $workspace, $user ) {
@@ -564,7 +563,6 @@ class MoocController extends Controller
 	    return $this->getDoctrine()
         	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
       		->guessActiveMoocSession( $workspace, $user );
-               
     }
 
 }
