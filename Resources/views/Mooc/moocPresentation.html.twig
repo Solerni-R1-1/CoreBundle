@@ -17,7 +17,9 @@
 	<div class="row slrn-header__column">
 		<div class="col-xs-3 col-md-3 slrn-header__logo">
             {% if mooc.getOwner() and mooc.getOwner().getLogoWebPath() %}
-                <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,85)}}"  alt="{{ mooc.getTitle() }}">
+                <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">
+                    <img src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,85)}}"  alt="{{ mooc.getTitle() }}">
+                </a>
             {% endif %}
 		</div>
 		<div class="col-xs-9 col-md-9 slrn-header__description">
@@ -39,69 +41,128 @@
 	<div class='sider__content'>
     	<ul class='essentiels'>
                 {# DATE #}
-                {% if session is defined and session is not null and 
-                    (session.getStartDate() is not empty or session.getEndDate() is not empty) %}
-                <li>
-                    <i class='essentiels__date'></i>
-                    {% if session.getStartDate() is not empty %}
-                        Date de début : {{session.getStartDate() | date("m/d/Y")}}
-                    {% endif %}
-                    {% if session.getStartDate() is not empty or session.getEndDate() is not empty %}<br/>{% endif %}
-                    {% if session.getEndDate() is not empty %}Date de fin : {{session.getEndDate() |date("m/d/Y") }}{% endif %}
-                </li>
+                {% if   session is defined and 
+                        session is not null and 
+                        (session.getStartDate() is not empty or session.getEndDate() is not empty)
+                %}
+                    <li>
+                        <i class='essentiels-icon essentiels__date'></i>
+                        {% if session.getStartDate() is not empty %}
+                            Date de début : <span class="slrn-bold">
+                                {{ session.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
+                            </span>
+                        {% endif %}
+                        {% if session.getStartDate() is not empty or session.getEndDate() is not empty %}<br/>{% endif %}
+                        {% if session.getEndDate() is not empty %}
+                            Date de fin : <span class="slrn-bold">
+                                {{session.getEndDate() | localizeddate( "long", "none", app.request.locale|default('fr') ) }}{% endif %}
+                            </span>
+
+                    </li>
                 {% else%}
-                <li>
-                    <i class='essentiels__date'></i> Aucune date de prévue
-                </li>
+                    <li>
+                        <i class='essentiels-icon essentiels__date'></i> Aucune date de prévue
+                    </li>
                 {% endif%}
                 
 			{# DUREE #}
 			{% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}
-			<li>
-				<i class='essentiels__duree'></i>
-				{% if mooc.getDuration() is not empty %}
-					Durée : {{mooc.getDuration() }} semaines
-				{% endif %}
-				{% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}<br/>{% endif %}
-				{% if mooc.getWeeklyTime() is not empty %}Temps de travail hebdomadaire : {{mooc.getWeeklyTime() | minsToHoursMins('%dh%dmin')}}{% endif %}
-			</li>
+                <li>
+                    <i class='essentiels-icon essentiels__duree'></i>
+                    {% if mooc.getDuration() is not empty %}
+                        Durée : <span class="slrn-bold">{{mooc.getDuration() }} semaines</span>
+                    {% endif %}
+                    {% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}<br/>{% endif %}
+                    {% if mooc.getWeeklyTime() is not empty %}Temps de travail hebdomadaire&nbsp;: 
+                        <span class="slrn-bold">{{mooc.getWeeklyTime() | minsToHoursMins('%dh%dmin')}}{% endif %}</span>
+                </li>
 			{% endif%}
 
 			{# COUT #}
-			{% if mooc.getCost() is not empty and mooc.getCost() != 0 %}
-			<li><i class='essentiels__tarif'></i>Tarif : Gratuit</li>
-			{% else %}
-			<li><i class='essentiels__tarif'></i>Tarif : {{mooc.getCost()}}€</li>
-			{% endif %}
+			<li>
+                <i class='essentiels-icon essentiels__tarif'></i> 
+                Tarif :<span class="slrn-bold">
+                {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
+                    Mooc gratuit
+                {% else %}
+                    {{mooc.getCost()}}&nbsp;€
+                {% endif %}
+            </li>
 
 			{# CERTIFICATION #}
-			<li>
-				<i class='essentiels__certif'></i>Certification : xx
-				<br/>
-				<a href='#' class='link__more'>En savoir plus</a>
-			</li>
+            {% if mooc.getCertificationType() is not empty %}
+                <li>
+                    <i class='essentiels-icon essentiels__certif'></i>
+                    Certification :<br>
+                    <span class="slrn-bold">
+                        {% for certification in mooc.getCertificationType() %}
+                            {{ certification|trans({}, 'platform') }}<br>
+                        {% endfor %}
+                    </span>
+                </li>
+            {% endif %}
 
 			{# LANGUAGE #}
 			{% if mooc.getLanguage() is not empty %}
-			<li><i class='essentiels__lang'></i>Langue du cours : {{mooc.getLanguage()}}</li>
+                <li>
+                    <i class='essentiels-icon essentiels__lang'></i>
+                    Langue du cours : <span class="slrn-bold">
+                        {{ mooc.getLanguage()|trans({}, 'platform') }}
+                    </span>
+                </li>
 			{% endif %}
 
 			{# VIDEO #}
 			{% if mooc.getHasVideo() is not empty %}
 			<li>
-				<i class='essentiels__video'></i>Vidéos<br/>
+				<i class='essentiels-icon essentiels__video'></i>
+                Vidéos<br/>
 				{% if mooc.getHasSubtitle() is not empty %}
-					Sous-Titrées
-					{% if mooc.getLanguage() is not empty %}
-						en {{mooc.getLanguage()}}
-					{% endif %}
+					<span class="slrn-bold">Sous-Titrées
+                        {% if mooc.getLanguage() is not empty %}
+                            en {{mooc.getLanguage()|trans({}, 'platform')}}
+                        {% endif %}
+                    </span>
 				{% endif %}
+			</li>
+			{% endif %}
+            
+            {# INSCRIPTIONS #}
+			{% if session is defined and session is not null %}
+			<li>
+				<i class='essentiels-icon essentiels__subscription'></i>
+                Inscriptions :<span class="slrn-bold">
+                    
+                    {% if mooc.isPublic() %}
+                        {% if   session.getMaxUsers() is defined    and 
+                                session.getMaxUsers() is empty      or
+                                session.getMaxUsers() == 0 
+                        %}
+                            Ouverte à tous
+                        {% else %}
+                            Limitée au {{ session.getMaxUsers() }} premiers inscrits 
+                        {% endif %}
+                        du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
+                            au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
+                    {% else %}
+                        {% if   session.getMaxUsers() is defined    and
+                                session.getMaxUsers() is empty      or
+                                session.getMaxUsers() == 0
+                        %}
+                            Vous êtes autorisés à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a>
+                        {% else %}
+                            Vous êtes autorisés à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a> dans une session limitée au {{ session.getMaxUsers() }} premiers inscrits 
+                        {% endif %}
+                        du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
+                        au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}  
+                    {% endif %}
+                </span>
 			</li>
 			{% endif %}
 		</ul>
 		<center>
             {% if session is defined and session is not null %}
-                <div class="row spacer">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
+                <div class="row">{% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}</div>
             {% endif %}
         </center>
 	</div>
@@ -123,9 +184,9 @@
 		</div>
 	{% endif %}
 
-	{% if mooc.getHasFacebookShare()  or
-			mooc.getHasTweeterShare()  or
-			mooc.getHasGplusShare()  or
+	{% if   mooc.getHasFacebookShare()  or
+			mooc.getHasTweeterShare()   or
+			mooc.getHasGplusShare()     or
 			mooc.getHasLinkedinShare()  %}
 
 		<h2>Partager</h2>
