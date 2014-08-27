@@ -42,7 +42,7 @@ class AdministrationController extends Controller
      * @Route("/", name="admin_parameters_mooc")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_ADMIN, ROLE_WS_CREATOR")
      */
     public function indexAction()
     {
