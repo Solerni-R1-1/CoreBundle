@@ -438,31 +438,34 @@ class WorkspaceController extends Controller
      */
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
-        $this->assertIsGranted($toolName, $workspace);
-
-        $event = $this->eventDispatcher->dispatch(
-            'open_tool_workspace_' . $toolName,
-            'DisplayTool',
-            array($workspace)
-        );
-
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Log\LogWorkspaceToolRead',
-            array($workspace, $toolName)
-        );
-
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Log\LogWorkspaceEnter',
-            array($workspace)
-        );
-
-        if ($toolName === 'resource_manager') {
-            $this->session->set('isDesktop', false);
+        if ($this->assertIsGranted($toolName, $workspace, false)) {
+	
+	        $event = $this->eventDispatcher->dispatch(
+	            'open_tool_workspace_' . $toolName,
+	            'DisplayTool',
+	            array($workspace)
+	        );
+	
+	        $this->eventDispatcher->dispatch(
+	            'log',
+	            'Log\LogWorkspaceToolRead',
+	            array($workspace, $toolName)
+	        );
+	
+	        $this->eventDispatcher->dispatch(
+	            'log',
+	            'Log\LogWorkspaceEnter',
+	            array($workspace)
+	        );
+	
+	        if ($toolName === 'resource_manager') {
+	            $this->session->set('isDesktop', false);
+	        }
+	
+	        return new Response($event->getContent());
+        } else {
+        	return $this->redirect($this->get('router')->generate('mooc_view', array('moocId' => $workspace->getMooc()->getId(), 'moocName' => $workspace->getMooc()->getTitle())));
         }
-
-        return new Response($event->getContent());
     }
 
     /**
@@ -1135,11 +1138,17 @@ class WorkspaceController extends Controller
         return new Response('error', 400);
     }
 
-    private function assertIsGranted($attributes, $object = null)
+    private function assertIsGranted($attributes, $object = null, $throwException = true)
     {
         if (false === $this->security->isGranted($attributes, $object)) {
-            throw new AccessDeniedException();
+        	if ($throwException) {
+            	throw new AccessDeniedException();
+        	} else {
+        		return false;
+        	}
         }
+        
+        return true;
     }
 
     private function checkWorkspaceManagerAccess(AbstractWorkspace $workspace)

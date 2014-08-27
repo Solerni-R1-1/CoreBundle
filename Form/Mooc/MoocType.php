@@ -66,8 +66,8 @@ class MoocType extends AbstractType
             ->add('weeklyTime', 'integer', array('required' => false, 'precision' => 0 ))
             ->add('certificationType', 'choice', array(
                     'choices' => array(
-                        'badge' => 'mooc__certif_badge',
-                        'attestation' => 'mooc_certif_attestation'
+                        'mooc_certif_badge' => 'mooc_certif_badge',
+                        'mooc_certif_attestation' => 'mooc_certif_attestation'
                     ),
                     'multiple' => true,
                     'expanded' => true,

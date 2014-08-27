@@ -318,6 +318,11 @@ class ProfileController extends Controller
         $form = $this->createForm(new ResetPasswordType($translator), $loggedUser);
         $form->handleRequest($this->request);
 
+        //We don't allow edit password for FB account
+        if( $loggedUser->isFacebookAccount() === TRUE){
+            return $this->redirect($this->generateUrl('claro_profile_view'));
+        }
+
         if ($form->isValid()) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();

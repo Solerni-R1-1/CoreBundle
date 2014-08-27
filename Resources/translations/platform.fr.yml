@@ -1007,7 +1007,7 @@ choose_lesson_mooc: -- Choisir un cours pour le mooc --
 choose_language_mooc: -- Choisir une langue --
 fr_FR: Français
 en_EN: Anglais
-mooc__certif_badge: Badge
+mooc_certif_badge: Badge
 mooc_certif_attestation: Attestation de réussite
 choose_replay_mooc: -- Choisir une action --
 mooc_can_replay: Rejouable
@@ -1026,5 +1026,5 @@ constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@do
 constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
 
 
-
+fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
 

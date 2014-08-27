@@ -112,7 +112,7 @@ class MoocController extends Controller
     public function sessionPageAction( $mooc, $moocSession, $word, $user ){
 
     	$session = new Session();
-    	$session->set('moocSession', $moocSession->getId());
+    	$session->set($mooc->getId().'-moocSession', $moocSession->getId());
         if(!preg_match($this->patternId, $mooc->getId() )){
             return $this->inner404("parametre moocId invalid : ". $mooc->getId() );
         }
@@ -339,6 +339,7 @@ class MoocController extends Controller
         
         // Check Session
         $session = $this->getSessionFromWorkspace($workspace, $user);
+        $currentUrl = dirname( $_SERVER['REQUEST_URI'] );
         
         if ( $session ) {
             //get the mooc lesson
@@ -348,10 +349,12 @@ class MoocController extends Controller
                 $firstSubChapter = $this->getFirstSubChapter($lesson);
                 if ($firstSubChapter ) {
                     // generate tab
+                    $url = $this->getRouteToTheLastChapter($lesson, $user);
                     $solerniTabs['solerniTabs'][] = array(
                         'name' => 'Apprendre',
-                        'url' => $this->getRouteToTheLastChapter($lesson, $user),
-                        'title' => 'Suivre les cours'
+                        'url' => $url,
+                        'title' => 'Suivre les cours',
+                    	'isSelected' => !(strpos(  $url, $currentUrl ) === false)
                     );
                 }
             }
@@ -365,18 +368,23 @@ class MoocController extends Controller
             // get the forum link
             if ($forum) {
                 // generate tab
+                $forumUrl = dirname(dirname($this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId()))));
+                $url = $this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId()));
                 $solerniTabs['solerniTabs'][] = array(
                     'name' => 'Discuter',
-                    'url' => $this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId())),
-                    'title' => 'Participer au forum'
+                    'url' => $url,
+                    'title' => 'Participer au forum',
+                   	'isSelected' => !(strpos(  $currentUrl, $forumUrl ) === false)
                 );
             }
         }
         // Generate tab for resource manager
+        $url = $this->get('router')->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
         $solerniTabs['solerniTabs'][] = array(
             'name' => 'Partager',
-            'url' => $this->get('router')->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager')),
-            'title' => 'Accéder au gestionnaire de ressources'
+            'url' => $url,
+            'title' => 'Accéder au gestionnaire de ressources',
+            'isSelected' => !(strpos(  $url, $currentUrl ) === false)
         );
                 
         return $this->render(
@@ -509,7 +517,8 @@ class MoocController extends Controller
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
             'session' => $this->getSessionFromWorkspace($workspace, $user),
-            'progression' => $progression
+            'progression' => $progression,
+            'workspace' => $workspace
             )
         );
     }
@@ -531,7 +540,6 @@ class MoocController extends Controller
         } 
         
         return $lesson;
-        
     }
     
     /*
@@ -547,7 +555,7 @@ class MoocController extends Controller
     }
     
         /*
-     * Get the session from a workspace
+     * Get the active (or next) session from a workspace
      * Return MoocSession Entity or null
      */
     private function getActiveSessionFromWorkspace( $workspace, $user ) {
@@ -555,7 +563,6 @@ class MoocController extends Controller
 	    return $this->getDoctrine()
         	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
       		->guessActiveMoocSession( $workspace, $user );
-               
     }
 
 }

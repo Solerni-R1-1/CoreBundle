@@ -103,7 +103,7 @@ class Mooc
      * 
      * @ORM\Column(name="certification_type", type="json_array")
      */
-    private $certificationType;
+    private $certificationType = array();
     
     /**
      * @var integer

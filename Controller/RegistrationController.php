@@ -266,18 +266,6 @@ class RegistrationController extends Controller
                     );
     }
 
-/*
-    private function sendEmailValidation(User $user){
-        $message = \Swift_Message::newInstance()
-            ->setSubject('Validez votre compte Solerni')
-            ->setFrom('contact@solerni.org')
-            ->setTo($user->getMail())
-            ->setBody($this->renderView('ClarolineCoreBundle:Registration:emailValidation.txt.twig', 
-                    array('user' => $user)))
-        ;
-        $this->get('mailer')->send($message);
-    }*/
-
 /************************ END ******************************/
 
     /**
