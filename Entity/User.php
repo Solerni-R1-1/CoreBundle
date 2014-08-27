@@ -330,6 +330,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * )
      */
     protected $sessionsByUsers;
+
+
+    /**
+     * @ORM\Column(name="is_facebook_account", type="boolean", nullable=true)
+     */
+    protected $isFacebookAccount = false;
     
 
     public function __construct()
@@ -1059,5 +1065,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function setSessionsByUsers(ArrayCollection $sessionsByUsers){
         $this->sessionsByUsers = $sessionsByUsers;
+    }
+
+    public function isFacebookAccount(){
+        return $this->isFacebookAccount;
+    }
+
+    public function setFacebookAccount($isFacebookAccount){
+        $this->isFacebookAccount = $isFacebookAccount;
     }
 }

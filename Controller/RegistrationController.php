@@ -362,6 +362,7 @@ class RegistrationController extends Controller
             $user->setFirstName($request->request->get('firstName'));
             $user->setLastName($request->request->get('lastName'));
             $user->setMail($request->request->get('mail'));
+            $user->setFacebookAccount(false);
 
             $errorList = $this->validator->validate($user);
 

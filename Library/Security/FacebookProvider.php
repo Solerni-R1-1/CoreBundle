@@ -64,6 +64,7 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
             $user->setUsername($this->createUsername($response->getNickname()));
             $user->setPlainPassword($this->utilities->generateGuid());
             $user->setMail($response->getEmail());
+            $user->setFacebookAccount(true); 
             $user = $this->userManager->createUser($user);
         }
 

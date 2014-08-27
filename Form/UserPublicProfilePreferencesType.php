@@ -25,12 +25,12 @@ class UserPublicProfilePreferencesType extends AbstractType
             ->add('display_email', 'checkbox', array(
                 'required' => false
             ))
-            ->add('display_phone_number', 'checkbox', array(
-                'required' => false
-            ))
-            ->add('allow_mail_sending', 'checkbox', array(
-                'required' => false
-            ))
+          //  ->add('display_phone_number', 'checkbox', array(
+          //      'required' => false
+          //  ))
+          //  ->add('allow_mail_sending', 'checkbox', array(
+          //      'required' => false
+          //  ))
             ->add('allow_message_sending', 'checkbox', array(
                 'required' => false
             ))

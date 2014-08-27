@@ -103,21 +103,21 @@
                                             {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
                                         </label>
                                     </div>
-                                    <div class="checkbox">
+                                  {#  <div class="checkbox">
                                         <label>
                                             {{ form_widget(form.display_phone_number) }} {{ 'phone'|trans({}, 'platform') }}
                                         </label>
-                                    </div>
-                                    <div class="checkbox">
+                                    </div>#}
+                                  {#  <div class="checkbox">
                                         <label>
                                             {{ form_widget(form.allow_mail_sending) }} {{ 'public_profile_preferences_allow_mail_sending'|trans({}, 'platform') }}
                                         </label>
-                                    </div>
+                                    </div> #}
                                     <div class="checkbox">
                                         <label>
                                             {{ form_widget(form.allow_message_sending) }} {{ 'public_profile_preferences_allow_message_sending'|trans({}, 'platform') }}
                                         </label>
-                                    </div>
+                                    </div> 
                                 </div>
 
                                 {{ form_rest(form) }}

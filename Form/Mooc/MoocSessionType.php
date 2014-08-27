@@ -27,7 +27,7 @@ class MoocSessionType extends AbstractType
             ->add('startDate', 
                     'date', 
                     array( 
-                        'label' => 'Début de session',
+                        'label' => 'session_start_date',
                         'widget' => 'single_text',
                         'required' => true
                     )
@@ -35,7 +35,7 @@ class MoocSessionType extends AbstractType
             ->add('endDate',
                     'date', 
                     array(
-                        'label' => 'Fin de session',
+                        'label' => 'session_end_date',
                         'widget' => 'single_text',
                         'required' => true
                     )
@@ -43,7 +43,7 @@ class MoocSessionType extends AbstractType
             ->add('startInscriptionDate', 
                     'date', 
                     array(
-                        'label' => 'Début d\'inscription',
+                        'label' => 'session_start_subscription',
                         'widget' => 'single_text',
                         'required' => true
                     )
@@ -51,7 +51,7 @@ class MoocSessionType extends AbstractType
             ->add('endInscriptionDate', 
                     'date',
                     array(
-                        'label' => 'Fin d\'inscription',
+                        'label' => 'session_end_subscription',
                         'widget' => 'single_text',
                         'required' => true
                     )
@@ -59,20 +59,20 @@ class MoocSessionType extends AbstractType
             ->add('title', 
                     'text', 
                     array(
-                        'label' => 'Titre de la session',
+                        'label' => 'session_title',
                         'required' => true
                     )
                 )
             ->add('maxUsers', 
                     'integer', 
                     array(
-                        'label' => 'Nombre maximum d\'inscrits',
+                        'label' => 'session_max_users',
                         'required' => false
                     ))
             ->add('forum', 'entity', array(
                 'label' => 'Forum',
                 'property' => 'name',
-                'empty_value' => '-- Choisir un forum de session --',
+                'empty_value' => 'session_choose_forum',
                 'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'required' => false,
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
@@ -90,6 +90,7 @@ class MoocSessionType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Claroline\CoreBundle\Entity\Mooc\MoocSession',
+            'translation_domain' => 'platform',
             'language' => 'fr'
         ));
     }

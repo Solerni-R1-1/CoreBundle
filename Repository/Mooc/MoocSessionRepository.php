@@ -59,4 +59,76 @@ class MoocSessionRepository extends EntityRepository
 		}
 		return $moocSession;
 	}
+    
+     /**
+	 * Retrieves the active session for a mooc or the next one if empty
+	 * 
+	 * @param ClarolineCoreBundle\Entity\Mooc\Mooc $mooc
+	 */
+	public function getActiveMoocSessionForUser( $mooc, $user ) {
+        
+        if( $user ) {
+            // Get the firest active mooc where the user is in
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms " .
+                    "WHERE :user MEMBER OF ms.users ".
+                    "AND ms.mooc = :mooc " .
+                    "AND ms.startDate < CURRENT_TIMESTAMP()" .
+                    "AND ms.endDate > CURRENT_TIMESTAMP()" .
+                    "ORDER BY ms.startDate DESC ";
+            $qb = $this->_em->createQuery($query)->setParameters(array(
+                    "mooc"  => $mooc,
+                    "user" => $user
+            ));
+            $result = $qb->getResult();
+        }
+
+        if ( count( $result ) == 0 ) {
+            // Get the most recent session where we are inside the inscription window
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms " .
+                    "WHERE ms.mooc = :mooc " .
+                    "AND ms.startInscriptionDate < CURRENT_TIMESTAMP()" .
+                    "AND ms.endInscriptionDate > CURRENT_TIMESTAMP()" .
+                    "ORDER BY ms.startInscriptionDate DESC ";
+            $qb = $this->_em->createQuery($query)->setParameters(array(
+                    "mooc" => $mooc
+            ));
+            $result = $qb->getResult();
+        }
+
+        if ( count($result) == 0 ) {
+            // Get the closest next session in time to possible preinscription
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms " .
+                    "WHERE ms.mooc = :mooc " .
+                    "AND ms.startInscriptionDate > CURRENT_TIMESTAMP()" .
+                    "ORDER BY ms.startInscriptionDate DESC ";
+            $qb = $this->_em->createQuery($query)->setParameters(array(
+                    "mooc" => $mooc
+            ));
+            $result = $qb->getResult();
+        }
+
+        if ( count($result) == 0 ) {
+            // Get the first session 
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms " .
+                    "WHERE ms.mooc = :mooc " .
+                    "ORDER BY ms.endDate DESC ";
+            $qb = $this->_em->createQuery($query)->setParameters(array(
+                    "mooc" => $mooc
+            ));
+            $result = $qb->getResult();
+        }
+
+        return ( count($result) > 0 ) ? $result[0] : NULL;
+		
+	}
+    
+    /*
+	 * Guess the mooc active session : the active one or the next one
+	 * 
+	 * @param ClarolineCoreBundle\Entity\AbstractWorkspace $workspace
+	 * @param ClarolineCoreBundle\Entity\User $user
+     */
+    public function guessActiveMoocSession( $workspace, $user ) {
+        return $this->getActiveMoocSessionForUser( $workspace->getMooc(), $user );
+    }
 }

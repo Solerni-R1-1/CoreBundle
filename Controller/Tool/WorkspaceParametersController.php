@@ -461,6 +461,7 @@ class WorkspaceParametersController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
+            $user->setFacebookAccount(false); 
             $this->userManager->createUser($user);
             $this->workspaceManager->addUserAction($workspace, $user);
             return $this->redirect(

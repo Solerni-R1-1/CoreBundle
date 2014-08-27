@@ -35,7 +35,7 @@ class MoocType extends AbstractType
                     'multiple'  => false,
                     'expanded'  => false,
                     'required'  => true,
-                    'empty_value' => '-- Choisir un propriétaire pour ce MOOC --'
+                    'empty_value' => 'mooc_choose_owner'
                 ))
             ->add('isPublic', 'checkbox', array('required' => false))
             ->add('accessConstraints', 'entity', array(
@@ -56,18 +56,18 @@ class MoocType extends AbstractType
             ->add('illustrationPath', 'text', array('required' => true, 'attr' => array( 'class' => 'hide' )))
             ->add('postEndAction', 'choice', array(
                     'choices' => array(
-                        'empty_value' => '-- Choisir une action -- ',
-                        '1' => 'Rejouable',
-                        '2' => 'Non rejouable'
-                    ), 
+                        'empty_value' => 'choose_replay_mooc',
+                        '1' => 'mooc_can_replay',
+                        '2' => 'mooc_cannot_replay'
+                    ),
                     'required' => false
                 ))
             ->add('duration', 'integer', array('required' => false, 'precision' => 0 ))
             ->add('weeklyTime', 'integer', array('required' => false, 'precision' => 0 ))
             ->add('certificationType', 'choice', array(
                     'choices' => array(
-                        'badge' => 'Badge',
-                        'attestation' => 'Attestation'
+                        'badge' => 'mooc__certif_badge',
+                        'attestation' => 'mooc_certif_attestation'
                     ),
                     'multiple' => true,
                     'expanded' => true,

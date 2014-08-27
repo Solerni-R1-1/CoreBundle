@@ -20,11 +20,11 @@ class MoocAccessConstraintsType extends AbstractType
                 'class' => 'ClarolineCoreBundle:Mooc\MoocOwner',
                 'property' => 'name',
                 'required' => true,
-                'empty_value' => '-- Choisir le propriétaire des règles d\'accès --',
+                'empty_value' => 'constraint_choose_owner',
                 'label_attr' => array ( 'class' => 'align-right' )
             ) )
-            ->add('whitelist', 'textarea', array( 'required' => false, 'label' => 'Liste blanche<span style="font-weight:normal"><br>(1 adresse email par ligne)</span>', 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 ) ))
-            ->add('patterns', 'textarea', array( 'required' => false, 'label' => 'Domaines autorisés<span style="font-weight:normal"><br>(@domaine.ext, 1 par ligne)</span>', 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 )  ))
+            ->add('whitelist', 'textarea', array( 'required' => false, 'label' => 'constraint_whitelist', 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 ) ))
+            ->add('patterns', 'textarea', array( 'required' => false, 'label' => 'constraint_pattern', 'label_attr' => array ( 'class' => 'align-right' ), 'attr' => array('rows' => 7 )  ))
 
         ;
     }
