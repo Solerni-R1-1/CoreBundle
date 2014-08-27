@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Claroline\CoreBundle\Entity\Badge\UserBadge;
 
 class BadgeController extends Controller
 {
@@ -117,7 +118,11 @@ class BadgeController extends Controller
         }
         
         foreach ($displayedBadges as $displayedBadge) {
-        	$res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge'], $resourceType, $loggedUser );
+        	if ($displayedBadge['badge'] instanceof UserBadge) {
+        		$res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge']->getBadge(), $resourceType, $loggedUser );
+        	} else {
+        		$res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge'], $resourceType, $loggedUser );
+        	}
         	$dropzone = $res['dropzone'];
         	$drop = $res['drop'];
         	if ($drop != null && $drop->getCalculatedGrade() <= $dropzone->getMinimumScoreToPass()) {
@@ -237,7 +242,6 @@ class BadgeController extends Controller
             $doctrine = $this->getDoctrine();
             $evalDropzoneRepo = $doctrine->getRepository('IcapDropzoneBundle:Dropzone');
             $evalDropRepo = $doctrine->getRepository('IcapDropzoneBundle:Drop');
-            
             foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
                 if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
                     $badgeRessourceNode = $BadgeRule->getResource();
