@@ -181,6 +181,14 @@ class AuthenticationController
             $user = $this->userManager->getUserbyEmail($data['mail']);
 
             if (!empty($user)) {
+
+                if ( $user->isFacebookAccount() === TRUE ) {
+                    return array(
+                        'error' => $this->translator->trans('fb_forbidden', array(), 'platform'),
+                        'form' => $form->createView()
+                    );
+                }
+
                 $user->setHashTime(time());
                 $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
                 $user->setResetPasswordHash($password);

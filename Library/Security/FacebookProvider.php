@@ -59,12 +59,20 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
         } catch (\Exception $e) {
             $user = new User();
             $content = $response->getResponse();
+
             $user->setFirstName($content['first_name']);
             $user->setLastName($content['last_name']);
-            $user->setUsername($this->createUsername($response->getNickname()));
             $user->setPlainPassword($this->utilities->generateGuid());
             $user->setMail($response->getEmail());
             $user->setFacebookAccount(true); 
+
+
+            $pseudo = $response->getNickname();
+            if( empty($pseudo) ){
+                $pseudo = $this->userManager->generatePublicUrl($user);
+            }
+            $user->setUsername($this->createUsername($pseudo));
+
             $user = $this->userManager->createUser($user);
         }
 
@@ -98,7 +106,7 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
         if (count($user) === 0) {
             return ($username);
         } else {
-            return $username . '#' . count($user);
+            return $username . '_' . count($user);
         }
     }
 }

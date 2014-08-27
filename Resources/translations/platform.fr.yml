@@ -1026,5 +1026,5 @@ constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@do
 constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
 
 
-
+fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
 
