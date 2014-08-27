@@ -12,7 +12,7 @@
                       <a class="slrn-subnavbar__link hometab-link" title="{{ solerniTab.title }}" href="{{ solerniTab.url }}">
                           {{ solerniTab.name }}
                       </a>
-                      {% if isCurrentPage( solerniTab.url ) %}<span class="slrn-item__marqueur"></span>{% endif %}
+                      {% if solerniTab.isSelected %}<span class="slrn-item__marqueur"></span>{% endif %}
                   </li>
               {% endfor %} 
         {% endif %}

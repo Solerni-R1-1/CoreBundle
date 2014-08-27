@@ -140,7 +140,7 @@ class MoocSessionRepository extends EntityRepository
     	$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms ".
     			"WHERE ms.forum = :forum";
     	$qb = $this->_em->createQuery($query)->setParameters(array(
-    			"forum" => $forum
+    			"forum" => $forum->getResourceNode()
     	));
     	
     	$result = $qb->getResult();
