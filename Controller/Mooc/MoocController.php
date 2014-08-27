@@ -509,7 +509,8 @@ class MoocController extends Controller
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
             'session' => $this->getSessionFromWorkspace($workspace, $user),
-            'progression' => $progression
+            'progression' => $progression,
+            'workspace' => $workspace
             )
         );
     }
