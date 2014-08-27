@@ -29,7 +29,7 @@ class BadgeController extends Controller
             AbstractWorkspace $workspace,
             User $loggedUser,
             $badgePage,
-            $resourceType = 'all',
+            $resourceType = null,
             $resourceId = null,
             $needEcho = true
     ) {
@@ -45,12 +45,13 @@ class BadgeController extends Controller
         $displayedBadges  = array();
         $nbTotalBadges    = 0;
         $nbAcquiredBadges = 0;
+          
+        if ( $resourceType == null ) {
+            $resourceType = 'all';
+        }
 
         foreach ($workspaceBadges as $workspaceBadge) {
-            
-            if ( $resourceType == null ) {
-                $resourceType = 'all';
-            }
+
             
             /* filter badges from name and resource ID to check rules associated with the badge */
             if ( $resourceType != 'all' && $resourceId != null ) {
@@ -125,7 +126,7 @@ class BadgeController extends Controller
         	}
         	$dropzone = $res['dropzone'];
         	$drop = $res['drop'];
-        	if ($drop != null && $drop->getCalculatedGrade() <= $dropzone->getMinimumScoreToPass()) {
+        	if ($drop != null && $drop->getCalculatedGrade() <= $dropzone->getMinimumScoreToPass() ) {
         		$nbTotalBadges--;
         	}
         }
