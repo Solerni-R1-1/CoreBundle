@@ -33,16 +33,19 @@
     {% if sessionComponentLayout == 'slider-small' %}
         </ul>
         <script type="text/javascript">
-
+        
         $(document).ready(function(){
 
+
+          $('.bxslider').css('display','block');
           $('.bxslider').bxSlider({
-              /*pause: 200,*/
-              /*auto: true,*/
+         {#   pause: 200,
+              auto: true,  #}
               mode: 'fade',
               infiniteLoop: false, 
               hideControlOnEnd: true
             });
+
         });
 
         </script>
