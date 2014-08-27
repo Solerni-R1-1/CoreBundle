@@ -2,7 +2,7 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'internal_error' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block message %}
+{% block content %}
     {#{'internal_error'|trans({}, 'platform')}#}
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
