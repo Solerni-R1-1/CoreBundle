@@ -103,7 +103,7 @@
             {% endif %}
 
 			{# LANGUAGE #}
-			{% if mooc.getLanguage() is not empty %}
+			{% if mooc.getLanguage() is not empty and mooc.getLanguage() != 'empty_valu' %}
                 <li>
                     <i class='essentiels-icon essentiels__lang'></i>
                     Langue du cours : <span class="slrn-bold">
