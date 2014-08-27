@@ -29,6 +29,10 @@
 /** RESET AND LAYOUT
 ===================================*/
 
+.bxslider{
+	display:none;  
+}
+
 .bx-wrapper {
 	position: relative;
 	margin: 0 auto 60px;
