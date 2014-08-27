@@ -11,3 +11,4 @@ framework:
     default_locale: %locale%
     session:
       ~
+    trusted_proxies:  %trusted_proxies%

@@ -18,6 +18,11 @@ class Version20140826093514 extends AbstractMigration
             ALTER TABLE claro_user 
             ADD is_facebook_account TINYINT(1) DEFAULT NULL
         ");
+
+        $this->addSql("
+            UPDATE claro_user SET public_url = username
+        ");
+
     }
 
     public function down(Schema $schema)
