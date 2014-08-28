@@ -891,11 +891,11 @@ body.dsk .alert { display: none; }
 .presentation__mooc__text {
     position:       relative;
     margin-left:    30px;
-    padding-top:    30px;
+    padding-top:    20px;
 }
 
 .presentation__mooc--2-column .presentation__mooc__text {
-    width:          177px;
+    width:          190px;
 }
 
 .presentation__mooc--3-column .presentation__mooc__text {
@@ -911,7 +911,8 @@ body.dsk .alert { display: none; }
     font-weight:    bold;
     margin:         0;
     color:          #333333;
-    /*white-space:    nowrap; Relatif bug Forge 155644 */
+    width:          350px;
+    margin-bottom:  2px;
 }
 
 .presentation__mooc__text__subtitle {
@@ -955,13 +956,13 @@ body.dsk .alert { display: none; }
 
 /* encart -> meta block */
 .presentation__mooc__meta {
-    position:   absolute; top: 0; right: 0; bottom: 0;
+    position:       absolute; top: 0; right: 0; bottom: 0;
     font-weight:    bold;
 }
 
 .presentation__mooc--2-column .presentation__mooc__meta {
     width:          155px;
-    padding-top:    85px;
+    padding-top:    75px;
     font-size:      10px;
 }
 
@@ -1361,27 +1362,27 @@ input[type="file"] { height: auto; }
 
 .slrn-my_badges-list__item {
     background-color:   #EEEEEF;
-    padding:            20px;
+    padding:            25px;
     display:            block;
     overflow:           hidden;
-    margin-bottom:      25px;
+    margin:             25px 0 40px 0;
 }
 
 .slrn-my_badges-list__item__image {
-    width:  100px;
-    height: 100px;
+    width:  112px;
+    height: 112px;
     float:  left;
 }
 
 .slrn-my_badges-list__body {
-    margin-left: 140px;
+    margin-left: 150px;
 }
 
 .slrn-my_badges-list__item__title {
-    font-size:      1.3em;
+    font-size:      1.7em;
     margin:         0 0 .5em 0;
     font-weight:    bold;
-    color: #333;
+    color:          #333;
 }
 
 .slrn-my_badges-list__content a {
