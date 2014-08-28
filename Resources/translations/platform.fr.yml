@@ -258,6 +258,7 @@ email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
+error_sessions_same_forum: 'Deux sessions ne peuvent pas avoir le même forum.'
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Form\Mooc\MoocType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormError;
 
 class WorkspaceParametersController extends Controller
 {
@@ -295,12 +297,33 @@ class WorkspaceParametersController extends Controller
         
         if ( $isMooc ) {
             if ( $form->isValid() || && $form_mooc->isValid() ) {
-
+            	$forumIds = array();
                 /* Setting current mooc for newly added sessions */
-                foreach ( $mooc->getMoocSessions() as $moocSession ) {
+                foreach ( $mooc->getMoocSessions() as $i => $moocSession ) {
                    if (  ! $moocSession->getMooc() ) {
                        $moocSession->setMooc( $mooc );
                    }
+
+                   $forum = $moocSession->getForum();
+                   if ($forum != null) {
+	                   	if (in_array($forum->getId(), $forumIds)) {
+		                   	$form_mooc->get('moocSessions')->get($i)->get('forum')->addError(new FormError($this->get('translator')->trans(
+						            'error_sessions_same_forum', 
+						            array(), 
+						            'platform'
+					            )));
+			                return array(
+			                		'form' => $form->createView(),
+			                		'form_mooc' => $form_mooc->createView(),
+			                		'workspace' => $workspace,
+			                		'url' => $url,
+			                		'user' => $user,
+			                		'count' => $count,
+			                		'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
+			                );
+	                   	}
+						$forumIds[] = $forum->getId();
+	                }
                 }
 
                 /* remove sessions from database if deleted */
