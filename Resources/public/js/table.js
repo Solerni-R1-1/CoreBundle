@@ -148,6 +148,7 @@
                             $('.chk-item:checked').each(function (index, element) {
                                 $(element).parent().parent().remove();
                             });
+                            $('#check-all-items').prop('checked', false);
                         }
                     }
                 });
