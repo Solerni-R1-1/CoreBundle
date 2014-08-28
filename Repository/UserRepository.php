@@ -1057,7 +1057,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         foreach ($users as $user) {
             $resultArray[] = array(
                 'id'   => $user->getId(),
-                'text' => $user->getFirstName() . ' ' . $user->getLastName()
+                'text' => $user->getFirstName() . ' ' . $user->getLastName() . ' (' . $user->getUsername() . ')'
             );
         }
 
