@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Claroline\CoreBundle\Controller\Mooc\MoocService;
 
 /**
  * Description of StaticController
@@ -44,6 +45,7 @@ class MoocController extends Controller
     private $router;
     private $workspaceManager;
     private $mailManager;
+    private $moocService;
     
     
     /**
@@ -52,7 +54,8 @@ class MoocController extends Controller
      *     "router"             = @DI\Inject("router"),
      *     "translator"         = @DI\Inject("translator"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
+     *     "moocService"        = @DI\Inject("orange.mooc.service")
      * })
      */
     public function __construct( 
@@ -60,13 +63,15 @@ class MoocController extends Controller
             UrlGeneratorInterface $router, 
             TranslatorInterface $translator,
             WorkspaceManager $workspaceManager,
-            MailManager $mailManager
+            MailManager $mailManager,
+            MoocService $moocService
         ) {
         $this->translator = $translator;
         $this->security = $security;
         $this->router = $router;
         $this->workspaceManager = $workspaceManager;
         $this->mailManager = $mailManager;
+        $this->moocService = $moocService;
     }
 
     /**
@@ -80,7 +85,7 @@ class MoocController extends Controller
      */
     public function moocPageAction( $mooc, $user ) {
 
-        $session = $this->getActiveSessionFromWorkspace( $mooc->getWorkspace(), $user );
+        $session = $this->moocService->getActiveSessionFromWorkspace( $mooc->getWorkspace(), $user );
 
         return $this->render(
             'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
@@ -178,9 +183,9 @@ class MoocController extends Controller
             return $this->inner404('La leçon n\'est pas définie pour ce mooc');
         }
 
-        $lesson = $this->getLessonFromWorkspace( $mooc->getWorkspace(), $user);
+        $lesson = $this->moocService->getLessonFromWorkspace( $mooc->getWorkspace(), $user);
 
-        $url = $this->getRouteToTheLastChapter( $lesson, $user );
+        $url = $this->moocService->getRouteToTheLastChapter( $lesson, $user );
         return  $this->redirect($url);
 
     }
@@ -305,7 +310,7 @@ class MoocController extends Controller
 
         // If we want progression
         if ( $showUserProgression && $user != 'anon.' ) {
-            $progression = $this->getUserProgressionInLesson( $user, $session->getMooc()->getWorkspace() );
+            $progression = $this->moocService->getUserProgressionInLesson( $user, $session->getMooc()->getWorkspace() );
         } else {
             $progression = null;
         }
@@ -338,18 +343,18 @@ class MoocController extends Controller
         );
         
         // Check Session
-        $session = $this->getSessionFromWorkspace($workspace, $user);
+        $session = $this->moocService->getSessionFromWorkspace($workspace, $user);
         $currentUrl = dirname( $_SERVER['REQUEST_URI'] );
         
         if ( $session ) {
             //get the mooc lesson
-            $lesson = $this->getLessonFromWorkspace($workspace, $user);
+            $lesson = $this->moocService->getLessonFromWorkspace($workspace, $user);
             // get the mooc lesson link
             if ($lesson) {
-                $firstSubChapter = $this->getFirstSubChapter($lesson);
+                $firstSubChapter = $this->moocService->getFirstSubChapter($lesson);
                 if ($firstSubChapter ) {
                     // generate tab
-                    $url = $this->getRouteToTheLastChapter($lesson, $user);
+                    $url = $this->moocService->getRouteToTheLastChapter($lesson, $user);
                     $solerniTabs['solerniTabs'][] = array(
                         'name' => 'Apprendre',
                         'url' => $url,
@@ -392,110 +397,7 @@ class MoocController extends Controller
             $solerniTabs
         );
     }
-    
-    /**
-     * @param Lesson $lesson
-     *
-     * @return \Icap\LessonBundle\Entity\Chapter
-     */
-    protected function getFirstSubChapter( \Icap\LessonBundle\Entity\Lesson $lesson )
-    {
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
-        $firstChapter = $chapterRepository->getFirstChapter($lesson);
-        $subChapter = null;
-        if ($firstChapter) {
-            $subChapter = $chapterRepository->getChapterFirstChild($firstChapter);
-        }
-        
-        return $subChapter;
-    }
-    
-    /**
-     * get the route to the last chapter read from a lesson, according to the log.
-     *
-     * @param Lesson $lesson
-     * @param User|string $user
-     * @return string
-     */
-    private function getRouteToTheLastChapter( \Icap\LessonBundle\Entity\Lesson $lesson, $user )
-    {
-        $router = $this->get('router');
-        $doctrine = $this->get('doctrine');
-        $logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
-        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-        $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_lesson');
-        if ($resourceType == null) {
-            die('must not be executed');
-        }
 
-        if($user instanceof User){
-            $log = $logRepository->findOneBy(
-                    array(
-                        'resourceType' => $resourceType->getId(),
-                        'doer' => $user->getId(),
-                        'action' => LogChapterReadEvent::ACTION,
-                    ),
-                    array('dateLog' => 'DESC')
-                );
-        } else {
-            $log = null;
-        }
-
-        $firstChapter = null;
-        if($log == null){
-            $allChapters = $chapterRepository->findByLesson(array('lesson' => $lesson), array('left' => 'ASC'));
-            foreach($allChapters as $chapter){
-                if($chapter->getLevel() > 1){
-                    if($firstChapter == null){
-                        $firstChapter = $chapter;
-                        break;
-                    }
-                }
-            }
-            if($firstChapter != null){
-                $url = $router->generate('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterId' => $firstChapter->getId()));
-            } else {
-                $url = $router->generate('icap_lesson', array('resourceId' => $lesson->getId()));
-            }
-        } else {
-            $details = $log->getDetails();
-            $url = $router->generate('icap_lesson_chapter', array('resourceId' => $details['chapter']['lesson'], 'chapterId' => $details['chapter']['chapter']));
-        }
-        
-        return $url;
-    }
-    
-    /*
-     * Return user progression in lesson from workspace
-     */
-    private function getUserProgressionInLesson( $user, $workspace ) {
-        
-        $doctrine = $this->getDoctrine();
-        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
-        $lesson = $this->getLessonFromWorkspace($workspace, $user);
-        
-        $totalProgression = 0;
-        $currentProgression = 0;
-        $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
-        $firstChapter = null;
-        foreach($allChapters as $chapter){
-            if($chapter->getLevel() > 1){
-                if($firstChapter == null){
-                    $firstChapter = $chapter;
-                }
-                $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
-                if($done && $done->getDone()){
-                    $currentProgression++;
-                }
-                $totalProgression++;
-            }
-        }
-
-        return ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
-        
-    }
-    
     /**
      * 
      * Render presentation widget for the mooc (left column of designs) 
@@ -505,10 +407,10 @@ class MoocController extends Controller
      */
     public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
     {
-        $lesson = $this->getLessonFromWorkspace($workspace, $user);
+        $lesson = $this->moocService->getLessonFromWorkspace($workspace, $user);
 
         if ( $renderProgression ) {
-            $progression = $this->getUserProgressionInLesson($user, $workspace);
+            $progression = $this->moocService->getUserProgressionInLesson($user, $workspace);
         } else {
            $progression = null; 
         }
@@ -516,53 +418,11 @@ class MoocController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
-            'session' => $this->getSessionFromWorkspace($workspace, $user),
+            'session' => $this->moocService->getSessionFromWorkspace($workspace, $user),
             'progression' => $progression,
             'workspace' => $workspace
             )
         );
     }
     
-    /*
-     * Get the lesson from a workspace
-     * Return a Lesson Entity or Null
-     */
-    private function getLessonFromWorkspace($workspace, $user) {
-        
-        $doctrine = $this->getDoctrine();
-        $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
-        $lesson = null;
-        $session = $this->getSessionFromWorkspace($workspace, $user);
-        
-        if ( $session ) {
-            $lessonNode = $session->getMooc()->getLesson();
-            $lesson = $lessonRepository->findOneByResourceNode($lessonNode);
-        } 
-        
-        return $lesson;
-    }
-    
-    /*
-     * Get the session from a workspace
-     * Return MoocSession Entity or null
-     */
-    private function getSessionFromWorkspace($workspace, $user) {
-	    $moocSession = $this->getDoctrine()
-        	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
-      		->guessMoocSession($workspace, $user);
-    	
-    	return $moocSession;
-    }
-    
-        /*
-     * Get the active (or next) session from a workspace
-     * Return MoocSession Entity or null
-     */
-    private function getActiveSessionFromWorkspace( $workspace, $user ) {
-        
-	    return $this->getDoctrine()
-        	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
-      		->guessActiveMoocSession( $workspace, $user );
-    }
-
 }

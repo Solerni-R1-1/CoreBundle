@@ -102,3 +102,8 @@ services:
         class: Claroline\CoreBundle\Controller\Mooc\MoocAccessConstraintsService
         calls:
             - [ setContainer, [@service_container] ]
+            
+    orange.mooc.service:
+        class: Claroline\CoreBundle\Controller\Mooc\MoocService
+        calls:
+            - [ setContainer, [@service_container] ]

@@ -23,7 +23,7 @@
         </a>    
     </div>
     {# PROGRESSION #}
-    {% if progression %}
+    {% if progression is not null %}
     <div class="row slrn-widget__body bg-color-primary lesson-progression">
         {#<div class="slrn-widget__title slrn-widget_row">{{ 'my_progress'|trans({}, 'platform') }}</div>#}
         <span class='presentation__mooc__progression__wrapper'>
