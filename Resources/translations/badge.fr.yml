@@ -126,7 +126,7 @@ my_collections: 'Mes collections'
 my_badges: Mes badges
 no_badge_claim: 'Aucune demande d''attribution.'
 no_badge_in_collection: 'Il n''y a aucun badge dans cette collection.'
-no_badges: 'Aucun badge.'
+no_badges: 'Vous n''avez pas encore obtenu de badge.<br /><a href="%url%" class="pink_link">Consultez les FAQ</a> afin de découvrir le fonctionnement des badges.'
 no_badges_create_to_motivate: 'Aucun badge actuellement, vous pouvez en <a href="%url%">créer</a> pour motiver vos utilisateurs.'
 no_collection: 'Aucune collection.'
 no_badges_in_workspace: 'Il n''y a pour l''instant aucun badge à obtenir dans cet espace de travail.'
