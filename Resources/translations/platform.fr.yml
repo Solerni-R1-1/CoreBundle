@@ -259,6 +259,10 @@ empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
 error_sessions_same_forum: 'Deux sessions ne peuvent pas avoir le même forum.'
+error_session_end_date_inferior_start_date: 'La date de fin doit être supérieure à la date de début.'
+error_session_invalid_start_inscription_date: 'L''inscription ne peut pas commencer après le début de la session.'
+error_session_end_inscription_date_inferior_start_inscription_date: 'La date de fin d''inscription doit être supérieure à la date de début d''inscription.'
+error_session_end_inscription_date_superior_end_date: 'L''inscription ne peut pas terminer après la fin de la session.'
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
