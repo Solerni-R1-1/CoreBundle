@@ -34,8 +34,9 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ResourceController
+class ResourceController extends Controller
 {
     private $sc;
     private $resourceManager;
@@ -186,6 +187,18 @@ class ResourceController
      */
     public function openAction(ResourceNode $node, $resourceType)
     {
+        // redirect user to inscription if he's not registered to a session
+        $workspace = $node->getWorkspace();
+        if (    $workspace->isMooc() && 
+                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() )
+            ) {
+                return $this->redirect( $this->get('router')
+                            ->generate('mooc_view', array( 
+                                'moocId' => $workspace->getMooc()->getId(), 
+                                'moocName' => $workspace->getMooc()->getTitle()))
+                );
+        }
+        
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);

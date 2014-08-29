@@ -438,9 +438,20 @@ class WorkspaceController extends Controller
      */
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
-        if ($this->assertIsGranted($toolName, $workspace, false)) {
-	
-	        $event = $this->eventDispatcher->dispatch(
+        // Redirect user if he's not registered to a session in the workspace
+        $user = $this->security->getToken()->getUser();
+        if ( $workspace->isMooc() & ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $user ) ) {
+            
+            return $this->redirect( $this->get('router')
+                                        ->generate('mooc_view', array( 
+                                            'moocId' => $workspace->getMooc()->getId(), 
+                                            'moocName' => $workspace->getMooc()->getTitle()))
+            );
+        }
+        
+        if ( $this->assertIsGranted($toolName, $workspace, false) ) {
+            
+            $event = $this->eventDispatcher->dispatch(
 	            'open_tool_workspace_' . $toolName,
 	            'DisplayTool',
 	            array($workspace)
@@ -463,9 +474,8 @@ class WorkspaceController extends Controller
 	        }
 	
 	        return new Response($event->getContent());
-        } else {
-        	return $this->redirect($this->get('router')->generate('mooc_view', array('moocId' => $workspace->getMooc()->getId(), 'moocName' => $workspace->getMooc()->getTitle())));
         }
+        
     }
 
     /**
