@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * @DI\Service("claroline.authentication_handler")
  */
@@ -47,6 +47,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $termsOfService;
     private $manager;
     private $router;
+    private $session;
 
     private $breakChain = false;
 
@@ -59,7 +60,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "termsOfService"         = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router"                 = @DI\Inject("router")
+     *     "router"                 = @DI\Inject("router"),
+     *     "session"                = @DI\Inject("session")
      * })
      *
      */
@@ -71,7 +73,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         FormFactory $formFactory,
         TermsOfServiceManager $termsOfService,
         ObjectManager $manager,
-        Router $router
+        Router $router,
+        Session $session
     )
     {
         $this->securityContext = $context;
@@ -82,6 +85,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->termsOfService = $termsOfService;
         $this->manager = $manager;
         $this->router = $router;
+        $this->session = $session;
     }
 
     /**
@@ -99,8 +103,11 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->securityContext->getToken()->getUser();
-
-        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
+        
+        if( $this->session->has('nextUrl') ) {
+            $uri = $this->session->get('nextUrl');
+            $this->session->remove('nextUrl');
+        } elseif ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
             $uri = $user->getLastUri();
         } else {
             $uri = $this->router->generate('claro_desktop_open');
