@@ -279,6 +279,12 @@ body.subnavbar-fixed { padding-top: 110px }
     top: -.8em;
 }
 
+.slrn-hr--lightgrey {
+    border-color:   #EEEEEF;
+    margin:         30px 0 25px 0;
+    height:         2px;
+}
+
 /* DROPDOWN MENU */
 #top_bar .dropdown-menu { left: 0; }
 .slrn-navbar .dropdown-menu .divider { margin: 0; }

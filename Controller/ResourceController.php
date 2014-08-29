@@ -478,12 +478,14 @@ class ResourceController
             	$session = $this->entityManager
             			->getRepository('ClarolineCoreBundle:Mooc\MoocSession')
             			->guessMoocSession($node->getWorkspace(), $user);
-            	foreach ($nodes as $i => $item) {
-            		if ($item['type'] == 'claroline_forum'
-            				&& $item['id'] != $session->getForum()->getId()) {
-            			unset ($nodes[$i]);
-            		}
-            	}
+                if ( $session && $session->getForum() ) {
+                    foreach ($nodes as $i => $item) {
+                        if ($item['type'] == 'claroline_forum'
+                                && $item['id'] != $session->getForum()->getId()) {
+                            unset ($nodes[$i]);
+                        }
+                    }
+                }
             }
 
             foreach ($nodes as $item) {
