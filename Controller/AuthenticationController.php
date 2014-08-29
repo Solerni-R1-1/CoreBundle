@@ -296,6 +296,7 @@ class AuthenticationController
      */
     public function postAuthenticationAction($format)
     {
+
         $formats = array('json', 'xml');
 
         if (!in_array($format, $formats)) {
