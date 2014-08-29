@@ -41,7 +41,7 @@ class MoocService extends Controller
      * Get the active (or next) session from a workspace
      * Return MoocSession Entity or null
      */
-    public function getActiveSessionFromWorkspace( $workspace, $user ) {
+    public function getActiveOrNextSessionFromWorkspace( $workspace, $user ) {
         
 	    return $this->getDoctrine()
         	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
@@ -52,7 +52,7 @@ class MoocService extends Controller
      * Get the session from a workspace
      * Return MoocSession Entity or null
      */
-    public function getSessionFromWorkspace($workspace, $user) {
+    public function getSessionForRegisteredUserFromWorkspace($workspace, $user) {
 	    $moocSession = $this->getDoctrine()
         	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
       		->guessMoocSession($workspace, $user);
@@ -172,7 +172,7 @@ class MoocService extends Controller
         $doctrine = $this->getDoctrine();
         $lessonRepository = $this->getDoctrine()->getRepository('IcapLessonBundle:Lesson');
         $lesson = null;
-        $session = $this->getSessionFromWorkspace($workspace, $user);
+        $session = $this->getSessionForRegisteredUserFromWorkspace($workspace, $user);
         
         if ( $session ) {
             $lessonNode = $session->getMooc()->getLesson();

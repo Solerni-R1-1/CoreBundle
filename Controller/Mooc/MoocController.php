@@ -85,7 +85,7 @@ class MoocController extends Controller
      */
     public function moocPageAction( $mooc, $user ) {
 
-        $session = $this->moocService->getActiveSessionFromWorkspace( $mooc->getWorkspace(), $user );
+        $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
 
         return $this->render(
             'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
@@ -347,7 +347,7 @@ class MoocController extends Controller
         );
         
         // Check Session
-        $session = $this->moocService->getSessionFromWorkspace($workspace, $user);
+        $session = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user);
         $currentUrl = dirname( $_SERVER['REQUEST_URI'] );
         
         if ( $session ) {
@@ -422,7 +422,7 @@ class MoocController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
-            'session' => $this->moocService->getSessionFromWorkspace($workspace, $user),
+            'session' => $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user),
             'progression' => $progression,
             'workspace' => $workspace
             )
