@@ -1,45 +1,44 @@
 <?php
 
-namespace Claroline\CoreBundle\Filter\Mooc;
+namespace Claroline\CoreBundle\SearchFilter\Mooc;
 
-use Orange\SearchBundle\Filter\AbstractFilter;
+use Orange\SearchBundle\SearchFilter\AbstractFilter;
 
 /**
  * Description of FilterStatus
  *
  * @author aameziane
  */
-class FilterDuration extends AbstractFilter
+class FilterStatus extends AbstractFilter
 {
     
     public static function getName() {
-        return 'duration';
+        return 'status';
     }
     
     
     public static function getShortCut() {
-        return 'duration';
+        return 'status';
     }
     
     
     public static function getViewType() {
         return 'checkbox-all';
     }
-
-
+    
     public static function getQueryExpression($values)
     {
         $expression = array();
         foreach ($values as $key) {
             switch ($key) {
-                case 'less_4':
-                    $expression [] = 'mooc_duration_i:[* TO 3]';
+                case 'in_progress':
+                    $expression [] = '(start_date:[* TO NOW/DAY] AND end_date:[NOW/DAY TO * ])';
                     break;
-                case 'between_4_6':
-                    $expression [] = 'mooc_duration_i:[4 TO 6]';
+                case 'coming_soon':
+                    $expression [] = 'start_date:[NOW/DAY TO *]';
                     break;
-                case 'more_6':
-                    $expression [] = 'mooc_duration_i:[7 TO *]';
+                case 'finished':
+                    $expression [] = 'end_date:[* TO NOW/DAY]';
                     break;
                 default:
                     break;
@@ -51,13 +50,14 @@ class FilterDuration extends AbstractFilter
     public static function createFacet(&$facetSet)
     {
         $facetSet->createFacetMultiQuery(static::getShortCut())
-                             ->createQuery('less_4', 'mooc_duration_i:[* TO 3]')
-                             ->createQuery('between_4_6', 'mooc_duration_i:[4 TO 6]')
-                             ->createQuery('more_6', 'mooc_duration_i:[7 TO *]');
+                             ->createQuery('in_progress', 'start_date:[* TO NOW/DAY] AND end_date:[NOW/DAY TO * ]')
+                             ->createQuery('coming_soon', 'start_date:[NOW/DAY TO *]')
+                             ->createQuery('finished', 'end_date:[* TO NOW/DAY]');
     }
     
     public static function buildResultFacet($resultFacet) {
-        $facet = $facet = static::initFacetResult();
+        
+        $facet = static::initFacetResult();
         
         foreach ($resultFacet as $value => $count) {
             $facet ['value'] [] = array(

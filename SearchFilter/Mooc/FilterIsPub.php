@@ -1,29 +1,29 @@
 <?php
 
-namespace Claroline\CoreBundle\Filter\Mooc;
+namespace Claroline\CoreBundle\SearchFilter\Mooc;
 
-use Orange\SearchBundle\Filter\AbstractFilter;
+use Orange\SearchBundle\SearchFilter\AbstractFilter;
 
 /**
  * Description of FilterType
  *
  * @author aameziane
  */
-class FilterOwner extends AbstractFilter
+class FilterIsPub extends AbstractFilter
 {
 
     public static function getName() {
-        return 'mooc_owner_name';
+        return 'mooc_is_public_b';
     }
     
     
     public static function getShortCut() {
-        return 'owner';
+        return 'ispub';
     }
     
     
     public static function getViewType() {
-        return 'checkbox-all';
+        return 'checkbox';
     }
     
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Claroline\CoreBundle\Filter\Mooc;
+namespace Claroline\CoreBundle\SearchFilter\Mooc;
 
-use Orange\SearchBundle\Filter\AbstractFilter;
+use Orange\SearchBundle\SearchFilter\AbstractFilter;
 
 /**
  * Description of FilterType
