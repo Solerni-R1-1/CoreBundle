@@ -207,6 +207,29 @@ class Mooc
      * 
      */
     private $workspace;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="badgesText", type="text", nullable=true)
+     */
+    private $badgesText;
+    
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="badgesUrl", type="text", nullable=true)
+     */
+    private $badgesUrl;
+    
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="googleAnalyticsToken", type="text", nullable=true)
+     */
+    private $googleAnalyticsToken;
     
     /**
      * @var Claroline\CoreBundle\Entity\Resource\ResourceNode
@@ -903,5 +926,41 @@ class Mooc
             $kernel = $kernel->getKernel();
         }
         return $kernel->getContainer()->get($serviceName);
+    }
+    
+    public function getGoogleAnalyticsToken() {
+    	return $this->googleAnalyticsToken;
+    }
+    
+    public function setGoogleAnalyticsToken($gaToken) {
+    	$this->googleAnalyticsToken = $gaToken;
+    }
+    
+	public function getBadgesText() {
+    	return $this->badgesText;
+    }
+
+    public function getBadgesUrl() {
+    	return $this->badgesUrl;
+    }
+
+    /**
+     * Returns a HREF version of the badges url.
+     * @return string
+     */
+    public function getNiceBadgesUrl() {
+    	if (strpos($this->badgesUrl, "http") !== 0) {
+    		return "//".$this->badgesUrl;
+    	} else {
+    		return $this->badgesUrl;
+    	}
+    }
+    
+    public function setBadgesText($badgesText) {
+    	 $this->badgesText = $badgesText;
+    }
+    
+    public function setBadgesUrl($badgesUrl) {
+    	$this->badgesUrl = $badgesUrl;
     }
 }

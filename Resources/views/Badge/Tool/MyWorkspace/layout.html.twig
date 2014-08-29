@@ -44,7 +44,7 @@
             <h2 class="slrn-content-main-title"> {{'my_evals'|trans({}, 'platform') }}</h2>
         {% else %}
             <div class="panel-heading">
-                <a class="slrn-read-faq pink_link" href="{{ path( 'solerni_static_page', { 'name': 'static_eval' } ) }}">{{ 'more_about_badges'|trans({}, 'platform') }}</a>
+                {%  if workspace.getMooc().getBadgesUrl() is defined and workspace.getMooc().getBadgesUrl() %}<a class="slrn-read-faq pink_link" href="{{ workspace.getMooc().getNiceBadgesUrl() }}">{{ 'more_about_badges'|trans({}, 'platform') }}</a>{% endif %}
                 <h2 class="slrn-content-main-title">
                     {{ 'competence_badges' | trans({}, 'platform') }}
                 </h2>
