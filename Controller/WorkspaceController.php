@@ -390,6 +390,7 @@ class WorkspaceController extends Controller
         $currentRoles = $this->utils->getRoles($this->security->getToken());
         //do I need to display every tools.
         $hasManagerAccess = false;
+        $hasAdminAccess = false;
         $managerRole = $this->roleManager->getManagerRole($workspace);
 
         foreach ($currentRoles as $role) {
@@ -398,13 +399,22 @@ class WorkspaceController extends Controller
             }
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            $hasManagerAccess = true;
+        if ($this->security->isGranted('ROLE_ADMIN') || $this->security->isGranted('ROLE_WS_CREATOR') ) {
+            $hasAdminAccess = true;
         }
 
-        //if manager or admin, show every tools
+        //if ws creator or admin, show every tools
+        if ($hasAdminAccess) {
+            $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+        } else 
+       	// if manager, show everything but mooc parameters
         if ($hasManagerAccess) {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+            foreach ($orderedTools as $i => $orderedTool) {
+            	if ($orderedTool->getName() == "parameters") {
+            		unset($orderedTools[$i]);
+            	}
+            }
         //otherwise only shows the relevant tools
         } else {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
