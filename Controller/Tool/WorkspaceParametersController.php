@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Form\Mooc\MoocType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormError;
 
 class WorkspaceParametersController extends Controller
 {
@@ -295,12 +297,80 @@ class WorkspaceParametersController extends Controller
         
         if ( $isMooc ) {
             if ( $form->isValid() || && $form_mooc->isValid() ) {
-
+            	$forumIds = array();
+            	$hasErrors = false;
                 /* Setting current mooc for newly added sessions */
-                foreach ( $mooc->getMoocSessions() as $moocSession ) {
-                   if (  ! $moocSession->getMooc() ) {
-                       $moocSession->setMooc( $mooc );
-                   }
+                foreach ( $mooc->getMoocSessions() as $i => $moocSession ) {
+                   	if (  ! $moocSession->getMooc() ) {
+                        $moocSession->setMooc( $mooc );
+                   	}
+					
+                   	$forum = $moocSession->getForum();
+                   	$form_session = $form_mooc->get('moocSessions')->get($i);
+                   	if ($forum != null) {
+	                   	if (in_array($forum->getId(), $forumIds)) {
+		                   	$form_session->get('forum')->addError(new FormError($this->get('translator')->trans(
+						            'error_sessions_same_forum', 
+						            array(), 
+						            'platform'
+					            )));
+		                   	$hasErrors = true;
+	                   	}
+						$forumIds[] = $forum->getId();
+	                }
+	                
+	                $startDate = $moocSession->getStartDate();
+	                $endDate = $moocSession->getEndDate();
+	                $startInscriptionDate = $moocSession->getStartInscriptionDate();
+	                $endInscriptionDate = $moocSession->getEndInscriptionDate();
+	                
+	                if ($endDate <= $startDate) {
+	                	$form_session->get('endDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_end_date_inferior_start_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                }
+	                if ($startInscriptionDate >= $startDate) {
+	                	$form_session->get('startInscriptionDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_invalid_start_inscription_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                	
+	                }
+	                if ($endInscriptionDate <= $startInscriptionDate) {
+	                	$form_session->get('endInscriptionDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_end_inscription_date_inferior_start_inscription_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                	
+	                }
+	                if ($endInscriptionDate > $endDate) {
+	                	$form_session->get('endInscriptionDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_end_inscription_date_superior_end_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                	
+	                }
+                }
+                
+                if ($hasErrors) {
+                	return array(
+                			'form' => $form->createView(),
+                			'form_mooc' => $form_mooc->createView(),
+                			'workspace' => $workspace,
+                			'url' => $url,
+                			'user' => $user,
+                			'count' => $count,
+                			'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
+                	);
                 }
 
                 /* remove sessions from database if deleted */
