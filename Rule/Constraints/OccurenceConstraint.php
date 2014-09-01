@@ -44,6 +44,9 @@ class OccurenceConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
-        return $queryBuilder->setMaxResults($this->getRule()->getOccurrence());
+        // Removed max result. If occurence was 1 and you lost the first time
+        // you tried a quizz, the only quizz log action which was checked was
+        // the failed one. Shouldn't be...
+        return $queryBuilder/*->setMaxResults($this->getRule()->getOccurrence())*/;
     }
 }

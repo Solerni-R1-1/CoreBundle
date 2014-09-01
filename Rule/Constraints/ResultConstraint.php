@@ -21,19 +21,19 @@ class ResultConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        $isValid               = true;
+        $isValid               = false;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
-
+        
         if (0 === count($this->getAssociatedLogs())) {
             $isValid = false;
         } else {
             foreach ($this->getAssociatedLogs() as $associatedLog) {
                 $associatedLogDetails = $associatedLog->getDetails();
-
+                // Slightly changes to match case when you match a rule then second time
                 if (isset($associatedLogDetails['result'])) {
-                    $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
+                    $isValid = $isValid || version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
                 } else {
-                    $isValid = false;
+                    $isValid = $isValid || false;
                 }
             }
         }

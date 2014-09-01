@@ -264,10 +264,11 @@ class SolerniController extends Controller
                     foreach ( $pagerFanta['badgePager'] as $badgeArray ) {
                         // Only meaning already started
                         if ( $badgeArray['type'] == 'inprogress') {
-                            // If endDate is in the future, we don't have all corrections and no grade
-                            if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") ||
-                                ( $badgeArray['associatedResource']['drop']->countFinishedCorrections() < $badgeArray['associatedResource']['dropzone']->getExpectedTotalCorrection() &&
-                                ! $badgeArray['associatedResource']['drop']->getCalculatedGrade() ) ) {
+                            // Remove Badge if endDate is in the future or we have a grade
+                            if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ||
+                                 ( $badgeArray['associatedResource']['drop']->getCalculatedGrade() > 0 ) ) {
+                                 continue;
+                            } else {
                                 // Add the badge to the active badges in array indexed by resource Node ID
                                 $inProgressBadges[$badgeArray['associatedResource']['dropzone']->getResourceNode()->getId()] = $badgeArray;
                             }
@@ -284,13 +285,12 @@ class SolerniController extends Controller
                         $plural = 's';
                     }
                     $statusText = $translator->trans( 'in_progress_badges', array( '%number%' => $evalsCount, '%plural%' => $plural ), 'platform');
-                    
                     $lastDoerActions = array();
                     $lastReceiverActions = array();
                     
                     // Get last action for each dropzone in claro_log
                     foreach ( $inProgressBadges as $inProgressBadge ) {
-                                            
+
                         // find the last action accessed
                         $logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
                         $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_dropzone');

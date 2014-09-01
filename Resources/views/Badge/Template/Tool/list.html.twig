@@ -9,8 +9,9 @@
             {% set isOver = false %}
             {% set isNotStarted = false %}
             {% set userResult = false %}
-            {# check eval status #}
-            {% if workspaceBadge.associatedResource.dropzone.getEndReview() < date() %}
+            {# check eval status : eval closed or user does not have drop and drop is closed #}
+            {% if    workspaceBadge.associatedResource.dropzone.getEndReview() < date() or
+                    ( workspaceBadge.associatedResource.drop is null and workspaceBadge.associatedResource.dropzone.getEndAllowDrop() < date() ) %}
                 {% set isOver = true %}
             {% endif %}
             {% if workspaceBadge.associatedResource.dropzone.isNotStarted() %}
@@ -88,8 +89,9 @@
             {% set isOver = false %}
             {% set isNotStarted = false %}
             {% set userResult = false %}
-            {# check eval status #}
-            {% if workspaceBadge.associatedResource.dropzone.getEndReview() < date() %}
+            {# check eval status : eval closed or user does not have drop and drop is closed #}
+            {% if   workspaceBadge.associatedResource.dropzone.getEndReview() < date() or 
+                    ( workspaceBadge.associatedResource.drop is null and workspaceBadge.associatedResource.dropzone.getEndAllowDrop() < date() ) %}
                 {% set isOver = true %}
             {% endif %}
             {% if workspaceBadge.associatedResource.dropzone.isNotStarted() %}

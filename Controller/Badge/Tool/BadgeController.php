@@ -77,7 +77,7 @@ class BadgeController extends Controller
             if (!$isOwned) {
                 $nbBadgeRules      = count($workspaceBadge->getRules());
                 $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
-
+                               
                 if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules >= $validatedRules['validRules']) {
                     $inProgressBadges[] = $workspaceBadge;
                     $nbTotalBadges++;
@@ -273,12 +273,10 @@ class BadgeController extends Controller
             $workspace = $session->getMooc()->getWorkspace();
             $WorkspacesBadges = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
             foreach ( $WorkspacesBadges['badgePager'] as $WorkspacesBadgePager ) {
-                foreach( $WorkspacesBadgePager as $WorkspacesBadge ) {
-                    // Only return badges with inprogress badges
-                    if ( $WorkspacesBadge == 'inprogress' ) {
-                         $WorkspacesBadgeList[] = $WorkspacesBadges;
-                         break 2;
-                    }
+                // Only returns badges if they have inprogress
+                if ( $WorkspacesBadgePager['type'] == 'inprogress' ) {
+                     $WorkspacesBadgeList[] = $WorkspacesBadges;
+                     break;
                 }
             }
         }

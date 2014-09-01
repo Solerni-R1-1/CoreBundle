@@ -123,7 +123,7 @@ class Validator
                 $validatedConstraints++;
             }
         }
-
+        
         return ($validatedConstraints === $nbConstraints) ? $associatedLogs : false;
     }
 

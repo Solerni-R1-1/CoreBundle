@@ -448,9 +448,13 @@ class WorkspaceController extends Controller
      */
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
-        // Redirect user if he's not registered to a session in the workspace
+        // Redirect user if he's not registered to a session in the workspace and is not ADMIN
         $user = $this->security->getToken()->getUser();
-        if ( $workspace->isMooc() & ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $user ) ) {
+        if (    $workspace->isMooc() && 
+                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $user ) &&
+                ! $this->security->isGranted('ROLE_ADMIN')
+                
+            ) {
             
             return $this->redirect( $this->get('router')
                                         ->generate('mooc_view', array( 

@@ -187,10 +187,11 @@ class ResourceController extends Controller
      */
     public function openAction(ResourceNode $node, $resourceType)
     {
-        // redirect user to inscription if he's not registered to a session
+        // redirect user to inscription if he's not registered to a session and is not ADMIN
         $workspace = $node->getWorkspace();
         if (    $workspace->isMooc() && 
-                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() )
+                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
+                ! $this->security->isGranted('ROLE_ADMIN')
             ) {
                 return $this->redirect( $this->get('router')
                             ->generate('mooc_view', array( 
