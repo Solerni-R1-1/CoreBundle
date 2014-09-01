@@ -264,14 +264,11 @@ class SolerniController extends Controller
                     foreach ( $pagerFanta['badgePager'] as $badgeArray ) {
                         // Only meaning already started
                         if ( $badgeArray['type'] == 'inprogress') {
-                            // Remove Badge if endDate is in the future or we have a grade
-                            if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ||
-                                 ( $badgeArray['associatedResource']['drop']->getCalculatedGrade() > 0 ) ) {
-                                 continue;
-                            } else {
-                                // Add the badge to the active badges in array indexed by resource Node ID
-                                $inProgressBadges[$badgeArray['associatedResource']['dropzone']->getResourceNode()->getId()] = $badgeArray;
-                            }
+                            // Remove Badge if endDate is in the future & we don't have a grade
+                            if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") &&
+                                 $badgeArray['associatedResource']['drop']->getCalculatedGrade() == -1 ) {
+                                 $inProgressBadges[$badgeArray['associatedResource']['dropzone']->getResourceNode()->getId()] = $badgeArray;
+                            } 
                         }
                     }
                 }
