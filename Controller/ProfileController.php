@@ -225,7 +225,7 @@ class ProfileController extends Controller
             $editYourself = true;
         }
 
-        $roles = $this->roleManager->getPlatformRoles($loggedUser);
+        $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->createForm(
             new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
         );
