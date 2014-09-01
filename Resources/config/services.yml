@@ -107,3 +107,50 @@ services:
         class: Claroline\CoreBundle\Controller\Mooc\MoocService
         calls:
             - [ setContainer, [@service_container] ]
+            
+    # Filter Search Declation 
+    
+    orange.search.filter.status:
+        class: Claroline\CoreBundle\SearchFilter\Mooc\FilterStatus
+        arguments:
+            - status
+            - status
+            - checkbox-all
+        tags:
+            -  { name: orange.search.filter, alias: status }
+            
+    orange.search.filter.duration:
+        class: Claroline\CoreBundle\SearchFilter\Mooc\FilterDuration
+        arguments:
+            - duration
+            - duration
+            - checkbox-all
+        tags:
+            -  { name: orange.search.filter, alias: duration }
+
+    orange.search.filter.ispub:
+        class: Orange\SearchBundle\Filter\FilterStandard
+        arguments:
+            - mooc_is_public_b
+            - ispub
+            - checkbox
+        tags:
+            -  { name: orange.search.filter, alias: ispub }
+
+    orange.search.filter.mcat:
+        class: Claroline\CoreBundle\SearchFilter\Mooc\FilterMoocCategory
+        arguments:
+            - mooc_category_ids
+            - mcat
+            - checkbox-all
+        tags:
+            -  { name: orange.search.filter, alias: mcat }
+            
+    orange.search.filter.owner:
+        class: Orange\SearchBundle\Filter\FilterStandard
+        arguments:
+            - mooc_owner_name
+            - owner
+            - checkbox-all
+        tags:
+            -  { name: orange.search.filter, alias: owner } 

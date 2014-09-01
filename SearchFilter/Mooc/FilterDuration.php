@@ -2,33 +2,20 @@
 
 namespace Claroline\CoreBundle\SearchFilter\Mooc;
 
-use Orange\SearchBundle\SearchFilter\AbstractFilter;
+use Orange\SearchBundle\Filter\FilterStandard;
 
 /**
- * Description of FilterStatus
+ * Description of FilterDuration
  *
  * @author aameziane
  */
-class FilterDuration extends AbstractFilter
+class FilterDuration extends FilterStandard
 {
     
-    public static function getName() {
-        return 'duration';
-    }
-    
-    
-    public static function getShortCut() {
-        return 'duration';
-    }
-    
-    
-    public static function getViewType() {
-        return 'checkbox-all';
-    }
 
-
-    public static function getQueryExpression($values)
+    public function getQueryExpression($values)
     {
+        
         $expression = array();
         foreach ($values as $key) {
             switch ($key) {
@@ -48,24 +35,25 @@ class FilterDuration extends AbstractFilter
         return "(" . implode(" OR ", $expression) . ")";
     }
     
-    public static function createFacet(&$facetSet)
+    public function createFacet(&$facetSet)
     {
-        $facetSet->createFacetMultiQuery(static::getShortCut())
+        $facetSet->createFacetMultiQuery($this->getShortCut())
                              ->createQuery('less_4', 'mooc_duration_i:[* TO 3]')
                              ->createQuery('between_4_6', 'mooc_duration_i:[4 TO 6]')
                              ->createQuery('more_6', 'mooc_duration_i:[7 TO *]');
     }
     
-    public static function buildResultFacet($resultFacet) {
-        $facet = $facet = static::initFacetResult();
+    public function buildResultFacet($resultFacet) 
+    {
+        $returnResultFacet  = $this->getResultFacet();
         
         foreach ($resultFacet as $value => $count) {
-            $facet ['value'] [] = array(
+            $returnResultFacet ['value'] [] = array(
                 'count' => $count,
                 'value' => $value,
-                'label' => self::get('translator')->trans($value, array(), 'search')
+                'label' => $this->get('translator')->trans($value, array(), 'search')
             );
         }
-        return $facet;
+        return $returnResultFacet;
     }
 }

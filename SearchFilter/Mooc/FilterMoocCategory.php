@@ -2,50 +2,38 @@
 
 namespace Claroline\CoreBundle\SearchFilter\Mooc;
 
-use Orange\SearchBundle\SearchFilter\AbstractFilter;
+use Orange\SearchBundle\Filter\FilterStandard;
 
 /**
- * Description of FilterType
+ * Description of FilterMoocCategory
  *
  * @author aameziane
  */
-class FilterMoocCategory extends AbstractFilter
+class FilterMoocCategory extends FilterStandard
 {
 
-    public static function getName() {
-        return 'mooc_category_ids';
-    }
-    
-    
-    public static function getShortCut() {
-        return 'mcat';
-    }
-    
-    
-    public static function getViewType() {
-        return 'checkbox-all';
-    }
-    
-    public static function buildResultFacet($resultFacet) {
+
+    public function buildResultFacet($resultFacet) 
+    {
         
-        $facet = static::initFacetResult();
+        $returnResultFacet  = $this->getResultFacet();
         
         foreach ($resultFacet as $value => $count) {
         /* @var $moocSession \Claroline\CoreBundle\Entity\Mooc\MoocCategory */
-            $moocCategory = self::get('doctrine')
+            $moocCategory = $this->get('doctrine')
                 ->getEntityManager()
                 ->getRepository("ClarolineCoreBundle:Mooc\MoocCategory")
                 ->findOneById($value);
 
             if ($moocCategory) {
-                $facet ['value'] []= array(
+                $returnResultFacet ['value'] []= array(
                        'count' => $count, 
                        'value' => $value,
                        'label' => $moocCategory->getName()
                 );
             }
         }
-        return $facet;
+        return $returnResultFacet;
     }
 
 }
