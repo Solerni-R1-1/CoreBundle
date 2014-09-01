@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @ORM\Entity
@@ -91,6 +93,15 @@ class File extends AbstractResource
     public function setHashName($hashName)
     {
         $this->hashName = $hashName;
+    }
+    
+    /**
+     * Shortcut method to know if the file is exportable for a given security context.
+     * 
+     * @param SecurityContext $sc
+     */
+    public function isExportable($sc) {
+    	return $sc->isGranted('EXPORT', new ResourceCollection(array($this->getResourceNode())));
     }
 
 }
