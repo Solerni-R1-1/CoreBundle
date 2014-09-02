@@ -219,6 +219,8 @@ class RegistrationController extends Controller
             $userDb = $users[0];
         }
 
+        $nextUrl = '';
+
         if($userDb == null || $userDb->getIsValidate() || $userDb->getKeyValidate() !== $key){
 
             $log->debug("key {$key} not valid for mail {$mail}");
@@ -252,6 +254,15 @@ class RegistrationController extends Controller
             //Send post-validation
             $this->userManager->sendEmailValidationConfirmee($userDb);
             
+            //Generate next url
+            if($this->request->getSession()->has('nextUrl')){
+                $nextUrl = $this->request->getSession()->get('nextUrl');
+                $this->request->getSession()->remove('nextUrl');
+            } else {
+                $nextUrl = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'), true);
+            }
+            
+
         }
 
       
@@ -261,7 +272,8 @@ class RegistrationController extends Controller
                         'form' => $form, 
                         'mail' => $mail, 
                         'hash' => $this->getHash($mail),
-                        'key' => $key
+                        'key' => $key,
+                        'nextUrl' => $nextUrl
 
                     );
     }
