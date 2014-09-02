@@ -118,19 +118,24 @@ class BadgeController extends Controller
             );
         }
         
-        foreach ($displayedBadges as $displayedBadge) {
-        	if ($displayedBadge['badge'] instanceof UserBadge) {
-        		$res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge']->getBadge(), $resourceType, $loggedUser );
-        	} else {
-        		$res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge'], $resourceType, $loggedUser );
-        	}
-        	$dropzone = $res['dropzone'];
-        	$drop = $res['drop'];
-        	if ($drop != null && $drop->getCalculatedGrade() <= $dropzone->getMinimumScoreToPass() ) {
-        		$nbTotalBadges--;
-        	}
+        if ( 'icap_dropzone' == $resourceType ) {
+            foreach ($displayedBadges as $displayedBadge) {
+                if ($displayedBadge['badge'] instanceof UserBadge) {
+                    $res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge']->getBadge(), $resourceType, $loggedUser );
+                } else {
+                    $res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge'], $resourceType, $loggedUser );
+                }
+                $dropzone = $res['dropzone'];
+                $drop = $res['drop'];
+                // Remove one for each badge acquired, failed, not finished, or over
+                if (   ( $drop != null && $drop->getCalculatedGrade() != -1 ) ||
+                       ( $drop != null && ! $drop->getFinished() && $dropzone->getEndAllowDrop()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ) ||
+                       ( $drop != null && $drop->getCalculatedGrade() == -1 && $dropzone->getEndReview()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ) ) {
+                    $nbTotalBadges--;
+                }
+            }
         }
-
+        
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
         $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);

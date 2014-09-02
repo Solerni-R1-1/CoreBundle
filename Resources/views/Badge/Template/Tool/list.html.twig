@@ -71,6 +71,9 @@
     {# this is the badges de competences pages #}
     <ul class="panel-body my_badges slrn-my_badges-list">
         {% set badgesToGo = nbTotalBadges - nbAcquiredBadges %}
+        {% if badgesToGo < 0 %}
+            {% set badgesToGo = 0 %}
+        {% endif %}
         <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ badgesToGo }} badge{% if badgesToGo > 1 %}s{% endif %} à obtenir</h5>
         {% for workspaceBadge in badgePager %}
             {% set badgeType = workspaceBadge.type %}
