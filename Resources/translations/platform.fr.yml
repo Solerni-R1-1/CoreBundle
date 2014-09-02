@@ -836,7 +836,7 @@ user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et de
 mail: 'Email'
 mail_invalid: 'Vous devez saisir une adresse email valide'
 user_form_plainPassword_first: 'Mot de passe'
-user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères alphanumériques au minimum'
+user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères au minimum'
 user_form_plainPassword_second: 'Vérification du mot de passe'
 password_mismatch : 'Les mots de passe ne correspondent pas'
 account_created: 'Votre compte utilisateur a été crée'

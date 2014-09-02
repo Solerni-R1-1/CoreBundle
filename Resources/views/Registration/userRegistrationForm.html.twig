@@ -44,7 +44,7 @@
                                                             'placeholder' :  firstNamePlaceholder,
                                                             'class' : firstNameClasses, 
                                                             'data-validation': 'alphanumeric required', 
-                                                            'data-validation-allowing': '-',
+                                                            'data-validation-allowing': '-éèöàñïîêôâ ',
                                                             'data-validation-error-msg' : firstNameInvalidMsg 
                 } }) }}
                 
@@ -60,7 +60,8 @@
                 {{ form_widget( form.lastName, {'attr': { 
                                                             'placeholder' : lastNamePlaceholder, 
                                                             'class' : lastNameClasses, 
-                                                            'data-validation': 'alphanumeric required',  
+                                                            'data-validation': 'alphanumeric required',   
+                                                            'data-validation-allowing': '-éèöàñïîêôâ ',
                                                             'data-validation-allowing': '-',
                                                             'data-validation-error-msg' : lastNameInvalidMsg 
                 } }) }}
@@ -110,7 +111,7 @@
                 {{ form_widget( form.plainPassword.first, {'attr': { 
                                                         'placeholder' : 'Mot de passe',
                                                         'class' : plainPasswordFirstClasses,
-                                                        'data-validation': 'alphanumeric length', 
+                                                        'data-validation': 'length', 
                                                         'data-validation-length': 'min4', 
                                                         'data-name': 'pass_confirmation', 
                                                         'data-validation-error-msg' : plainPasswordFirstInvalidMsg 
@@ -127,7 +128,7 @@
                     {{ form_widget( form.plainPassword.second, {'attr': {
                                                         'placeholder' : plainPasswordSecondPlaceholder,
                                                         'class' : plainPasswordSecondClasses,
-                                                        'data-validation': 'alphanumeric confirmation',
+                                                        'data-validation': 'confirmation',
                                                         'data-name': 'pass',
                                                         'data-validation-error-msg' : plainPasswordSecondInvalidMsg
                 } }) }}
