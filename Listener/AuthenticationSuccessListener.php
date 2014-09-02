@@ -185,8 +185,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         if ($event->isMasterRequest() and
             $user = $this->getUser($event->getRequest()) and
             !$user->getIsValidate() && 
-            !$user->hasAcceptedTerms()){
-            
+            $user->isFacebookAccount()) {
+        	
             $user->setIsValidate(true);
             $this->manager->persist($user);
             $this->manager->flush();
