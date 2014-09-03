@@ -24,3 +24,12 @@
         {% endif %}
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript">
+        jQuery(document).ready(function(jQuery) {
+            jQuery('#text_content a').attr('target', '_blank');
+        });
+    </script>
+{% endblock %} 
