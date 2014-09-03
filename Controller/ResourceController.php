@@ -191,7 +191,7 @@ class ResourceController extends Controller
         $workspace = $node->getWorkspace();
         if (    $workspace->isMooc() && 
                 ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
-                ! $this->security->isGranted('ROLE_ADMIN')
+                ! $this->sc->isGranted('ROLE_ADMIN')
             ) {
                 return $this->redirect( $this->get('router')
                             ->generate('mooc_view', array( 
