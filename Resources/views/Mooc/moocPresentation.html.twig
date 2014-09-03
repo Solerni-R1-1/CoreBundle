@@ -134,13 +134,13 @@
                 Inscriptions :<span class="slrn-bold">
                     
                     {% if mooc.isPublic() %}
-                        {% if   session.getMaxUsers() is defined    and 
+                        {% if   session.getMaxUsers() is not defined or 
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0 
                         %}
                             Ouverte à tous
                         {% else %}
-                            Limitée au {{ session.getMaxUsers() }} premiers inscrits 
+                            Limitées au{% if session.getMaxUsers() > 1 %}x{% endif %} {{ session.getMaxUsers() }} premiers inscrits 
                         {% endif %}
                         du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
                             au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
