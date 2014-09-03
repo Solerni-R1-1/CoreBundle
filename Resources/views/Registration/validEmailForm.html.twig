@@ -23,7 +23,7 @@
     	{% if msg == 'accountValidation_key_ok' %}
 
     		<h1 class="slrn-section-title">Votre compte est validé avec succès.</h1>
-    		<p>Vous pouvez dès maintenant découvrir Solerni en <a href='{{ path('claro_desktop_open_tool', { 'toolName': 'home'}) }}' class='slrn-red-link'>Cliquant sur ce lien</a></p>
+    		<p>Vous pouvez dès maintenant découvrir Solerni en <a href='{{ nextUrl }}' class='slrn-red-link'>Cliquant sur ce lien</a></p>
 
     	{% else %}
     		<h1 class="slrn-section-title">Formulaire d'activation de compte</h1>

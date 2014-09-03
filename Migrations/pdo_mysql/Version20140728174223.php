@@ -19,6 +19,11 @@ class Version20140728174223 extends AbstractMigration
             ADD is_validate TINYINT(1) NOT NULL, 
             ADD key_validate VARCHAR(255) DEFAULT NULL
         ");
+
+        $this->addSql("
+            UPDATE claro_user 
+            set is_validate = true
+        ");
     }
 
     public function down(Schema $schema)
