@@ -103,8 +103,12 @@ body.subnavbar-fixed { padding-top: 110px }
 .navbar-inverse .navbar-nav > li:not(.slrn-topbar--messages) > a:hover { text-decoration: underline; }
 .navbar-inverse .navbar-nav > .slrn-topbar--account > a { text-transform: capitalize; }
 
+.navbar-inverse .navbar-nav > .slrn-topbar--account .dropdown-toggle {
+    height: 42px;
+}
+
 .navbar-inverse .navbar-nav > .slrn-topbar--account .dropdown-toggle span {
-    width:  132px;
+    width:      132px;
     display:    inline-block;
     overflow:   hidden;
     height:     1.5em;
@@ -146,7 +150,10 @@ body.subnavbar-fixed { padding-top: 110px }
 .navbar-fixed-top { z-index: 1050; }
 
 /* ITEM MARQUEUR */
-.slrn-topbar-item { position: relative; }
+.slrn-topbar-item { 
+    position:   relative; 
+    height:     50px;
+}
 .slrn-item__marqueur { 
     position: absolute; 
     bottom: 0; 
@@ -302,7 +309,6 @@ body.subnavbar-fixed { padding-top: 110px }
 /* DROPDOWN MENU */
 #top_bar .dropdown-menu { 
     left:   0; 
-    top:    94%;
 }
 
 .slrn-navbar .dropdown-menu .divider { 
