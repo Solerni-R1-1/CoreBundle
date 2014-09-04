@@ -29,7 +29,9 @@ class MoocSessionType extends AbstractType
                     array( 
                         'label' => 'session_start_date',
                         'widget' => 'single_text',
-                        'required' => true
+                        'required' => true,
+                        'attr' => array( 'class' => 'slrn-date'),
+                        'format' => 'dd/MM/yyyy'
                     )
                 )
             ->add('endDate',
@@ -37,7 +39,9 @@ class MoocSessionType extends AbstractType
                     array(
                         'label' => 'session_end_date',
                         'widget' => 'single_text',
-                        'required' => true
+                        'required' => true,
+                        'attr' => array( 'class' => 'slrn-date'),
+                        'format' => 'dd/MM/yyyy'
                     )
                 )
             ->add('startInscriptionDate', 
@@ -45,7 +49,9 @@ class MoocSessionType extends AbstractType
                     array(
                         'label' => 'session_start_subscription',
                         'widget' => 'single_text',
-                        'required' => true
+                        'required' => true,
+                        'attr' => array( 'class' => 'slrn-date'),
+                        'format' => 'dd/MM/yyyy'
                     )
                 )
             ->add('endInscriptionDate', 
@@ -53,7 +59,9 @@ class MoocSessionType extends AbstractType
                     array(
                         'label' => 'session_end_subscription',
                         'widget' => 'single_text',
-                        'required' => true
+                        'required' => true,
+                        'attr' => array( 'class' => 'slrn-date'),
+                        'format' => 'dd/MM/yyyy'
                     )
                 )
             ->add('title', 
