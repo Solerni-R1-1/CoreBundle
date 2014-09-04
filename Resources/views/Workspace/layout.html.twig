@@ -76,7 +76,7 @@
         {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
-        {% if (is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) and app.user.personalWorkspace.getId() != workspace.getId()) or is_granted('ROLE_ADMIN') %}
+        {% if (is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) and app.user.personalWorkspace.getId() != workspace.getId()) or is_granted('ROLE_WS_CREATOR') %}
             {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
         {% endif %}
 

@@ -523,7 +523,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $isWorkspaceManager = true;
         }
 
-        if (in_array('ROLE_ADMIN', $rolenames)) {
+        if (in_array('ROLE_WS_CREATOR', $rolenames)) {
             $isWorkspaceManager = true;
         }
 

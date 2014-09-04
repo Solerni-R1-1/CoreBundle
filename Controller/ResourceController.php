@@ -191,7 +191,7 @@ class ResourceController extends Controller
         $workspace = $node->getWorkspace();
         if (    $workspace->isMooc() && 
                 ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
-                ! $this->sc->isGranted('ROLE_ADMIN')
+                ! $this->sc->isGranted('ROLE_WS_CREATOR')
             ) {
                 return $this->redirect( $this->get('router')
                             ->generate('mooc_view', array( 
@@ -199,15 +199,15 @@ class ResourceController extends Controller
                                 'moocName' => $workspace->getMooc()->getTitle()))
                 );
         }
-        
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $this->checkAccess('OPEN', $collection);
+        $resourceArray = array($this->resourceManager->getResourceFromNode($node));
         $event = $this->dispatcher->dispatch(
             'open_'.$resourceType,
             'OpenResource',
-            array($this->resourceManager->getResourceFromNode($node))
+            $resourceArray
         );
         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
 
@@ -454,7 +454,7 @@ class ResourceController extends Controller
         $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
         $canChangePosition = false;
         $nodesWithCreatorPerms = array();
-
+        
         if ($node === null) {
             $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
             $isRoot = true;
@@ -467,21 +467,20 @@ class ResourceController extends Controller
             $this->checkAccess('OPEN', $collection);
 
             if ($user !== 'anon.') {
-                if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
+                if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_WS_CREATOR')) {
                     $canChangePosition = true;
                 }
             }
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
-            
 
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
             $adminTypes = [];
             $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken());
 
-            if ($isOwner || $this->sc->isGranted('ROLE_ADMIN')) {
+            if ($isOwner || $this->sc->isGranted('ROLE_WS_CREATOR')) {
                 $resourceTypes = $this->resourceManager->getAllResourceTypes();
 
                 foreach ($resourceTypes as $resourceType) {
@@ -546,6 +545,7 @@ class ResourceController extends Controller
 
         $jsonResponse->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
         $jsonResponse->headers->add(array('Expires' => '-1'));
+
 
         return $jsonResponse;
     }
@@ -681,7 +681,7 @@ class ResourceController extends Controller
      */
     public function restoreNodeOrderAction(ResourceNode $parent, User $user)
     {
-        if ($user !== $parent->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+        if ($user !== $parent->getCreator() && !$this->sc->isGranted('ROLE_WS_CREATOR')) {
             throw new AccessDeniedException();
         }
 
@@ -756,7 +756,7 @@ class ResourceController extends Controller
      */
     public function insertBefore(ResourceNode $node, User $user, ResourceNode $next = null)
     {
-        if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+        if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_WS_CREATOR')) {
             throw new AccessDeniedException();
         }
 
