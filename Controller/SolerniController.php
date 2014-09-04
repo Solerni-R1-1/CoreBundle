@@ -328,6 +328,8 @@ class SolerniController extends Controller
                     $subTitle = $mostRecentEval['badge']->getName();
                     $subText = $mostRecentEval['badge']->getWorkspace()->getMooc()->getTitle();
                     $subUrl = $mostRecentEval['associatedResourceUrl'];
+                    $footerText = $translator->trans( 'show_my_evals', array(), 'platform');
+                    $footerUrl = $router->generate('solerni_user_evaluations');
                 }
                     
                 break;
