@@ -400,14 +400,13 @@ class MoocController extends Controller
         	$mooc = $workspace->getMooc();
         	$blogRes = $mooc->getBlog();
         	if ($blogRes != null) {
-        		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findBy(array("resourceNode" => $blogRes));
-        		echo $blog->getId();
+        		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
         		$url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
         		$solerniTabs['solerniTabs'][] = array(
         				'name' => 'S\'informer',
         				'url' => $url,
         				'title' => 'Accéder au blog',
-        				'isSelected' => false
+        				'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
         		);
         	}
         }
