@@ -25,7 +25,7 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/", name="admin_parameters_mooc_accessconstraints")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function indexAction()
     {
@@ -51,7 +51,7 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/", name="admin_parameters_mooc_accessconstraints_create")
      * @Method("POST")
      * @Template("ClarolineCoreBundle:Mooc\MoocAccessConstraints:new.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function createAction(Request $request)
     {
@@ -98,7 +98,7 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/new", name="admin_parameters_mooc_accessconstraints_new")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function newAction()
     {
@@ -117,7 +117,7 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/{id}/edit", name="admin_parameters_mooc_accessconstraints_edit")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function editAction( $id )
     {
@@ -162,7 +162,7 @@ class MoocAccessConstraintsController extends Controller
      * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_update")
      * @Method("PUT")
      * @Template("ClarolineCoreBundle:Mooc\MoocAccessConstraints:edit.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function updateAction(Request $request, $id)
     {
@@ -204,7 +204,7 @@ class MoocAccessConstraintsController extends Controller
      *
      * @Route("/{id}", name="admin_parameters_mooc_accessconstraints_delete")
      * @Method("DELETE")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function deleteAction(Request $request, $id)
     {

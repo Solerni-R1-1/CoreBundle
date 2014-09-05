@@ -21,7 +21,7 @@ class MoocCategoryController extends Controller
      * @Route("/", name="admin_parameters_mooc_categories")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function indexAction()
     {
@@ -47,7 +47,7 @@ class MoocCategoryController extends Controller
      * @Route("/", name="admin_parameters_mooc_category_create")
      * @Method("POST")
      * @Template("ClarolineCoreBundle:Mooc\MoocCategory:new.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function createAction(Request $request)
     {
@@ -94,7 +94,7 @@ class MoocCategoryController extends Controller
      * @Route("/new", name="admin_parameters_mooc_category_new")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function newAction()
     {
@@ -113,7 +113,7 @@ class MoocCategoryController extends Controller
      * @Route("/{id}/edit", name="admin_parameters_mooc_category_edit")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function editAction($id)
     {
@@ -159,7 +159,7 @@ class MoocCategoryController extends Controller
      * @Route("/{id}", name="admin_parameters_mooc_category_update")
      * @Method("PUT")
      * @Template("ClarolineCoreBundle:Mooc\MoocCategory:edit.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function updateAction(Request $request, $id)
     {
@@ -192,7 +192,7 @@ class MoocCategoryController extends Controller
      *
      * @Route("/{id}", name="admin_parameters_mooc_category_delete")
      * @Method("DELETE")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function deleteAction(Request $request, $id)
     {

@@ -138,20 +138,20 @@
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0 
                         %}
-                            Ouverte à tous
+                            Ouvertes à tous
                         {% else %}
-                            Limitées au{% if session.getMaxUsers() > 1 %}x{% endif %} {{ session.getMaxUsers() }} premiers inscrits 
+                            Limitées au{% if session.getMaxUsers() > 1 %}x{% endif %} {{ session.getMaxUsers() }} premier{% if session.getMaxUsers() > 1 %}s{% endif %} inscrit{% if session.getMaxUsers() > 1 %}s{% endif %}
                         {% endif %}
                         du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
-                            au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
+                        au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
                     {% else %}
                         {% if   session.getMaxUsers() is defined    and
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0
                         %}
-                            Vous êtes autorisés à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a>
+                            Vous êtes autorisé à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a>
                         {% else %}
-                            Vous êtes autorisés à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a> dans une session limitée au {{ session.getMaxUsers() }} premiers inscrits 
+                            Vous êtes autorisé à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a> dans une session limitée au{% if session.getMaxUsers() > 1 %}x{% endif %} {{ session.getMaxUsers() }} premier{% if session.getMaxUsers() > 1 %}s{% endif %} inscrit{% if session.getMaxUsers() > 1 %}s{% endif %} 
                         {% endif %}
                         du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
                         au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}  

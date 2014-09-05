@@ -54,7 +54,6 @@ class AjaxAuthenticationListener
             $form = $this->templating->render(
                 'ClarolineCoreBundle:Authentication:loginAjaxForm.html.twig'
             );
-
             //@see https://github.com/gillest/HackSessionBundle
             if (!$request->hasPreviousSession()) {
                 $request->cookies->set(session_name(), 'tmp');

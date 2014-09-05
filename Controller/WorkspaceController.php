@@ -452,7 +452,7 @@ class WorkspaceController extends Controller
         $user = $this->security->getToken()->getUser();
         if (    $workspace->isMooc() && 
                 ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $user ) &&
-                ! $this->security->isGranted('ROLE_ADMIN')
+                ! $this->security->isGranted('ROLE_WS_CREATOR')
                 
             ) {
             

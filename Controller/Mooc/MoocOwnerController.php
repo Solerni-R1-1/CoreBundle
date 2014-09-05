@@ -21,7 +21,7 @@ class MoocOwnerController extends Controller
      * @Route("/", name="admin_parameters_mooc_owners")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function indexAction()
     {
@@ -48,7 +48,7 @@ class MoocOwnerController extends Controller
      * @Route("/", name="admin_parameters_mooc_owner_create")
      * @Method("POST")
      * @Template("ClarolineCoreBundle:Mooc\MoocOwner:new.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function createAction( Request $request )
     {
@@ -95,7 +95,7 @@ class MoocOwnerController extends Controller
      * @Route("/new", name="admin_parameters_mooc_owner_new")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function newAction()
     {
@@ -114,7 +114,7 @@ class MoocOwnerController extends Controller
      * @Route("/{id}/edit", name="admin_parameters_mooc_owner_edit")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function editAction( $id )
     {
@@ -163,7 +163,7 @@ class MoocOwnerController extends Controller
      * @Route("/{id}", name="admin_parameters_mooc_owner_update")
      * @Method("PUT")
      * @Template("ClarolineCoreBundle:Mooc\MoocOwner:edit.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function updateAction( Request $request, $id )
     {
@@ -199,7 +199,7 @@ class MoocOwnerController extends Controller
      *
      * @Route("/{id}", name="admin_parameters_mooc_owner_delete")
      * @Method("DELETE")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_WS_CREATOR")
      */
     public function deleteAction(Request $request, $id)
     {

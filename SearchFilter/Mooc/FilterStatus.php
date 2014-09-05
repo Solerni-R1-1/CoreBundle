@@ -43,10 +43,10 @@ class FilterStatus extends FilterStandard
                              ->createQuery('finished', 'end_date:[* TO NOW/DAY]');
     }
     
-    public function buildResultFacet($resultFacet) 
+    public function postProcessResultFacet($resultFacet) 
     {
         
-        $returnResultFacet = $this->getResultFacet();
+        $returnResultFacet = $this->initResultFacet();
         
         foreach ($resultFacet as $value => $count) {
             $returnResultFacet ['value'] [] = array(

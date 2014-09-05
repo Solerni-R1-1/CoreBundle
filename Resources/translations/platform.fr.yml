@@ -612,7 +612,6 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send: Envoyer
-send: envoyer
 send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
@@ -876,6 +875,7 @@ go_to_evaluation: 'Aller dans mon espace d''évaluation'
 get_this_badge: 'Obtenir ce badge'
 my_evals: 'Mes évaluations'
 get_more_badges: 'Obtenir plus de badges'
+show_my_evals: Afficher mes évaluations
 
 back_to_parameters: 'Retour à l''administration'
 
