@@ -15,8 +15,7 @@ use Claroline\CoreBundle\Entity\AbstractIndexable;
 
 abstract class AbstractIndexableResourceElement extends AbstractIndexable
 {
-   
-    use IndexableTrait;
+    
     use IndexableResourceNodeTrait;
     
     abstract public function getResourceNode();

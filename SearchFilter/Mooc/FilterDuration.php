@@ -43,9 +43,9 @@ class FilterDuration extends FilterStandard
                              ->createQuery('more_6', 'mooc_duration_i:[7 TO *]');
     }
     
-    public function buildResultFacet($resultFacet) 
+    public function postProcessResultFacet($resultFacet) 
     {
-        $returnResultFacet  = $this->getResultFacet();
+        $returnResultFacet  = $this->initResultFacet();
         
         foreach ($resultFacet as $value => $count) {
             $returnResultFacet ['value'] [] = array(
