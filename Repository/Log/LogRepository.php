@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class LogRepository extends EntityRepository
 {
@@ -526,5 +527,33 @@ class LogRepository extends EntityRepository
     public function defaultQueryBuilderForBadge()
     {
         return $this->createQueryBuilder('l')->orderBy('l.dateLog');
+    }
+
+    public function getSubscribeCountUntil(AbstractWorkspace $workspace, \DateTime $until) {
+    	$qb = $this->createQueryBuilder('l')
+    	->where("l.workspace = :workspace")
+    	->andWhere("l.dateLog < :until")
+    	->setParameters(array(
+    			"workspace" => $workspace,
+    			"until" => $until
+    	));
+    
+    	return count($qb->getQuery()->getResult());
+    }
+    
+    public function findAllBetween(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $action) {
+    	$qb = $this->createQueryBuilder('l')->orderBy('l.dateLog')
+    	->where("l.dateLog >= :from")
+    	->andWhere("l.dateLog <= :to")
+    	->andWhere("l.action = :action")
+    	->andWhere("l.workspace = :workspace")
+    	->setParameters(array(
+    			"from" => $from,
+    			"to" => $to,
+    			"action" => $action,
+    			"workspace" => $workspace
+    	));
+    	
+    	return $qb->getQuery()->getResult();
     }
 }

@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Log\Log;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -233,10 +234,99 @@ class AnalyticsManager
         $workspaceIds = array($workspace->getId());
         $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
         $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
+        $hourlyAudience = $this->getHourlyAudience($workspace);
+        
+        $defaultFrom = new \DateTime();
+        $defaultFrom->sub(new \DateInterval("P10M"));
+        $subscriptionStats = $this->getSubscriptionsForPeriod($workspace, $defaultFrom, new \DateTime());
 
         return array('chartData' => $chartData,
+        	'hourlyAudience' => $hourlyAudience,
+        	'subscriptionStats' => $subscriptionStats,
             'resourceCount' => $resourcesByType,
             'workspace' => $workspace
         );
     }
+    
+    /**
+     * Gets the hourly audience for the workspace.
+     * @param AbstractWorkspace $workspace 
+     * 
+     * @return An array containing two arrays :
+     *    - The first is the workspace connections for every hour of the day
+     *    - The second is the workspace associated logs (which are not connections) for every hour of the day
+     */
+    public function getHourlyAudience(AbstractWorkspace $workspace) {
+    	$audience = array();
+    	$audience[] = array();
+    	$audience[] = array();
+    	
+    	$logs = $this->logRepository->findBy(array(
+    			"workspace" => $workspace
+    	));
+    	for ($i = 1; $i < 25; $i++) {
+    		$audience[0][$i] = 0;
+    		$audience[1][$i] = 0;
+    	}
+    	foreach ($logs as $i => $log) {
+    		$hour = intval($log->getDateLog()->format('H'));
+    		if ($log->getAction() == "workspace-enter") {
+    			$audience[0][$hour]++;
+    		} else {
+    			$audience[1][$hour]++;
+    		}
+    	}
+    	
+    	return $audience;
+    }
+    
+    /**
+     * Sends back the total subscription of a workspace every day 
+     * and the number of subscriptions to this workspace each day
+     * 
+     * @param AbstractWorkspace $workspace
+     * @param \DateTime $from
+     * @param \DateTime $to
+     */
+    public function getSubscriptionsForPeriod(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    	$subscriptions = array();
+    	$subscriptions[] = array();
+    	$subscriptions[] = array();
+
+    	// Get information from database
+    	$logs = $this->logRepository->findAllBetween($workspace, $from, $to, "workspace-role-subscribe_user");
+    	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
+    	
+    	// Init arrays
+    	/*$nbDays = intval($from->diff($to, true)->format('%R%a'));    	
+    	for ($i = 0; $i < $nbDays; $i++) {
+    		$date = $from->add(new \DateInterval("P1D"));
+    		$subscriptions[0][$date->format("YYYYY-mm-dd")] = 0;
+    		$subscriptions[1][$date->format("YYYYY-mm-dd")] = 0;
+    	}*/
+
+    	// Extract data
+    	$index = -1;
+    	$lastDate = null;
+    	foreach ($logs as $i => $log) {
+    		if ($lastDate != $log->getDateLog()->format("Y-m-d")) {
+    			$index ++;
+    			$subscriptions[0][$index] = array();
+    			$subscriptions[0][$index][0] = $log->getDateLog()->format("Y-m-d");
+    			$subscriptions[1][$index] = array();
+    			$subscriptions[1][$index][0] = $log->getDateLog()->format("Y-m-d");
+    			$subscriptions[1][$index][1] = 0;
+    		}
+    		/*$nbSubscriptions++;
+    		$subscriptions[0][$log->getDateLog()->format("YYYYY-mm-dd")] = $nbSubscriptions;
+    		$subscriptions[1][$log->getDateLog()->format("YYYYY-mm-dd")]++;*/
+    		$nbSubscriptions++;
+    		$subscriptions[0][$index][1] = $nbSubscriptions;
+    		$subscriptions[1][$index][1]++;
+    		$lastDate = $log->getDateLog()->format("Y-m-d");
+    	}
+    	
+    	return $subscriptions;
+    	
+    } 
 }
