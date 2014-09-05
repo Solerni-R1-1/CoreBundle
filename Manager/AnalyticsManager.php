@@ -23,6 +23,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\ForumBundle\Repository\MessageRepository;
+use Claroline\CoreBundle\Controller\Mooc\MoocService;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -39,20 +41,27 @@ class AnalyticsManager
     private $workspaceRepo;
     /** @var LogRepository */
     private $logRepository;
+    /** @var MessageRepository */
+    private $messageRepository;
+    /** @var MoocService */
+    private $moocService;
 
     /**
      * @DI\InjectParams({
-     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager")
+     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "moocService"   = @DI\Inject("orange.mooc.service")
      * })
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(ObjectManager $objectManager, MoocService $moocService)
     {
-        $this->om            = $objectManager;
-        $this->resourceRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->resourceTypeRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $this->userRepo      = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-        $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->om            	= $objectManager;
+        $this->moocService 		= $moocService;
+        $this->resourceRepo  	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $this->resourceTypeRepo	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->userRepo      	= $objectManager->getRepository('ClarolineCoreBundle:User');
+        $this->workspaceRepo 	= $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->logRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
 
     }
 
@@ -235,13 +244,17 @@ class AnalyticsManager
         $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
         $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
         $hourlyAudience = $this->getHourlyAudience($workspace);
+        $activeUsers = $this->getPercentageActiveMembers($workspace);
         
         $defaultFrom = new \DateTime();
         $defaultFrom->sub(new \DateInterval("P10M"));
         $subscriptionStats = $this->getSubscriptionsForPeriod($workspace, $defaultFrom, new \DateTime());
+        $forumContributions = $this->getForumActivity($workspace, $defaultFrom, new \DateTime());
 
         return array('chartData' => $chartData,
         	'hourlyAudience' => $hourlyAudience,
+        	'activeUsers' => $activeUsers,
+        	'forumContributions' => $forumContributions,
         	'subscriptionStats' => $subscriptionStats,
             'resourceCount' => $resourcesByType,
             'workspace' => $workspace
@@ -296,14 +309,6 @@ class AnalyticsManager
     	// Get information from database
     	$logs = $this->logRepository->findAllBetween($workspace, $from, $to, "workspace-role-subscribe_user");
     	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
-    	
-    	// Init arrays
-    	/*$nbDays = intval($from->diff($to, true)->format('%R%a'));    	
-    	for ($i = 0; $i < $nbDays; $i++) {
-    		$date = $from->add(new \DateInterval("P1D"));
-    		$subscriptions[0][$date->format("YYYYY-mm-dd")] = 0;
-    		$subscriptions[1][$date->format("YYYYY-mm-dd")] = 0;
-    	}*/
 
     	// Extract data
     	$index = -1;
@@ -317,9 +322,6 @@ class AnalyticsManager
     			$subscriptions[1][$index][0] = $log->getDateLog()->format("Y-m-d");
     			$subscriptions[1][$index][1] = 0;
     		}
-    		/*$nbSubscriptions++;
-    		$subscriptions[0][$log->getDateLog()->format("YYYYY-mm-dd")] = $nbSubscriptions;
-    		$subscriptions[1][$log->getDateLog()->format("YYYYY-mm-dd")]++;*/
     		$nbSubscriptions++;
     		$subscriptions[0][$index][1] = $nbSubscriptions;
     		$subscriptions[1][$index][1]++;
@@ -329,4 +331,56 @@ class AnalyticsManager
     	return $subscriptions;
     	
     } 
+    
+    /**
+     * Gives back the number of active members since N days and the total of members of this workspace.
+     * [active, total]
+     * 
+     * @param AbstractWorkspace $workspace
+     * @param number $nbDays
+     * @return number
+     */
+    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5) {
+    	$date = new \DateTime();
+    	$date->sub(new \DateInterval("P".$nbDays."D"));
+    	
+    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date)[0][1];
+    	$nbTotal =  $this->logRepository->countRegisteredUsers($workspace)[0][1];
+    	return [$nbActive , $nbTotal];
+    }
+    
+    /**
+     * 
+     * @param AbstractWorkspace $workspace
+     */
+    public function getForumActivity(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    	$forum = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace)->getForum();
+    	$messages = $this->messageRepository->findAllPublicationsBetween($forum, $from, $to);
+    	
+    	$contributions = array();
+    	$contributions[0] = array();
+    	$nbContributions = 0;
+    	$nbDays = 0;
+    	
+    	
+    	// Extract data
+    	$index = -1;
+    	$lastDate = null;
+    	foreach ($messages as $i => $message) {
+    		if ($lastDate != $message->getCreationDate()->format("Y-m-d")) {
+    			$index ++;
+    			$contributions[0][$index] = array();
+    			$contributions[0][$index][0] = $message->getCreationDate()->format("Y-m-d");
+    			$contributions[0][$index][1] = 0;
+    			$nbDays++;
+    		}
+    		$nbContributions++;
+    		$contributions[0][$index][1]++;
+    		$lastDate = $message->getCreationDate()->format("Y-m-d");
+    	}
+    	
+    	$contributions[1] = $nbContributions / $nbDays;
+    	
+    	return $contributions;
+    }
 }

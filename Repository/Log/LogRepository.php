@@ -556,4 +556,28 @@ class LogRepository extends EntityRepository
     	
     	return $qb->getQuery()->getResult();
     }
+    
+public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
+    	$qb = $this->createQueryBuilder('l')
+	    	->select("COUNT(DISTINCT l.doer)")
+    		->where("l.workspace = :workspace")
+    		->andWhere("l.dateLog > :date")
+    		->setParameters(array(
+    				"workspace" => $workspace,
+    				"date" => $date
+    		));
+    	
+    	return $qb->getQuery()->getResult();
+    }
+    
+    public function countRegisteredUsers(AbstractWorkspace $workspace) {
+    	$qb = $this->createQueryBuilder('l')
+    	->select("COUNT(DISTINCT l.doer)")
+    	->where("l.workspace = :workspace")
+    	->setParameters(array(
+    			"workspace" => $workspace
+    	));
+    	 
+    	return $qb->getQuery()->getResult();
+    }
 }

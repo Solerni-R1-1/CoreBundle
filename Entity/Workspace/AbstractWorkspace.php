@@ -294,6 +294,10 @@ abstract class AbstractWorkspace
         }
     }
 
+    /**
+     * 
+     * @return \Claroline\CoreBundle\Entity\Workspace\Claroline\CoreBundle\Entity\Mooc\Mooc
+     */
     public function getMooc()
     {
         return $this->mooc;
