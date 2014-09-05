@@ -13,6 +13,7 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasOverlay.min.js') }}"></script>
 {% else %}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
 {% endif %}
@@ -28,11 +29,29 @@
         </div>
     </div>
 </div>
+
+<div id="analytics-resources-piechart2" class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-bar-chart"></i>
+        Utilisateurs actifs
+    </div>
+    <div id="collapse-piechart2" class="panel-body">
+        <div id="container-piechart2">
+            <div id="resources-pie-chart2" class="pie-chart"></div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     var pieChartData = [];
     {% for resource in resourceCount %}
     pieChartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
     {% endfor %}
+    var pieChartData2 = [];
+    var activeUsers = {{ activeUsers[0] }};
+    var totalUsers = {{ activeUsers[1] }};
+    var percentageActive = (activeUsers / totalUsers) * 100;
+    pieChartData2.push(["Utilisateurs actifs", percentageActive ]);
+    pieChartData2.push(["Utilisateurs non actifs", (100 - percentageActive)]);
     var bg_color = "transparent";
     if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
     var numberRows = 7;
@@ -44,6 +63,55 @@
             var resourcesPlot = $.jqplot(
                     'resources-pie-chart',
                     [pieChartData],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: false,
+                            shadow: false,
+                            background: bg_color,
+                            useNegativeColors: false
+                        },
+                        highlighter: {
+                            show: false
+                        },
+                        cursor: {
+                            show: false,
+                            zoom: false,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker:true,
+                            renderer:$.jqplot.PieRenderer,
+                            rendererOptions:{
+                                showDataLabels: true,
+                                dataLabelThreshold: 2,
+                                dataLabels: 'percent',
+                                sliceMargin:0.3,
+                                dataLabelFormatString: '%.1f%%',
+                                highlightMouseOver:false
+                            },
+                            shadow:false
+                        },
+                        legend:{
+                            location: 's',
+                            border:'none',
+                            renderer: $.jqplot.CavasTextRenderer,
+                            show:true,
+                            showMarker:true,
+                            rendererOptions:{
+                                numberRows:numberRows
+                            },
+                            backgroundColor:bg_color,
+                            placement:'outsideGrid'
+                        }
+                    }
+            );
+        }
+
+        if (pieChartData2.length>0) {
+            var resourcesPlot2 = $.jqplot(
+                    'resources-pie-chart2',
+                    [pieChartData2],
                     {
                         title: {show: false},
                         grid: {

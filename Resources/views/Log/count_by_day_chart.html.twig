@@ -21,6 +21,7 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasOverlay.min.js') }}"></script>
 
 {% if actionName is not defined or actionName is empty %}
 <legend>{{ 'Actions per day'|trans({}, 'platform') }}</legend>
@@ -29,15 +30,43 @@
 {% endif %}
 
 <div id="actions-line-chart" class="line-chart"></div>
+<br />
+<div id="actions-line-chart2" class="line-chart"></div>
+<br />
+<div id="actions-line-chart3" class="line-chart"></div>
+<br />
+<div id="actions-line-chart4" class="line-chart"></div>
 
 <br/>
 <div class="count_by_day_chart_legend"><i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
 
 <script type="text/javascript">
     var chartData = {{ chartData|json_encode|raw }};
+    var chartData20 = $.map({{ hourlyAudience[0]|json_encode|raw }}, function(value, index) {
+		return [value];
+    });
+
+    var chartData21 = $.map({{ hourlyAudience[1]|json_encode|raw }}, function(value, index) {
+		return [value];
+    });
+
+    var chartData30 = $.map({{ subscriptionStats[0]|json_encode|raw }}, function(value, index) {
+		return [value];
+    });
+
+    var chartData31 = $.map({{ subscriptionStats[1]|json_encode|raw }}, function(value, index) {
+		return [value];
+    });
+
+    var chartData4 = $.map({{ forumContributions[0]|json_encode|raw }}, function(value, index) {
+		return [value];
+    });
+
+    var forumsContributionMean = {{ forumContributions[1] }};
+
     var bg_color = "transparent";
     if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
-    $(document).ready(function(){
+    $(document).ready(function() {
         if (chartData.length>0) {
             var actionsPlot = $.jqplot(
                 'actions-line-chart',
@@ -100,6 +129,240 @@
                     }
                 }
             );
+        }
+
+        if (chartData20.length>0) {
+            var actionsPlot2 = $.jqplot(
+                'actions-line-chart2',
+                [chartData20, chartData21],
+                {
+                    title: {show: false},
+                    grid: {
+                        drawBorder: true,
+                        borderWidth: 1.0,
+                        shadow: false,
+                        background: bg_color
+                    },
+                    axesDefaults: {
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                    },
+                    axes: {
+                        xaxis: {                            
+                            label: "Heure de la journée",
+                            pad: 0
+                        },
+                        yaxis: {
+                        	label: "Nombre de connections",
+                            min:0,
+                            showTickMarks: true,
+                            numberTicks: 5
+                        },
+                        y2axis: {
+							label: "Activité sur le cours",
+	                        min:0,
+                            showTickMarks: true,
+                            numberTicks: 5
+                        }
+                    },
+                    highlighter: {
+                        show: true,
+                        sizeAdjust: 1,
+                        tooltipOffset:12,
+                        tooltipLocation:'n',
+                        tooltipAxes:'xy',
+                        formatString:'%s <br/> %d',
+                        tooltipFadeSpeed:'fast'
+                    },
+                    cursor: {
+                        show: true,
+                        zoom: true,
+                        showTooltip: false
+                    },
+                    seriesDefaults: {
+                        showMarker:((chartData20.length<10)?true:false),
+                        markerOptions:{shadow:false},
+                        shadow:false,
+                        showLine:true,
+                        useNegativeColors: false,
+                        fill: true,
+                        lineWidth: 1.5,
+                        fillAndStroke: true,
+                        fillAlpha: 0.12,
+                        rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                    },
+                    series: [
+                        {yaxis:'yaxis', label:'Nombre de connections'},
+                        {yaxis:'y2axis', label:'Activité sur le cours'}
+                    ],
+                    legend: {
+						show: true,
+						placement: 'outsideGrid'
+                    }
+                }
+            );
+
+            if (chartData30.length>0) {
+                var actionsPlot3 = $.jqplot(
+                    'actions-line-chart3',
+                    [chartData30, chartData31],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: true,
+                            borderWidth: 1.0,
+                            shadow: false,
+                            background: bg_color
+                        },
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                        },
+                        axes: {
+                            xaxis: {
+                            	renderer: $.jqplot.DateAxisRenderer,
+                                tickOptions: {
+                                    formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                    showGridline: false,
+                                    showMark: true,
+                                    angle: -20,
+                                    fontSize: '10px'
+                                },
+                                numberTicks:10,
+                                label: "Date",
+                                pad: 0
+                            },
+                            yaxis: {
+                            	label: "Inscriptions",
+                                min:0,
+                                showTickMarks: true,
+                                numberTicks: 5
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            sizeAdjust: 1,
+                            tooltipOffset:12,
+                            tooltipLocation:'n',
+                            tooltipAxes:'xy',
+                            formatString:'%s <br/> %d',
+                            tooltipFadeSpeed:'fast'
+                        },
+                        cursor: {
+                            show: true,
+                            zoom: true,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker:((chartData30.length<10)?true:false),
+                            markerOptions:{shadow:false},
+                            shadow:false,
+                            showLine:true,
+                            useNegativeColors: false,
+                            fill: true,
+                            lineWidth: 1.5,
+                            fillAndStroke: true,
+                            fillAlpha: 0.12,
+                            rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                        },
+                        series: [
+                            {yaxis:'yaxis', label:'Inscriptions totales'},
+                            {yaxis:'yaxis', label:'Inscriptions'}
+                        ],
+                        legend: {
+    						show: true,
+    						placement: 'outsideGrid'
+                        }
+                    }
+                );
+            }
+            if (chartData4.length>0) {
+                var actionsPlot4 = $.jqplot(
+                    'actions-line-chart4',
+                    [chartData4],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: true,
+                            borderWidth: 1.0,
+                            shadow: false,
+                            background: bg_color
+                        },
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                        },
+                        axes: {
+                            xaxis: {
+                            	renderer: $.jqplot.DateAxisRenderer,
+                                tickOptions: {
+                                    formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                    showGridline: false,
+                                    showMark: true,
+                                    angle: -20,
+                                    fontSize: '10px'
+                                },
+                                numberTicks:10,
+                                label: "Date",
+                                pad: 0
+                            },
+                            yaxis: {
+                            	label: "Publications",
+                                min:0,
+                                showTickMarks: true,
+                                numberTicks: 5
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            sizeAdjust: 1,
+                            tooltipOffset:12,
+                            tooltipLocation:'n',
+                            tooltipAxes:'xy',
+                            formatString:'%s <br/> %d',
+                            tooltipFadeSpeed:'fast'
+                        },
+                        cursor: {
+                            show: true,
+                            zoom: true,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker:((chartData4.length<10)?true:false),
+                            markerOptions:{shadow:false},
+                            shadow:false,
+                            showLine:true,
+                            useNegativeColors: false,
+                            fill: true,
+                            lineWidth: 1.5,
+                            fillAndStroke: true,
+                            fillAlpha: 0.12,
+                            rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                        },
+                        series: [
+                            {yaxis:'yaxis', label:'Publications forum'},
+                        ],
+                        legend: {
+    						show: true,
+    						placement: 'outsideGrid'
+                        },
+                        canvasOverlay: {
+                            show: true,
+                            objects: [
+                                {dashedHorizontalLine: {
+                                    name: 'average',
+                                    y: forumsContributionMean, 
+                                    lineWidth: 1,
+                                    color: 'red',
+                                    shadow: false
+                                }}
+                            ]
+                        }
+                        
+                    }
+                );
+            }
+                
         }
     });
 </script>
