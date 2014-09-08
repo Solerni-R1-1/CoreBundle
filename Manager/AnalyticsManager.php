@@ -25,6 +25,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\ForumBundle\Repository\MessageRepository;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
+use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -45,6 +46,8 @@ class AnalyticsManager
     private $messageRepository;
     /** @var MoocService */
     private $moocService;
+    /** @var BadgeRepository */
+    private $badgeRepository;
 
     /**
      * @DI\InjectParams({
@@ -62,6 +65,7 @@ class AnalyticsManager
         $this->workspaceRepo 	= $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->logRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
         $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
+        $this->badgeRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Badge\Badge');
 
     }
 
@@ -243,21 +247,25 @@ class AnalyticsManager
         $workspaceIds = array($workspace->getId());
         $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
         $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
-        $hourlyAudience = $this->getHourlyAudience($workspace);
-        $activeUsers = $this->getPercentageActiveMembers($workspace);
+        
         
         $defaultFrom = new \DateTime();
         $defaultFrom->sub(new \DateInterval("P10M"));
+        
         $subscriptionStats = $this->getSubscriptionsForPeriod($workspace, $defaultFrom, new \DateTime());
         $forumContributions = $this->getForumActivity($workspace, $defaultFrom, new \DateTime());
+        $hourlyAudience = $this->getHourlyAudience($workspace);
+        $activeUsers = $this->getPercentageActiveMembers($workspace);
+        $badgesSuccessRates = $this->getBadgesSuccessRate($workspace);
 
         return array('chartData' => $chartData,
+            'resourceCount' => $resourcesByType,
+            'workspace' => $workspace,
         	'hourlyAudience' => $hourlyAudience,
         	'activeUsers' => $activeUsers,
         	'forumContributions' => $forumContributions,
         	'subscriptionStats' => $subscriptionStats,
-            'resourceCount' => $resourcesByType,
-            'workspace' => $workspace
+        	'badgesSuccessRates' => $badgesSuccessRates
         );
     }
     
@@ -385,14 +393,37 @@ class AnalyticsManager
     }
     
     /**
-     * Gives back the success rates of the various knowledge badges (associated with quizzes)
+     * Gives back the success rates of the various knowledge/skill badges (associated with quizzes)
      * @param AbstractWorkspace $workspace
      * @return Array of badges success rates [[badge1success, badge1failure],[badge2success][badge2failure],...]
      */
-    public function getKnowledgeBadgesSuccessRate(AbstractWorkspace $workspace) {
+    public function getBadgesSuccessRate(AbstractWorkspace $workspace) {
     	$rates = array();
     	
+    	$badges = $this->badgeRepository->findByWorkspace($workspace);
     	
+    	foreach ($badges as $badge) {
+    		$rate = array();
+    		foreach($badge->getRules() as $rule){
+    			if (strpos($rule->getAction(), 'ujm_exercise') !== false) {
+    				$rate['type'] = 'knowledge';
+    			} else
+    			if (strpos($rule->getAction(), 'icap_dropzone') !== false) {
+    				$rate['type'] = 'skill';
+    			} else {
+    				continue;
+    			}
+    			
+    			$rate['name'] = $badge->getName();
+    			$rate['success'] = count($badge->getUsers());
+    			$rate['failure'] = 9;
+    			break;
+    		}
+    		
+    		if (count($rate) != 0) {
+    			$rates[] = $rate;
+    		}
+    	}
     	
     	return $rates;
     }
