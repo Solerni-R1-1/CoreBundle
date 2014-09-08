@@ -103,6 +103,24 @@ body.subnavbar-fixed { padding-top: 110px }
 .navbar-inverse .navbar-nav > li:not(.slrn-topbar--messages) > a:hover { text-decoration: underline; }
 .navbar-inverse .navbar-nav > .slrn-topbar--account > a { text-transform: capitalize; }
 
+.navbar-inverse .navbar-nav > .slrn-topbar--account .dropdown-toggle {
+    height: 42px;
+}
+
+.navbar-inverse .navbar-nav > .slrn-topbar--account .dropdown-toggle span {
+    width:      132px;
+    display:    inline-block;
+    overflow:   hidden;
+    height:     1.5em;
+    text-align: left;
+}
+
+.navbar-inverse .navbar-nav > .slrn-topbar--account .caret {
+    position:   absolute;
+    right:      15px;
+    top:        24px;
+}
+
 #top_bar.slrn-navbar { 
     border-bottom: 5px solid rgb( 52, 60, 71 ); 
     border-bottom-color: rgba( 75, 102, 124, .7 ); 
@@ -132,7 +150,10 @@ body.subnavbar-fixed { padding-top: 110px }
 .navbar-fixed-top { z-index: 1050; }
 
 /* ITEM MARQUEUR */
-.slrn-topbar-item { position: relative; }
+.slrn-topbar-item { 
+    position:   relative; 
+    height:     50px;
+}
 .slrn-item__marqueur { 
     position: absolute; 
     bottom: 0; 
@@ -286,12 +307,20 @@ body.subnavbar-fixed { padding-top: 110px }
 }
 
 /* DROPDOWN MENU */
-#top_bar .dropdown-menu { left: 0; }
-.slrn-navbar .dropdown-menu .divider { margin: 0; }
+#top_bar .dropdown-menu { 
+    left:   0; 
+}
+
+.slrn-navbar .dropdown-menu .divider { 
+    margin: 0; 
+}
+
 .slrn-navbar .dropdown-menu { 
-    padding: 0; 
-    border-radius: 0; 
-    font-size: .9em; }
+    padding:        0; 
+    border-radius:  0; 
+    font-size:      .9em; 
+}
+
 .slrn-topbar-item__sub { margin: .4em 0; }
 .slrn-topbar-item__sub:hover { background-color: transparent; }
 .slrn-navbar .dropdown-menu > li > a { color: #FFF; }
@@ -919,6 +948,10 @@ body.dsk .alert { display: none; }
     color:          #333333;
     width:          350px;
     margin-bottom:  2px;
+}
+
+.presentation__mooc--slider-small .presentation__mooc__text__title { 
+    width:          325px;
 }
 
 .presentation__mooc__text__subtitle {

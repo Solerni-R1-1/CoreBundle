@@ -196,9 +196,10 @@ class WorkspaceParametersController extends Controller
             $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
             $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
             $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+            $blogResourceType = $resourceTypeRepository->findOneByName('icap_blog');
             
             /* generate form */
-            $form_mooc = $this->formFactory->create( FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType ), $mooc );
+            $form_mooc = $this->formFactory->create( FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType, $blogResourceType ), $mooc );
             
             /* Return MOOC data and form */
             $returnArray = array(
@@ -289,9 +290,10 @@ class WorkspaceParametersController extends Controller
             $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
             $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
             $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+            $blogResourceType = $resourceTypeRepository->findOneByName('icap_blog');
             
             // Generate mooc form
-            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType ), $mooc );
+            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType, $blogResourceType ), $mooc );
             $form_mooc->handleRequest($this->request);
         }
         

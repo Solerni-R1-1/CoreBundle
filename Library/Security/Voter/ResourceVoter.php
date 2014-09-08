@@ -321,8 +321,13 @@ class ResourceVoter implements VoterInterface
 
     public function isWorkspaceManager(AbstractWorkspace $workspace, TokenInterface $token)
     {
+    	$result = false;
         $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
 
-        return in_array($managerRoleName, $this->ut->getRoles($token)) ? true: false;
+        if (in_array($managerRoleName, $this->ut->getRoles($token))
+        		|| in_array('ROLE_WS_CREATOR', $this->ut->getRoles($token))) {
+        	$result = true;
+        }
+        return $result;
     }
 }

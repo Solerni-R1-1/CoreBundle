@@ -73,7 +73,7 @@ class BadgeController extends Controller
                     $nbTotalBadges++;
                 }
             }
-
+            
             if (!$isOwned) {
                 $nbBadgeRules      = count($workspaceBadge->getRules());
                 $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
@@ -88,7 +88,7 @@ class BadgeController extends Controller
                 }
             }
         }
-
+        
         // Create badge list to display (owned badges first, in progress badges and then other badges)
         $displayedBadges = array();
         foreach ($ownedBadges as $ownedBadge) {
@@ -128,6 +128,7 @@ class BadgeController extends Controller
                 $dropzone = $res['dropzone'];
                 $drop = $res['drop'];
                 // Remove one for each badge acquired, failed, not finished, or over
+                // Careful : $nbTotalBadges is no more total badges, but badgesToGo !
                 if (   ( $drop != null && $drop->getCalculatedGrade() != -1 ) ||
                        ( $drop != null && ! $drop->getFinished() && $dropzone->getEndAllowDrop()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ) ||
                        ( $drop != null && $drop->getCalculatedGrade() == -1 && $dropzone->getEndReview()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ) ) {

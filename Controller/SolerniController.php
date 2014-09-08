@@ -266,7 +266,8 @@ class SolerniController extends Controller
                         if ( $badgeArray['type'] == 'inprogress') {
                             // Remove Badge if endDate is in the future & we don't have a grade
                             if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") &&
-                                 $badgeArray['associatedResource']['drop']->getCalculatedGrade() == -1 ) {
+                                 ( $badgeArray['associatedResource']['drop']  &&
+                                 $badgeArray['associatedResource']['drop']->getCalculatedGrade() == -1 ) ) {
                                  $inProgressBadges[$badgeArray['associatedResource']['dropzone']->getResourceNode()->getId()] = $badgeArray;
                             } 
                         }
@@ -328,6 +329,8 @@ class SolerniController extends Controller
                     $subTitle = $mostRecentEval['badge']->getName();
                     $subText = $mostRecentEval['badge']->getWorkspace()->getMooc()->getTitle();
                     $subUrl = $mostRecentEval['associatedResourceUrl'];
+                    $footerText = $translator->trans( 'show_my_evals', array(), 'platform');
+                    $footerUrl = $router->generate('solerni_user_evaluations');
                 }
                     
                 break;

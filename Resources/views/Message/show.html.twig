@@ -60,9 +60,9 @@
                     </div>
                     <div class="panel-footer">
                         {% if message is empty %}
-                        <button id="submit-button" type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
+                            <button id="submit-button" type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
                         {% else %}
-                        <button id="submit-button" type="submit" class="btn btn-primary">{{ 'answer'|trans({}, 'platform') }}</button>
+                            <button id="submit-button" type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
                         {% endif %}
                         <a href="{{ path('claro_message_list_received')}}" id="link_new_message_layout" class='btn btn-gris action-button'>
                              {{ 'cancel'|trans({}, 'platform') }}

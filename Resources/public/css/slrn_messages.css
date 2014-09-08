@@ -21,7 +21,7 @@
 }
 
 .flat_block > li > a {
-	color:#999999;
+	color:#606060;
 }
 
 .flat_block > li.active > a{
@@ -139,4 +139,8 @@ table.scrollable thead th {
 
 .counter_b{
 	font-weight: bold;
+}
+
+.slrn-message-new {
+    padding: 7px 15px 0 0;
 }

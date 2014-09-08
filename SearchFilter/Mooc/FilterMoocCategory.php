@@ -13,10 +13,10 @@ class FilterMoocCategory extends FilterStandard
 {
 
 
-    public function buildResultFacet($resultFacet) 
+    public function postProcessResultFacet($resultFacet) 
     {
         
-        $returnResultFacet  = $this->getResultFacet();
+        $returnResultFacet  = $this->initResultFacet();
         
         foreach ($resultFacet as $value => $count) {
         /* @var $moocSession \Claroline\CoreBundle\Entity\Mooc\MoocCategory */
