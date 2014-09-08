@@ -383,4 +383,17 @@ class AnalyticsManager
     	
     	return $contributions;
     }
+    
+    /**
+     * Gives back the success rates of the various knowledge badges (associated with quizzes)
+     * @param AbstractWorkspace $workspace
+     * @return Array of badges success rates [[badge1success, badge1failure],[badge2success][badge2failure],...]
+     */
+    public function getKnowledgeBadgesSuccessRate(AbstractWorkspace $workspace) {
+    	$rates = array();
+    	
+    	
+    	
+    	return $rates;
+    }
 }
