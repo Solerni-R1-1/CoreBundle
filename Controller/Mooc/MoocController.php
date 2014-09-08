@@ -338,9 +338,9 @@ class MoocController extends Controller
      *                 options={"id" = "workspaceId"})
      * @ParamConverter("user", options={"authenticatedUser" = false})
      */
-    public function renderSolerniTabsAction( $workspace, $user )
+    public function renderSolerniTabsAction(AbstractWorkspace $workspace, $user )
     {
-        
+        $router = $this->get('router');
         $solerniTabs = array(
             'solerniTabs' => array(),
             'workspace' => $workspace,
@@ -378,7 +378,7 @@ class MoocController extends Controller
             if ($forum) {
                 // generate tab
                 $forumUrl = dirname(dirname($this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId()))));
-                $url = $this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId()));
+                $url = $router->generate('claro_forum_categories', array('forum' => $forum->getId()));
                 $solerniTabs['solerniTabs'][] = array(
                     'name' => 'Discuter',
                     'url' => $url,
@@ -388,14 +388,29 @@ class MoocController extends Controller
             }
         }
         // Generate tab for resource manager
-        $url = $this->get('router')->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
+        $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
         $solerniTabs['solerniTabs'][] = array(
             'name' => 'Partager',
             'url' => $url,
             'title' => 'Accéder au gestionnaire de ressources',
             'isSelected' => !(strpos(  $url, $currentUrl ) === false)
         );
-                
+
+        if ($workspace->isMooc()) {
+        	$mooc = $workspace->getMooc();
+        	$blogRes = $mooc->getBlog();
+        	if ($blogRes != null) {
+        		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
+        		$url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
+        		$solerniTabs['solerniTabs'][] = array(
+        				'name' => 'S\'informer',
+        				'url' => $url,
+        				'title' => 'Accéder au blog',
+        				'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
+        		);
+        	}
+        }
+        
         return $this->render(
             'ClarolineCoreBundle:Partials:includeSolerniTabs.html.twig',
             $solerniTabs

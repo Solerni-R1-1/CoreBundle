@@ -11,10 +11,12 @@ class MoocType extends AbstractType
         
     private $lessonResourceType;
     private $forumResourceType;
+    private $blogResourceType;
     private $workspace;
 
-    public function __construct( $workspace, $lessonResourceType, $forumResourceType ) {
+    public function __construct( $workspace, $lessonResourceType, $forumResourceType, $blogResourceType) {
         $this->lessonResourceType = $lessonResourceType;
+        $this->blogResourceType = $blogResourceType;
         $this->forumResourceType = $forumResourceType;
         $this->workspace = $workspace;
     }
@@ -102,6 +104,15 @@ class MoocType extends AbstractType
                     'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
                             return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->lessonResourceType);
                     }
+            ))
+            ->add('blog', 'entity', array(
+            		'required'      => false,
+            		'property'      => 'name',
+            		'empty_value'   => 'choose_blog_mooc',
+            		'class'         => 'ClarolineCoreBundle:Resource\ResourceNode',
+            		'query_builder' => function ( \Doctrine\ORM\EntityRepository $er )  {
+            			return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->blogResourceType);
+            		}
             ))
             ->add('moocSessions', 'collection', array(
                     'type' => new MoocSessionType( $this->workspace, $this->forumResourceType ),
