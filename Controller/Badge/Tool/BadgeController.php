@@ -270,28 +270,64 @@ class BadgeController extends Controller
      * @Route("/mes_evaluations", name="solerni_user_evaluations")
      * @ParamConverter( "user", options={"authenticatedUser" = true })
      */
-    public function userEvaluationsPageAction( $user ) {
+    public function userEvaluationsPageAction(User $user ) {
         
         $WorkspacesBadgeList = array();
         
+        $workspaces = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Workspace\AbstractWorkspace")->findAllWorkspacesUserIsRegisteredTo($user);
+        $badgeRepository = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge');
+        
+        $result = array();
+        
         // get all badges associated to dropzone for each session subscribed
-        foreach( $user->getMoocSessions() as $session ) {
-            $workspace = $session->getMooc()->getWorkspace();
-            $WorkspacesBadges = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
-            foreach ( $WorkspacesBadges['badgePager'] as $WorkspacesBadgePager ) {
-                // Only returns badges if they have inprogress
-                if ( $WorkspacesBadgePager['type'] == 'inprogress' ) {
-                     $WorkspacesBadgeList[] = $WorkspacesBadges;
-                     break;
-                }
-            }
+        foreach($workspaces as $workspace) {
+        	$badgesInProgress = array();
+        	$workspaceBadges = $badgeRepository->findByWorkspace($workspace);
+        	foreach($workspaceBadges as $workspaceBadge) {
+        		$status = $this->getBadgeStatus($workspaceBadge);
+        		
+        		if ($workspaceBadge->isKnowledgeBadge() && $status == BadgeController::BADGE_STATUS_IN_PROGRESS) {
+        			$evalNode = $workspaceBadge->getAssociatedEvaluations();
+        			$badgeInProgress = array();
+        			$badgeInProgress['badge'] = $workspaceBadge;
+        			$badgeInProgress['status'] = BadgeController::BADGE_STATUS_IN_PROGRESS;
+        			$badgeInProgress['resource_status'] = BadgeController::RES_STATUS_IN_PROGRESS;
+        			$badgeInProgress['associatedResourceUrl'] = $this->getResourceUrlAssociatedWithRule( $workspaceBadge, $evalNode[0]->getResourceType()->getName() );
+        			$badgesInProgress[] = $badgeInProgress;
+        		}
+        	}
+        	
+        	if (!empty($badgesInProgress)) {
+        		$localResult = array();
+        		$localResult['workspace'] = $workspace;
+        		$localResult['badges'] = $badgesInProgress;
+        		$result[] = $localResult;
+        	}
         }
         
         return $this->render(
             'ClarolineCoreBundle:Mooc:myEvaluationslist.html.twig',
-            array( 'WorkspacesBadgeList' => $WorkspacesBadgeList )
+            array( 'WorkspacesBadgeList' => $result )
         );
         
+    }
+
+    const BADGE_STATUS_AVAILABLE = 0;
+    const BADGE_STATUS_FAILED = 1;
+    const BADGE_STATUS_OWNED = 2;
+    const BADGE_STATUS_IN_PROGRESS = 3;
+
+    const RES_STATUS_SUCCEED = 0;
+    const RES_STATUS_FAILED = 1;
+    const RES_STATUS_TIME_OVER = 2;
+    const RES_STATUS_AVAILABLE = 3;
+    const RES_STATUS_IN_PROGRESS = 4;
+    
+    public function getBadgeStatus($badge) {
+    	$result = BadgeController::BADGE_STATUS_IN_PROGRESS;
+    	
+    	
+    	return $result;
     }
 
 }

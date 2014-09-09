@@ -908,4 +908,38 @@ class Badge extends Rulable
             $this->badgeClaims = new ArrayCollection();
         }
     }
+    
+    public function getAssociatedResources($type = null) {
+    	$result = array();
+    	
+    	foreach ($this->badgeRules as $badgeRule) {
+    		$res = $badgeRule->getResource();
+    		if (!in_array($res, $result)) {
+    			if ($type == null
+    					|| $res->getResourceType()->getName() == $type) {
+    				$result[] = $res;
+    			}
+    		}
+    	}
+    	
+    	return $result;
+    }
+    
+    public function isKnowledgeBadge() {
+    	$evals = $this->getAssociatedEvaluations();
+    	return !empty($evals);
+    }
+    
+    public function isSkillBadge() {
+    	$evals = $this->getAssociatedEvaluations();
+    	return !empty($evals);
+    }
+
+    public function getAssociatedEvaluations() {
+    	return $this->getAssociatedResources("icap_dropzone");
+    }
+    
+    public function getAssociatedExercises() {
+    	return $this->getAssociatedResources("ujm_exercise");
+    }
 }

@@ -1,10 +1,10 @@
 {# this is the mes evaluations block #}
 {% if pageContext is defined and pageContext == 'my_evals' %}
     {% set atLeastOne = false %}
-    {% for workspaceBadge in badgePager %}
-        {% if workspaceBadge.type == 'inprogress' %}
-            {% set badge = workspaceBadge.badge %}
-            {% set buttonLink = workspaceBadge.associatedResourceUrl %}
+    {% for badge in badges %}
+        {% if badge.status == 3 %}
+            {% set badgeEntity = badge.badge %}
+            {% set buttonLink = badge.associatedResourceUrl %}
             {# local variables #}
             {% set isOver = false %}
             {% set isNotStarted = false %}
