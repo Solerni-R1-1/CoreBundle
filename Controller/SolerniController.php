@@ -230,7 +230,7 @@ class SolerniController extends Controller
                     $iconImageSubstitute = $lastBadge->getWebPath();
                     $statusText = $translator->trans( 'last_badge', array(), 'platform');
                     $badgeTitle = $lastBadge->getName();
-                    $subTitle = ( strlen ( $badgeTitle ) > 20 ) ? substr( $badgeTitle, 0, 15 ) . '...' : $badgeTitle;
+                    $subTitle = ( mb_strlen ( $badgeTitle, "HTML-ENTITIES" ) > 20 ) ? mb_substr( $badgeTitle, 0, 15, "HTML-ENTITIES"  ) . '...' : $badgeTitle;
                     if ( $lastBadge->getWorkspace()->getMooc() ) {
                         $subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
                     } else {
