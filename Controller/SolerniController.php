@@ -203,10 +203,10 @@ class SolerniController extends Controller
                     $iconClass = $iconClass . '_actif';
                     $statusText = $translator->trans( 'last_message', array(), 'platform');
                     $messageTitle = $message->getObject();
-                    $subTitle = ( strlen ( $messageTitle ) > 15 ) ? substr( $messageTitle, 0, 15 ) . '...' : $messageTitle;
+                    $subTitle = ( mb_strlen ( $messageTitle, "HTML-ENTITIES" ) > 15 ) ? mb_substr( $messageTitle, 0, 15 , "HTML-ENTITIES") . '...' : $messageTitle;
                     $subTitle .= ' ' . $translator->trans( '@at', array(), 'platform') . ' ' .  $message->getDate()->format('H\hi');
                     $messageContent = strip_tags( $message->getContent() );
-                    $subText = ( strlen ( $messageContent ) > 30 ) ? substr( $messageContent, 0, 30 ) . '...' : $messageContent;
+                    $subText = ( mb_strlen ( $messageContent, "HTML-ENTITIES" ) > 30 ) ? mb_substr( $messageContent, 0, 30, "HTML-ENTITIES" ) . '...' : $messageContent;
                     $subUrl = $router->generate('claro_message_show', array('message' => $message->getId()));
                 }
                 break;
