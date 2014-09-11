@@ -58,11 +58,15 @@
 		return [value];
     });
 
+    {% if forumContributions is defined and forumContributions %}
     var chartData4 = $.map({{ forumContributions[0]|json_encode|raw }}, function(value, index) {
 		return [value];
+	var forumsContributionMean = {{ forumContributions[1] }};
     });
+    {% else %}
+    var chartData4 = {};
+    {% endif %}
 
-    var forumsContributionMean = {{ forumContributions[1] }};
 
     var bg_color = "transparent";
     if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";

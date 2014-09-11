@@ -29,6 +29,8 @@ use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Controller\Badge\Tool\BadgeController;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Icap\DropzoneBundle\Entity\Drop;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -51,17 +53,21 @@ class AnalyticsManager
     private $moocService;
     /** @var BadgeRepository */
     private $badgeRepository;
+    /** @var BadgeManager */
+    private $badgeManager;
 
     /**
      * @DI\InjectParams({
      *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *     "moocService"   = @DI\Inject("orange.mooc.service")
+     *     "moocService"   = @DI\Inject("orange.mooc.service"),
+     *     "badgeManager"  = @DI\Inject("claroline.manager.badge")
      * })
      */
-    public function __construct(ObjectManager $objectManager, MoocService $moocService)
+    public function __construct(ObjectManager $objectManager, MoocService $moocService, BadgeManager $badgeManager)
     {
         $this->om            	= $objectManager;
         $this->moocService 		= $moocService;
+        $this->badgeManager		= $badgeManager;
         $this->resourceRepo  	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceTypeRepo	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->userRepo      	= $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -365,34 +371,43 @@ class AnalyticsManager
      * @param AbstractWorkspace $workspace
      */
     public function getForumActivity(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
-    	$forum = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace)->getForum();
-    	$messages = $this->messageRepository->findAllPublicationsBetween($forum, $from, $to);
-    	
-    	$contributions = array();
-    	$contributions[0] = array();
-    	$nbContributions = 0;
-    	$nbDays = 0;
-    	
-    	
-    	// Extract data
-    	$index = -1;
-    	$lastDate = null;
-    	foreach ($messages as $i => $message) {
-    		if ($lastDate != $message->getCreationDate()->format("Y-m-d")) {
-    			$index ++;
-    			$contributions[0][$index] = array();
-    			$contributions[0][$index][0] = $message->getCreationDate()->format("Y-m-d");
-    			$contributions[0][$index][1] = 0;
-    			$nbDays++;
+    	if ($workspace->isMooc()) {
+    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    		if ($session != null && $session->getForum() != null) { 
+		    	$forum = $session->getForum();
+		    	$messages = $this->messageRepository->findAllPublicationsBetween($forum, $from, $to);
+		    	
+		    	$contributions = array();
+		    	$contributions[0] = array();
+		    	$nbContributions = 0;
+		    	$nbDays = 0;
+		    	
+		    	
+		    	// Extract data
+		    	$index = -1;
+		    	$lastDate = null;
+		    	foreach ($messages as $i => $message) {
+		    		if ($lastDate != $message->getCreationDate()->format("Y-m-d")) {
+		    			$index ++;
+		    			$contributions[0][$index] = array();
+		    			$contributions[0][$index][0] = $message->getCreationDate()->format("Y-m-d");
+		    			$contributions[0][$index][1] = 0;
+		    			$nbDays++;
+		    		}
+		    		$nbContributions++;
+		    		$contributions[0][$index][1]++;
+		    		$lastDate = $message->getCreationDate()->format("Y-m-d");
+		    	}
+		    
+		    	$contributions[1] = $nbDays > 0 ? $nbContributions / $nbDays : 0;
+		    	
+		    	return $contributions;
+    		} else {
+    			return null;
     		}
-    		$nbContributions++;
-    		$contributions[0][$index][1]++;
-    		$lastDate = $message->getCreationDate()->format("Y-m-d");
+    	} else {
+    		return null;
     	}
-    	
-    	$contributions[1] = $nbContributions / $nbDays;
-    	
-    	return $contributions;
     }
     
     /**
@@ -403,50 +418,63 @@ class AnalyticsManager
     public function getBadgesSuccessRate(AbstractWorkspace $workspace) {
     	$rates = array();
     	
-    	$badges = $this->badgeRepository->findByWorkspace($workspace);
-    	
-    	foreach ($badges as $badge) {
-    		$rate = array();
+    	if ($workspace->isMooc()) {
+    		$workspaceUsers = array();
+    		$mooc = $workspace->getMooc();
+    		$sessions = $mooc->getMoocSessions();
     		
-    		if ($badge->isKnowledgeBadge()) {
-    			$rate['type'] = 'knowledge';
-    		} else if ($badge->isSkillBadge()) {
-    			$rate['type'] = 'skill';
-    		} else {
-    			continue;
+    		// Get all distinct users for all sessions 
+    		foreach ($sessions as $session) {
+    			/* @var $session MoocSession */
+    			$users = $session->getUsers();
+    			foreach ($users as $user) {
+    				/* @var $user User */
+    				if (!in_array($user, $workspaceUsers, true)) {
+    					$workspaceUsers[] = $user;
+    				}
+    			}
     		}
-
-    		$rate['name'] = $badge->getName();
-    		$rate['success'] = count($badge->getUsers());
-    		$rate['failure'] = 9;
     		
-    		$rates[] = $rate;
+    		foreach ($workspaceUsers as $user) {
+    			/* @var $user User */
+    			$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, true);
+    			foreach ($badges as $badge) {
+    				/* @var $badgeEntity Badge */
+    				$badgeEntity = $badge['badge'];
+    				$badgeName = $badgeEntity->getName();
+    				
+    				if (!array_key_exists($badgeName, $rates)) {
+    					//echo ("=> ".$badgeName." <br />");
+    					$rateBadge = array();
+    					$rateBadge['success'] = 0;
+    					$rateBadge['failure'] = 0;
+    					$rateBadge['inProgress'] = 0;
+    					$rateBadge['available'] = 0;
+    					$rateBadge['name'] = $badgeName;
+    					$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
+    					$rates[$badgeName] = $rateBadge;
+    				}/* else {
+    					//echo ("<= ".$badgeName." <br />");
+    					//$rateBadge = $rates[$badgeName];
+    				}*/
+    				
+    				if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
+    					$rates[$badgeName]['success']++;
+    				} else if ($badge['status'] == Badge::BADGE_STATUS_FAILED) {
+    					$rates[$badgeName]['failure']++;
+    				} else if ($badge['status'] == Badge::BADGE_STATUS_IN_PROGRESS) {
+    					$rates[$badgeName]['inProgress']++;
+    				} else if ($badge['status'] == Badge::BADGE_STATUS_AVAILABLE) {
+    					$rates[$badgeName]['available']++;
+    				}
+    				//echo ($rateBadge['name']." success = ".$rateBadge['success']."<br />");
+    			}
+    		}
+    		
+    		
     	}
-//     	if ($workspace->isMooc()) {
-//     		$workspaceUsers = array();
-//     		$mooc = $workspace->getMooc();
-//     		$sessions = $mooc->getMoocSessions();
-    		
-//     		// Get all distinct users for all sessions 
-//     		foreach ($sessions as $session) {
-//     			/* @var $session MoocSession */
-//     			$users = $session->getUsers();
-//     			foreach ($users as $user) {
-//     				/* @var $user User */
-//     				if (!in_array($user, $workspaceUsers)) {
-//     					$workspaceUsers[] = $user;
-//     				}
-//     			}
-//     		}
-    		
-//     		foreach ($workspaceUsers as $user) {
-//     			/* @var $user User */
-//     			$badges = $this->badgeController->getAllBadgesForWorkspace($user, $workspace, true, true);
-//     		}
-    		
-    		
-//     	}
     	
     	return $rates;
     }
+    
 }
