@@ -242,12 +242,12 @@ class SolerniController extends Controller
                 }
                 break;
             
-            case 'evals':            	
+            case 'evals':
             	// Services initialization
-            	$badgeController = $this->get('orange.badge.controller');
-            	
+            	$badgeManager = $this->get('claroline.manager.badge');
+
             	// Get all in progress badges
-            	$badgesInProgress = $badgeController->getAllBadgesInProgress($user);
+            	$badgesInProgress = $badgeManager->getAllBadgesInProgress($user);
             	
             	// Change status to reflect the number of ongoing badges
             	$evalsCount = 0;
