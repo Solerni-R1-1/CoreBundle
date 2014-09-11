@@ -22,6 +22,6 @@
     {{ 'my_badges'|trans({}, 'badge') }}
 {% endblock %}
 
-{% block section_body %}
-    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', {'workspace': workspace, 'loggedUser': user, 'badgePage': badgePage})) }}
+{% block section_body %}a
+    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', {'workspace': workspace, 'loggedUser': user})) }}
 {% endblock %}

@@ -908,4 +908,141 @@ class Badge extends Rulable
             $this->badgeClaims = new ArrayCollection();
         }
     }
+    
+    public function getAssociatedResources($type = null) {
+    	$result = array();
+    	foreach ($this->badgeRules as $badgeRule) {
+    		$res = $badgeRule->getResource();
+    		if (!in_array($res, $result)) {
+    			if ($type == null
+    					|| ($res->getResourceType()->getName() == $type
+    							&& strpos($badgeRule->getAction(), $type))) {
+    				$result[] = $res;
+    			}
+    		}
+    	}
+    	
+    	return $result;
+    }
+    
+    public function isKnowledgeBadge() {
+    	$evals = $this->getAssociatedEvaluations();
+    	return !empty($evals);
+    }
+    
+    public function isSkillBadge() {
+    	$evals = $this->getAssociatedExercises();
+    	return !empty($evals);
+    }
+
+    public function getAssociatedEvaluations() {
+    	return $this->getAssociatedResources("icap_dropzone");
+    }
+    
+    public function getAssociatedExercises() {
+    	return $this->getAssociatedResources("ujm_exercise");
+    }
+    
+    public function isAssociatedToResourceType($resourceType) {
+    	$resources = $this->getAssociatedResources($resourceType);
+    	
+    	return !empty($resources);
+    }
+    
+
+
+    /** Badge can be obtained. */
+    const BADGE_STATUS_AVAILABLE = 0;
+    /** Badge has been failed. */
+    const BADGE_STATUS_FAILED = 1;
+    /** Badge is owned. */
+    const BADGE_STATUS_OWNED = 2;
+    /** Badge is in progress. */
+    const BADGE_STATUS_IN_PROGRESS = 3;
+    
+    
+    /** No resource(eval or quizz...) associated to the badge. */
+    const RES_STATUS_NO_RESOURCE = -1;
+    /** Eval or quizz has been succeeded. */
+    const RES_STATUS_SUCCEED = 0;
+    /** Eval or quizz has been failed. */
+    const RES_STATUS_FAILED = 1;
+    /** Eval or quizz period has expired. */
+    const RES_STATUS_TIME_OVER = 2;
+    /** Eval or quizz has not started yet. */
+    const RES_STATUS_NOT_STARTED = 3;
+    /** Eval or quizz has been started by user but not finished. */
+    const RES_STATUS_IN_PROGRESS = 4;
+    /** Eval or quizz is available but user hasn't started it. */
+    const RES_STATUS_AVAILABLE = 5;
+    
+    public function getBadgeStatus(User $user, $resourceStatus, $badgeRuleValidator) {
+    	$result = Badge::BADGE_STATUS_IN_PROGRESS;
+    	foreach ($this->getUserBadges() as $userBadge) {
+    		if ($userBadge->getUser()->getId() == $user->getId()) {
+    			return Badge::BADGE_STATUS_OWNED;
+    		}
+    	}
+    	 
+    	// If we failed the exam, if the exam is over and we don't have the badge or
+    	// if we succeed in the exam but don't have the badge, you failed the badge.
+    	// (if the badge needed a 15/20 but you got a 12/20, you succeed the eval but not the badge)
+    	if ($resourceStatus == Badge::RES_STATUS_FAILED
+    			|| $resourceStatus == Badge::RES_STATUS_TIME_OVER
+    			|| $resourceStatus == Badge::RES_STATUS_SUCCEED) {
+    		$result = Badge::BADGE_STATUS_FAILED;
+    	} else {
+    		$nbBadgeRules      = count($this->getRules());
+        	$validatedRules    = $badgeRuleValidator->validate($this, $user);
+    
+        	if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules > $validatedRules['validRules']) {
+        		$result = Badge::BADGE_STATUS_IN_PROGRESS;
+        	} else {
+        		$result = Badge::BADGE_STATUS_AVAILABLE;
+        	}
+        }
+    
+        return $result;
+    }
+    
+    
+    public function getBadgeResourceStatus($resource) {
+    	$result = Badge::RES_STATUS_IN_PROGRESS;
+    	 
+    	if ($this->isKnowledgeBadge()) {
+	    	$now = new \DateTime();
+	    	$dropzone = $resource['dropzone'];
+	    	$drop = $resource['drop'];
+	    
+	    	if ($dropzone->isNotStarted()) {
+	    		$result = Badge::RES_STATUS_NOT_STARTED;
+	    	} else if ($dropzone->getEndReview() < $now
+	    			|| ($drop == null && $dropzone->getEndAllowDrop() < $now)) {
+	    		$result = Badge::RES_STATUS_TIME_OVER;
+	    	} else if ($drop != null) {
+	    		$grade = $drop->getCalculatedGrade();
+	    		$expectedGrade = $dropzone->getMinimumScoreToPass();
+	    		if ($grade != -1 && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection()) {
+	    			if ($grade >= $expectedGrade) {
+	    				$result = Badge::RES_STATUS_SUCCEED;
+	    			} else {
+				    	$result = Badge::RES_STATUS_FAILED;
+	    			}
+	    		} else {
+	    			$result = Badge::RES_STATUS_IN_PROGRESS;
+	    		}
+	    	} else {
+	    		$result = Badge::RES_STATUS_AVAILABLE;
+	    	}
+    
+    	} else if ($this->isSkillBadge()) {
+    
+    	} else {
+    		$result = Badge::RES_STATUS_NO_RESOURCE;
+    	}
+    	 
+    	 
+    	return $result;
+    }
+    
 }

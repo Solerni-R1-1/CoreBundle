@@ -1,44 +1,37 @@
 {# this is the mes evaluations block #}
 {% if pageContext is defined and pageContext == 'my_evals' %}
     {% set atLeastOne = false %}
-    {% for workspaceBadge in badgePager %}
-        {% if workspaceBadge.type == 'inprogress' %}
-            {% set badge = workspaceBadge.badge %}
-            {% set buttonLink = workspaceBadge.associatedResourceUrl %}
+    {% for badge in badges %}
+        {% if badge.status == 3 %}
+            {% set badgeEntity = badge.badge %}
+            {% set buttonLink = badge.resource.url %}
             {# local variables #}
             {% set isOver = false %}
             {% set isNotStarted = false %}
             {% set userResult = false %}
-            {# check eval status : eval closed or user does not have drop and drop is closed #}
-            {% if    workspaceBadge.associatedResource.dropzone.getEndReview() < date() or
-                    ( workspaceBadge.associatedResource.drop is null and workspaceBadge.associatedResource.dropzone.getEndAllowDrop() < date() ) %}
-                {% set isOver = true %}
-            {% endif %}
-            {% if workspaceBadge.associatedResource.dropzone.isNotStarted() %}
-                {% set isNotStarted = true %}
-            {% endif %}
-            {# check user eval status #}
-            {% if workspaceBadge.associatedResource.drop is defined %}
-                {% if workspaceBadge.associatedResource.drop.calculatedGrade is defined and workspaceBadge.associatedResource.drop.countFinishedCorrections >= workspaceBadge.associatedResource.dropzone.expectedTotalCorrection %}
-                    {% if workspaceBadge.associatedResource.drop.calculatedGrade >= workspaceBadge.associatedResource.dropzone.minimumScoreToPass %}
-                        {% set userResult = 'succeed' %}
-                    {% else %}
-                        {% set userResult = 'failed' %}
-                    {% endif %}
-                {% endif %}
+            {% if badge.resource.status == 0 %}
+            	{% set userResult = 'succeed' %}
+            {% elseif badge.resource.status == 1 %}
+            	{% set userResult = 'failed' %}
+            {% elseif badge.resource.status == 2 %}
+            	{% set isOver = true %}
+            {% elseif badge.resource.status == 3 %}
+            	{% set isNotStarted = true %}
+            {% elseif badge.resource.status == 4 %}
+            	{# In progress #}
             {% endif %}
             
             <li class="slrn-my_badges-list__item">
-                <img src="{{ image(badge.webPath).zoomCrop(100,100) }}" 
-                     alt="{{ badge.name }}" 
+                <img src="{{ image(badgeEntity.webPath).zoomCrop(100,100) }}" 
+                     alt="{{ badgeEntity.name }}" 
                      class="slrn-my_badges-list__item__image"
                      width="100"
                      height="100"
                 >
                 <section class="slrn-my_badges-list__body">
-                    <h6 class="slrn-my_badges-list__item__title slrn-my_badges-list__item__title--my_evals">Badge &laquo; {{ badge.name }} &raquo;</h6>
+                    <h6 class="slrn-my_badges-list__item__title slrn-my_badges-list__item__title--my_evals">Badge &laquo; {{ badgeEntity.name }} &raquo;</h6>
                     <div class="slrn-my_badges-list__content slrn-my_badges-list__content--my_evals">
-                        {{'start_date'|trans({}, 'solerni')}} : {{ workspaceBadge.associatedResource.dropzone.getStartAllowDrop()|date('d/m/y') }}
+                        {{'start_date'|trans({}, 'solerni')}} : {{ badge.resource.resource.dropzone.getStartAllowDrop()|date('d/m/y') }}
                     </div>
                     <footer class="slrn-my_badges-list__footer">
                          {% if userResult == 'succeed' %}
@@ -70,58 +63,47 @@
 {% else %}
     {# this is the badges de competences pages #}
     <ul class="panel-body my_badges slrn-my_badges-list">
-        {% set badgesToGo = nbTotalBadges %}
-        <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ badgesToGo }} badge{% if badgesToGo > 1 %}s{% endif %} à obtenir</h5>
-        {% for workspaceBadge in badgePager %}
-            {% set badgeType = workspaceBadge.type %}
-            {% if 'owned' == badgeType %}
-                    {% set badge     = workspaceBadge.badge.badge %}
-                    {% set userBadge = workspaceBadge.badge %}
-                    {% set buttonLink = path( 'claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badge.slug } ) %}
-            {% else %}
-                    {% set badge     = workspaceBadge.badge %}
-                    {% if workspaceBadge.associatedResourceUrl is defined %}
-                        {% set buttonLink =  workspaceBadge.associatedResourceUrl %}
-                    {% endif %}
+    {% set remainingBadges = nbTotalBadges - (nbAcquiredBadges + nbFailedBadges) %}
+        <h5 class="slrn-bold slrn-my_badges_enumerate">Il vous reste encore {{ remainingBadges }} badge{% if remainingBadges > 1 %}s{% endif %} à obtenir</h5>
+        {% for badge in badges %}
+            {% set status = badge.status %}
+            {% set badgeEntity = badge.badge %}
+            {% if 2 == status %}
+                    {% set buttonLink = path( 'claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badgeEntity.slug } ) %}
+                    {% set issuedAt = badge.issuedDate %}
+            {% elseif badge.resource.url is defined %}
+                   	{% set buttonLink =  badge.resource.url %}
             {% endif %}
             {# local variables #}
-            {% set atLeastOne = true %}
             {% set isOver = false %}
             {% set isNotStarted = false %}
             {% set userResult = false %}
-            {# check eval status : eval closed or user does not have drop and drop is closed #}
-            {% if   workspaceBadge.associatedResource.dropzone.getEndReview() < date() or 
-                    ( workspaceBadge.associatedResource.drop is null and workspaceBadge.associatedResource.dropzone.getEndAllowDrop() < date() ) %}
-                {% set isOver = true %}
-            {% endif %}
-            {% if workspaceBadge.associatedResource.dropzone.isNotStarted() %}
-                {% set isNotStarted = true %}
-            {% endif %}
-            {# check user eval status #}
-            {% if workspaceBadge.associatedResource.drop is not null %}
-                {% if workspaceBadge.associatedResource.drop.calculatedGrade is defined and workspaceBadge.associatedResource.drop.countFinishedCorrections >= workspaceBadge.associatedResource.dropzone.expectedTotalCorrection %}
-                    {% if workspaceBadge.associatedResource.drop.calculatedGrade >= workspaceBadge.associatedResource.dropzone.minimumScoreToPass %}
-                        {% set userResult = 'succeed' %}
-                    {% else %}
-                        {% set userResult = 'failed' %}
-                    {% endif %}
-                {% endif %}
+            {% if badge.resource.status == 0 %}
+            	{% set userResult = 'succeed' %}
+            {% elseif badge.resource.status == 1 %}
+            	{% set userResult = 'failed' %}
+            {% elseif badge.resource.status == 2 %}
+            	{% set isOver = true %}
+            {% elseif badge.resource.status == 3 %}
+            	{% set isNotStarted = true %}
+            {% elseif badge.resource.status == 4 %}
+            	{# In progress #}
             {% endif %}
         
             <li class="slrn-my_badges-list__item">
-                <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="slrn-my_badges-list__item__image" />
+                <img src="{{ asset(badgeEntity.webPath) }}" alt="{{ badgeEntity.name }}" class="slrn-my_badges-list__item__image" />
                 <section class="slrn-my_badges-list__body">
-                    <h6 class="slrn-my_badges-list__item__title">Badge &laquo; {{ badge.name }} &raquo;</h6>
-                    {% if 'owned' == badgeType %} 
-                        <span class=" slrn-my_badges-list__body__status"><span class="slrn-bold">Obtenu le :</span> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }}</span>
+                    <h6 class="slrn-my_badges-list__item__title">Badge &laquo; {{ badgeEntity.name }} &raquo;</h6>
+                    {% if 2 == status %} 
+                        <span class=" slrn-my_badges-list__body__status"><span class="slrn-bold">Obtenu le :</span> {{ issuedAt|date('date_format'|trans({}, 'platform')) }}</span>
                     {% endif %}
-                    {% if 'inprogress' == badgeType %}
+                    {% if 3 == status %}
                          <span class=" slrn-my_badges-list__body__status"><span class="slrn-bold">Badge en cours d'acquisition</span></span>
                     {% endif %}
-                    <article class="slrn-my_badges-list__content">{{ badge.criteria | raw }}</article>
+                    <article class="slrn-my_badges-list__content">{{ badgeEntity.criteria | raw }}</article>
                     <footer class="slrn-my_badges-list__footer">
                         <span class="slrn-gratuit-icon">prix gratuit</span>
-                         {% if 'owned' == badgeType %}
+                         {% if 2 == status %}
                             <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
                                 {{'my_badge_details'|trans({}, 'platform')}}
                             </a>
@@ -143,10 +125,10 @@
                             </a>
                         {% elseif buttonLink %}
                             <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
-                                {% if 'inprogress' == badgeType %} 
+                                {% if 3 == status %} 
                                    {{'go_to_evaluation'|trans({}, 'platform')}}
                                 {% endif %}
-                                {% if 'available' == badgeType %} 
+                                {% if 0 == status %} 
                                     {{'get_this_badge'|trans({}, 'platform')}}
                                 {% endif %}
                             </a>
@@ -157,7 +139,7 @@
         {% endfor %}
     </ul>
 {% endif %}
-{% if badgePager.haveToPaginate %}
+{#% if badgePager.haveToPaginate %}
 <div>
     {{
         pagerfanta(
@@ -172,4 +154,4 @@
         )
     }}
 </div>
-{% endif %}
+{% endif %#}
