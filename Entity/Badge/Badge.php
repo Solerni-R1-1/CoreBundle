@@ -913,8 +913,8 @@ class Badge extends Rulable
     	$result = array();
     	foreach ($this->badgeRules as $badgeRule) {
     		$res = $badgeRule->getResource();
-    		if (!in_array($res, $result)) {
-    			if ($type == null
+    		if ( $res != NULL && !in_array($res, $result)) {
+    			if ($type == null 
     					|| ($res->getResourceType()->getName() == $type
     							&& strpos($badgeRule->getAction(), $type))) {
     				$result[] = $res;
