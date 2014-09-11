@@ -108,11 +108,14 @@ body.subnavbar-fixed { padding-top: 110px }
 }
 
 .navbar-inverse .navbar-nav > .slrn-topbar--account .dropdown-toggle span {
-    width:      132px;
-    display:    inline-block;
-    overflow:   hidden;
-    height:     1.5em;
-    text-align: left;
+    width:          132px;
+    display:        inline-block;
+    overflow:       hidden;
+    height:         1.5em;
+    text-align:     left;
+    white-space:    nowrap;
+    text-overflow:  ellipsis;
+    padding-right:  .8em;
 }
 
 .navbar-inverse .navbar-nav > .slrn-topbar--account .caret {
