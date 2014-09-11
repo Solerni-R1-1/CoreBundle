@@ -704,6 +704,10 @@ class Mooc
         return $this->hasLinkedinShare;
     }
     
+    /**
+     * 
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getMoocSessions()
     {
         return $this->moocSessions;
@@ -712,7 +716,7 @@ class Mooc
     /**
      * Get workspace 
      * 
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return AbstractWorkspace
      */
     public function getWorkspace()
     {

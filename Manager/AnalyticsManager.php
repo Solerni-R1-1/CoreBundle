@@ -26,6 +26,9 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\ForumBundle\Repository\MessageRepository;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Controller\Badge\Tool\BadgeController;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -404,26 +407,45 @@ class AnalyticsManager
     	
     	foreach ($badges as $badge) {
     		$rate = array();
-    		foreach($badge->getRules() as $rule){
-    			if (strpos($rule->getAction(), 'ujm_exercise') !== false) {
-    				$rate['type'] = 'knowledge';
-    			} else
-    			if (strpos($rule->getAction(), 'icap_dropzone') !== false) {
-    				$rate['type'] = 'skill';
-    			} else {
-    				continue;
-    			}
-    			
-    			$rate['name'] = $badge->getName();
-    			$rate['success'] = count($badge->getUsers());
-    			$rate['failure'] = 9;
-    			break;
-    		}
     		
-    		if (count($rate) != 0) {
-    			$rates[] = $rate;
+    		if ($badge->isKnowledgeBadge()) {
+    			$rate['type'] = 'knowledge';
+    		} else if ($badge->isSkillBadge()) {
+    			$rate['type'] = 'skill';
+    		} else {
+    			continue;
     		}
+
+    		$rate['name'] = $badge->getName();
+    		$rate['success'] = count($badge->getUsers());
+    		$rate['failure'] = 9;
+    		
+    		$rates[] = $rate;
     	}
+//     	if ($workspace->isMooc()) {
+//     		$workspaceUsers = array();
+//     		$mooc = $workspace->getMooc();
+//     		$sessions = $mooc->getMoocSessions();
+    		
+//     		// Get all distinct users for all sessions 
+//     		foreach ($sessions as $session) {
+//     			/* @var $session MoocSession */
+//     			$users = $session->getUsers();
+//     			foreach ($users as $user) {
+//     				/* @var $user User */
+//     				if (!in_array($user, $workspaceUsers)) {
+//     					$workspaceUsers[] = $user;
+//     				}
+//     			}
+//     		}
+    		
+//     		foreach ($workspaceUsers as $user) {
+//     			/* @var $user User */
+//     			$badges = $this->badgeController->getAllBadgesForWorkspace($user, $workspace, true, true);
+//     		}
+    		
+    		
+//     	}
     	
     	return $rates;
     }
