@@ -387,16 +387,19 @@ class MoocController extends Controller
                 );
             }
         }
+        
         // Generate tab for resource manager
-        $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
-        $solerniTabs['solerniTabs'][] = array(
-            'name' => 'Partager',
-            'url' => $url,
-            'title' => 'Accéder au gestionnaire de ressources',
-            'isSelected' => !(strpos(  $url, $currentUrl ) === false)
-        );
+        if ( $session ) {
+            $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
+            $solerniTabs['solerniTabs'][] = array(
+                'name' => 'Partager',
+                'url' => $url,
+                'title' => 'Accéder au gestionnaire de ressources',
+                'isSelected' => !(strpos(  $url, $currentUrl ) === false)
+            );
+        }
 
-        if ($workspace->isMooc()) {
+        if ( $workspace->isMooc() ) {
         	$mooc = $workspace->getMooc();
         	$blogRes = $mooc->getBlog();
         	if ($blogRes != null) {

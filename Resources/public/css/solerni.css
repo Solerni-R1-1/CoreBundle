@@ -384,6 +384,7 @@ body.subnavbar-fixed { padding-top: 110px }
 .body-my_badges .content,
 .body-without-subnavbar .content { padding-top: 0; }
 .body-forum .content { padding-top: 0; }
+.body-blog .content { padding-top: 0; }
 
 /* HIDE FLASHBOX ON DASHBOARD */
 body.dsk .alert { display: none; }
