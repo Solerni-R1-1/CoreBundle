@@ -23,7 +23,7 @@
             <br/><br/>
         {% endif %}
 
-        {% if 0 < resourceCount|length %}
+        {#% if 0 < resourceCount|length %#}
             <div class="row">
                 <div class="col-md-6">
                     {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
@@ -45,6 +45,8 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        {#% endif %#}
+        	<a href="{{ path('solerni_export_badges_knowledge_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES KNOWLEDGE</a><br />
+        	{#<a href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES SKILL</a>#}
     </div>
 {% endblock %}

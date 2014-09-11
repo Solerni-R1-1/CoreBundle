@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * MoocSessionRepository
@@ -161,5 +162,23 @@ class MoocSessionRepository extends EntityRepository
     	$result = $qb->getResult();
     	 
     	return ( count($result) > 0 ) ? true : false;
+    }
+    
+    /**
+     * Returns the active session, or the last one if no active session.
+     * @param AbstractWorkspace $workspace
+     */
+    public function getActiveOrLastSession(AbstractWorkspace $workspace) {
+    	$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms
+				WHERE ms.mooc = :mooc 
+				AND ms.startDate < CURRENT_TIMESTAMP()
+				ORDER BY ms.endDate DESC ";
+		$qb = $this->_em->createQuery($query)->setParameters(array(
+				"mooc" => $workspace->getMooc()
+		));
+        
+        $result = $qb->getResult();
+        
+        return ( count($result) > 0 ) ? $result[0] : NULL;
     }
 }

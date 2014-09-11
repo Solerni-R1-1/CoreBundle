@@ -49,6 +49,17 @@ class MoocService extends Controller
     }
     
     /**
+     * Get the active (or next) session from a workspace
+     * Return MoocSession Entity or null
+     */
+    public function getActiveOrLastSessionFromWorkspace( $workspace ) {
+    
+    	return $this->getDoctrine()
+    	->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
+    	->getActiveOrLastSession( $workspace );
+    }
+    
+    /**
      * Get the session from a workspace
      * Return MoocSession Entity or null
      */

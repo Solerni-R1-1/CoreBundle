@@ -73,6 +73,11 @@ claro_log:
     prefix: log
     type: annotation
 
+claro_export_analytics:
+    resource: "@ClarolineCoreBundle/Controller/SolerniController.php"
+    prefix: analytics/export
+    type: annotation
+
 claro_log_admin:
     resource: "@ClarolineCoreBundle/Controller/Log/AdministrationController.php"
     prefix: admin

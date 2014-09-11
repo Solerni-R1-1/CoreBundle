@@ -13,6 +13,7 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasOverlay.min.js') }}"></script>
 {% else %}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
 {% endif %}
@@ -28,17 +29,61 @@
         </div>
     </div>
 </div>
+
+<div id="analytics-resources-active-users-piechart" class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-bar-chart"></i>
+        Utilisateurs actifs
+    </div>
+    <div id="collapse-active-users-piechart" class="panel-body">
+        <div id="container-active-users-piechart">
+            <div id="resources-active-users-pie-chart" class="pie-chart"></div>
+        </div>
+    </div>
+</div>
+
+{% for badge in badgesSuccessRates %}
+<div id="analytics-resources-badge-{{ loop.index0 }}-piechart" class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-bar-chart"></i>
+        {{ badge['name'] }}
+    </div>
+    <div id="collapse-badge-{{ loop.index0 }}-piechart" class="panel-body">
+        <div id="container-badge-{{ loop.index0 }}-piechart">
+            <div id="resources-badge-{{ loop.index0 }}-pie-chart" class="pie-chart"></div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 <script type="text/javascript">
     var pieChartData = [];
     {% for resource in resourceCount %}
     pieChartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
     {% endfor %}
+    
+    var activeUsersData = [];
+    var activeUsers = {{ activeUsers[0] }};
+    var totalUsers = {{ activeUsers[1] }};
+    var percentageActive = (activeUsers / totalUsers) * 100;
+    activeUsersData.push(["Utilisateurs actifs", percentageActive ]);
+    activeUsersData.push(["Utilisateurs non actifs", (100 - percentageActive)]);
+
+    {% for badge in badgesSuccessRates %}
+	var badge{{ loop.index0 }}Rates = [];
+	badge{{ loop.index0 }}Rates.push(["Success", {{ badge['success'] }}]);
+	badge{{ loop.index0 }}Rates.push(["Failure", {{ badge['failure'] }}]);
+	badge{{ loop.index0 }}Rates.push(["In Progress", {{ badge['inProgress'] }}]);
+	badge{{ loop.index0 }}Rates.push(["Available", {{ badge['available'] }}]);
+    {% endfor %}
+    
     var bg_color = "transparent";
     if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
     var numberRows = 7;
     {% if numberRows is not empty %}
     numberRows = {{ numberRows }};
     {% endif %}
+    
     $(document).ready(function(){
         if (pieChartData.length>0) {
             var resourcesPlot = $.jqplot(
@@ -87,6 +132,107 @@
                         }
                     }
             );
+        }
+
+        if (activeUsersData.length>0) {
+            var activeUsersResourcesPlot = $.jqplot(
+                    'resources-active-users-pie-chart',
+                    [activeUsersData],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: false,
+                            shadow: false,
+                            background: bg_color,
+                            useNegativeColors: false
+                        },
+                        highlighter: {
+                            show: false
+                        },
+                        cursor: {
+                            show: false,
+                            zoom: false,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker:true,
+                            renderer:$.jqplot.PieRenderer,
+                            rendererOptions:{
+                                showDataLabels: true,
+                                dataLabelThreshold: 2,
+                                dataLabels: 'percent',
+                                sliceMargin:0.3,
+                                dataLabelFormatString: '%.1f%%',
+                                highlightMouseOver:false
+                            },
+                            shadow:false
+                        },
+                        legend:{
+                            location: 's',
+                            border:'none',
+                            renderer: $.jqplot.CavasTextRenderer,
+                            show:true,
+                            showMarker:true,
+                            rendererOptions:{
+                                numberRows:numberRows
+                            },
+                            backgroundColor:bg_color,
+                            placement:'outsideGrid'
+                        }
+                    }
+            );
+
+            {% for badge in badgesSuccessRates %}
+            if (badge{{ loop.index0 }}Rates.length>0) {
+                var badge{{ loop.index0 }}ResourcesPlot = $.jqplot(
+                        'resources-badge-{{ loop.index0 }}-pie-chart',
+                        [badge{{ loop.index0 }}Rates],
+                        {
+                            title: {show: false},
+                            grid: {
+                                drawBorder: false,
+                                shadow: false,
+                                background: bg_color,
+                                useNegativeColors: false
+                            },
+                            highlighter: {
+                                show: false
+                            },
+                            cursor: {
+                                show: false,
+                                zoom: false,
+                                showTooltip: false
+                            },
+                            seriesDefaults: {
+                                showMarker:true,
+                                renderer:$.jqplot.PieRenderer,
+                                rendererOptions:{
+                                    showDataLabels: true,
+                                    dataLabelThreshold: 2,
+                                    dataLabels: 'percent',
+                                    sliceMargin:0.3,
+                                    dataLabelFormatString: '%.1f%%',
+                                    highlightMouseOver:false
+                                },
+                                shadow:false
+                            },
+                            legend:{
+                                location: 's',
+                                border:'none',
+                                renderer: $.jqplot.CavasTextRenderer,
+                                show:true,
+                                showMarker:true,
+                                rendererOptions:{
+                                    numberRows:numberRows
+                                },
+                                backgroundColor:bg_color,
+                                placement:'outsideGrid'
+                            }
+                        }
+                );
+            }
+            {% endfor %}
+            
         }
     });
 </script>
