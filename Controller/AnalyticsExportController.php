@@ -173,7 +173,7 @@ class AnalyticsExportController extends Controller {
 					'Content-Disposition' => 'attachment; filename="export.csv"'
 			));
 		} else {
-			throw new \Exception();
+			throw $this->createNotFoundException('Ce workspace ne contient pas de mooc');
 		}
 	}
 	
@@ -286,7 +286,7 @@ class AnalyticsExportController extends Controller {
 					'Content-Disposition' => 'attachment; filename="export.csv"'
 			));
 		} else {
-			throw new \Exception();
+			throw $this->createNotFoundException('Ce workspace ne contient pas de mooc');
 		}
 	}
 	
@@ -403,7 +403,7 @@ class AnalyticsExportController extends Controller {
 					'Content-Disposition' => 'attachment; filename="export.csv"'
 			));
 		} else {
-			throw new \Exception();
+			throw $this->createNotFoundException('Ce workspace ne contient pas de mooc');
 		}
 	}
 	
@@ -425,43 +425,47 @@ class AnalyticsExportController extends Controller {
 			$mooc = $workspace->getMooc();
 			
 			$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			$users = $session->getUsers();
-			
-			$rowsCSV = array();
+			if ($session != null && $session->getForum() != null) {
+				$users = $session->getUsers();
+				
+				$rowsCSV = array();
+		
+				$headerCSV = array();
+		
+				$headerCSV[0] = "Firstname";
+				$headerCSV[1] = "Lastname";
+				$headerCSV[2] = "Username";
+				$headerCSV[3] = "Mail";
+				$headerCSV[4] = "Number of forum publications";
+				
+				$rowsCSV[] = $headerCSV;
+		
+				// Extract data
+				foreach ($users as $user) {
+					// Get information from database
+					$nbPublications = $this->messageRepository->countMessagesForUser($session->getForum(), $user, $from, $to);
+		
+					$rowCSV = array();
+					$rowCSV[0] = $user->getLastName();
+					$rowCSV[1] = $user->getFirstName();
+					$rowCSV[2] = $user->getUsername();
+					$rowCSV[3] = $user->getMail();
+					$rowCSV[4] = $nbPublications;
+		
+					$rowsCSV[] = $rowCSV;
+				}
 	
-			$headerCSV = array();
-	
-			$headerCSV[0] = "Firstname";
-			$headerCSV[1] = "Lastname";
-			$headerCSV[2] = "Username";
-			$headerCSV[3] = "Mail";
-			$headerCSV[4] = "Number of forum publications";
-			
-			$rowsCSV[] = $headerCSV;
-	
-			// Extract data
-			foreach ($users as $user) {
-				// Get information from database
-				$nbPublications = $this->messageRepository->countMessagesForUser($session->getForum(), $user, $from, $to);
-	
-				$rowCSV = array();
-				$rowCSV[0] = $user->getLastName();
-				$rowCSV[1] = $user->getFirstName();
-				$rowCSV[2] = $user->getUsername();
-				$rowCSV[3] = $user->getMail();
-				$rowCSV[4] = $nbPublications;
-	
-				$rowsCSV[] = $rowCSV;
+				$content = $this->createCSVFromArray($rowsCSV);
+		
+				return new Response($content, 200, array(
+						'Content-Type' => 'application/force-download',
+						'Content-Disposition' => 'attachment; filename="export.csv"'
+				));
+			} else {
+				throw $this->createNotFoundException('Ce workspace ne contient pas de forum');
 			}
-
-			$content = $this->createCSVFromArray($rowsCSV);
-	
-			return new Response($content, 200, array(
-					'Content-Type' => 'application/force-download',
-					'Content-Disposition' => 'attachment; filename="export.csv"'
-			));
 		} else {
-			throw new \Exception();
+			throw $this->createNotFoundException('Ce workspace ne contient pas de mooc');
 		}
 	}
 	
