@@ -22,6 +22,7 @@ use Doctrine\ORM\UnitOfWork;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use UJM\ExoBundle\Services\classes\exerciseServices;
 
 /**
  * @DI\Service("claroline.manager.badge")
@@ -39,7 +40,12 @@ class BadgeManager
     protected $router;
     
     protected $badgeValidator;
-
+    
+    /**
+     * @var exerciseServices
+     */
+	protected $exerciseService;
+    
     /**
      * Constructor.
      *
@@ -47,18 +53,21 @@ class BadgeManager
      *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "router"			 = @DI\Inject("router"),
-     *     "badgeValidator"  = @DI\Inject("claroline.rule.validator")
+     *     "badgeValidator"  = @DI\Inject("claroline.rule.validator"),
+     *     "exerciseService" = @DI\Inject("ujm.exercise_services")
      * })
      */
     public function __construct(
     		EntityManager $entityManager,
     		EventDispatcherInterface $eventDispatcher,
     		$router,
-    		$badgeValidator) {
+    		$badgeValidator,
+    		exerciseServices $exerciseService) {
         $this->entityManager   = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->router		   = $router;
         $this->badgeValidator  = $badgeValidator;
+        $this->exerciseService = $exerciseService;
     }
 
     /**
@@ -315,7 +324,11 @@ class BadgeManager
     				$badgeRessourceNode = $BadgeRule->getResource();
     				if ( $badgeRessourceNode ) {
     					$associatedExercise = $exercisesRepo->findOneByResourceNode( $badgeRessourceNode );
-    					$associatedResource = array( 'exercise' => $associatedExercise );
+    					$mark = $exercisesRepo->getExerciseMarksForUser($associatedExercise, $loggedUser);
+    					$maxMark = $this->exerciseService->getExerciseTotalScore($associatedExercise->getId());
+    					$mark = ($mark / $maxMark) * 20; 
+    					echo "$mark";
+    					$associatedResource = array( 'exercise' => $associatedExercise, 'bestMark' => $mark);
     				}
     			}
     		}

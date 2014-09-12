@@ -26,6 +26,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * @ORM\Table(name="claro_badge")
@@ -1036,7 +1037,26 @@ class Badge extends Rulable
 	    	}
     
     	} else if ($this->isSkillBadge()) {
-    
+    		$now = new \DateTime();
+    		/* @var $exercise Exercise */
+    		$exercise = $resource['exercise'];
+    		$mark = $resource['bestMark'];
+    		 
+    		/*if ($exercise->isNotStarted()) {
+    			$result = Badge::RES_STATUS_NOT_STARTED;
+    		} else if ($dropzone->getEndReview() < $now
+    				|| ($drop == null && $dropzone->getEndAllowDrop() < $now)) {
+    			$result = Badge::RES_STATUS_TIME_OVER;
+    		} else */
+    		if ($mark != null) {
+    			if ($mark >= 10) {
+    				$result = Badge::RES_STATUS_SUCCEED;
+    			} else {
+    				$result = Badge::RES_STATUS_FAILED;
+    			}
+    		} else {
+    			$result = Badge::RES_STATUS_AVAILABLE;
+    		}
     	} else {
     		$result = Badge::RES_STATUS_NO_RESOURCE;
     	}

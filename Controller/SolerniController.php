@@ -20,6 +20,7 @@ use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Component\HttpFoundation\Response;
+use UJM\ExoBundle\Entity\Exercise;
 
 
 /**
@@ -665,7 +666,8 @@ class SolerniController extends Controller
     
     		foreach ($workspaceUsers as $user) {
     			/* @var $user User */
-    			$badges = $badgeManager->getAllBadgesForWorkspace($user, $workspace, true, false);
+    			$badges = $badgeManager->getAllBadgesForWorkspace($user, $workspace, false, true);
+    			$exerciseRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
     			 
     			$rowCSV = array();
     			 
@@ -691,8 +693,8 @@ class SolerniController extends Controller
     					$index = $badgesIndex[$badgeName];
     				}
     				 
-    				/* @var $drop Drop */
-    				$drop = $badge['resource']['resource']['drop'];
+    				/* @var $exercise Exercise */
+    				$exercise = $badge['resource']['resource']['exercise'];
     
     				if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
     					$nbOwnedBadges++;
@@ -700,9 +702,9 @@ class SolerniController extends Controller
     				
     				if ($badge['resource']['status'] == Badge::RES_STATUS_SUCCEED
     						|| $badge['resource']['status'] == Badge::RES_STATUS_FAILED) {
-    					$rowCSV[$index] = $drop->getCalculatedGrade();
+    					$rowCSV[$index] = $badge['resource']['resource']['bestMark'];
     				} else {
-    					$rowCSV[$index] = 0;
+    					$rowCSV[$index] = 0.00;
     				}
     				$totalNotes += $rowCSV[$index];
     				$nbNotes++;
@@ -711,7 +713,7 @@ class SolerniController extends Controller
     			if ($nbNotes > 0) {
     				$rowCSV[$indexBadges] = $totalNotes / $nbNotes;
     			} else {
-    				$rowCSV[$indexBadges] = 0;
+    				$rowCSV[$indexBadges] = 0.00;
     			}
     			
     			$rowCSV[$indexBadges + 1] = $nbOwnedBadges;
