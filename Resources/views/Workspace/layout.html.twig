@@ -19,7 +19,7 @@
     {% endif %}
 {% endif %}
     {% set noTabs = false %}
-    {% if app.user and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+    {% if app.user and workspace is defined and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
         {% set noTabs = true %}
     {% endif %}
 
