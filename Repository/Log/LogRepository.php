@@ -557,7 +557,7 @@ class LogRepository extends EntityRepository
     	return $qb->getQuery()->getResult();
     }
     
-public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
+	public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
     	$qb = $this->createQueryBuilder('l')
 	    	->select("COUNT(DISTINCT l.doer)")
     		->where("l.workspace = :workspace")
@@ -580,4 +580,36 @@ public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
     	 
     	return $qb->getQuery()->getResult();
     }
+    
+	public function getLastConnection(AbstractWorkspace $workspace, User $user) {
+    	$qb = $this->createQueryBuilder('l')
+	    	->select("l")
+	    	->where("l.workspace = :workspace")
+	    	->andWhere("l.doer = :user")
+	    	->andWhere("l.action = 'workspace-enter'")
+	    	->orderBy("l.dateLog", "DESC")
+	    	->setParameters(array(
+	    			"workspace" => $workspace,
+	    			"user" => $user
+	    	));
+    	 
+	    $result = $qb->getQuery()->getResult(); 
+    	return count($result) > 0 ? $result[0] : null;
+    } 
+    
+    public function getLastSubscription(AbstractWorkspace $workspace, User $user) {
+  	  $qb = $this->createQueryBuilder('l')
+	    	->select("l")
+	    	->where("l.workspace = :workspace")
+	    	->andWhere("l.doer = :user")
+	    	->andWhere("l.action = 'workspace-role-subscribe_user'")
+	    	->orderBy("l.dateLog", "DESC")
+	    	->setParameters(array(
+	    			"workspace" => $workspace,
+	    			"user" => $user
+	    	));
+    	 
+	    $result = $qb->getQuery()->getResult(); 
+    	return count($result) > 0 ? $result[0] : null;
+    } 
 }

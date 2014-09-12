@@ -47,6 +47,10 @@
             </div>
         {#% endif %#}
         	<a href="{{ path('solerni_export_badges_knowledge_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES KNOWLEDGE</a><br />
-        	<a href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES SKILL</a>
+        	<a href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES SKILL</a><br />
+        	<a href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">EXPORT SUBSCRIPTIONS STATS</a><br />
+        	<a href="{{ path('solerni_export_active_users_stats', {'workspace':workspace.getId(), 'nbDays':5}) }}">EXPORT ACTIVE USERS / CONNECTION STATS</a><br />
+        	<a href="{{ path('solerni_export_forum_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">EXPORT FORUM STATS</a><br />
+        	
     </div>
 {% endblock %}

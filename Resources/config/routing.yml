@@ -74,7 +74,7 @@ claro_log:
     type: annotation
 
 claro_export_analytics:
-    resource: "@ClarolineCoreBundle/Controller/SolerniController.php"
+    resource: "@ClarolineCoreBundle/Controller/AnalyticsExportController.php"
     prefix: analytics/export
     type: annotation
 

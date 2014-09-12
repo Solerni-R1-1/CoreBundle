@@ -326,8 +326,7 @@ class BadgeManager
     					$associatedExercise = $exercisesRepo->findOneByResourceNode( $badgeRessourceNode );
     					$mark = $exercisesRepo->getExerciseMarksForUser($associatedExercise, $loggedUser);
     					$maxMark = $this->exerciseService->getExerciseTotalScore($associatedExercise->getId());
-    					$mark = ($mark / $maxMark) * 20; 
-    					echo "$mark";
+    					$mark = ($mark / $maxMark) * 20;
     					$associatedResource = array( 'exercise' => $associatedExercise, 'bestMark' => $mark);
     				}
     			}
