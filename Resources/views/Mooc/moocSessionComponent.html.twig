@@ -93,7 +93,8 @@
                     {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
                         Mooc gratuit
                     {% else %}
-                        {{ mooc.getCost() }}&nbsp;€
+                        Mooc gratuit
+                        {#{{ mooc.getCost() }}&nbsp;€#}{# use it when we need to print cost #}
                     {% endif %}
 
             </span>

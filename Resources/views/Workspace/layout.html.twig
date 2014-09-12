@@ -18,7 +18,12 @@
         {% set workspace = session.getMooc().getWorkspace() %}
     {% endif %}
 {% endif %}
-{% block bodyClasses %}{% if workspace is defined and app.user and app.user.getPersonalWorkspace().getId() != workspace.getId() %}subnavbar-fixed{% endif %}{% endblock %}
+    {% set noTabs = false %}
+    {% if app.user and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+        {% set noTabs = true %}
+    {% endif %}
+
+{% block bodyClasses %}{% if workspace is defined and noTabs == false %}subnavbar-fixed{% endif %}{% endblock %}
 
 {# WE DO NOT USE BREADCRUMB 
 {% block breadcrumb %}
@@ -65,7 +70,7 @@
     {% if _resource is defined and workspace is not defined %}
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
-    {% if params and workspace is defined and app.user.getPersonalWorkspace().getId() != workspace.getId()  %}
+    {% if params and workspace is defined and noTabs == false %}
         {% render controller( "ClarolineCoreBundle:Mooc\\Mooc:renderSolerniTabs", params ) %}
     {% endif %}
 {% endblock %}
