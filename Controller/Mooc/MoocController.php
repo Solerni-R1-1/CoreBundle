@@ -348,7 +348,8 @@ class MoocController extends Controller
         
         // Check Session
         $session = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user);
-        $currentUrl = dirname( $_SERVER['REQUEST_URI'] );
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        
         
         if ( $session ) {
             //get the mooc lesson
@@ -363,7 +364,7 @@ class MoocController extends Controller
                         'name' => 'Apprendre',
                         'url' => $url,
                         'title' => 'Suivre les cours',
-                    	'isSelected' => !(strpos(  $url, $currentUrl ) === false)
+                    	'isSelected' => !(strpos(  $url, dirname($currentUrl) ) === false)
                     );
                 }
             }
@@ -383,7 +384,7 @@ class MoocController extends Controller
                     'name' => 'Discuter',
                     'url' => $url,
                     'title' => 'Participer au forum',
-                   	'isSelected' => !(strpos(  $currentUrl, $forumUrl ) === false)
+                   	'isSelected' => !(strpos(  dirname( $currentUrl ), $forumUrl ) === false)
                 );
             }
         }
@@ -395,7 +396,7 @@ class MoocController extends Controller
                 'name' => 'Partager',
                 'url' => $url,
                 'title' => 'Accéder au gestionnaire de ressources',
-                'isSelected' => !(strpos(  $url, $currentUrl ) === false)
+                'isSelected' => !(strpos(  $currentUrl, $url ) === false)
             );
         }
 
@@ -414,9 +415,12 @@ class MoocController extends Controller
         	}
         }
         
+        $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'my_badges'));
+        $isMyBadgesPage = array( 'isMyBadgesPage' => !(strpos( $currentUrl, $url ) === false) );
+        
         return $this->render(
             'ClarolineCoreBundle:Partials:includeSolerniTabs.html.twig',
-            $solerniTabs
+            $solerniTabs + $isMyBadgesPage
         );
     }
 
