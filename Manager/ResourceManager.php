@@ -129,7 +129,8 @@ class ResourceManager
         AbstractWorkspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
-        array $rights = array()
+        array $rights = array(),
+    	$createLog = true
     )
     {
         $this->om->startFlushSuite();
@@ -176,7 +177,9 @@ class ResourceManager
 
         $node->setPathForCreationLog($parentPath . $name);
         $node->setIcon($icon);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
+        if ($createLog) {
+        	$this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
+        }
         $this->om->endFlushSuite();
 
         return $resource;

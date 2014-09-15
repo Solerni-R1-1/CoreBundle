@@ -170,17 +170,19 @@ class RoleManager
      * @param \Claroline\CoreBundle\Entity\Role                $role
      * @param boolean                                          $sendMail
      */
-    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
+    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false, $createLog = true)
     {
         if (!$ars->hasRole($role->getName())) {
             $ars->addRole($role);
             $this->om->startFlushSuite();
 
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $ars)
-            );
+            if ($createLog) {
+	            $this->dispatcher->dispatch(
+	                'log',
+	                'Log\LogRoleSubscribe',
+	                array($role, $ars)
+	            );
+            }
             $this->om->persist($ars);
             $this->om->endFlushSuite();
 

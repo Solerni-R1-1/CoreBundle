@@ -329,6 +329,7 @@ class UsersController extends Controller
      */
     public function importAction()
     {
+    	
         $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($this->request);
@@ -341,7 +342,17 @@ class UsersController extends Controller
                 $users[] = str_getcsv($line, ';');
             }
 
-            $this->userManager->importUsers($users);
+            /*$this->userManager->importUsers($users); // Slow 2*/
+            $ctx    = new \ZMQContext();
+            $sender = new \ZMQSocket($ctx, \ZMQ::SOCKET_PUSH);
+            $sender->connect("tcp://localhost:11112");
+            
+            $message = array(
+            		'class_name'	=> "ClarolineCoreBundle:User",
+            		'users' 		=> $users,
+            		'user'			=> $this->getUser()->getId()
+            );
+            $sender->send(json_encode($message));
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }

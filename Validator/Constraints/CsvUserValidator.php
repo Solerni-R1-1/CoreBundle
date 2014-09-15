@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Doctrine\ORM\EntityManager;
 
 /**
  * @DI\Validator("csv_user_validator")
@@ -25,17 +26,20 @@ class CsvUserValidator extends ConstraintValidator
 {
     private $validator;
     private $translator;
+    private $em;
 
     /**
      * @DI\InjectParams({
      *     "validator" = @DI\Inject("validator"),
      *     "trans"     = @DI\Inject("translator"),
+     *     "em"		   = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(ValidatorInterface $validator, TranslatorInterface $translator)
+    public function __construct(ValidatorInterface $validator, TranslatorInterface $translator, EntityManager $em)
     {
         $this->validator = $validator;
         $this->translator = $translator;
+        $this->em = $em;
     }
 
     public function validate($value, Constraint $constraint)
@@ -81,14 +85,6 @@ class CsvUserValidator extends ConstraintValidator
             $newUser->setMail($email);
             $newUser->setAdministrativeCode($code);
             $newUser->setPhone($phone);
-            $errors = $this->validator->validate($newUser, array('registration', 'Default'));
-
-            foreach ($errors as $error) {
-                $this->context->addViolation(
-                    $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
-                    $error->getInvalidValue() . ' : ' . $error->getMessage()
-                );
-            }
         }
         foreach ($usernames as $username => $lines) {
             if (count($lines) > 1) {
@@ -111,6 +107,31 @@ class CsvUserValidator extends ConstraintValidator
                 ) . ' ';
                 $this->context->addViolation($msg);
             }
+        }
+        
+        // Validate users
+        $repo = $this->em->getRepository("ClarolineCoreBundle:User");
+        
+        $alreadyExistingUsernames = $repo->findByUsernameIn(array_keys($usernames));
+        $alreadyExistingMails = $repo->findByMailIn(array_keys($mails));
+
+        foreach ($alreadyExistingUsernames as $user) {
+        	$msg = $this->translator->trans(
+        			'username_already_exists',
+        			array('%username%' => $user->getUsername(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
+        			'platform'
+        	) . ' ';
+        	 
+        	$this->context->addViolation($msg);
+        }
+
+        foreach ($alreadyExistingMails as $user) {
+                $msg = $this->translator->trans(
+                    'mail_already_exists',
+                    array('%email%' => $user->getMail(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
+                    'platform'
+                ) . ' ';
+                $this->context->addViolation($msg);
         }
     }
 

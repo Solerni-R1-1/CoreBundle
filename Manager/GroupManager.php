@@ -424,4 +424,8 @@ class GroupManager
 
         return array();
     }
+    
+    public function getGroupById($groupId) {
+    	return $this->groupRepo->findOneById($groupId);
+    }
 }

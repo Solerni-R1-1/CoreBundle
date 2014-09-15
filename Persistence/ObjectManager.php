@@ -249,4 +249,8 @@ class ObjectManager extends ObjectManagerDecorator
             );
         }
     }
+    
+    public function getConnection() {
+    	return $this->wrapped->getConnection();
+    }
 }

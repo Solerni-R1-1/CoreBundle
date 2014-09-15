@@ -95,7 +95,7 @@
                 {% endif %}
                 </div>
                 <div class="col-md-4">
-                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
+                    {{ maxResultsSelectBox(max, '$(\'#search-button\').trigger(\'click\');', 'groups_per_page') }}
                 </div>
             </div>
             {% if pager.getNbResults() > 0 %}

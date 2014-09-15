@@ -1074,4 +1074,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setFacebookAccount($isFacebookAccount){
         $this->isFacebookAccount = $isFacebookAccount;
     }
+    
+    public function __toString() {
+    	return "User(".$this->id.") : ".$this->username;
+    }
 }

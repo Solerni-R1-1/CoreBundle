@@ -255,6 +255,7 @@ editable: Modifiable
 email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
 email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
+mail_already_exists: 'Un utilisateur avec l''adresse mail %email% existe déjà (lignes : %lines%)'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
@@ -726,6 +727,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
+username_already_exists: 'Un utilisateur avec le nom d''utilisateur %username% existe déjà (lignes : %lines%)'
 username_or_email: 'Nom d''utilisateur ou email'
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'

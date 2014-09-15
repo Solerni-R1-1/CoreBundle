@@ -30,6 +30,9 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ValidatorInterface;
+use Doctrine\ORM\UnitOfWork;
+use Doctrine\ORM\EntityManager;
+use Monolog\Logger;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -48,6 +51,8 @@ class UserManager
     private $userRepo;
     private $validator;
     private $workspaceManager;
+    private $em;
+    private $logger;
 
     /**
      * Constructor.
@@ -63,7 +68,9 @@ class UserManager
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "em"		   				= @DI\Inject("doctrine.orm.entity_manager"),
+     *     "logger"					= @DI\Inject("logger"),
      * })
      */
     public function __construct(
@@ -77,7 +84,9 @@ class UserManager
         ToolManager $toolManager,
         Translator $translator,
         ValidatorInterface $validator,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+    	EntityManager $em,
+    	Logger $logger
     )
     {
         $this->userRepo               = $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -92,6 +101,8 @@ class UserManager
         $this->objectManager          = $objectManager;
         $this->mailManager            = $mailManager;
         $this->validator              = $validator;
+        $this->em					  = $em;
+        $this->logger 				  = $logger;
     }
 
     /**
@@ -262,29 +273,78 @@ class UserManager
      */
     public function importUsers(array $users)
     {
+    	
+    	$this->em->getConnection()->getConfiguration()->setSQLLogger(null);
+    	gc_enable();
+    	$config = Configuration::fromTemplate($this->personalWsTemplateFile);
+    	
+    	$this->objectManager->beginTransaction();
         $this->objectManager->startFlushSuite();
 
-        foreach ($users as $user) {
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $username = $user[2];
-            $pwd = $user[3];
-            $email = $user[4];
-            $code = isset($user[5])? $user[5] : null;
-            $phone = isset($user[6])? $user[6] : null;
-
-            $newUser = $this->objectManager->factory('Claroline\CoreBundle\Entity\User');
-            $newUser->setFirstName($firstName);
-            $newUser->setLastName($lastName);
-            $newUser->setUsername($username);
-            $newUser->setPlainPassword($pwd);
-            $newUser->setMail($email);
-            $newUser->setAdministrativeCode($code);
-            $newUser->setPhone($phone);
-            $this->createUser($newUser);
+        foreach ($users as $i => $user) {
+            $newUser = new User();
+            $newUser->setFirstName($user[0]);
+            $newUser->setLastName($user[1]);
+            $newUser->setUsername($user[2]);
+            $newUser->setPlainPassword($user[3]);
+            $newUser->setMail($user[4]);
+            if (isset($user[5])) {
+            	$newUser->setAdministrativeCode($user[5]);
+            }
+            if (isset($user[6])) {
+            	$newUser->setPhone($user[6]);
+            }
+            $this->createUserForImport($newUser, $config);
+            if ($i % 1000 == 0) {
+            	$this->objectManager->endFlushSuite();
+            	$this->objectManager->clear();
+            	$this->objectManager->startFlushSuite();
+            }
+            $this->logger->log(Logger::DEBUG, "User nb. ".$i);
         }
 
         $this->objectManager->endFlushSuite();
+        $this->objectManager->commit();
+    }
+    
+    /**
+     * Create a user.
+     * Its basic properties (name, username,... ) must already be set.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function createUserForImport(User $user, $config) {
+    	
+    	$this->setPersonalWorkspaceForImport($user, $config);
+    
+    	$user
+	    	->setPublicUrl($user->getUsername())
+	    	->setPublicProfilePreferences(new UserPublicProfilePreferences());
+    
+    	$this->toolManager->addRequiredToolsToUser($user);
+    	$this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
+    	$this->objectManager->persist($user);
+    	$this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
+    
+    	return $user;
+    }
+    /**
+     * Creates the personal workspace of a user.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     */
+    public function setPersonalWorkspaceForImport(User $user, $config)
+    {
+        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
+        $locale = $this->platformConfigHandler->getParameter('locale_language');
+        $this->translator->setLocale($locale);
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
+        $config->setWorkspaceName($personalWorkspaceName);
+        $config->setWorkspaceCode($user->getUsername());
+        $workspace = $this->workspaceManager->create($config, $user, true);
+        $user->setPersonalWorkspace($workspace);
     }
 
     /**

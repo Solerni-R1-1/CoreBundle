@@ -159,7 +159,7 @@ class WorkspaceManager
      *
      * @throws UnknownToolException
      */
-    public function create(Configuration $config, User $manager)
+    public function create(Configuration $config, User $manager, $createLog = true)
     {
         $config->check();
         $this->om->startFlushSuite();
@@ -177,7 +177,7 @@ class WorkspaceManager
         $workspace->setCreationDate($date->getTimestamp());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-        $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER']);
+        $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER'], false, $createLog);
         $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
         $dir->setName($workspace->getName());
         $rights = $config->getPermsRootConfiguration();
@@ -189,7 +189,8 @@ class WorkspaceManager
             $workspace,
             null,
             null,
-            $preparedRights
+            $preparedRights,
+        	$createLog
         );
 
         $toolsConfig = $config->getToolsConfiguration();
@@ -227,7 +228,9 @@ class WorkspaceManager
             $position++;
         }
 
-        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
+        if ($createLog) {
+        	$this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
+        }
         $this->om->persist($workspace);
         $this->om->endFlushSuite();
 
