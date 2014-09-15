@@ -425,7 +425,7 @@ class MoocController extends Controller
      * Render presentation widget for the mooc (left column of designs) 
      * 
      * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @ParamConverter("user", options={"authenticatedUser" = false})
      */
     public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
     {
