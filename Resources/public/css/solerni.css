@@ -409,14 +409,14 @@ body.subnavbar-fixed {
 
 .slrn-subnavbar__subblock--badges {
     float:          right;
-    padding:        1em 1em 1em 3.4em;
-    width:          13em;
+    padding:        1em .5em .5em 3.4em;
+    width:          12em;
     position:       relative; 
     background:     #A5B2BD url('../images/sprites_solerni.png') no-repeat 10px -319px scroll;
     line-height:    1.2;
     color:          #FFF;
     margin-top:     5.8em;
-    height:         4.3em;
+    height:         4em;
     z-index:        1;
 }
 
@@ -434,7 +434,7 @@ body.subnavbar-fixed {
     height:             .8em;
     border-radius:      100%;
     position:           absolute;
-    top:                87%;
+    top:                89%;
     left:               46%;
     background-color:   #FF004F;
     
