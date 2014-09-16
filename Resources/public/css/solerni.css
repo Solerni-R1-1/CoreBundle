@@ -337,7 +337,8 @@ body.subnavbar-fixed {
 
 .slrn-subnavbar-container {
     background-color:   #FFF; 
-    border-bottom:      4px solid #999; 
+    border-bottom:      4px solid #999;
+    min-height:         132px;
 }
 .slrn-subnavbar-container.navbar-fixed-top { 
     top: 50px;
