@@ -7,6 +7,14 @@
             {% set isRegistered = true %}
         {% endif %}
     {% endfor %}
+    {% set sessionGroups = session.getGroups() %}
+    {% for sessionGroup in sessionGroups %}
+		{% for userGroup in user.getGroups() %}
+            {% if sessionGroup.getId() == userGroup.getId() %}
+                {% set isRegistered = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
 {% endif %}
 {# display session component #}
 {% set mooc = session.getMooc() %}

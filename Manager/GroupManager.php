@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Monolog\Logger;
 
 /**
  * @DI\Service("claroline.manager.group_manager")
@@ -34,6 +35,7 @@ class GroupManager
     private $pagerFactory;
     private $translator;
     private $eventDispatcher;
+    private $logger;
 
     /**
      * Constructor.
@@ -42,14 +44,16 @@ class GroupManager
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "translator"      = @DI\Inject("translator"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "logger"			 = @DI\Inject("logger")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
         Translator $translator,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+    	Logger $logger
     )
     {
         $this->om = $om;
@@ -58,6 +62,7 @@ class GroupManager
         $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     /**
@@ -112,15 +117,21 @@ class GroupManager
      */
     public function addUsersToGroup(Group $group, array $users)
     {
+    	$this->om->startFlushSuite();
         foreach ($users as $user) {
             if (!$group->containsUser($user)) {
+            	$this->logger->info("Start adding user to group...");
                 $group->addUser($user);
                 $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
+                $this->logger->info("User added to group !");
+            } else {
+            	$this->logger->info("User already in group.");
             }
         }
 
         $this->om->persist($group);
-        $this->om->flush();
+        
+        $this->om->endFlushSuite();
     }
 
     /**

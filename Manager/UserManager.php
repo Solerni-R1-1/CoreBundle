@@ -295,7 +295,7 @@ class UserManager
             	$newUser->setPhone($user[6]);
             }
             $this->createUserForImport($newUser, $config);
-            if ($i % 1000 == 0) {
+            if ($i % 1000 == 999) {
             	$this->objectManager->endFlushSuite();
             	$this->objectManager->clear();
             	$this->objectManager->startFlushSuite();
