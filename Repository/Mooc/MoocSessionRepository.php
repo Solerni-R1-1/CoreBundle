@@ -31,9 +31,11 @@ class MoocSessionRepository extends EntityRepository
 				AND ms.startDate < CURRENT_TIMESTAMP()
 				ORDER BY ms.endDate DESC ";
 		$groups = array();
-		foreach ($user->getGroups() as $group) {
-			$groups[] = $group->getId(); 
-		}
+        if ( $user instanceof \ClarolineCoreBundle\Entity\User ) {
+            foreach ($user->getGroups() as $group) {
+                $groups[] = $group->getId(); 
+            }
+        }
 		$qb = $this->_em->createQuery($query)->setParameters(array(
 				"user" => $user,
 				"mooc" => $mooc,
