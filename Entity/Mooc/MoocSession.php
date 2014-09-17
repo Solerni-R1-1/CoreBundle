@@ -71,6 +71,17 @@ class MoocSession extends AbstractIndexable
     private $users;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group",
+     *     cascade={"persist"},
+     *     inversedBy="moocSession"
+     * )
+     * @ORM\JoinTable(name="claro_group_mooc_session")
+     */
+    private $groups;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="max_users", type="integer", nullable=true)
@@ -251,6 +262,29 @@ class MoocSession extends AbstractIndexable
     public function setUsers( $users )
     {
         $this->users = $users;
+        
+        return $this;
+    }
+    
+    /**
+     * Get Groups
+     * 
+     * @return PersistentCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * Set Groups
+     * 
+     * @param  $groups
+     * @return MoocSession
+     */
+    public function setGroups( $groups )
+    {
+        $this->groups = $groups;
         
         return $this;
     }

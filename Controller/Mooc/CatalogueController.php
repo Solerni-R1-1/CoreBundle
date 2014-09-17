@@ -102,6 +102,16 @@ class CatalogueController extends Controller
                     $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) ) 
                 {
                     $autorizedSessions[] = $session;
+                } else {
+                	$groups = $user->getGroups();
+                	foreach ($groups as $group) {
+                		foreach ($group->getMoocSessions() as $groupSession) {
+                			if ($groupSession->getId() == $session->getId()) {
+                				$autorizedSessions[] = $session;
+                				break;
+                			}
+                		}
+                	}
                 }
             }
         }

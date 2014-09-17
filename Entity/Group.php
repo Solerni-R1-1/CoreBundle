@@ -62,10 +62,20 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      */
     protected $roles;
 
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession",
+     *     cascade={"persist"},
+     *     mappedBy="groups"
+     * )
+     */
+    protected $moocSessions;
+
     public function __construct()
     {
         parent::__construct();
-        $this->users = new ArrayCollection();
+        $this->users 			 = new ArrayCollection();
+        $this->moocSessions      = new ArrayCollection();
     }
 
     public function getId()
@@ -147,4 +157,13 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         return array('name', 'id');
     }
 
+    public function getMoocSessions()
+    {
+    	return $this->moocSessions;
+    }
+    
+    public function setMoocSessions(ArrayCollection $moocSessions)
+    {
+    	$this->moocSessions = $moocSessions;
+    }
 }

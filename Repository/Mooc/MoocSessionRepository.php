@@ -20,14 +20,24 @@ class MoocSessionRepository extends EntityRepository
 	 * @param ClarolineCoreBundle\Entity\User $user
 	 */
 	public function getLastMoocSessionForUser($user, $mooc) {
-		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms ".
-				"WHERE :user MEMBER OF ms.users ".
-				"AND ms.mooc = :mooc ".
-				"AND ms.startDate < CURRENT_TIMESTAMP()".
-				"ORDER BY ms.endDate DESC ";
+		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+            	WHERE (:user MEMBER OF ms.users 
+                		OR EXISTS (
+                			SELECT g FROM Claroline\CoreBundle\Entity\Group g
+							JOIN g.moocSessions gms
+							WHERE ms = gms
+							AND g IN (:groups))) 
+				AND ms.mooc = :mooc 
+				AND ms.startDate < CURRENT_TIMESTAMP()
+				ORDER BY ms.endDate DESC ";
+		$groups = array();
+		foreach ($user->getGroups() as $group) {
+			$groups[] = $group->getId(); 
+		}
 		$qb = $this->_em->createQuery($query)->setParameters(array(
 				"user" => $user,
-				"mooc" => $mooc
+				"mooc" => $mooc,
+				"groups" => $groups
 		));
         
         $result = $qb->getResult();
@@ -74,15 +84,25 @@ class MoocSessionRepository extends EntityRepository
         
         if( $user ) {
             // Get the firest active mooc where the user is in
-            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms " .
-                    "WHERE :user MEMBER OF ms.users ".
-                    "AND ms.mooc = :mooc " .
-                    "AND ms.startDate < CURRENT_TIMESTAMP()" .
-                    "AND ms.endDate > CURRENT_TIMESTAMP()" .
-                    "ORDER BY ms.startDate DESC ";
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+                    WHERE (:user MEMBER OF ms.users 
+                		OR EXISTS (
+                			SELECT g FROM Claroline\CoreBundle\Entity\Group g
+							JOIN g.moocSessions gms
+							WHERE ms = gms
+							AND g IN (:groups))) 
+                    AND ms.mooc = :mooc 
+                    AND ms.startDate < CURRENT_TIMESTAMP()
+                    AND ms.endDate > CURRENT_TIMESTAMP()
+                    ORDER BY ms.startDate DESC ";
+			$groups = array();
+			foreach ($user->getGroups() as $group) {
+				$groups[] = $group->getId(); 
+			}
             $qb = $this->_em->createQuery($query)->setParameters(array(
-                    "mooc"  => $mooc,
-                    "user" => $user
+                    "mooc"		=> $mooc,
+                    "user"		=> $user,
+					"groups"	=> $groups
             ));
             $result = $qb->getResult();
         }

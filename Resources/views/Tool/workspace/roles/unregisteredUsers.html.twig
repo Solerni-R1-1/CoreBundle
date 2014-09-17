@@ -82,6 +82,29 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="btn-group  margin-md">
+                   		{% if workspace.isMooc() and workspace.getMooc().getMoocSessions() is not empty %}
+                    	<div class="btn-group">
+                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                {{ 'session'|trans({}, 'platform') }}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" >
+                           	 	{% for session in workspace.getMooc().getMoocSessions() %}
+								<li role="presentation">
+									<input
+                                    	class="chk-session hide" 
+                                    	type="checkbox" 
+                                    	value="{{ session.getId() }}"
+                                        data-name="{{ session.getTitle() }}"
+                                        id="session-{{ session.getId() }}" />
+                                    <label for="session-{{ session.getId() }}">
+                                        	{{ session.getTitle() }}
+                                    </label>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
                         <div class="btn-group">
                             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 {{ 'roles'|trans({}, 'platform') }}
@@ -122,7 +145,7 @@
             {% endif %}
                 </div>
                 <div class="col-md-4">
-                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
+                    {{ maxResultsSelectBox(max, '$(\'#search-button\').trigger(\'click\');', 'users_per_page') }}
                 </div>
             </div>
             <div class="table-responsive">
@@ -135,6 +158,7 @@
                             <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(),direction )  }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(),direction ) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
+                            <th>{{ 'session'|trans({}, 'platform') }}</th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
@@ -147,7 +171,7 @@
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
                                 <td>{{ user.getMail() }}</td>
-                                <td>
+                                <td class="cell-roles">
                                     {% for role in user.getEntityRoles() %}
                                         {% if role.getWorkspace() == workspace %}
                                             <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
@@ -156,12 +180,33 @@
                                         {% endif %}
                                     {% endfor %}
                                     {% set groups = user.getGroups() %}
-                                        {% for group in groups %}
+                                    {% for group in groups %}
                                         {% for role in group.getEntityRoles() %}
                                             {% if role.getWorkspace() == workspace %}
                                                 <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
                                                 </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </td>
+                                <td class="cell-sessions">
+                                    {% for session in user.getMoocSessions() %}
+                                        {% if session.getMooc().getWorkspace() == workspace %}
+                                            <span class="label label-success" id="label-{{ session.getId () }}-{{ user.getId()}}">
+                                                {{ session.getTitle() }}
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% set groups = user.getGroups() %}
+                                        {% for group in groups %}
+                                        {% for session in group.getMoocSessions() %}
+                                            {% if session.getMooc().getWorkspace() == workspace %}
+                                                <span title="{{ group.getName() }}" class="label label-default" id="label-session-{{ session.getId () }}-{{ user.getId()}}">
+                                                    {{ session.getTitle() }}
+                                                </span>
+
                                             {% endif %}
                                         {% endfor %}
                                     {% endfor %}
@@ -200,9 +245,17 @@
                 i++;
             });
 
+            var sessions = [];
+            var j = 0;
+            $('.chk-session:checked').each(function (index, element) {
+                sessions[j] = $(element).attr('data-name');
+                j++;
+            });
+            
+
             if (i > 0) {
                 var html = Twig.render(confirmAddRole,
-                        {'nbItems': $('.chk-user:checked').length, 'roles': roles}
+                        {'nbItems': $('.chk-user:checked').length, 'roles': roles, 'sessions': sessions}
                 );
             } else {
                 var html = Twig.render(noRoleSelected);
@@ -228,7 +281,14 @@
                 i++;
             });
 
-            if (i < 1) {
+            var j = 0;
+            var sessions = [];
+            $('.chk-session:checked').each(function (index, element) {
+                sessions[j] = element.value;
+                j++;
+            });
+
+            if (i < 1 && j < 1) {
                 $('#table-modal').modal('hide');
                 $('.modal-body').empty();
 
@@ -236,6 +296,7 @@
             }
 
             queryString.roleIds = roles;
+            queryString.sessionIds = sessions;
 
             var route = Routing.generate('claro_workspace_add_roles_to_users', {'workspace': {{ workspace.getId() }} });
             route += '?' + $.param(queryString);
@@ -249,7 +310,7 @@
 
                     //add each role to the user list
                     for (i = 0; i < users.length; i++) {
-                        var td = $('#row-' + users[i] + " td:last-child");
+                        var td = $('#row-' + users[i] + " .cell-roles");
                         var cell = $(td[0]);
                         var html = cell.html();
 
@@ -258,6 +319,23 @@
                             //only append the span if the role isn't already here
                             if (html.indexOf(roleLib) === -1) {
                                 html += "<span class='label label-success'>" + roleLib + "</span>";
+                            }
+                        }
+
+                        cell.html(html);
+                    }
+
+	                //add each role to the group list
+                    for (i = 0; i < users.length; i++) {
+                        var td = $('#row-' + users[i] + " .cell-sessions");
+                        var cell = $(td[0]);
+                        var html = cell.html();
+                        
+                        for (var j = 0; j < sessions.length; j++) {
+                            var sessionLib = $('#session-' + sessions[j]).attr('data-name');
+                            //only append the span if the role isn't already here
+                            if (html.indexOf(sessionLib) === -1) {
+                                html += "<span class='label label-success'>" + sessionLib + "</span>";
                             }
                         }
 

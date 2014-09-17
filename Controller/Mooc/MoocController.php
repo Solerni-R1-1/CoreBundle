@@ -292,6 +292,12 @@ class MoocController extends Controller
     public function getUserSessionsListAction( $user, $sessionComponentLayout = '2-column', $showUserProgression = false )
     {
         $userSession = $user->getMoocSessions();
+        $groups = $user->getGroups();
+        foreach ($groups as $group) {
+        	foreach ($group->getMoocSessions() as $groupSession) {
+        		$userSession[] = $groupSession;
+        	}
+        }
 
         return $this->render(
         'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
