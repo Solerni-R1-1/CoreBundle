@@ -20,7 +20,6 @@
     <div class="panel-body logs-container">
         {% if 0 < chartData|length %}
             {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' with {'actionName' : 'entries_per_day'} %}
-            <br/><br/>
         {% endif %}
 
         {#% if 0 < resourceCount|length %#}

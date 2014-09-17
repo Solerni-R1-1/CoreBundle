@@ -84,6 +84,13 @@ class MoocController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = false})
      */
     public function moocPageAction( $mooc, $user ) {
+        
+        /* redirect anon users to login if mooc is private */
+        if (  ! $mooc->isPublic() && $user == 'anon.' ) {
+            $url = $this->get('router')
+                         ->generate('claro_security_login');
+            return  $this->redirect($url);
+        }
 
         $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
 

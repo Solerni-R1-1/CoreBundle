@@ -120,7 +120,10 @@
                 /* Add empty session form  */
                 $('#js-mooc_sessions__add').on('click', function(e) {
                     e.preventDefault();
-                    $('.slrn-mooc_sessions').append('<div class="slrn-mooc_sessions__item">' + newForm + '</div>');
+                    $('.slrn-mooc_sessions')
+                            .append('<div class="slrn-mooc_sessions__item">' + newForm + '</div>')
+                            .find('.slrn-date')
+                            .datepicker({ 'format': 'dd/mm/yyyy'});
                     newForm = sessionPrototype.replace( /__name__/g, $('.slrn-mooc_sessions__item').length );
                 });
 
@@ -169,7 +172,7 @@
                     }
                 });
                 
-                /* Add datepcikers */
+                /* Add datepickers */
                 $('.slrn-date').datepicker({ 'format': 'dd/mm/yyyy'});
             });
         </script>

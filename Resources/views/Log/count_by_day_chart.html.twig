@@ -11,6 +11,7 @@
         color: #777;
     }
 </style>
+
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
@@ -42,6 +43,7 @@
 
 <script type="text/javascript">
     var chartData = {{ chartData|json_encode|raw }};
+    
     var chartData20 = $.map({{ hourlyAudience[0]|json_encode|raw }}, function(value, index) {
 		return [value];
     });
