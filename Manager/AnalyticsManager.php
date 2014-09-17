@@ -267,14 +267,10 @@ class AnalyticsManager
         $activeUsers = $this->getPercentageActiveMembers($workspace);
         $badgesSuccessRates = $this->getBadgesSuccessRate($workspace);
 
-        return array('chartData' => $chartData,
+        return array(
+            'chartData' => $chartData,
             'resourceCount' => $resourcesByType,
-            'workspace' => $workspace,
-        	'hourlyAudience' => $hourlyAudience,
-        	'activeUsers' => $activeUsers,
-        	'forumContributions' => $forumContributions,
-        	'subscriptionStats' => $subscriptionStats,
-        	'badgesSuccessRates' => $badgesSuccessRates
+            'workspace' => $workspace
         );
     }
     

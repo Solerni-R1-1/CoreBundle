@@ -927,12 +927,12 @@ class Badge extends Rulable
     }
     
     public function isKnowledgeBadge() {
-    	$evals = $this->getAssociatedEvaluations();
+    	$evals = $this->getAssociatedExercises();
     	return !empty($evals);
     }
     
     public function isSkillBadge() {
-    	$evals = $this->getAssociatedExercises();
+    	$evals = $this->getAssociatedEvaluations();
     	return !empty($evals);
     }
 
@@ -1010,7 +1010,7 @@ class Badge extends Rulable
     public function getBadgeResourceStatus($resource) {
     	$result = Badge::RES_STATUS_IN_PROGRESS;
     	 
-    	if ($this->isKnowledgeBadge()) {
+    	if ($this->isSkillBadge()) {
 	    	$now = new \DateTime();
 	    	$dropzone = $resource['dropzone'];
 	    	$drop = $resource['drop'];
@@ -1036,7 +1036,7 @@ class Badge extends Rulable
 	    		$result = Badge::RES_STATUS_AVAILABLE;
 	    	}
     
-    	} else if ($this->isSkillBadge()) {
+    	} else if ($this->isKnowledgeBadge()) {
     		$now = new \DateTime();
     		/* @var $exercise Exercise */
     		$exercise = $resource['exercise'];

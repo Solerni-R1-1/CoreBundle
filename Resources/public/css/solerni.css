@@ -416,7 +416,7 @@ body.subnavbar-fixed {
     background:     #A5B2BD url('../images/sprites_solerni.png') no-repeat 10px -319px scroll;
     line-height:    1.2;
     color:          #FFF;
-    margin-top:     5.8em;
+    margin-top:     6.1em;
     height:         4em;
     z-index:        1;
 }
@@ -440,17 +440,6 @@ body.subnavbar-fixed {
     background-color:   #FF004F;
     
 }
-
-
-/*
-.btn-inscrire { 
-    float: right; 
-    margin-top: 1em; 
-}
-
-.btn-inscrire.is-registered,
-.btn-inscrire.is-registered:focus { background-color: #C9D200; border-color: #C9D200; }
-*/
 
 /* CONTENT */
 .content { padding-top: 2em; }
@@ -1770,3 +1759,21 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     font-size:  30px;
 }
 
+/* ANALYTICS */
+
+.logs-container .btn {
+    margin-bottom:  1em;
+    margin-left:    1em;
+}
+
+.slrn-statistic-wrapper {
+    margin-bottom: 30px;
+}
+
+.slrn-statistic-wrapper legend {
+    margin-bottom: 40px;
+}
+
+#left-bar {
+    z-index: 9999;
+}

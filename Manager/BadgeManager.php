@@ -217,11 +217,12 @@ class BadgeManager
     		if ($allBadges
     				|| ($knowledgeBadges && $knowledgeBadge)
     				|| ($skillBadges && $skillBadge)) {
-    					if ($knowledgeBadge) {
+    					if ($skillBadge) {
     						$resNode = $badge->getAssociatedEvaluations();
-    					} else if ($skillBadge) {
+    					} else 
+                        if ($knowledgeBadge) {
     						$resNode = $badge->getAssociatedExercises();
-    					} else {
+    					} else  {
     						// What to do in other situations ?
     						$resNode = null;
     					}

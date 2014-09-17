@@ -1,0 +1,182 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+    'name': 'analytics'|trans({}, 'platform'),
+    'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h2 class="panel-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}
+    </div>
+    <div class="panel-body logs-container">
+        {% set chartHeight = 400 %}
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:moocAnalyticsFiles.html.twig'%}
+
+        <div class="slrn-statistic-wrapper">
+            <legend>{{ 'mooc_badges_knowledge_chart'|trans({}, 'platform') }}</legend>
+            <div id="analytics-badge-chart1">
+                <div id="analytics-badge-knowledge-chart" class="pie-chart"></div>
+            </div>
+            <div class="count_by_day_chart_legend">
+                <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
+            </div>
+        </div>
+        
+        <div class="slrn-statistic-wrapper">
+            <legend>{{ 'mooc_badges_skill_chart'|trans({}, 'platform') }}</legend>
+             <div id="analytics-badge-chart1">
+                <div id="analytics-badge-skill-chart" class="pie-chart"></div>
+            </div>
+            <div class="count_by_day_chart_legend">
+                <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
+            </div>
+        </div>
+
+<script type="text/javascript">
+   
+    {% if badgesSuccessRates is defined %}
+        var evalBadgeRates = [];
+        var quizzBadgeRates = [];
+        {% for badge in badgesSuccessRates %}
+            {% if badge.type == 'skill' %}
+                evalBadgeRates.push([{{badge['success']}}, {{badge['failure']}}, {{badge['inProgress']}}, {{badge['available']}}]);
+            {% else %}
+                quizzBadgeRates.push([{{badge['success']}}, {{badge['failure']}}, {{badge['inProgress']}}, {{badge['available']}}]);
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+        
+    var bg_color = "transparent";
+    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+    var numberRows = 7;
+    {% if numberRows is defined and numberRows is not empty %}
+        numberRows = {{ numberRows }};
+    {% endif %}
+    
+    $(document).ready(function() {
+  
+        {% if badgesSuccessRates is defined %}
+               
+                if (quizzBadgeRates.length>0) {
+                    var badgeResourcesPlot = $.jqplot(
+                            'analytics-badge-knowledge-chart',
+                            [quizzBadgeRates],
+                            {   
+                                stackSeries: true,
+                                title: {show: false},
+                                grid: {
+                                    drawBorder: false,
+                                    shadow: false,
+                                    background: bg_color,
+                                    useNegativeColors: false
+                                },
+                                highlighter: {
+                                    show: false
+                                },
+                                cursor: {
+                                    show: false,
+                                    zoom: false,
+                                    showTooltip: false
+                                },
+                                seriesDefaults: {
+                                    showMarker:true,
+                                    renderer:$.jqplot.PieRenderer,
+                                    rendererOptions:{
+                                        showDataLabels: true,
+                                        dataLabelThreshold: 2,
+                                        dataLabels: 'percent',
+                                        sliceMargin:0.3,
+                                        dataLabelFormatString: '%.1f%%',
+                                        highlightMouseOver:false
+                                    },
+                                    shadow:true
+                                },
+                                legend:{
+                                    location: 's',
+                                    border:'none',
+                                    renderer: $.jqplot.CavasTextRenderer,
+                                    show:true,
+                                    showMarker:true,
+                                    rendererOptions:{
+                                        numberRows:numberRows
+                                    },
+                                    backgroundColor:bg_color,
+                                    placement:'outsideGrid'
+                                }
+                            }
+                    );
+                }
+                
+                if (evalBadgeRates.length>0) {
+                    var badgeResourcesPlot = $.jqplot(
+                            'analytics-badge-skill-chart',
+                            [evalBadgeRates],
+                            {   
+                                stackSeries: true,
+                                title: {show: false},
+                                grid: {
+                                    drawBorder: false,
+                                    shadow: false,
+                                    background: bg_color,
+                                    useNegativeColors: false
+                                },
+                                highlighter: {
+                                    show: false
+                                },
+                                cursor: {
+                                    show: false,
+                                    zoom: false,
+                                    showTooltip: false
+                                },
+                                seriesDefaults: {
+                                    showMarker:true,
+                                    renderer:$.jqplot.PieRenderer,
+                                    rendererOptions:{
+                                        showDataLabels: true,
+                                        dataLabelThreshold: 2,
+                                        dataLabels: 'percent',
+                                        sliceMargin:0.3,
+                                        dataLabelFormatString: '%.1f%%',
+                                        highlightMouseOver:false
+                                    },
+                                    shadow:true
+                                },
+                                legend:{
+                                    location: 's',
+                                    border:'none',
+                                    labels: ["Success", "Failure", "inProgress", "Available"],
+                                    renderer: $.jqplot.CavasTextRenderer,
+                                    show:true,
+                                    showMarker:true,
+                                    rendererOptions:{
+                                        numberRows:numberRows
+                                    },
+                                    backgroundColor:bg_color,
+                                    placement:'outsideGrid'
+                                }
+                            }
+                    );
+                }
+                
+            {% endif %}
+        
+    });
+</script>
+    </div>
+{% endblock %}

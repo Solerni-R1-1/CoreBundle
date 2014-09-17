@@ -17,12 +17,29 @@
 {% endblock %}
 
 {% block section_content %}
+
+    <div class="panel-heading">
+        <h2 class="panel-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}
+        <div class="">
+            <div class="panel panel-default">
+                <div id="analytics-barchart" class="panel-body">
+                    <div id="container-barchart">
+                        <div id="activity-bar-chart" class="bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
     <div class="panel-body logs-container">
         {% if 0 < chartData|length %}
             {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' with {'actionName' : 'entries_per_day'} %}
         {% endif %}
 
-        {#% if 0 < resourceCount|length %#}
+        {% if 0 < resourceCount|length %}
             <div class="row">
                 <div class="col-md-6">
                     {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
@@ -44,12 +61,6 @@
                     </div>
                 </div>
             </div>
-        {#% endif %#}
-        	<a href="{{ path('solerni_export_badges_knowledge_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES KNOWLEDGE</a><br />
-        	<a href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">EXPORT BADGES SKILL</a><br />
-        	<a href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">EXPORT SUBSCRIPTIONS STATS</a><br />
-        	<a href="{{ path('solerni_export_active_users_stats', {'workspace':workspace.getId(), 'nbDays':5}) }}">EXPORT ACTIVE USERS / CONNECTION STATS</a><br />
-        	<a href="{{ path('solerni_export_forum_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">EXPORT FORUM STATS</a><br />
-        	
+        {% endif %}
     </div>
 {% endblock %}
