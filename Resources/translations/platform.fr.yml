@@ -1060,3 +1060,5 @@ mooc_forum_publication: Publication dans le forum
 mooc_users_activity: Répartition des utilisateurs par activité / inactivité
 mooc_badges_knowledge_piechart: Répartition des badges de connaissances par statut
 mooc_badges_skill_piechart: Répartition des badges de compétences par statut
+mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
+mooc_badges_skill_chart: Répartition cumulée des badges de compétences
