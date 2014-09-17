@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Repository\Mooc;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
 
 /**
  * MoocSessionRepository
@@ -19,23 +21,24 @@ class MoocSessionRepository extends EntityRepository
 	 * 
 	 * @param ClarolineCoreBundle\Entity\User $user
 	 */
-	public function getLastMoocSessionForUser($user, $mooc) {
+	public function getLastMoocSessionForUser(User $user, Mooc $mooc) {
 		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
             	WHERE (:user MEMBER OF ms.users 
                 		OR EXISTS (
                 			SELECT g FROM Claroline\CoreBundle\Entity\Group g
 							JOIN g.moocSessions gms
 							WHERE ms = gms
-							AND g IN (:groups))) 
+							AND g IN (:groups)))
 				AND ms.mooc = :mooc 
 				AND ms.startDate < CURRENT_TIMESTAMP()
 				ORDER BY ms.endDate DESC ";
 		$groups = array();
-        if ( $user instanceof \ClarolineCoreBundle\Entity\User ) {
+        if ( $user instanceof User ) {
             foreach ($user->getGroups() as $group) {
                 $groups[] = $group->getId(); 
             }
         }
+        
 		$qb = $this->_em->createQuery($query)->setParameters(array(
 				"user" => $user,
 				"mooc" => $mooc,
