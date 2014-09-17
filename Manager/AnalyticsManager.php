@@ -261,12 +261,6 @@ class AnalyticsManager
         $defaultFrom = new \DateTime();
         $defaultFrom->sub(new \DateInterval("P10M"));
         
-        $subscriptionStats = $this->getSubscriptionsForPeriod($workspace, $defaultFrom, new \DateTime());
-        $forumContributions = $this->getForumActivity($workspace, $defaultFrom, new \DateTime());
-        $hourlyAudience = $this->getHourlyAudience($workspace);
-        $activeUsers = $this->getPercentageActiveMembers($workspace);
-        $badgesSuccessRates = $this->getBadgesSuccessRate($workspace);
-
         return array(
             'chartData' => $chartData,
             'resourceCount' => $resourcesByType,

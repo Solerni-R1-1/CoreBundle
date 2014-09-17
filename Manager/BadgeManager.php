@@ -269,7 +269,7 @@ class BadgeManager
     		$workspaceBadges = $badgeRepository->findByWorkspace($workspace);
     		foreach($workspaceBadges as $i => $badge) {
 
-    			if ($badge->isKnowledgeBadge()) {
+    			if ($badge->isSkillBadge()) {
     				$evalNode = $badge->getAssociatedEvaluations();
     				$badgeInProgress = array();
     				$badgeInProgress['badge'] = $badge;
