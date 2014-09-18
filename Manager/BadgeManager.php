@@ -206,7 +206,7 @@ class BadgeManager
         return $isRulesChanged;
     }
     
-    public function getAllBadgesForWorkspace(User $user, AbstractWorkspace $workspace, $knowledgeBadges = true, $skillBadges = false, $allBadges = false) {
+    public function getAllBadgesForWorkspace(User $user, AbstractWorkspace $workspace, $skillBadges = true, $knowledgeBadges = false, $allBadges = false) {
     	$badgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge');
     
     	$badgesInProgress = array();

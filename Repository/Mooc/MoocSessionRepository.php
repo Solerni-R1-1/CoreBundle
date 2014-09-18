@@ -101,9 +101,11 @@ class MoocSessionRepository extends EntityRepository
                     AND ms.endDate > CURRENT_TIMESTAMP()
                     ORDER BY ms.startDate DESC ";
 			$groups = array();
-			foreach ($user->getGroups() as $group) {
-				$groups[] = $group->getId(); 
-			}
+        	if ( $user instanceof User ) {
+				foreach ($user->getGroups() as $group) {
+					$groups[] = $group->getId(); 
+				}
+        	}
             $qb = $this->_em->createQuery($query)->setParameters(array(
                     "mooc"		=> $mooc,
                     "user"		=> $user,
