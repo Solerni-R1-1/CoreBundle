@@ -23,7 +23,7 @@
         <div class="presentation__mooc__text__desc" ng-bind-html = "document.content | truncate:85">
         </div>
         <div class="presentation__mooc__text__button">
-            <a href="{{ document.mooc_view_url | path}}" class="btn btn-primary">
+            <a href="{{ document.mooc_view_url | path }}" class="btn btn-primary">
                 En savoir plus
             </a>
         </div>
@@ -39,5 +39,8 @@
         <span class="presentation__mooc__meta__price">
             Mooc gratuit
         </span>
+    </div>
+    <div ng-if="!document.mooc_is_public_b" class="mooc_private_layer">
+         Mooc Privé
     </div>
 </div>
