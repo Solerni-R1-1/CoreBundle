@@ -21,7 +21,7 @@
 {% block content %}
     <div class="col-md-12 col-xs-12">
         <h1 class="slrn-section-title">Votre inscription a été enregistrée, il ne reste plus qu'à valider votre compte.</h1>
-        <p>Pour valider définitivement votre inscription, cliquez sur le lien contenu dans le mail que nous venons de vous envoyer à l'adresse {{ mail }}.</p>
+        <p>Pour valider définitivement votre inscription, cliquez sur le lien contenu dans le mail que nous avons envoyé à l'adresse {{ mail }}.</p>
         <p>- Si vous ne recevez pas notre mail, veuillez vérifier si celui-ci n'est pas bloqué dans vos courriers indésirables.</p>
         <p>- Si c'est le cas, merci d'ajouter cette adresse noreply@solerni.com dans votre carnet d'adresses.</p>
         <p>Sinon, <a href='{{ path('claro_registration_send_mail', { 'mail': mail , 'hash' : hash}) }}' class='slrn-red-link'>cliquez sur ce lien pour recevoir de nouveau notre email.</a></p>

@@ -113,12 +113,12 @@ class RegistrationController extends Controller
      */
     public function sendEmailValidationAction($mail = null, $hash = null){
 
-        if(empty($mail) || empty($hash)){
+        if( empty($mail) ){
             throw new AccessDeniedHttpException();
         }
-
-        if(md5($mail.$this->innerhash) !== $hash){
-            throw new AccessDeniedHttpException();
+        
+        if( ! $hash ) {
+            $hash = $this->getHash($mail);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -133,6 +133,11 @@ class RegistrationController extends Controller
 
         $key = $user->getKeyValidate();
         $mail = $user->getMail();
+        
+        // Redirect to dashboard if user is already validated
+        if ( $user->getIsValidate() ) {
+            return $this->redirect($this->generateUrl('claro_desktop_open'));     
+        }
 
         $log = $this->container->get('logger');
         $log->debug("Send mail with key {$key} to {$mail}");
