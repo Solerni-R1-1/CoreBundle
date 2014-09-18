@@ -84,13 +84,13 @@
                        {{ form_widget(form.phone, {'attr': { 'class' : 'hide' } }) }}
                     </div>
                 </div>
-                {# CACHE : LOCALE  #}
+                {# CACHE : LOCALE  #}{#
                 <div class="form-group row">
                     {{ form_label(form.locale, label|default(null), { 'label_attr' : { 'class': '' } } ) }}
                     <div class="col-md-3 col-xs-3">
                        {{ form_widget(form.locale, {'attr': { 'class' : '' } }) }}
                     </div>
-                </div>
+                </div>#}
                 {# CACHE : PLATFORM ROLES  #}
                 {# TODO : ALLOW ADMIN TO CHANGE ROLE #}
                 {% if form.platformRoles is defined %}
