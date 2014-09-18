@@ -26,6 +26,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Description of StaticController
@@ -46,6 +49,7 @@ class MoocController extends Controller
     private $workspaceManager;
     private $mailManager;
     private $moocService;
+    private $roleManager;
     
     
     /**
@@ -55,7 +59,8 @@ class MoocController extends Controller
      *     "translator"         = @DI\Inject("translator"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
-     *     "moocService"        = @DI\Inject("orange.mooc.service")
+     *     "moocService"        = @DI\Inject("orange.mooc.service"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct( 
@@ -64,7 +69,8 @@ class MoocController extends Controller
             TranslatorInterface $translator,
             WorkspaceManager $workspaceManager,
             MailManager $mailManager,
-            MoocService $moocService
+            MoocService $moocService,
+    		RoleManager $roleManager
         ) {
         $this->translator = $translator;
         $this->security = $security;
@@ -72,6 +78,7 @@ class MoocController extends Controller
         $this->workspaceManager = $workspaceManager;
         $this->mailManager = $mailManager;
         $this->moocService = $moocService;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -83,13 +90,17 @@ class MoocController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = false})
      */
-    public function moocPageAction( $mooc, $user ) {
+    public function moocPageAction(Mooc $mooc, User $user ) {
         
-        /* redirect anon users to login if mooc is private */
-        if (  ! $mooc->isPublic() && $user == 'anon.' ) {
-            $url = $this->get('router')
-                         ->generate('claro_security_login');
-            return  $this->redirect($url);
+        if (  ! $mooc->isPublic()) {
+        	/* redirect anon users to login if mooc is private */
+        	if ($user == 'anon.') {
+	            $url = $this->get('router')
+	                         ->generate('claro_security_login');
+	            return  $this->redirect($url);
+        	} else if (!$this->roleManager->hasUserAccess($user, $mooc->getWorkspace())) {
+        		throw new AccessDeniedHttpException();
+        	}
         }
 
         $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );

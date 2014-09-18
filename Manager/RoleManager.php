@@ -667,4 +667,20 @@ class RoleManager
         $this->om->persist($role);
         $this->om->flush();
     }
+    
+    public function hasUserAccess(User $user, AbstractWorkspace $workspace) {
+    	$result = false;
+    	
+    	$roles = $this->getRolesByWorkspace($workspace);
+    	foreach ($roles as $role) {
+    		foreach ($user->getRoles() as $userRole) {
+    			if ($role->getName() == $userRole) {
+    				$result = true;
+    				break;
+    			}
+    		}
+    	}
+    	
+    	return $result;
+    }
 }
