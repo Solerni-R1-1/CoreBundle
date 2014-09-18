@@ -128,9 +128,9 @@ class UserManager
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->objectManager->endFlushSuite();
 
-        if ($this->mailManager->isMailerAvailable()) {
+        /*if ($this->mailManager->isMailerAvailable()) {
             $this->mailManager->sendCreationMessage($user);
-        }
+        }*/
 
         return $user;
     }
@@ -156,10 +156,12 @@ class UserManager
      * @return \Claroline\CoreBundle\Entity\User
      */
     public function sendEmailValidationConfirmee($user){
-        if ($this->mailManager->isMailerAvailable()) {
-            $this->mailManager->sendValidationConfirmeeMessage($user);
-        }
+    	if ($this->mailManager->isMailerAvailable()) {
+    		$this->mailManager->sendValidationConfirmeeMessage($user);
+            $this->mailManager->sendCreationMessage($user);
+    	}
     }
+    
 
     /**
      * Rename a user.

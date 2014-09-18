@@ -90,7 +90,7 @@ class MoocController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = false})
      */
-    public function moocPageAction(Mooc $mooc, User $user ) {
+    public function moocPageAction(Mooc $mooc, $user ) {
         
         if (  ! $mooc->isPublic()) {
         	/* redirect anon users to login if mooc is private */
