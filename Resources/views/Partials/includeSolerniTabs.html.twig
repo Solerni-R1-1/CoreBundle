@@ -1,8 +1,9 @@
 {# LIST OF TABS ON THE TOPNAVBAR #}
  <div class="slrn-content-container slrn-subnavbar-container navbar-fixed-top">
     <div class="container">
-        <div class="slrn-header-title col-md-12 row">
-            <div class="col-md-2">
+        {# Logo and title #}
+        <div class="slrn-header-title">
+            <div class="slrn-header-title__logo">
                 {% if workspace.getMooc.getOwner %}
                     {% set owner = workspace.getMooc.getOwner %}
                     {% if owner.getLogoWebPath() %}
@@ -12,7 +13,7 @@
                     {% endif %}
                 {% endif %}
             </div>
-            <div class="col-md-5">
+            <div class="slrn-header-title__name">
                 <h1 class="slrn-header-mooc-name">
                     {{ workspace.getMooc.getTitle() }}
                 </h1>

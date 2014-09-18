@@ -75,7 +75,7 @@ class MoocSession extends AbstractIndexable
      *
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group",
      *     cascade={"persist"},
-     *     inversedBy="moocSession"
+     *     inversedBy="moocSessions"
      * )
      * @ORM\JoinTable(name="claro_group_mooc_session")
      */

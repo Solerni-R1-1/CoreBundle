@@ -357,7 +357,7 @@ body.subnavbar-fixed {
 }
 
 .slrn-subnavbar { 
-    padding-left:   17.5em; 
+    padding-left:   18.9em; 
     margin-bottom:  0;
     display:        inline-block;
 }
@@ -393,6 +393,17 @@ body.subnavbar-fixed {
     margin-top: -42px;
     text-align: center;
     z-index:    1;
+    width:      1024px;
+}
+
+.slrn-header-title__logo {
+    width:      265px;
+    float:      left;
+}
+
+.slrn-header-title__name {
+    width:      580px;
+    float:      left;
 }
 
 .slrn-header-mooc-name {
@@ -1760,7 +1771,6 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 /* ANALYTICS */
-
 .logs-container .btn {
     margin-bottom:  1em;
     margin-left:    1em;
