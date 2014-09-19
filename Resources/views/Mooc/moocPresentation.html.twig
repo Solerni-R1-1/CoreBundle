@@ -149,6 +149,7 @@
                         du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
                         au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
                     {% else %}
+                        Privées<br>
                         {% if   session.getMaxUsers() is defined    and
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0
