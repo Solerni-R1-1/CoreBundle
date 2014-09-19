@@ -256,10 +256,7 @@ class MoocController extends Controller
 
         /* if anon redirect to login page with query param to redirect user after login */
         if ( $user == 'anon.' ) {
-            
-
-            $this->get('session')->set('nextUrl', $this->router->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ) ));
-            
+        	$this->get('session')->set('moocSession', $moocSession);
             $route = $this->router->generate('claro_security_login', array () );
         } else {
             /* get all users */

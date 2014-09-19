@@ -98,18 +98,27 @@ class AuthenticationController
      */
     public function loginAction()
     {
+    	$data = array();
+    	$session = $this->request->getSession();
+    	
+    	
         if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $this->request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } else {
-            $error = $this->request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
+            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+        }        
+        
+        $lastUsername = $session->get(SecurityContext::LAST_USERNAME);
+        
+        if ($session->has("moocSession")) {
+        	$moocSession = $session->get("moocSession");
+        	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+        	$data['moocSession'] = $moocSession;
         }
 
-        $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
-
-        return array(
-            'last_username' => $lastUsername,
-            'error' => $error
-        );
+        $data['last_username'] = $lastUsername;
+        $data['error'] = $error;
+        return $data;
     }
 
     /**

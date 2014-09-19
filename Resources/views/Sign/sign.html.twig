@@ -5,6 +5,10 @@
 {% block solerniHeaderImage %}{% endblock %}
 
 {% block content %}
+	{% if moocSession is defined %}<div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
+	<h2 class="slrn-login-mooc-register">{{ "login_register_mooc"|trans({"%moocName%": moocSession.getMooc().getTitle()}, "platform")|raw }}</h2>
+		<hr class="slrn-hr"/>
+	</div>{% endif %}
     <div class="col-md-6 col-xs-6 slrn-md-6 slrn-md-6--signin">
         <h1 class="slrn-section-title">{% block formTitle %}{% endblock %}</h1>
         {% if is_facebook_available() %}

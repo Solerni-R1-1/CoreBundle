@@ -1787,3 +1787,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 #left-bar {
     z-index: 9999;
 }
+
+.slrn-login-mooc-register {
+	color: #333;
+}
