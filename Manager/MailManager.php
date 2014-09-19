@@ -99,7 +99,7 @@ class MailManager
      */
     public function sendValidationMessage(User $user){
 
-        $subject = 'Rappel de vos identifiants Solerni';
+        $subject = 'Confirmation de votre adresse email sur Solerni';
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailValidation.html.twig',  array('user' => $user));
 
@@ -114,7 +114,7 @@ class MailManager
      */
     public function sendValidationConfirmeeMessage(User $user){
 
-        $subject = 'Confirmation de votre adresse email sur Solerni';
+        $subject = 'Rappel de vos identifiants Solerni';
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailValidationConfirmee.html.twig',  array('user' => $user));
 

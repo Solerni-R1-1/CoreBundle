@@ -4,6 +4,9 @@ namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
 
 /**
  * MoocSessionRepository
@@ -18,15 +21,28 @@ class MoocSessionRepository extends EntityRepository
 	 * 
 	 * @param ClarolineCoreBundle\Entity\User $user
 	 */
-	public function getLastMoocSessionForUser($user, $mooc) {
-		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms ".
-				"WHERE :user MEMBER OF ms.users ".
-				"AND ms.mooc = :mooc ".
-				"AND ms.startDate < CURRENT_TIMESTAMP()".
-				"ORDER BY ms.endDate DESC ";
+	public function getLastMoocSessionForUser(User $user, Mooc $mooc) {
+		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+            	WHERE (:user MEMBER OF ms.users 
+                		OR EXISTS (
+                			SELECT g FROM Claroline\CoreBundle\Entity\Group g
+							JOIN g.moocSessions gms
+							WHERE ms = gms
+							AND g IN (:groups)))
+				AND ms.mooc = :mooc 
+				AND ms.startDate < CURRENT_TIMESTAMP()
+				ORDER BY ms.endDate DESC ";
+		$groups = array();
+        if ( $user instanceof User ) {
+            foreach ($user->getGroups() as $group) {
+                $groups[] = $group->getId(); 
+            }
+        }
+        
 		$qb = $this->_em->createQuery($query)->setParameters(array(
 				"user" => $user,
-				"mooc" => $mooc
+				"mooc" => $mooc,
+				"groups" => $groups
 		));
         
         $result = $qb->getResult();
@@ -73,15 +89,27 @@ class MoocSessionRepository extends EntityRepository
         
         if( $user ) {
             // Get the firest active mooc where the user is in
-            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms " .
-                    "WHERE :user MEMBER OF ms.users ".
-                    "AND ms.mooc = :mooc " .
-                    "AND ms.startDate < CURRENT_TIMESTAMP()" .
-                    "AND ms.endDate > CURRENT_TIMESTAMP()" .
-                    "ORDER BY ms.startDate DESC ";
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+                    WHERE (:user MEMBER OF ms.users 
+                		OR EXISTS (
+                			SELECT g FROM Claroline\CoreBundle\Entity\Group g
+							JOIN g.moocSessions gms
+							WHERE ms = gms
+							AND g IN (:groups))) 
+                    AND ms.mooc = :mooc 
+                    AND ms.startDate < CURRENT_TIMESTAMP()
+                    AND ms.endDate > CURRENT_TIMESTAMP()
+                    ORDER BY ms.startDate DESC ";
+			$groups = array();
+        	if ( $user instanceof User ) {
+				foreach ($user->getGroups() as $group) {
+					$groups[] = $group->getId(); 
+				}
+        	}
             $qb = $this->_em->createQuery($query)->setParameters(array(
-                    "mooc"  => $mooc,
-                    "user" => $user
+                    "mooc"		=> $mooc,
+                    "user"		=> $user,
+					"groups"	=> $groups
             ));
             $result = $qb->getResult();
         }
@@ -161,5 +189,23 @@ class MoocSessionRepository extends EntityRepository
     	$result = $qb->getResult();
     	 
     	return ( count($result) > 0 ) ? true : false;
+    }
+    
+    /**
+     * Returns the active session, or the last one if no active session.
+     * @param AbstractWorkspace $workspace
+     */
+    public function getActiveOrLastSession(AbstractWorkspace $workspace) {
+    	$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms
+				WHERE ms.mooc = :mooc 
+				AND ms.startDate < CURRENT_TIMESTAMP()
+				ORDER BY ms.endDate DESC ";
+		$qb = $this->_em->createQuery($query)->setParameters(array(
+				"mooc" => $workspace->getMooc()
+		));
+        
+        $result = $qb->getResult();
+        
+        return ( count($result) > 0 ) ? $result[0] : NULL;
     }
 }

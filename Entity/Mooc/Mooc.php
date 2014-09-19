@@ -240,6 +240,14 @@ class Mooc
     private $lesson;
     
     /**
+     * @var Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * 
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * 
+     */
+    private $blog;
+    
+    /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      * 
      * @ORM\ManyToOne(
@@ -696,6 +704,10 @@ class Mooc
         return $this->hasLinkedinShare;
     }
     
+    /**
+     * 
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getMoocSessions()
     {
         return $this->moocSessions;
@@ -704,7 +716,7 @@ class Mooc
     /**
      * Get workspace 
      * 
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return AbstractWorkspace
      */
     public function getWorkspace()
     {
@@ -778,15 +790,27 @@ class Mooc
     public function setLesson( $lesson ) {
         $this->lesson = $lesson;
     }
+    
+    public function getBlog() {
+        return $this->blog;
+    }
+
+    public function setBlog( $blog ) {
+        $this->blog = $blog;
+    }
+    
     public function getOwner() {
         return $this->owner;
     }
+    
     public function setOwner($owner) {
         $this->owner = $owner;
     }
+    
     public function getIsPublic() {
         return $this->isPublic;
     }
+    
     public function getAccessConstraints() {
         return $this->accessConstraints;
     }

@@ -19,249 +19,55 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
+use Claroline\CoreBundle\Manager\BadgeManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class BadgeController extends Controller
 {
+	/** @var BadgeManager */
+	private $badgeManager;
+	
+	/**
+	 * @DI\InjectParams({
+	 *     "badgeManager" = @DI\Inject("claroline.manager.badge")
+	 * })
+	 */
+	public function __construct(BadgeManager $badgeManager) {
+		$this->badgeManager  = $badgeManager;
+	}
+	
     /*
      * Returns or render (depending of needEcho) lists of badges related to resource_types
      */
     public function myWorkspaceBadgeAction(
-            AbstractWorkspace $workspace,
-            User $loggedUser,
-            $badgePage,
-            $resourceType = null,
-            $resourceId = null,
-            $needEcho = true
-    ) {
-        /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
-        $badgeRuleValidator = $this->get("claroline.rule.validator");
-
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $workspaceBadges */
-        $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
-
-        $ownedBadges      = array();
-        $inProgressBadges = array();
-        $availableBadges  = array();
-        $displayedBadges  = array();
-        $nbTotalBadges    = 0;
-        $nbAcquiredBadges = 0;
-          
-        if ( $resourceType == null ) {
-            $resourceType = 'all';
-        }
-
-        foreach ($workspaceBadges as $workspaceBadge) {
-
-            
-            /* filter badges from name and resource ID to check rules associated with the badge */
-            if ( $resourceType != 'all' && $resourceId != null ) {
-                if ( ! $this->isOneRuleAssociatedWithResourceId( $workspaceBadge, $resourceId ) ) {
-                   	continue;
-                }
-            } elseif ( $resourceType != 'all' ) {
-                if ( ! $this->isOneRuleAssociatedWithResource( $workspaceBadge, $resourceType ) ) {
-                   	continue;
-                }
-            }
-            
-            $isOwned = false;
-            foreach ($workspaceBadge->getUserBadges() as $userBadge) {
-                if ($loggedUser->getId() === $userBadge->getUser()->getId()) {
-                    $ownedBadges[] = $userBadge;
-                    $isOwned = true;
-                    $nbAcquiredBadges++;
-                    $nbTotalBadges++;
-                }
-            }
-            
-            if (!$isOwned) {
-                $nbBadgeRules      = count($workspaceBadge->getRules());
-                $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
-                               
-                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules >= $validatedRules['validRules']) {
-                    $inProgressBadges[] = $workspaceBadge;
-                    $nbTotalBadges++;
-                }
-                else {
-                    $availableBadges[] = $workspaceBadge;
-                    $nbTotalBadges++;
-                }
-            }
-        }
-        
-        // Create badge list to display (owned badges first, in progress badges and then other badges)
-        $displayedBadges = array();
-        foreach ($ownedBadges as $ownedBadge) {
-            $displayedBadges[] = array(
-                'type'  => 'owned',
-                'badge' => $ownedBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $ownedBadge->getBadge(), $resourceType ),
-                'associatedResource' => $this->getResourceAssociatedWithBadge( $ownedBadge->getBadge(), $resourceType, $loggedUser )
-            );
-        }
-
-        foreach ($inProgressBadges as $inProgressBadge) {
-            $displayedBadges[] = array(
-                'type'          => 'inprogress',
-                'badge'         => $inProgressBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $inProgressBadge, $resourceType ),
-                'associatedResource' => $this->getResourceAssociatedWithBadge( $inProgressBadge, $resourceType, $loggedUser )
-            );
-        }
-
-        foreach ($availableBadges as $availableBadge) {
-            $displayedBadges[] = array(
-                'type'  => 'available',
-                'badge' => $availableBadge,
-                'associatedResourceUrl'  => $this->getResourceUrlAssociatedWithRule( $availableBadge, $resourceType ),
-                'associatedResource' => $this->getResourceAssociatedWithBadge( $availableBadge, $resourceType, $loggedUser )
-            );
-        }
-        
-        if ( 'icap_dropzone' == $resourceType ) {
-            foreach ($displayedBadges as $displayedBadge) {
-                if ($displayedBadge['badge'] instanceof UserBadge) {
-                    $res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge']->getBadge(), $resourceType, $loggedUser );
-                } else {
-                    $res = $this->getResourceAssociatedWithBadge( $displayedBadge['badge'], $resourceType, $loggedUser );
-                }
-                $dropzone = $res['dropzone'];
-                $drop = $res['drop'];
-                // Remove one for each badge acquired, failed, not finished, or over
-                // Careful : $nbTotalBadges is no more total badges, but badgesToGo !
-                if (   ( $drop != null && $drop->getCalculatedGrade() != -1 ) ||
-                       ( $drop != null && ! $drop->getFinished() && $dropzone->getEndAllowDrop()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ) ||
-                       ( $drop != null && $drop->getCalculatedGrade() == -1 && $dropzone->getEndReview()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") ) ) {
-                    $nbTotalBadges--;
-                }
-            }
-        }
-        
-        /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
-        $pagerFactory = $this->get('claroline.pager.pager_factory');
-        $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
-
+    		AbstractWorkspace $workspace,
+            User $loggedUser) {
+    	
+    	$badges = $this->badgeManager->getAllBadgesForWorkspace($loggedUser, $workspace);
+    	
+    	$nbTotalBadges = count($badges);
+    	$nbAcquiredBadges = 0;
+    	$nbFailedBadges = 0;
+    	foreach ($badges as $badge) {
+    		if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
+    			$nbAcquiredBadges++;
+    		} else if ($badge['status'] == Badge::BADGE_STATUS_FAILED) {
+    			$nbFailedBadges++;
+    		}
+    	}
+    	
         $badgeList = array(
-            'badgePager'        => $badgePager,
-            'workspace'         => $workspace,
-            'badgePage'         => $badgePage,
-            'nbTotalBadges'     => $nbTotalBadges,
-            'nbAcquiredBadges'  => $nbAcquiredBadges
+        	'badges' => $badges,
+        	'workspace' => $workspace,
+        	'nbTotalBadges' => $nbTotalBadges,
+        	'nbAcquiredBadges' => $nbAcquiredBadges,
+        	'nbFailedBadges' => $nbFailedBadges
         );
-        
-        /* if we need this data from another controller */
-        if ( $needEcho == false ) {
-            return $badgeList;
-        }
 
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/Tool/list.html.twig',
             $badgeList
         );
-    }
-    
-    /*
-     * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
-     * @var $resourceString is string part of resource type name in rules
-     * 
-     * @return bool 
-     */
-    public function isOneRuleAssociatedWithResource( $badge, $resourceType )
-    {
-        $returnBool = false;
-
-        foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
-            if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
-                $returnBool = true;
-            }
-        }
-
-        return $returnBool;
-    }
-    
-     /*
-     * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
-     * @var $resourceId is int of the resource ID
-     * 
-     * @return bool
-     */
-    public function isOneRuleAssociatedWithResourceId( $badge, $resourceId ) {
-        
-        $returnBool = false;
-
-        foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
-             $badgeResource = $BadgeRule->getResource();
-             if ( $badgeResource ) {
-                 if ( $badgeResource->getId() == $resourceId ) {
-                     $returnBool = true;
-                 }
-            }
-        }
-
-        return $returnBool;
-    }
-    
-     /*
-     * Returns a url for the resource
-     * if the badge has a rule attached to a specific resource
-     * 
-     * @var $badge is instance of Claroline\CoreBundle\Entity\Badge\Badge
-     * @var $resourceString is string part of resource type in rules
-     * 
-     * @return string
-     */
-    public function getResourceUrlAssociatedWithRule( $badge, $resourceType ) {
-        
-        $returnUrl = null;
-        
-        foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
-            $badgeRuleResource = $BadgeRule->getResource();
-            if ( strpos( $BadgeRule->getAction(), $resourceType ) && $badgeRuleResource ) {
-                $returnUrl = $this->getUrlFromResourceNode( $badgeRuleResource );
-            }
-        }
-              
-        return $returnUrl;
-    }
-    /*
-     * Return the url to open a resource
-     * 
-     * @var $resource is instance of Claroline\CoreBundle\Entity\Resource\ResourceNode 
-     * 
-     * @return string
-     */
-    public function getUrlFromResourceNode( $resource ) {
-        
-        $router = $this->get('router');
-        return $router->generate('claro_resource_open', array(
-                    'node' => $resource->getId(),
-                    'resourceType' => $resource->getResourceType()->getName()
-        ));       
-    }
-    
-    /*
-     *  @return instance of Claroline\CoreBundle\Entity\Resource\ResourceNode if resource ID found
-     */
-    public function getResourceAssociatedWithBadge( $badge, $resourceType, $loggedUser ) {
-        
-        if ( strpos( $resourceType, 'dropzone' ) ) {
-            $associatedResource = array();
-            $doctrine = $this->getDoctrine();
-            $evalDropzoneRepo = $doctrine->getRepository('IcapDropzoneBundle:Dropzone');
-            $evalDropRepo = $doctrine->getRepository('IcapDropzoneBundle:Drop');
-            foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
-                if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
-                    $badgeRessourceNode = $BadgeRule->getResource();
-                    if ( $badgeRessourceNode ) {
-                        $associatedDropzone = $evalDropzoneRepo->findOneByResourceNode( $badgeRessourceNode );
-                        $associatedDrop = $evalDropRepo->findOneBy( array( 'dropzone' => $associatedDropzone, 'user' => $loggedUser ) );
-                        $associatedResource = array( 'dropzone' => $associatedDropzone, 'drop' => $associatedDrop );
-                    }
-                }
-            }
-        }
-        
-        return $associatedResource;
     }
     
     /**
@@ -270,28 +76,14 @@ class BadgeController extends Controller
      * @Route("/mes_evaluations", name="solerni_user_evaluations")
      * @ParamConverter( "user", options={"authenticatedUser" = true })
      */
-    public function userEvaluationsPageAction( $user ) {
+    public function userEvaluationsPageAction(User $user) {
         
-        $WorkspacesBadgeList = array();
-        
-        // get all badges associated to dropzone for each session subscribed
-        foreach( $user->getMoocSessions() as $session ) {
-            $workspace = $session->getMooc()->getWorkspace();
-            $WorkspacesBadges = $this->myWorkspaceBadgeAction( $workspace, $user, 1, 'icap_dropzone', null, false );
-            foreach ( $WorkspacesBadges['badgePager'] as $WorkspacesBadgePager ) {
-                // Only returns badges if they have inprogress
-                if ( $WorkspacesBadgePager['type'] == 'inprogress' ) {
-                     $WorkspacesBadgeList[] = $WorkspacesBadges;
-                     break;
-                }
-            }
-        }
+        $result = $this->badgeManager->getAllBadgesInProgress($user);
         
         return $this->render(
             'ClarolineCoreBundle:Mooc:myEvaluationslist.html.twig',
-            array( 'WorkspacesBadgeList' => $WorkspacesBadgeList )
+            array( 'WorkspacesBadgeList' => $result )
         );
         
     }
-
 }

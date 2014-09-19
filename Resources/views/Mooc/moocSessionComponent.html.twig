@@ -7,6 +7,14 @@
             {% set isRegistered = true %}
         {% endif %}
     {% endfor %}
+    {% set sessionGroups = session.getGroups() %}
+    {% for sessionGroup in sessionGroups %}
+		{% for userGroup in user.getGroups() %}
+            {% if sessionGroup.getId() == userGroup.getId() %}
+                {% set isRegistered = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
 {% endif %}
 {# display session component #}
 {% set mooc = session.getMooc() %}
@@ -93,7 +101,8 @@
                     {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
                         Mooc gratuit
                     {% else %}
-                        {{ mooc.getCost() }}&nbsp;€
+                        Mooc gratuit
+                        {#{{ mooc.getCost() }}&nbsp;€#}{# use it when we need to print cost #}
                     {% endif %}
 
             </span>

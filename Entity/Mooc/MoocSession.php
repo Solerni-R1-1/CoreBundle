@@ -71,6 +71,17 @@ class MoocSession extends AbstractIndexable
     private $users;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group",
+     *     cascade={"persist"},
+     *     inversedBy="moocSessions"
+     * )
+     * @ORM\JoinTable(name="claro_group_mooc_session")
+     */
+    private $groups;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="max_users", type="integer", nullable=true)
@@ -254,6 +265,29 @@ class MoocSession extends AbstractIndexable
         
         return $this;
     }
+    
+    /**
+     * Get Groups
+     * 
+     * @return PersistentCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * Set Groups
+     * 
+     * @param  $groups
+     * @return MoocSession
+     */
+    public function setGroups( $groups )
+    {
+        $this->groups = $groups;
+        
+        return $this;
+    }
 
     
 
@@ -335,9 +369,9 @@ class MoocSession extends AbstractIndexable
        $doc->mooc_title             = $mooc->getTitle();
        $doc->mooc_alias             = $mooc->getAlias();
        $doc->content                = 
-               $mooc->getDescription().'<br>'.
+               strip_tags( $mooc->getDescription().'<br>' ).
                $mooc->getTitle().'<br>'.
-               $mooc->getAboutPageDescription();
+               strip_tags( $mooc->getAboutPageDescription() );
        
        $doc->mooc_is_public_b       = $mooc->isPublic();
        $doc->mooc_duration_i        = $mooc->getDuration();

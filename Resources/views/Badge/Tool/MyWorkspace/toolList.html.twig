@@ -29,7 +29,5 @@
 		{{ workspace.getMooc().getBadgesText() | raw }}
 	    <hr>
     {% endif %} 
-    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', 
-        {'workspace': workspace, 'loggedUser': user, 'badgePage': 1, 'resourceType' : 'icap_dropzone' }))
-    }}  
+    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Badge:myWorkspaceBadge', {'workspace': workspace, 'loggedUser': user })) }}  
 {% endblock %}

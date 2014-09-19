@@ -6,7 +6,7 @@
         <a {% if subUrl != '#' %}href="{{ subUrl }}"{% endif %} class="dsk__article__footer__block__ico {{ iconClass }}">
             {% if iconImageSubstitute is not empty %}
                 <div class="dsk__article__footer__block__ico__background">
-                    <img src="{{ image(iconImageSubstitute).zoomCrop(47, 47) }}" alt="{{ subTitle }} Badge Icon" width=""47" height="47">
+                    <img src="{{ image(iconImageSubstitute).zoomCrop(47, 47) }}" alt="{{ subTitle }} Badge Icon" width="47" height="47">
                 </div>
             {% endif %}
         </a>

@@ -23,15 +23,15 @@
         <div class="presentation__mooc__text__desc" ng-bind-html = "document.content | truncate:85">
         </div>
         <div class="presentation__mooc__text__button">
-            <a href="{{ document.mooc_view_url | path}}" class="btn btn-primary">
+            <a href="{{ document.mooc_view_url | path }}" class="btn btn-primary">
                 En savoir plus
             </a>
         </div>
 	</div>
     <div class="presentation__mooc__block presentation__mooc__meta">
         <div class="presentation__mooc__meta__date">
-            <p>Début le {{document.start_date | date : 'MM.dd.yyyy'}}</p>
-            <p>Fin le {{document.end_date | date : 'MM.dd.yyyy'}}</p>
+            <p>Début le {{document.start_date | date : 'dd.MM.yyyy'}}</p>
+            <p>Fin le {{document.end_date | date : 'dd.MM.yyyy'}}</p>
         </div>
         <span class="presentation__mooc__meta__badge">
             Badgeant
@@ -39,5 +39,8 @@
         <span class="presentation__mooc__meta__price">
             Mooc gratuit
         </span>
+    </div>
+    <div ng-if="!document.mooc_is_public_b" class="mooc_private_layer">
+         Mooc Privé
     </div>
 </div>

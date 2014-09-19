@@ -46,7 +46,9 @@ body {
 }
 body.sign-in { background-color: #EEEEEF; }
 
-body.subnavbar-fixed { padding-top: 110px }
+body.subnavbar-fixed { 
+    padding-top: 186px;
+}
 
 /* COLORS */
 .bg-color-primary { background-color: #4B667C; }        /* blue/grey */
@@ -331,49 +333,124 @@ body.subnavbar-fixed { padding-top: 110px }
 .slrn-topbar--logout { text-transform: uppercase; }
 
 /* WORKSPACE SUBNAV */
-.slrn-subnavbar-container { background-color: #EEEEEF; border-bottom: 4px solid #999; }
-.slrn-subnavbar-container.navbar-fixed-top { top: 50px; }
-.btn-config--tabs { float:left; }
-.hometab-element.active .slrn-item__marqueur { background-color: #D90045; }
-.hometab-element.active .slrn-item__marqueur:after { background-color: #EEEEEF; }
-.slrn-subnavbar { 
-    padding-left: 19.7857em; 
-    margin-bottom: 0;
-    display: inline-block;
+
+
+.slrn-subnavbar-container {
+    background-color:   #FFF; 
+    border-bottom:      4px solid #999;
+    height:         136px;
 }
+.slrn-subnavbar-container.navbar-fixed-top { 
+    top: 50px;
+}
+
+.btn-config--tabs { 
+    float:left;
+}
+
+.hometab-element.active .slrn-item__marqueur { 
+    background-color: #D90045;
+}
+
+.hometab-element.active .slrn-item__marqueur:after { 
+    background-color: #FFF;
+}
+
+.slrn-subnavbar { 
+    padding-left:   18.9em; 
+    margin-bottom:  0;
+    display:        inline-block;
+}
+
 .slrn-subnavbar .slrn-subnavbar__item { 
-    display: inline-block; 
-    position: relative; 
-    margin: 0 .8em; }
-.slrn-subnavbar .slrn-subnavbar__item:first-child { margin-left: 0; }
+    display:    inline-block; 
+    position:   relative; 
+    margin:     0 .8em; 
+}
+
+.slrn-subnavbar .slrn-subnavbar__item:first-child { 
+    margin-left: 0;
+}
+
 .slrn-subnavbar__link,
 .slrn-subnavbar__subblock { 
-    display: block; 
-    padding: 2.28em .2em .7em .2em; 
+    display:        block; 
+    padding:        2.3em .2em .7em .2em; 
     text-transform: uppercase; 
-    font-weight: bold; 
-    font-size: .9em; }
-.slrn-subnavbar__link:hover { text-decoration: none; color: #D90045; }
+    font-weight:    bold; 
+    font-size:      .9em;
+    margin-top:     6em;
+}
+
+.slrn-subnavbar__link:hover { 
+    text-decoration: none; 
+    color: #D90045;
+}
+
+.slrn-header-title {
+    position:   absolute;
+    top:        50%;
+    margin-top: -42px;
+    text-align: center;
+    z-index:    1;
+    width:      1024px;
+}
+
+.slrn-header-title__logo {
+    width:      265px;
+    float:      left;
+}
+
+.slrn-header-title__name {
+    width:      580px;
+    float:      left;
+}
+
+.slrn-header-mooc-name {
+    text-align:     left;
+    color:          #333;
+    font-size:      30px;
+    font-weight:    bold;
+}
+
 .slrn-subnavbar__subblock { 
     font-size: .88em;
     display: inline-block; 
     height: 4.56em;
 }
+
 .slrn-subnavbar__subblock--badges {
-    border-left: 1px solid #999;
-    border-right: 1px solid #999;
-    float: right;
-    padding: 1.5em 2em .7em 3.5em;
-    width: 13em ;
-    overflow: hidden;
-    position: relative; 
-    background: transparent url('../images/sprites_solerni.png') no-repeat 10px -315px scroll;
-    line-height: 1.2em;
+    float:          right;
+    padding:        1em .5em .5em 3.4em;
+    width:          12em;
+    position:       relative; 
+    background:     #A5B2BD url('../images/sprites_solerni.png') no-repeat 10px -319px scroll;
+    line-height:    1.2;
+    color:          #FFF;
+    margin-top:     6.1em;
+    height:         4em;
+    z-index:        1;
 }
-.slrn-subnavbar__subblock--badges:hover { background-color: #E1E1E1; text-decoration: none; }
-.btn-inscrire { float: right; margin-top: 1em; }
-.btn-inscrire.is-registered,
-.btn-inscrire.is-registered:focus { background-color: #C9D200; border-color: #C9D200; }
+
+.slrn-subnavbar__subblock--badges:hover,
+.slrn-subnavbar__subblock--badges.active { 
+    background-color:   #FF004F;
+    color:              #FFF;
+    text-decoration:    none;
+}
+
+.slrn-subnavbar__subblock--badges:hover:after,
+.slrn-subnavbar__subblock--badges.active:after {
+    content:            "";
+    width:              1em;
+    height:             .8em;
+    border-radius:      100%;
+    position:           absolute;
+    top:                89%;
+    left:               46%;
+    background-color:   #FF004F;
+    
+}
 
 /* CONTENT */
 .content { padding-top: 2em; }
@@ -384,6 +461,7 @@ body.subnavbar-fixed { padding-top: 110px }
 .body-my_badges .content,
 .body-without-subnavbar .content { padding-top: 0; }
 .body-forum .content { padding-top: 0; }
+.body-blog .content { padding-top: 0; }
 
 /* HIDE FLASHBOX ON DASHBOARD */
 body.dsk .alert { display: none; }
@@ -1692,3 +1770,24 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     font-size:  30px;
 }
 
+/* ANALYTICS */
+.logs-container .btn {
+    margin-bottom:  1em;
+    margin-left:    1em;
+}
+
+.slrn-statistic-wrapper {
+    margin-bottom: 30px;
+}
+
+.slrn-statistic-wrapper legend {
+    margin-bottom: 40px;
+}
+
+#left-bar {
+    z-index: 9999;
+}
+
+.slrn-login-mooc-register {
+	color: #333;
+}

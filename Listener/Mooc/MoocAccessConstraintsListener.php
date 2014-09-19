@@ -14,9 +14,22 @@ use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use Claroline\CoreBundle\Entity\Mooc\Mooc;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Doctrine\ORM\UnitOfWork;
+use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class MoocAccessConstraintsListener extends ContainerAware
 {
+	private $entityManager;
+
+	/**
+	 * @DI\InjectParams({
+	 *     "entityManager"                     = @DI\Inject("doctrine.orm.entity_manager")
+	 * })
+	 */
+	public function __construct(/*EntityManager $entityManager*/) {
+		/*$this->entityManager = $entityManager;*/
+	}
 
     public function postUpdate(LifecycleEventArgs $args)
     {
@@ -32,10 +45,15 @@ class MoocAccessConstraintsListener extends ContainerAware
         if ($entity instanceof MoocAccessConstraints) {
             $service = $this->container->get('orange.moocaccesscontraints_service');
             $service->processUpgrade(array($entity));
-        }
+        } else
         if ($entity instanceof User) {
-            $service = $this->container->get('orange.moocaccesscontraints_service');
-            $service->processUpgrade(array(), $entity);
+        	$uow = $this->container->get("doctrine.orm.entity_manager")->getUnitOfWork();
+        	$changeSet = $uow->getEntityChangeSet($entity);
+        	
+        	if (array_key_exists("mail", $changeSet)) {
+	            $service = $this->container->get('orange.moocaccesscontraints_service');
+	            $service->processUpgrade(array(), $entity);
+        	}
         }
 
         // Code moved to WorkspaceManager.createWorkspace() postUpdateListener.

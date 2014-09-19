@@ -6,6 +6,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -16,6 +17,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
+use Claroline\CoreBundle\Manager\BadgeManager;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Symfony\Component\HttpFoundation\Response;
+use UJM\ExoBundle\Entity\Exercise;
 
 
 /**
@@ -243,96 +248,64 @@ class SolerniController extends Controller
                 break;
             
             case 'evals':
-                
-                $AllEvalsPaginated = array();
-                $inProgressBadges = array();
+            	// Services initialization
+            	$badgeManager = $this->get('claroline.manager.badge');
 
-                // Get all evals badges from all sessions
-                foreach( $user->getMoocSessions() as $userSession ) {
-                    $AllEvalsPaginated[] = $this->get('orange.badge.controller')->myWorkspaceBadgeAction(
-                        $userSession->getMooc()->getWorkspace(),
-                        $user,
-                        1,
-                        'icap_dropzone',
-                        null,
-                        false
-                    );
-                }
-                
-                // Then we remove all expired and noted (finished) evals and store that in a new array
-                foreach ( $AllEvalsPaginated as $pagerFanta ) {
-                    foreach ( $pagerFanta['badgePager'] as $badgeArray ) {
-                        // Only meaning already started
-                        if ( $badgeArray['type'] == 'inprogress') {
-                            // Remove Badge if endDate is in the future & we don't have a grade
-                            if ( $badgeArray['associatedResource']['dropzone']->getEndReview()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") &&
-                                 ( $badgeArray['associatedResource']['drop']  &&
-                                 $badgeArray['associatedResource']['drop']->getCalculatedGrade() == -1 ) ) {
-                                 $inProgressBadges[$badgeArray['associatedResource']['dropzone']->getResourceNode()->getId()] = $badgeArray;
-                            } 
-                        }
-                    }
-                }
-                
-                // if that array exists
-                if ( $inProgressBadges ) {
-                    // change status to reflect the number of ongoing badges
-                    $plural = '';
-                    $evalsCount = count( $inProgressBadges );
-                    if ( $evalsCount > 1 ) {
-                        $plural = 's';
-                    }
-                    $statusText = $translator->trans( 'in_progress_badges', array( '%number%' => $evalsCount, '%plural%' => $plural ), 'platform');
-                    $lastDoerActions = array();
-                    $lastReceiverActions = array();
-                    
-                    // Get last action for each dropzone in claro_log
-                    foreach ( $inProgressBadges as $inProgressBadge ) {
-
-                        // find the last action accessed
-                        $logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
-                        $resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_dropzone');
-                        // Get last user action
-                        $lastDoerActions[] = $logRepository->findOneBy(
-                            array(
-                                'resourceType' => $resourceType->getId(),
-                                'doer' => $user->getId(),
-                                'resourceNode' => $inProgressBadge['associatedResource']['dropzone']->getResourceNode()->getId()
-                            ),
-                            array('dateLog' => 'DESC')
-                        );
-                        // Get last action to the user
-                        $lastReceiverActions[] = $logRepository->findOneBy(
-                            array(
-                                'resourceType' => $resourceType->getId(),
-                                'receiver' => $user->getId(),
-                                'resourceNode' => $inProgressBadge['associatedResource']['dropzone']->getResourceNode()->getId()
-                            ),
-                            array('dateLog' => 'DESC')
-                        );
-                        
-                        $mostRecentAction = '';
-                        foreach ( $lastDoerActions as $lastDoerAction ) {
-                            if ( ! $mostRecentAction instanceof \Claroline\CoreBundle\Entity\Log\Log ) {
-                                $mostRecentAction = $lastDoerAction;
-                            } elseif ( $lastDoerAction->getDateLog()->format("Y-m-d H:i:s") > $mostRecentAction->getDateLog()->format("Y-m-d H:i:s") ) {
-                                $mostRecentAction = $lastDoerAction;
-                            }
-                        }
-                    }
-                        
-                    //show last eval 
-                    $mostRecentEval = $inProgressBadges[$mostRecentAction->getResourceNode()->getId()];
-                    $containerClass = 'footer__block__withImage';
-                    $iconClass .= '_actif';
-                    $iconImageSubstitute = $mostRecentEval['badge']->getWebPath();
-                    $subTitle = $mostRecentEval['badge']->getName();
-                    $subText = $mostRecentEval['badge']->getWorkspace()->getMooc()->getTitle();
-                    $subUrl = $mostRecentEval['associatedResourceUrl'];
-                    $footerText = $translator->trans( 'show_my_evals', array(), 'platform');
-                    $footerUrl = $router->generate('solerni_user_evaluations');
-                }
-                    
+            	// Get all in progress badges
+            	$badgesInProgress = $badgeManager->getAllBadgesInProgress($user);
+            	
+            	// Change status to reflect the number of ongoing badges
+            	$evalsCount = 0;
+            	foreach ($badgesInProgress as $badgeWorkspace) {
+            		foreach ($badgeWorkspace['badges'] as $badge) {
+            			$evalsCount++;
+            		}
+            	}
+            	// If we have at least a badge
+            	if ($evalsCount > 0) {
+            		// Repositories init
+	            	$logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
+	            	$resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_dropzone');
+	            	
+	            	// Pluralize
+            		$plural = $evalsCount > 1 ? 's' : '';
+	            	$statusText = $translator->trans( 'in_progress_badges', array( '%number%' => $evalsCount, '%plural%' => $plural ), 'platform');
+	            	
+	            	$mostRecentAction = null;
+	            	$lastBadge;
+	            	// Loop on all the badges of all workspaces
+	            	foreach($badgesInProgress as $badgeWorkspace) {
+	            		foreach($badgeWorkspace['badges'] as $badge) {
+	            			// Get the last action made by the user on the associated dropzone
+	            			$lastDoerAction = $logRepository->findOneBy(
+	            					array(
+	            							'resourceType' => $resourceType,
+	            							'doer' => $user,
+	            							'resourceNode' => $badge['resource']['resource']['dropzone']->getResourceNode()
+	            					),
+	            					array('dateLog' => 'DESC')
+	            			);
+	            			
+	            			// If we have no most recent action yet or if the last found action is posterior to the one saved
+	            			if ($mostRecentAction == null
+	            					|| $lastDoerAction->getDateLog() > $mostRecentAction->getDateLog()) {
+	            				// Replace it and save the last badge
+	            				$mostRecentAction = $lastDoerAction;
+	            				$lastBadge = $badge;
+	            			}
+	            		}
+	            	}
+	
+	            	//show last eval
+	            	$containerClass = 'footer__block__withImage';
+	            	$iconClass .= '_actif';
+	            	$iconImageSubstitute = $lastBadge['badge']->getWebPath();
+	            	$subTitle = $lastBadge['badge']->getName();
+	            	$subText = $lastBadge['badge']->getWorkspace()->getMooc()->getTitle();
+	            	$subUrl = $lastBadge['resource']['url'];
+	            	$footerText = $translator->trans( 'show_my_evals', array(), 'platform');
+	            	$footerUrl = $router->generate('solerni_user_evaluations');
+            	}
                 break;
             }
         
@@ -527,5 +500,4 @@ class SolerniController extends Controller
         }
         return $results;
     }
-
 }

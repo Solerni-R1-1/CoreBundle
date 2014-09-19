@@ -82,11 +82,15 @@
 			<li>
                 <i class='essentiels-icon essentiels__tarif'></i> 
                 Tarif :<span class="slrn-bold">
-                {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
-                    Mooc gratuit
-                {% else %}
-                    {{mooc.getCost()}}&nbsp;€
-                {% endif %}
+                    {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
+                        Mooc gratuit
+                    {% elseif mooc.isPublic() %}
+                        Mooc gratuit<br>
+                        Certification en option
+                    {% else %}
+                        Formation professionnelle
+                    {% endif %}
+                </span>
             </li>
 
 			{# CERTIFICATION #}
@@ -145,6 +149,7 @@
                         du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
                         au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
                     {% else %}
+                        Privées<br>
                         {% if   session.getMaxUsers() is defined    and
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0

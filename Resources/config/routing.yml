@@ -73,6 +73,11 @@ claro_log:
     prefix: log
     type: annotation
 
+claro_export_analytics:
+    resource: "@ClarolineCoreBundle/Controller/AnalyticsExportController.php"
+    prefix: analytics/export
+    type: annotation
+
 claro_log_admin:
     resource: "@ClarolineCoreBundle/Controller/Log/AdministrationController.php"
     prefix: admin
@@ -340,4 +345,8 @@ claro_registration_validate_user:
 claro_registration_validate_user_form:
     resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
     prefix: register
+    type: annotation
+    
+claro_mooc_analytics:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocAnalyticsController.php"
     type: annotation

@@ -104,9 +104,10 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->securityContext->getToken()->getUser();
         
-        if( $this->session->has('nextUrl') ) {
-            $uri = $this->session->get('nextUrl');
-            $this->session->remove('nextUrl');
+        if( $this->session->has('moocSession') ) {
+        	$moocSession = $this->session->get('moocSession');
+            $uri = $this->router->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
+            $this->session->remove('moocSession');
         } elseif ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
             $uri = $user->getLastUri();
         } else {
@@ -199,7 +200,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             !$this->isImpersonated() and 
             !in_array($event->getRequest()->attributes->get('_route'), $authorizedUrl)) {
 
-            $uri = $this->router->generate('claro_registration_validate_user_form', array('mail' => $user->getMail()));
+            $uri = $this->router->generate('claro_registration_send_mail', array('mail' => $user->getMail()));
             $response = new RedirectResponse($uri);
             $event->setResponse($response);
             $this->breakChain = true;

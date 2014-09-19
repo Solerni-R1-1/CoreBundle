@@ -1,9 +1,24 @@
 {# LIST OF TABS ON THE TOPNAVBAR #}
  <div class="slrn-content-container slrn-subnavbar-container navbar-fixed-top">
     <div class="container">
-       {# {% if _resource is defined %}
-            {% set workspace = _resource.getResourceNode().getWorkspace() %}
-        {% endif %} #}
+        {# Logo and title #}
+        <div class="slrn-header-title">
+            <div class="slrn-header-title__logo">
+                {% if workspace.getMooc.getOwner %}
+                    {% set owner = workspace.getMooc.getOwner %}
+                    {% if owner.getLogoWebPath() %}
+                        <a title="{{ 'see_all_owner_moocs'|trans({}, 'platform') }} {{ owner.getName() }}" href="{{ path('solerni_owner_catalogue', {'ownerId': owner.getId(), 'ownerName': owner.getName()|slugify()|raw }) }}">
+                            <img class="header-logo-img" src="{{ image(owner.getLogoWebPath()).scaleResize(null,84) }}"  alt="{{ owner.getName() }}">
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="slrn-header-title__name">
+                <h1 class="slrn-header-mooc-name">
+                    {{ workspace.getMooc.getTitle() }}
+                </h1>
+            </div>
+        </div>
         <ul class="slrn-subnavbar">
         {# THE ACTUAL TABS #}
           {% if solerniTabs is defined %}
@@ -18,11 +33,11 @@
         {% endif %}
         </ul>
         {# LINK TO PROFILE BADGES #}
-        <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" 
+        <a title="{{ 'page_my_badges'|trans({}, 'platform') }}"
            href="{{ path( 'claro_workspace_open_tool', { 
                             'workspaceId': workspace.getId(), 
                             'toolName': 'my_badges' } ) }}" 
-           class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges">{{ 'competence_badges' | trans({}, 'platform') }}
+           class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges{% if isMyBadgesPage %} active{% endif %}">{{ 'competence_badges' | trans({}, 'platform') }}
         </a>
     </div>
 </div>

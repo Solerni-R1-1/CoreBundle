@@ -23,6 +23,14 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\ForumBundle\Repository\MessageRepository;
+use Claroline\CoreBundle\Controller\Mooc\MoocService;
+use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Controller\Badge\Tool\BadgeController;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Icap\DropzoneBundle\Entity\Drop;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -39,20 +47,34 @@ class AnalyticsManager
     private $workspaceRepo;
     /** @var LogRepository */
     private $logRepository;
+    /** @var MessageRepository */
+    private $messageRepository;
+    /** @var MoocService */
+    private $moocService;
+    /** @var BadgeRepository */
+    private $badgeRepository;
+    /** @var BadgeManager */
+    private $badgeManager;
 
     /**
      * @DI\InjectParams({
-     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager")
+     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "moocService"   = @DI\Inject("orange.mooc.service"),
+     *     "badgeManager"  = @DI\Inject("claroline.manager.badge")
      * })
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(ObjectManager $objectManager, MoocService $moocService, BadgeManager $badgeManager)
     {
-        $this->om            = $objectManager;
-        $this->resourceRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->resourceTypeRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $this->userRepo      = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-        $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->om            	= $objectManager;
+        $this->moocService 		= $moocService;
+        $this->badgeManager		= $badgeManager;
+        $this->resourceRepo  	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $this->resourceTypeRepo	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->userRepo      	= $objectManager->getRepository('ClarolineCoreBundle:User');
+        $this->workspaceRepo 	= $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->logRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
+        $this->badgeRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Badge\Badge');
 
     }
 
@@ -234,15 +256,13 @@ class AnalyticsManager
         $workspaceIds = array($workspace->getId());
         $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
         $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
-        $hourlyAudience = $this->getHourlyAudience($workspace);
+        
         
         $defaultFrom = new \DateTime();
         $defaultFrom->sub(new \DateInterval("P10M"));
-        $subscriptionStats = $this->getSubscriptionsForPeriod($workspace, $defaultFrom, new \DateTime());
-
-        return array('chartData' => $chartData,
-        	'hourlyAudience' => $hourlyAudience,
-        	'subscriptionStats' => $subscriptionStats,
+        
+        return array(
+            'chartData' => $chartData,
             'resourceCount' => $resourcesByType,
             'workspace' => $workspace
         );
@@ -296,14 +316,6 @@ class AnalyticsManager
     	// Get information from database
     	$logs = $this->logRepository->findAllBetween($workspace, $from, $to, "workspace-role-subscribe_user");
     	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
-    	
-    	// Init arrays
-    	/*$nbDays = intval($from->diff($to, true)->format('%R%a'));    	
-    	for ($i = 0; $i < $nbDays; $i++) {
-    		$date = $from->add(new \DateInterval("P1D"));
-    		$subscriptions[0][$date->format("YYYYY-mm-dd")] = 0;
-    		$subscriptions[1][$date->format("YYYYY-mm-dd")] = 0;
-    	}*/
 
     	// Extract data
     	$index = -1;
@@ -317,9 +329,6 @@ class AnalyticsManager
     			$subscriptions[1][$index][0] = $log->getDateLog()->format("Y-m-d");
     			$subscriptions[1][$index][1] = 0;
     		}
-    		/*$nbSubscriptions++;
-    		$subscriptions[0][$log->getDateLog()->format("YYYYY-mm-dd")] = $nbSubscriptions;
-    		$subscriptions[1][$log->getDateLog()->format("YYYYY-mm-dd")]++;*/
     		$nbSubscriptions++;
     		$subscriptions[0][$index][1] = $nbSubscriptions;
     		$subscriptions[1][$index][1]++;
@@ -329,4 +338,133 @@ class AnalyticsManager
     	return $subscriptions;
     	
     } 
+    
+    /**
+     * Gives back the number of active members since N days and the total of members of this workspace.
+     * [active, total]
+     * 
+     * @param AbstractWorkspace $workspace
+     * @param number $nbDays
+     * @return number
+     */
+    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5) {
+    	$date = new \DateTime();
+    	$date->sub(new \DateInterval("P".$nbDays."D"));
+    	
+    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date)[0][1];
+    	$nbTotal =  $this->logRepository->countRegisteredUsers($workspace)[0][1];
+    	return [$nbActive , $nbTotal];
+    }
+    
+    /**
+     * 
+     * @param AbstractWorkspace $workspace
+     */
+    public function getForumActivity(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    	if ($workspace->isMooc()) {
+    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    		if ($session != null && $session->getForum() != null) { 
+		    	$forum = $session->getForum();
+		    	$messages = $this->messageRepository->findAllPublicationsBetween($forum, $from, $to);
+		    	
+		    	$contributions = array();
+		    	$contributions[0] = array();
+		    	$nbContributions = 0;
+		    	$nbDays = 0;
+		    	
+		    	
+		    	// Extract data
+		    	$index = -1;
+		    	$lastDate = null;
+		    	foreach ($messages as $i => $message) {
+		    		if ($lastDate != $message->getCreationDate()->format("Y-m-d")) {
+		    			$index ++;
+		    			$contributions[0][$index] = array();
+		    			$contributions[0][$index][0] = $message->getCreationDate()->format("Y-m-d");
+		    			$contributions[0][$index][1] = 0;
+		    			$nbDays++;
+		    		}
+		    		$nbContributions++;
+		    		$contributions[0][$index][1]++;
+		    		$lastDate = $message->getCreationDate()->format("Y-m-d");
+		    	}
+		    
+		    	$contributions[1] = $nbDays > 0 ? $nbContributions / $nbDays : 0;
+		    	
+		    	return $contributions;
+    		} else {
+    			return null;
+    		}
+    	} else {
+    		return null;
+    	}
+    }
+    
+    /**
+     * Gives back the success rates of the various knowledge/skill badges (associated with quizzes)
+     * @param AbstractWorkspace $workspace
+     * @return Array of badges success rates [[badge1success, badge1failure],[badge2success][badge2failure],...]
+     */
+    public function getBadgesSuccessRate(AbstractWorkspace $workspace) {
+    	$rates = array();
+    	
+    	if ($workspace->isMooc()) {
+    		$workspaceUsers = array();
+    		$mooc = $workspace->getMooc();
+    		$sessions = $mooc->getMoocSessions();
+    		
+    		// Get all distinct users for all sessions 
+    		foreach ($sessions as $session) {
+    			/* @var $session MoocSession */
+    			$users = $session->getUsers();
+    			foreach ($users as $user) {
+    				/* @var $user User */
+    				if (!in_array($user, $workspaceUsers, true)) {
+    					$workspaceUsers[] = $user;
+    				}
+    			}
+    		}
+    		
+    		foreach ($workspaceUsers as $user) {
+    			/* @var $user User */
+    			$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, true);
+    			foreach ($badges as $badge) {
+    				/* @var $badgeEntity Badge */
+    				$badgeEntity = $badge['badge'];
+    				$badgeName = $badgeEntity->getName();
+    				
+    				if (!array_key_exists($badgeName, $rates)) {
+    					//echo ("=> ".$badgeName." <br />");
+    					$rateBadge = array();
+    					$rateBadge['success'] = 0;
+    					$rateBadge['failure'] = 0;
+    					$rateBadge['inProgress'] = 0;
+    					$rateBadge['available'] = 0;
+    					$rateBadge['name'] = $badgeName;
+    					$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
+    					$rates[$badgeName] = $rateBadge;
+    				}/* else {
+    					//echo ("<= ".$badgeName." <br />");
+    					//$rateBadge = $rates[$badgeName];
+    				}*/
+    				
+    				if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
+    					$rates[$badgeName]['success']++;
+    				} else if ($badge['status'] == Badge::BADGE_STATUS_FAILED) {
+    					$rates[$badgeName]['failure']++;
+    				} else if ($badge['status'] == Badge::BADGE_STATUS_IN_PROGRESS) {
+    					$rates[$badgeName]['inProgress']++;
+    				} else if ($badge['status'] == Badge::BADGE_STATUS_AVAILABLE) {
+    					$rates[$badgeName]['available']++;
+    				}
+    				//echo ($rateBadge['name']." success = ".$rateBadge['success']."<br />");
+    			}
+    		}
+    		
+    		
+    	}
+    	
+    	return $rates;
+    }
+    
 }

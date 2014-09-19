@@ -294,6 +294,10 @@ abstract class AbstractWorkspace
         }
     }
 
+    /**
+     * 
+     * @return Mooc
+     */
     public function getMooc()
     {
         return $this->mooc;

@@ -81,6 +81,7 @@ add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
+add_sessions_confirm_message: 'Ainsi qu''ajouter les élément(s) sélectionné(s) aux session(s) : '
 add_subcategory: 'Ajouter une sous-catégorie'
 add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
@@ -255,6 +256,7 @@ editable: Modifiable
 email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
 email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
+mail_already_exists: 'Un utilisateur avec l''adresse mail %email% existe déjà (lignes : %lines%)'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
@@ -448,6 +450,7 @@ no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
+no_session_choice: 'Pas de session'
 none: Aucun
 not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
 not_blank_expected: 'Cette valeur ne peut pas être vide'
@@ -596,6 +599,7 @@ save: Sauvegarder
 save_as_template: 'Sauvegarder comme modèle'
 save_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 search: Rechercher
+search_maj: RECHERCHER
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
@@ -726,6 +730,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
+username_already_exists: 'Un utilisateur avec le nom d''utilisateur %username% existe déjà (lignes : %lines%)'
 username_or_email: 'Nom d''utilisateur ou email'
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
@@ -823,6 +828,7 @@ connect_with_mail: 'Je me connecte avec mon email'
 register_with_mail: 'Je m''inscris avec mon email'
 must_use_password: 'Vous devez saisir votre mot de passe'
 login_failure: 'Vos identifiants sont incorrects. Merci de réessayer'
+login_register_mooc: 'S''inscrire à <strong>%moocName%</strong>'
 btn_connect_message: 'Je me connecte'
 forgot_password: 'J''ai oublié mon mot de passe'
 user_form_mail: 'Adresse email'
@@ -913,6 +919,8 @@ claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
 claroline_corebundle_moocs : 'Moocs'
 claroline_corebundle_mooc_certificationType : 'Certification'
 claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
+claroline_corebundle_mooc_blog: Blog du Mooc
+choose_blog_mooc: -- Choisir un blog pour le mooc --
 
 
 workspace_edit: 'Paramètres du workspace'
@@ -1035,4 +1043,26 @@ constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
 
 
 fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
+see_all_owner_moocs: Voir tous les moocs
+mooc_analytics: Statistiques du MOOC
+mooc_analytics_home: Claroline
+mooc_analytics_details: Détails du MOOC
+mooc_analytics_badges_piechart: Badges (Piecharts)
+mooc_analytics_badges_chart: Badges (Charts)
+mooc_analytics_export: Exports
 
+mooc_analytics_export: Exportez les données du MOOC
+export_badge_knowledge: Badges de connaissances
+export_badge_skill: Badge de compétences
+export_subscriptions_stats: Statistiques d'inscription
+export_active_users: Utilisateurs les plus actifs
+export_forum_stats: Statistiques du forum
+
+mooc_subscriptions_follow_up: Suivi des inscriptions
+mooc_workspace_interactions: Ouvertures et interactions par heure
+mooc_forum_publication: Publication dans le forum
+mooc_users_activity: Répartition des utilisateurs par activité / inactivité
+mooc_badges_knowledge_piechart: Répartition des badges de connaissances par statut
+mooc_badges_skill_piechart: Répartition des badges de compétences par statut
+mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
+mooc_badges_skill_chart: Répartition cumulée des badges de compétences

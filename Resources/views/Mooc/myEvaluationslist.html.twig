@@ -16,12 +16,9 @@
     {% else %}
         {# for each badgePager render all badges #}
         {% for BadgeList in WorkspacesBadgeList %}
-            {% set badgePager = BadgeList.badgePager %}
             {% set workspace = BadgeList.workspace %}
-            {% set badgePage = BadgeList.badgePage %}
-            {% set nbTotalBadges = BadgeList.nbTotalBadges %}
-            {% set nbAcquiredBadges = BadgeList.nbAcquiredBadges %}
-            {% set mooc = BadgeList.workspace.getMooc() %}
+            {% set mooc = workspace.getMooc() %}
+            {% set badges = BadgeList.badges %}
             {# echo name and owner #}
             <div class="dsk__my_moocs_header">       
                 <h2 class="slrn-section-title">{{ mooc.getTitle() }}</h2>

@@ -1,0 +1,148 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+    'name': 'analytics'|trans({}, 'platform'),
+    'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h2 class="panel-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}
+    </div>
+    <div class="panel-body logs-container">
+        {% set chartHeight = 400 %}
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:moocAnalyticsFiles.html.twig'%}
+
+        <div class="slrn-statistic-wrapper">
+            <legend>{{ 'mooc_badges_knowledge_piechart'|trans({}, 'platform') }}</legend>
+            {% if badgesSuccessRates is defined %}
+                {% for badge in badgesSuccessRates %}
+                    {% if badge.type == 'knowledge' %}
+                        <div id="analytics-badge-{{ loop.index0 }}-piechart" class="panel panel-default slrn-analytics-pîechart">
+                            <div class="panel-heading">
+                                Badge : <i>{{ badge['name'] }}</i>
+                            </div>
+                            <div id="collapse-badge-{{ loop.index0 }}-piechart" class="panel-body">
+                                <div id="container-badge-{{ loop.index0 }}-piechart">
+                                    <div id="analytics-badge-{{ loop.index0 }}-pie-chart" class="pie-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="slrn-statistic-wrapper">
+            <legend>{{ 'mooc_badges_skill_piechart'|trans({}, 'platform') }}</legend>
+            {% if badgesSuccessRates is defined %}
+                {% for badge in badgesSuccessRates %}
+                    {% if badge.type == 'skill' %}
+                        <div id="analytics-badge-{{ loop.index0 }}-piechart" class="panel panel-default">
+                            <div class="panel-heading">
+                                Badge : {{ badge['name'] }}
+                            </div>
+                            <div id="collapse-badge-{{ loop.index0 }}-piechart" class="panel-body">
+                                <div id="container-badge-{{ loop.index0 }}-piechart">
+                                    <div id="analytics-badge-{{ loop.index0 }}-pie-chart" class="pie-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+<script type="text/javascript">
+   
+    {% if badgesSuccessRates is defined %}
+        {% for badge in badgesSuccessRates %}
+        var badge{{ loop.index0 }}Rates = [];
+        badge{{ loop.index0 }}Rates.push(["Success", {{ badge['success'] }}]);
+        badge{{ loop.index0 }}Rates.push(["Failure", {{ badge['failure'] }}]);
+        badge{{ loop.index0 }}Rates.push(["In Progress", {{ badge['inProgress'] }}]);
+        badge{{ loop.index0 }}Rates.push(["Available", {{ badge['available'] }}]);
+        {% endfor %}
+    {% endif %}
+        
+    var bg_color = "transparent";
+    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+    var numberRows = 7;
+    {% if numberRows is defined and numberRows is not empty %}
+        numberRows = {{ numberRows }};
+    {% endif %}
+    
+    $(document).ready(function() {
+  
+        {% if badgesSuccessRates is defined %}
+            {% for badge in badgesSuccessRates %}
+                if (badge{{ loop.index0 }}Rates.length>0) {
+                    var badge{{ loop.index0 }}ResourcesPlot = $.jqplot(
+                            'analytics-badge-{{ loop.index0 }}-pie-chart',
+                            [badge{{ loop.index0 }}Rates],
+                            {
+                                title: {show: false},
+                                grid: {
+                                    drawBorder: false,
+                                    shadow: false,
+                                    background: bg_color,
+                                    useNegativeColors: false
+                                },
+                                highlighter: {
+                                    show: false
+                                },
+                                cursor: {
+                                    show: false,
+                                    zoom: false,
+                                    showTooltip: false
+                                },
+                                seriesDefaults: {
+                                    showMarker:true,
+                                    renderer:$.jqplot.PieRenderer,
+                                    rendererOptions:{
+                                        showDataLabels: true,
+                                        dataLabelThreshold: 2,
+                                        dataLabels: 'percent',
+                                        sliceMargin:0.3,
+                                        dataLabelFormatString: '%.1f%%',
+                                        highlightMouseOver:false
+                                    },
+                                    shadow:true
+                                },
+                                legend:{
+                                    location: 's',
+                                    border:'none',
+                                    renderer: $.jqplot.CavasTextRenderer,
+                                    show:true,
+                                    showMarker:true,
+                                    rendererOptions:{
+                                        numberRows:numberRows
+                                    },
+                                    backgroundColor:bg_color,
+                                    placement:'outsideGrid'
+                                }
+                            }
+                    );
+                }
+                {% endfor %}
+            {% endif %}
+        
+    });
+</script>
+    </div>
+{% endblock %}

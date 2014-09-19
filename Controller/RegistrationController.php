@@ -88,12 +88,25 @@ class RegistrationController extends Controller
     public function userRegistrationFormAction()
     {
         $this->checkAccess();
+        
+    	$data = array();
+    	$session = $this->request->getSession();
         $user = new User();
         $localeManager = $this->get('claroline.common.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+        
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
 
-        return array('form' => $form->createView());
+
+        if ($session->has("moocSession")) {
+        	$moocSession = $session->get("moocSession");
+        	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+        	$data['moocSession'] = $moocSession;
+        }
+        
+        $data['form'] = $form->createView();
+        
+        return $data;
     }
 
 
@@ -113,12 +126,12 @@ class RegistrationController extends Controller
      */
     public function sendEmailValidationAction($mail = null, $hash = null){
 
-        if(empty($mail) || empty($hash)){
+        if( empty($mail) ){
             throw new AccessDeniedHttpException();
         }
-
-        if(md5($mail.$this->innerhash) !== $hash){
-            throw new AccessDeniedHttpException();
+        
+        if( ! $hash ) {
+            $hash = $this->getHash($mail);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -133,6 +146,11 @@ class RegistrationController extends Controller
 
         $key = $user->getKeyValidate();
         $mail = $user->getMail();
+        
+        // Redirect to dashboard if user is already validated
+        if ( $user->getIsValidate() ) {
+            return $this->redirect($this->generateUrl('claro_desktop_open'));     
+        }
 
         $log = $this->container->get('logger');
         $log->debug("Send mail with key {$key} to {$mail}");
@@ -254,10 +272,12 @@ class RegistrationController extends Controller
             //Send post-validation
             $this->userManager->sendEmailValidationConfirmee($userDb);
             
+            $session = $this->request->getSession();
             //Generate next url
-            if($this->request->getSession()->has('nextUrl')){
-                $nextUrl = $this->request->getSession()->get('nextUrl');
-                $this->request->getSession()->remove('nextUrl');
+            if($session->has('moocSession')){
+            	$moocSession = $session->has('moocSession'); 
+            	$nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
+                $session->remove('moocSession');
             } else {
                 $nextUrl = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'), true);
             }
@@ -295,6 +315,8 @@ class RegistrationController extends Controller
     public function registerUserAction()
     {
         $this->checkAccess();
+    	$session = $this->request->getSession();
+        $data = array();
         $user = new User();
 
         $localeManager = $this->get('claroline.common.locale_manager');
@@ -320,15 +342,20 @@ class RegistrationController extends Controller
                 PlatformRoles::USER
             );
 
-            return $this->redirect($this->generateUrl('claro_registration_send_mail', 
-                array(
-                    'mail' => $user->getMail(), 
-                    'hash' => $this->getHash($user->getMail())
-                )
-            ));
+            $data['mail'] = $user->getMail();
+            $data['hash'] = $this->getHash($user->getMail());
+            return $this->redirect($this->generateUrl('claro_registration_send_mail', $data));
+        } else {
+        	if ($session->has("moocSession")) {
+        		$moocSession = $session->get("moocSession");
+        		$moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+        		$data['moocSession'] = $moocSession;
+        	}
+        	
+        	$data['form'] = $form->createView();
+        	
+        	return $data;
         }
-
-        return array('form' => $form->createView());
     }
 
     private function getHash($mail){

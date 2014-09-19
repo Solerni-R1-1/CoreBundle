@@ -82,3 +82,17 @@ wed: Wed
 wednesday: Wednesday
 week: week
 workspace: Workspace
+
+#Short
+SU: S
+MO: M
+TU: T
+WE: W
+TH: T
+FR: F
+SA: S
+
+slrn_prev: '<'
+slrn_next: '>'
+
+
