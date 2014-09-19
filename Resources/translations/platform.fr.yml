@@ -1066,3 +1066,9 @@ mooc_badges_knowledge_piechart: Répartition des badges de connaissances par sta
 mooc_badges_skill_piechart: Répartition des badges de compétences par statut
 mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
 mooc_badges_skill_chart: Répartition cumulée des badges de compétences
+
+mooc_register_modal_title: '<b>Bienvenue</b>,'
+mooc_register_modal_mooc_name: 'Vous vous êtes inscrit au MOOC "%moocName%".'
+mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débutera le %moocDate% prochain.</strong>'
+mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
+mooc_register_modal_text2: 'A très bientôt.'
