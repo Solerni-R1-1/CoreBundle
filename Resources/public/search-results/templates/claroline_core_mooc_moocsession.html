@@ -20,8 +20,8 @@
                 {{document.mooc_owner_name}}
             </a>
         </span>
-        <div class="presentation__mooc__text__desc" ng-bind-html = "document.content | truncate:85">
-        </div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description | truncate:85" ng-if="!hasParameter('q')"></div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.content | truncate:85" ng-if="hasParameter('q')"></div>
         <div class="presentation__mooc__text__button">
             <a href="{{ document.mooc_view_url | path }}" class="btn btn-primary">
                 En savoir plus

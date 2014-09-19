@@ -235,10 +235,36 @@
     {% endif %}
  </div>
 </section>
+
+
+
+<div id="modal-registration-confirmation" class="modal fade" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<div class="modal-body">
+				<p>{{ "mooc_register_modal_title"|trans({}, "platform")|raw }}</p>
+				<p>{{ "mooc_register_modal_mooc_name"|trans({"%moocName%":mooc.getTitle()}, "platform")|raw }}</p>
+				<p>{{ "mooc_register_modal_mooc_date"|trans({"%moocDate%":session.getStartDate()|date('d/m')}, "platform")|raw }}</p>
+				<p>{{ "mooc_register_modal_text"|trans({}, "platform")|raw }}</p>
+				<p>{{ "mooc_register_modal_text2"|trans({}, "platform")|raw }}</p>
+			</div>
+			<div class="modal-footer">
+				<input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'ok'|trans({}, 'platform') }}"/>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {# <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/xxx.js') }}"></script> #}
+    {% if app.request.query.all['showmodal'] is defined and app.request.query.all['showmodal'] %}
+    <script type="text/javascript">
+    	$('#modal-registration-confirmation').modal();
+		window.history.replaceState("", "", window.location.pathname);
+    </script>
+    {% endif %}
 {% endblock %}
 

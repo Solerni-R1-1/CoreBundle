@@ -288,11 +288,10 @@ class MoocController extends Controller
             }
 
             /* redirect to lesson default page */
-            $route = $this->router->generate('mooc_view_session', array ( 
+            $route = $this->router->generate('mooc_view', array ( 
                 'moocId' => $moocSession->getMooc()->getId(), 
                 'moocName' => $moocSession->getMooc()->getAlias(),
-                'sessionId' => $moocSession->getId(), 
-                'word' => 'apprendre'
+            	'showmodal' => true
                 ) );
         }
 
