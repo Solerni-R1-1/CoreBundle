@@ -599,6 +599,7 @@ save: Sauvegarder
 save_as_template: 'Sauvegarder comme modèle'
 save_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 search: Rechercher
+search_maj: RECHERCHER
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'

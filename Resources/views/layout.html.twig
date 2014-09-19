@@ -223,6 +223,8 @@
             selector: '[data-toggle=tooltip]'
         });
     </script>
-    
-   
+    <!--[if IE 9 ]>
+        <script src="{{ asset('bundles/clarolinecore/js/jquery.placeholder.js') }}"></script>
+        <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
+    <![endif]-->
 {% endblock %}
