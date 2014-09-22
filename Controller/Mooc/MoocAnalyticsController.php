@@ -86,13 +86,19 @@ class MoocAnalyticsController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function analyticsMoocDetailsAction( $workspace, $user ) {
+    	$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        $from = $currentSession->getStartDate();
+        $to = $currentSession->getEndDate();
+        $now = new \DateTime();
+        if ($now < $to) {
+        	$to = $now;
+        }
         
-        $defaultFrom = new \DateTime();
-        $defaultFrom->sub(new \DateInterval("P10M"));
+    	
         
         $hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace);
-        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $defaultFrom, new \DateTime());
-        $forumContributions = $this->analyticsManager->getForumActivity($workspace, $defaultFrom, new \DateTime());
+        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to);
+        $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to);
         $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace);
         
         return $this->render(
