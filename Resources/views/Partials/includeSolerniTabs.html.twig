@@ -33,11 +33,12 @@
         {% endif %}
         </ul>
         {# LINK TO PROFILE BADGES #}
-        <a title="{{ 'page_my_badges'|trans({}, 'platform') }}"
-           href="{{ path( 'claro_workspace_open_tool', { 
+        <a  title="{{ 'page_my_badges'|trans({}, 'platform') }}"
+            href="{{ path( 'claro_workspace_open_tool', { 
                             'workspaceId': workspace.getId(), 
                             'toolName': 'my_badges' } ) }}" 
-           class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges{% if isMyBadgesPage %} active{% endif %}">{{ 'competence_badges' | trans({}, 'platform') }}
+            class="slrn-subnavbar__subblock slrn-subnavbar__subblock--badges{% if isMyBadgesPage %} active{% endif %}">
+                <span class="slrn-inner-text">{{ 'competence_badges' | trans({}, 'platform') }}</span>
         </a>
     </div>
 </div>
