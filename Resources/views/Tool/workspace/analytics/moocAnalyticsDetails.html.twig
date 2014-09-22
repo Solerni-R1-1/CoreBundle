@@ -50,6 +50,27 @@
             <div class="count_by_day_chart_legend">
                 <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
             </div>
+            {% if forumPublishers and forumPublishers is not empty %}
+            <table border="1">
+	           	<tr>
+	            	<th>{{ 'mooc_analytics_publisher_name'|trans({}, 'platform')}}</th>
+	            	<th>{{ 'mooc_analytics_publisher_firstname'|trans({}, 'platform')}}</th>
+	            	<th>{{ 'mooc_analytics_publisher_username'|trans({}, 'platform')}}</th>
+	            	<th>{{ 'mooc_analytics_publisher_mail'|trans({}, 'platform')}}</th>
+	            	<th>{{ 'mooc_analytics_publisher_nb_pub'|trans({}, 'platform')}}</th>
+	            </tr>
+	            {% for i in 0..min(9, forumPublishers|length - 1) %}
+	            	{% set forumPublisher = forumPublishers[i] %}
+	           	<tr>
+	            	<td>{{ forumPublisher['lastname'] }}</td>
+	            	<td>{{ forumPublisher['firstname'] }}</td>
+	            	<td>{{ forumPublisher['username'] }}</td>
+	            	<td>{{ forumPublisher['mail'] }}</td>
+	            	<td>{{ forumPublisher['nbPublications'] }}</td>
+	            </tr>
+	            {% endfor %}
+	        {% endif %}
+	        </table>
         </div>
         
         <div class="slrn-statistic-wrapper">

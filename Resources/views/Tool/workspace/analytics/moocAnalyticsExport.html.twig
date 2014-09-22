@@ -41,13 +41,13 @@
         <a class="btn btn-gris" href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_badge_skill'|trans({}, 'platform') }}
         </a>
-        <a class="btn btn-gris" href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">
+        <a class="btn btn-gris" href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_subscriptions_stats'|trans({}, 'platform') }}
         </a>
         <a class="btn btn-gris" href="{{ path('solerni_export_active_users_stats', {'workspace':workspace.getId(), 'nbDays':5}) }}">
             {{ 'export_active_users'|trans({}, 'platform') }}
         </a>
-        <a class="btn btn-gris" href="{{ path('solerni_export_forum_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">
+        <a class="btn btn-gris" href="{{ path('solerni_export_forum_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_forum_stats'|trans({}, 'platform') }}
         </a>
     </div>

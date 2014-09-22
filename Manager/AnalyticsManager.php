@@ -543,4 +543,44 @@ class AnalyticsManager
     	return $rates;
     }
     
+    public function getForumStats(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    	$result = array();
+    	$userRows = array();
+    	if ($workspace->isMooc()) {
+    		$workspaceUsers = array();
+    		$mooc = $workspace->getMooc();
+    			
+    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    		if ($session != null && $session->getForum() != null) {
+    			$users = $session->getUsers();
+    			
+    			// Extract data
+    			foreach ($users as $user) {
+    				// Get information from database
+    				$nbPublications = $this->messageRepository->countMessagesForUser($session->getForum(), $user, $from, $to);
+    	
+    				$userRow = array();
+    				$userRow["lastname"] = $user->getLastName();
+    				$userRow["firstname"] = $user->getFirstName();
+    				$userRow["username"] = $user->getUsername();
+    				$userRow["mail"] = $user->getMail();
+    				$userRow["nbPublications"] = $nbPublications;
+    	
+    				if (!isset($userRows[$nbPublications])) {
+    					$userRows[$nbPublications] = array();
+    				}
+    				$userRows[$nbPublications][] = $userRow;
+    			}
+    		}
+    	}
+    	krsort($userRows);
+    	foreach ($userRows as $nbPublication => $userRowSet) {
+    		foreach($userRowSet as $userRow) {
+    			$result[] = $userRow;
+    		}
+    	}
+    	
+    	return $result;
+    }
+    
 }

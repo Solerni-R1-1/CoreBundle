@@ -25,6 +25,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\ForumBundle\Repository\MessageRepository;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
+use Claroline\CoreBundle\Manager\AnalyticsManager;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 
 /**
@@ -47,22 +49,35 @@ class AnalyticsExportController extends Controller {
 	
 	/** @var MoocService */
 	private $moocService;
+	
+	/** @var AnalyticsManager */
+	private $analyticsManager;
+	
+	/** @var Translator */
+	private $translator;
 
 	/**
 	 * @DI\InjectParams({
 	 *     "badgeManager"            = @DI\Inject("claroline.manager.badge"),
 	 *     "moocService"			 = @DI\Inject("orange.mooc.service"),
-	 *     "container"				 = @DI\Inject("service_container")
+	 *     "container"				 = @DI\Inject("service_container"),
+	 *     "analyticsManager"		 = @DI\Inject("claroline.manager.analytics_manager")
 	 *     })
 	 */
-	public function _construct(BadgeManager $badgeManager, $container, MoocService $moocService) {
+	public function _construct(
+			$container,
+			BadgeManager $badgeManager,
+			MoocService $moocService, 
+			AnalyticsManager $analyticsManager) {
 		$this->setContainer($container);
 		
 		$this->badgeManager = $badgeManager;
 		$this->moocService = $moocService;
+		$this->analyticsManager = $analyticsManager;
 		
 		$this->logRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
 		$this->messageRepository = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
+		$this->translator = $this->get('translator');
 		
 	}
 	/**
@@ -272,14 +287,12 @@ class AnalyticsExportController extends Controller {
 				$rowsCSV[] = $rowCSV;
 				 
 			}
-	
+
+			$headerCSV[$indexBadges] = "Mean on all badges";
+			$headerCSV[$indexBadges + 1] = "Number of owned badges";
 
 			array_unshift($rowsCSV, $headerCSV);
 			$content = $this->createCSVFromArray($rowsCSV);
-			 
-			rewind($handle);
-			$content = stream_get_contents($handle);
-			fclose($handle);
 	
 			return new Response($content, 200, array(
 					'Content-Type' => 'application/force-download',
@@ -292,7 +305,7 @@ class AnalyticsExportController extends Controller {
 	
 	/**
 	 * @EXT\Route(
-	 *     "{workspace}/subscriptions/{from}/{to}",
+	 *     "{workspace}/subscriptions",
 	 *     name="solerni_export_subscriptions_stats"
 	 * )
 	 *
@@ -300,7 +313,16 @@ class AnalyticsExportController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function exportSubscriptionsStatsAction(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+	public function exportSubscriptionsStatsAction(AbstractWorkspace $workspace) {
+		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+		$from = $currentSession->getStartDate();
+		$to = $currentSession->getEndDate();
+		
+		$now = new \DateTime();
+		if ($now < $to) {
+			$to = $now;
+		}
+		
 		$rowsCSV = array();
 		
 		$headerCSV = array();
@@ -315,19 +337,26 @@ class AnalyticsExportController extends Controller {
 		
 		// Get information from database
 		$logs = $this->logRepository->findAllBetween($workspace, $from, $to, "workspace-role-subscribe_user");
+		$users = array();
 		
 		// Extract data
 		foreach ($logs as $i => $log) {
-			/* @var $log Log */ 
-			$rowCSV = array();
-			$rowCSV[0] = $log->getDoer()->getLastName();
-			$rowCSV[1] = $log->getDoer()->getFirstName();
-			$rowCSV[2] = $log->getDoer()->getUsername();
-			$rowCSV[3] = $log->getDoer()->getMail();
-			$rowCSV[4] = $log->getDateLog()->format("d/m/Y");
-			$rowCSV[5] = $log->getDateLog()->format("H:i:s");
+			/* @var $log Log */
+			$user = $log->getReceiver();
 			
-			$rowsCSV[] = $rowCSV;
+			if (!in_array($user->getId(), $users)) { 
+				$rowCSV = array();
+				$rowCSV[0] = $user->getLastName();
+				$rowCSV[1] = $user->getFirstName();
+				$rowCSV[2] = $user->getUsername();
+				$rowCSV[3] = $user->getMail();
+				$rowCSV[4] = $log->getDateLog()->format("d/m/Y");
+				$rowCSV[5] = $log->getDateLog()->format("H:i:s");
+				
+				$rowsCSV[] = $rowCSV;
+				
+				$users[] = $user->getId();
+			}
 		}
 
 		$content = $this->createCSVFromArray($rowsCSV);
@@ -384,14 +413,22 @@ class AnalyticsExportController extends Controller {
 				$lastConnectionLog = $this->logRepository->getLastConnection($workspace, $user);
 				$lastSubscriptionLog = $this->logRepository->getLastSubscription($workspace, $user);
 	
+			
 				$rowCSV = array();
 				$rowCSV[0] = $user->getLastName();
 				$rowCSV[1] = $user->getFirstName();
 				$rowCSV[2] = $user->getUsername();
 				$rowCSV[3] = $user->getMail();
-				$rowCSV[4] = $lastSubscriptionLog->getDateLog()->format("d/m/Y");
-				$rowCSV[5] = $lastConnectionLog->getDateLog()->format("d/m/Y");
-	
+				if ($lastSubscriptionLog != null) {
+					$rowCSV[4] = $lastSubscriptionLog->getDateLog()->format("d/m/Y");
+				} else {
+					$rowCSV[4] = "N/A";
+				}
+				if ($lastConnectionLog != null) {
+					$rowCSV[5] = $lastConnectionLog->getDateLog()->format("d/m/Y");
+				} else {
+					$rowCSV[5] = "N/A";
+				}
 				$rowsCSV[] = $rowCSV;
 			}
 	
@@ -410,7 +447,7 @@ class AnalyticsExportController extends Controller {
 
 	/**
 	 * @EXT\Route(
-	 *     "{workspace}/forum/publications/{from}/{to}",
+	 *     "{workspace}/forum/publications",
 	 *     name="solerni_export_forum_stats"
 	 * )
 	 *
@@ -418,55 +455,37 @@ class AnalyticsExportController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function exportForumStatsAction(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
-		if ($workspace->isMooc()) {
-			$badgesIndex = array();
-			$workspaceUsers = array();
-			$mooc = $workspace->getMooc();
-			
-			$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			if ($session != null && $session->getForum() != null) {
-				$users = $session->getUsers();
-				
-				$rowsCSV = array();
+	public function exportForumStatsAction(AbstractWorkspace $workspace) {
+		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+		$from = $currentSession->getStartDate();
+		$to = $currentSession->getEndDate();
 		
-				$headerCSV = array();
-		
-				$headerCSV[0] = "Firstname";
-				$headerCSV[1] = "Lastname";
-				$headerCSV[2] = "Username";
-				$headerCSV[3] = "Mail";
-				$headerCSV[4] = "Number of forum publications";
-				
-				$rowsCSV[] = $headerCSV;
-		
-				// Extract data
-				foreach ($users as $user) {
-					// Get information from database
-					$nbPublications = $this->messageRepository->countMessagesForUser($session->getForum(), $user, $from, $to);
-		
-					$rowCSV = array();
-					$rowCSV[0] = $user->getLastName();
-					$rowCSV[1] = $user->getFirstName();
-					$rowCSV[2] = $user->getUsername();
-					$rowCSV[3] = $user->getMail();
-					$rowCSV[4] = $nbPublications;
-		
-					$rowsCSV[] = $rowCSV;
-				}
-	
-				$content = $this->createCSVFromArray($rowsCSV);
-		
-				return new Response($content, 200, array(
-						'Content-Type' => 'application/force-download',
-						'Content-Disposition' => 'attachment; filename="export.csv"'
-				));
-			} else {
-				throw $this->createNotFoundException('Ce workspace ne contient pas de forum');
-			}
-		} else {
-			throw $this->createNotFoundException('Ce workspace ne contient pas de mooc');
+		$now = new \DateTime();
+		if ($now < $to) {
+			$to = $now;
 		}
+		
+		$headerCSV = array();
+		$header = array();
+		
+		$header[0] = $this->translator->trans('mooc_analytics_publisher_name', array(), 'platform');
+		$header[1] = $this->translator->trans('mooc_analytics_publisher_firstname', array(), 'platform');
+		$header[2] = $this->translator->trans('mooc_analytics_publisher_username', array(), 'platform');
+		$header[3] = $this->translator->trans('mooc_analytics_publisher_mail', array(), 'platform');
+		$header[4] = $this->translator->trans('mooc_analytics_publisher_nb_pub', array(), 'platform');
+		
+		$headerCSV[] = $header;
+		 
+
+		$data = $this->analyticsManager->getForumStats($workspace, $from, $to);
+		
+		$rowsCSV = array_merge($headerCSV, $data);
+		$content = $this->createCSVFromArray($rowsCSV);
+		
+		return new Response($content, 200, array(
+				'Content-Type' => 'application/force-download',
+				'Content-Disposition' => 'attachment; filename="export.csv"'
+		));
 	}
 	
 	private function createCSVFromArray(array $data) {

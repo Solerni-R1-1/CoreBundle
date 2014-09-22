@@ -1050,6 +1050,11 @@ mooc_analytics_details: Détails du MOOC
 mooc_analytics_badges_piechart: Badges (Piecharts)
 mooc_analytics_badges_chart: Badges (Charts)
 mooc_analytics_export: Exports
+mooc_analytics_publisher_name: Nom
+mooc_analytics_publisher_firstname: Prénom
+mooc_analytics_publisher_username: Pseudo
+mooc_analytics_publisher_mail: Adresse e-mail
+mooc_analytics_publisher_nb_pub: Nombre de publications
 
 mooc_analytics_export: Exportez les données du MOOC
 export_badge_knowledge: Badges de connaissances

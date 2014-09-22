@@ -94,12 +94,11 @@ class MoocAnalyticsController extends Controller
         	$to = $now;
         }
         
-    	
-        
-        $hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace);
+    	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace);
         $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to);
         $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace);
+        $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to);
         
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsDetails.html.twig',
@@ -107,6 +106,7 @@ class MoocAnalyticsController extends Controller
                 'hourlyAudience'        => $hourlyAudience,
                 'subscriptionStats'     => $subscriptionStats,
                 'forumContributions'    => $forumContributions,
+            	'forumPublishers'		=> $forumPublishers,
                 'activeUsers'           => $activeUsers,
                 'workspace'             => $workspace
             )
