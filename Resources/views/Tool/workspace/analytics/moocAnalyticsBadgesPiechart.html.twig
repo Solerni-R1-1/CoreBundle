@@ -75,7 +75,7 @@
         var badge{{ loop.index0 }}Rates = [];
         badge{{ loop.index0 }}Rates.push(["Success", {{ badge['success'] }}]);
         badge{{ loop.index0 }}Rates.push(["Failure", {{ badge['failure'] }}]);
-        badge{{ loop.index0 }}Rates.push(["In Progress", {{ badge['inProgress'] }}]);
+        badge{{ loop.index0 }}Rates.push(["Abandon", {{ badge['inProgress'] }}]);
         badge{{ loop.index0 }}Rates.push(["Available", {{ badge['available'] }}]);
         {% endfor %}
     {% endif %}

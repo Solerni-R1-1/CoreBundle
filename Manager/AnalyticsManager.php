@@ -486,22 +486,11 @@ class AnalyticsManager
     	
     	if ($workspace->isMooc()) {
     		$workspaceUsers = array();
-    		$mooc = $workspace->getMooc();
-    		$sessions = $mooc->getMoocSessions();
+    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     		
-    		// Get all distinct users for all sessions 
-    		foreach ($sessions as $session) {
-    			/* @var $session MoocSession */
-    			$users = $session->getUsers();
-    			foreach ($users as $user) {
-    				/* @var $user User */
-    				if (!in_array($user, $workspaceUsers, true)) {
-    					$workspaceUsers[] = $user;
-    				}
-    			}
-    		}
+    		$users = $session->getUsers();
     		
-    		foreach ($workspaceUsers as $user) {
+    		foreach ($users as $user) {
     			/* @var $user User */
     			$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, true);
     			foreach ($badges as $badge) {
@@ -510,7 +499,6 @@ class AnalyticsManager
     				$badgeName = $badgeEntity->getName();
     				
     				if (!array_key_exists($badgeName, $rates)) {
-    					//echo ("=> ".$badgeName." <br />");
     					$rateBadge = array();
     					$rateBadge['success'] = 0;
     					$rateBadge['failure'] = 0;
@@ -519,10 +507,7 @@ class AnalyticsManager
     					$rateBadge['name'] = $badgeName;
     					$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
     					$rates[$badgeName] = $rateBadge;
-    				}/* else {
-    					//echo ("<= ".$badgeName." <br />");
-    					//$rateBadge = $rates[$badgeName];
-    				}*/
+    				}
     				
     				if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
     					$rates[$badgeName]['success']++;
@@ -531,9 +516,8 @@ class AnalyticsManager
     				} else if ($badge['status'] == Badge::BADGE_STATUS_IN_PROGRESS) {
     					$rates[$badgeName]['inProgress']++;
     				} else if ($badge['status'] == Badge::BADGE_STATUS_AVAILABLE) {
-    					$rates[$badgeName]['available']++;
+    					$rates[$badgeName]['available']	++;
     				}
-    				//echo ($rateBadge['name']." success = ".$rateBadge['success']."<br />");
     			}
     		}
     		

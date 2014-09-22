@@ -82,34 +82,20 @@ class AnalyticsExportController extends Controller {
 	}
 	/**
 	 * @EXT\Route(
-	 *     "{workspace}/badges/knowledge",
-	 *     name="solerni_export_badges_knowledge_stats"
+	 *     "{workspace}/badges/skill",
+	 *     name="solerni_export_badges_skill_stats"
 	 * )
 	 *
 	 * @param AbstractWorkspace $workspace
 	 *
 	 * @return Response
 	 */
-	public function exportKnowledgeBadgesStatsAction(AbstractWorkspace $workspace) {
+	public function exportSkillBadgesStatsAction(AbstractWorkspace $workspace) {
 		if ($workspace->isMooc()) {
 			$badgesIndex = array();
-			$workspaceUsers = array();
-			$mooc = $workspace->getMooc();
-			$sessions = $mooc->getMoocSessions();
-			 
-			// Get all distinct users for all sessions
-			foreach ($sessions as $session) {
-				/* @var $session MoocSession */
-				$users = $session->getUsers();
-				foreach ($users as $user) {
-					/* @var $user User */
-					if (!in_array($user, $workspaceUsers, true)) {
-						$workspaceUsers[] = $user;
-					}
-				}
-			}
-	
-	
+			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+			$workspaceUsers = $currentSession->getUsers();
+
 			$headerCSV = array();
 			$headerCSV[0] = "LastName";
 			$headerCSV[1] = "FirstName";
@@ -117,13 +103,31 @@ class AnalyticsExportController extends Controller {
 			$headerCSV[3] = "Mail";
 			$indexBadges = 4;
 			$rowsCSV = array();
-	
+			
+			$usersBadges = array();
+
+			// Get all badges for all users and sort them
 			foreach ($workspaceUsers as $user) {
-				/* @var $user User */
+				$usersBadges[$user->getId()] = array();
+				$usersBadges[$user->getId()]['user'] = $user;
+				$userBadges = array();
 				$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, false);
+				foreach($badges as $badge) {
+					$userBadges[$badge['badge']->getId()] = $badge;
+				}
+				ksort($userBadges);
+				$usersBadges[$user->getId()]['badges'] = $userBadges;
+			}
 	
+			
+			
+			// For all user associated to his badges
+			foreach ($usersBadges as $userBadges) {
+				/* @var $user User */
+				$user = $userBadges['user'];
+				$badges = $userBadges['badges'];
+				$nbBadges = count($badges);
 				$rowCSV = array();
-	
 				$rowCSV[0] = $user->getLastName();
 				$rowCSV[1] = $user->getFirstName();
 				$rowCSV[2] = $user->getUsername();
@@ -133,51 +137,34 @@ class AnalyticsExportController extends Controller {
 				$totalNotes = 0;
 				$nbNotes = 0;
 	
+				$indexBadge = 4;
 				foreach ($badges as $badge) {
 					/* @var $badgeEntity Badge */
 					$badgeEntity = $badge['badge'];
 					$badgeName = $badgeEntity->getName();
-					if (!array_key_exists($badgeName, $badgesIndex)) {
-						$index = $indexBadges;
-						$badgesIndex[$badgeName] = $index;
-						$headerCSV[$index] = $badgeName;
-						$indexBadges++;
-					} else {
-						$index = $badgesIndex[$badgeName];
-					}
 						
 					/* @var $drop Drop */
 					$drop = $badge['resource']['resource']['drop'];
 	
-					if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
-						$nbOwnedBadges++;
-					}
-	
 					if ($badge['resource']['status'] == Badge::RES_STATUS_SUCCEED
 							|| $badge['resource']['status'] == Badge::RES_STATUS_FAILED) {
-								$rowCSV[$index] = $drop->getCalculatedGrade();
-							} else {
-								$rowCSV[$index] = 0;
-							}
-							$totalNotes += $rowCSV[$index];
-							$nbNotes++;
-				}
-				 
-				if ($nbNotes > 0) {
-					$rowCSV[$indexBadges] = $totalNotes / $nbNotes;
-				} else {
-					$rowCSV[$indexBadges] = 0;
-				}
-				 
-				$rowCSV[$indexBadges + 1] = $nbOwnedBadges;
-				 
+						$rowCSV[$indexBadge] = $drop->getCalculatedGrade();
+					} else {
+						$rowCSV[$indexBadge] = "";
+					}
+					
+
+					if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
+						$rowCSV[$nbBadges + $indexBadge] = "oui";
+					} else {
+						$rowCSV[$nbBadges + $indexBadge] = "non";
+					}
+					$indexBadge++;
+				}				 
+				ksort($rowCSV);
 				$rowsCSV[] = $rowCSV;
 				 
 			}
-	
-	
-			$headerCSV[$indexBadges] = "Mean on all badges";
-			$headerCSV[$indexBadges + 1] = "Number of owned badges";
 
 			array_unshift($rowsCSV, $headerCSV);
 			
@@ -194,32 +181,20 @@ class AnalyticsExportController extends Controller {
 	
 	/**
 	 * @EXT\Route(
-	 *     "{workspace}/badges/skill",
-	 *     name="solerni_export_badges_skill_stats"
+	 *     "{workspace}/badges/knowledge",
+	 *     name="solerni_export_badges_knowledge_stats"
 	 * )
 	 *
 	 * @param AbstractWorkspace $workspace
 	 *
 	 * @return Response
 	 */
-	public function exportSkillBadgesStatsAction(AbstractWorkspace $workspace) {
+	public function exportKnowledgeBadgesStatsAction(AbstractWorkspace $workspace) {
 		if ($workspace->isMooc()) {
-			$badgesIndex = array();
-			$workspaceUsers = array();
-			$mooc = $workspace->getMooc();
-			$sessions = $mooc->getMoocSessions();
-			 
-			// Get all distinct users for all sessions
-			foreach ($sessions as $session) {
-				/* @var $session MoocSession */
-				$users = $session->getUsers();
-				foreach ($users as $user) {
-					/* @var $user User */
-					if (!in_array($user, $workspaceUsers, true)) {
-						$workspaceUsers[] = $user;
-					}
-				}
-			}
+			$exerciseRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
+			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+			$workspaceUsers = $currentSession->getUsers();
+				
 	
 	
 			$headerCSV = array();
@@ -227,14 +202,48 @@ class AnalyticsExportController extends Controller {
 			$headerCSV[1] = "FirstName";
 			$headerCSV[2] = "Username";
 			$headerCSV[3] = "Mail";
-			$indexBadges = 4;
 			$rowsCSV = array();
-	
+			$badgeMaxTries = array();
+			$usersBadges = array();
 			foreach ($workspaceUsers as $user) {
-				/* @var $user User */
 				$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, false, true);
-				$exerciseRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
-	
+				$usersBadges[$user->getId()] = array();
+				$usersBadges[$user->getId()]['user'] = $user;
+				$userBadges = array();
+				foreach($badges as $badge) {
+					$badgeId = $badge['badge']->getId();
+					$nbMarks = sizeof($badge['resource']['resource']['marks']);
+					if (!isset($badgeMaxTries[$badgeId]) || $badgeMaxTries[$badgeId] < $nbMarks) {
+						$badgeMaxTries[$badgeId] = $nbMarks;
+					}
+					$userBadges[$badgeId] = $badge;
+				}
+				ksort($userBadges);
+				$usersBadges[$user->getId()]['badges'] = $userBadges;
+			}
+			
+			$totalTries = array_sum($badgeMaxTries);
+			
+			foreach($usersBadges as $userBadges) {
+				$indexBadge = 4;
+				foreach($userBadges['badges'] as $userBadge) {
+					$index = 1;
+					for($i = 0; $i < $badgeMaxTries[$userBadge['badge']->getId()]; $i++) {
+						$headerCSV[] = $userBadge['badge']->getName()." - Essai ".$index;
+						$index++;
+					}
+					$headerCSV[$indexBadge + $totalTries] = $userBadge['badge']->getName()." obtenu ?";
+					$indexBadge++;
+				}
+				break;
+			}
+			
+			
+			
+			foreach ($usersBadges as $userBadges) {
+				/* @var $user User */
+				$user = $userBadges['user'];
+				$badges = $userBadges['badges'];
 				$rowCSV = array();
 	
 				$rowCSV[0] = $user->getLastName();
@@ -245,19 +254,12 @@ class AnalyticsExportController extends Controller {
 				$nbOwnedBadges = 0;
 				$totalNotes = 0;
 				$nbNotes = 0;
-	
+				$index = 4;
+				$indexBadge = 4;
 				foreach ($badges as $badge) {
 					/* @var $badgeEntity Badge */
 					$badgeEntity = $badge['badge'];
 					$badgeName = $badgeEntity->getName();
-					if (!array_key_exists($badgeName, $badgesIndex)) {
-						$index = $indexBadges;
-						$badgesIndex[$badgeName] = $index;
-						$headerCSV[$index] = $badgeName;
-						$indexBadges++;
-					} else {
-						$index = $badgesIndex[$badgeName];
-					}
 						
 					/* @var $exercise Exercise */
 					$exercise = $badge['resource']['resource']['exercise'];
@@ -265,31 +267,27 @@ class AnalyticsExportController extends Controller {
 					if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
 						$nbOwnedBadges++;
 					}
-	
-					if ($badge['resource']['status'] == Badge::RES_STATUS_SUCCEED
-							|| $badge['resource']['status'] == Badge::RES_STATUS_FAILED) {
-								$rowCSV[$index] = $badge['resource']['resource']['bestMark'];
-							} else {
-								$rowCSV[$index] = 0.00;
-							}
-							$totalNotes += $rowCSV[$index];
-							$nbNotes++;
-				}
-				 
-				if ($nbNotes > 0) {
-					$rowCSV[$indexBadges] = $totalNotes / $nbNotes;
-				} else {
-					$rowCSV[$indexBadges] = 0.00;
-				}
-				 
-				$rowCSV[$indexBadges + 1] = $nbOwnedBadges;
-				 
-				$rowsCSV[] = $rowCSV;
-				 
-			}
 
-			$headerCSV[$indexBadges] = "Mean on all badges";
-			$headerCSV[$indexBadges + 1] = "Number of owned badges";
+					$nbMaxTries = $badgeMaxTries[$badgeEntity->getId()];
+					$marks = $badge['resource']['resource']['marks'];
+					for ($i = 0; $i < $nbMaxTries; $i++) {
+						$rowCSV[$index] = isset($marks[$i]) ? $marks[$i] : "";
+						$index++;  
+					}
+					
+					if ($badge['resource']['status'] == Badge::RES_STATUS_SUCCEED) {
+						$rowCSV[$totalTries + $indexBadge] = "oui";
+					} else if ($badge['resource']['status'] == Badge::RES_STATUS_FAILED) {
+						$rowCSV[$totalTries + $indexBadge] = "non";
+					} else {
+						$rowCSV[$totalTries + $indexBadge] = "non";
+					}
+					
+					$indexBadge++;
+				}
+				ksort($rowCSV);
+				$rowsCSV[] = $rowCSV;
+			}
 
 			array_unshift($rowsCSV, $headerCSV);
 			$content = $this->createCSVFromArray($rowsCSV);
