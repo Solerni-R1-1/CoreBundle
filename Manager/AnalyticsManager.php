@@ -257,10 +257,6 @@ class AnalyticsManager
         $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
         $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
         
-        
-        $defaultFrom = new \DateTime();
-        $defaultFrom->sub(new \DateInterval("P10M"));
-        
         return array(
             'chartData' => $chartData,
             'resourceCount' => $resourcesByType,
@@ -319,20 +315,65 @@ class AnalyticsManager
 
     	// Extract data
     	$index = -1;
-    	$lastDate = null;
+    	// First last date is the beginning date
+    	$lastDate = $from->format("Y-m-d");
+    	// For each log
     	foreach ($logs as $i => $log) {
-    		if ($lastDate != $log->getDateLog()->format("Y-m-d")) {
+    		$currDate = $log->getDateLog()->format("Y-m-d");
+    		// If we changed date
+    		if ($lastDate != $currDate) {
+    			// We need to put, in the array, the dates which have no logs. Starts here.
+    			$lastDateTime = new \DateTime($lastDate);
+    			$currentDateTime = new \DateTime($currDate);
+	    		// Calculate the number of days between the last and the current log date
+	    		$interval = $currentDateTime->diff($lastDateTime, true);
+	    		$nbDays = $interval->format('%a');
+	    		// For each days between the two, we complete the date which have no logs with default values
+	    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions) 
+	    		for ($j = 0; $j < $nbDays - 1; $j++) {
+	    			$index++;
+	    			$lastDateTime = $lastDateTime->add(new \DateInterval("P1D"));
+	    			$subscriptions[0][$index] = array();
+	    			$subscriptions[0][$index][0] = $lastDateTime->format("Y-m-d");
+	    			$subscriptions[0][$index][1] = $nbSubscriptions;
+	    			$subscriptions[1][$index] = array();
+	    			$subscriptions[1][$index][0] = $lastDateTime->format("Y-m-d");
+	    			$subscriptions[1][$index][1] = 0;
+	    		}
+	    		// End here.
+    			// For the log date, we initialize a new array in our array
     			$index ++;
     			$subscriptions[0][$index] = array();
-    			$subscriptions[0][$index][0] = $log->getDateLog()->format("Y-m-d");
+    			$subscriptions[0][$index][0] = $currDate;
     			$subscriptions[1][$index] = array();
-    			$subscriptions[1][$index][0] = $log->getDateLog()->format("Y-m-d");
+    			$subscriptions[1][$index][0] = $currDate;
     			$subscriptions[1][$index][1] = 0;
     		}
     		$nbSubscriptions++;
     		$subscriptions[0][$index][1] = $nbSubscriptions;
     		$subscriptions[1][$index][1]++;
-    		$lastDate = $log->getDateLog()->format("Y-m-d");
+    		$lastDate = $currDate;
+    	}
+    	$currDate = $to->format("Y-m-d");
+    	if ($lastDate != $currDate) {
+    		// We need to put, in the array, the dates which have no logs. Starts here.
+    		$lastDateTime = new \DateTime($lastDate);
+    		$currentDateTime = new \DateTime($currDate);
+    		// Calculate the number of days between the last and the current log date
+    		$interval = $currentDateTime->diff($lastDateTime, true);
+    		$nbDays = $interval->format('%a');
+    		// For each days between the two, we complete the date which have no logs with default values
+    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions)
+    		for ($j = 0; $j < $nbDays; $j++) {
+    			$index++;
+    			$lastDateTime = $lastDateTime->add(new \DateInterval("P1D"));
+    			$subscriptions[0][$index] = array();
+    			$subscriptions[0][$index][0] = $lastDateTime->format("Y-m-d");
+    			$subscriptions[0][$index][1] = $nbSubscriptions;
+    			$subscriptions[1][$index] = array();
+    			$subscriptions[1][$index][0] = $lastDateTime->format("Y-m-d");
+    			$subscriptions[1][$index][1] = 0;
+    		}
     	}
     	
     	return $subscriptions;
@@ -372,21 +413,56 @@ class AnalyticsManager
 		    	$nbContributions = 0;
 		    	$nbDays = 0;
 		    	
-		    	
 		    	// Extract data
 		    	$index = -1;
-		    	$lastDate = null;
+		    	$lastDate = $to->format("Y-m-d");
 		    	foreach ($messages as $i => $message) {
-		    		if ($lastDate != $message->getCreationDate()->format("Y-m-d")) {
+		    		$currDate = $message->getCreationDate()->format("Y-m-d");
+		    		if ($lastDate != $currDate) {
+			    		// We need to put, in the array, the dates which have no logs. Starts here.
+			    		$lastDateTime = new \DateTime($lastDate);
+			    		$currentDateTime = new \DateTime($currDate);
+			    		// Calculate the number of days between the last and the current log date
+			    		$interval = $lastDateTime->diff($currentDateTime, true);
+			    		$diffDays = $interval->format('%a');
+			    		// For each days between the two, we complete the date which have no logs with default values
+			    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions)
+			    		for ($j = 0; $j < $diffDays - 1; $j++) {
+			    			$index++;
+			    			$nbDays++;
+			    			$lastDateTime = $lastDateTime->sub(new \DateInterval("P1D"));
+			    			$contributions[0][$index] = array();
+			    			$contributions[0][$index][0] = $lastDateTime->format("Y-m-d");
+			    			$contributions[0][$index][1] = 0;
+			    		}
 		    			$index ++;
 		    			$contributions[0][$index] = array();
-		    			$contributions[0][$index][0] = $message->getCreationDate()->format("Y-m-d");
+		    			$contributions[0][$index][0] = $currDate;
 		    			$contributions[0][$index][1] = 0;
 		    			$nbDays++;
 		    		}
 		    		$nbContributions++;
 		    		$contributions[0][$index][1]++;
-		    		$lastDate = $message->getCreationDate()->format("Y-m-d");
+		    		$lastDate = $currDate;
+		    	}
+		    	$currDate = $from->format("Y-m-d");
+		    	if ($lastDate != $currDate) {
+		    		// We need to put, in the array, the dates which have no logs. Starts here.
+		    		$lastDateTime = new \DateTime($lastDate);
+		    		$currentDateTime = new \DateTime($currDate);
+		    		// Calculate the number of days between the last and the current log date
+		    		$interval = $lastDateTime->diff($currentDateTime, true);
+		    		$diffDays = $interval->format('%a');
+		    		// For each days between the two, we complete the date which have no logs with default values
+		    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions)
+		    		for ($j = 0; $j < $diffDays; $j++) {
+		    			$index++;
+		    			$nbDays++;
+		    			$lastDateTime = $lastDateTime->sub(new \DateInterval("P1D"));
+		    			$contributions[0][$index] = array();
+		    			$contributions[0][$index][0] = $lastDateTime->format("Y-m-d");
+		    			$contributions[0][$index][1] = 0;
+		    		}
 		    	}
 		    
 		    	$contributions[1] = $nbDays > 0 ? $nbContributions / $nbDays : 0;

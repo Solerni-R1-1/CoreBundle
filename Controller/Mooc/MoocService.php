@@ -51,6 +51,8 @@ class MoocService extends Controller
     /**
      * Get the active (or next) session from a workspace
      * Return MoocSession Entity or null
+     * 
+     * @return MoocSession the active or last session
      */
     public function getActiveOrLastSessionFromWorkspace( $workspace ) {
     
