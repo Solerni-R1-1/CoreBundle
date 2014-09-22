@@ -325,10 +325,18 @@ class BadgeManager
     				$badgeRessourceNode = $BadgeRule->getResource();
     				if ( $badgeRessourceNode ) {
     					$associatedExercise = $exercisesRepo->findOneByResourceNode( $badgeRessourceNode );
-    					$mark = $exercisesRepo->getExerciseMarksForUser($associatedExercise, $loggedUser);
     					$maxMark = $this->exerciseService->getExerciseTotalScore($associatedExercise->getId());
-    					$mark = ($mark / $maxMark) * 20;
-    					$associatedResource = array( 'exercise' => $associatedExercise, 'bestMark' => $mark);
+    					$marks = $exercisesRepo->getExerciseMarksForUser($associatedExercise, $loggedUser);
+    					$normalizedMarks = array();
+    					$bestMark = 0;
+    					foreach ($marks as $mark) {
+    						$normalizedMark = ($mark['noteExo'] / $maxMark) * 20;
+    						$normalizedMarks[] = $normalizedMark;
+    						if ($normalizedMark > $bestMark) {
+    							$bestMark = $normalizedMark;
+    						}
+    					}
+    					$associatedResource = array( 'exercise' => $associatedExercise, 'bestMark' => $bestMark, 'marks' => $normalizedMarks);
     				}
     			}
     		}
