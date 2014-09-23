@@ -7,25 +7,19 @@
 
 {% if mooc is defined and mooc %}
 <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--workspace">
-    {# HEADER FOND + POLICE #}
-    <div class="londrina-solid row slrn-widget__header bg-color-second">
-        <a href="{{ path( 'mooc_view', { 'moocId': mooc.getId(), 'moocName': mooc.getTitle()|slugify()|raw }) }}">{{ mooc.getTitle() }}</a>
-    </div>
     {# IMAGE #}
     <div class="row slrn-widget__body">
-        <a href="{{ path( 'mooc_view', { 'moocId': mooc.getId(), 'moocName': mooc.getTitle()|slugify()|raw }) }}">
-            <img 
+        <img 
                 class="slrn-widget__image" 
-                src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 167 ) }}" 
+                src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 200 ) }}" 
                 alt="{{ mooc.getTitle() }}"
                 width="234" 
-                height="167" />
-        </a>    
+                height="200" 
+        />  
     </div>
     {# PROGRESSION #}
     {% if progression is not null %}
     <div class="row slrn-widget__body bg-color-primary lesson-progression">
-        {#<div class="slrn-widget__title slrn-widget_row">{{ 'my_progress'|trans({}, 'platform') }}</div>#}
         <span class='presentation__mooc__progression__wrapper'>
             <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
             <span class='presentation__mooc__progression__100'>
