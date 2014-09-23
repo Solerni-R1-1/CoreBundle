@@ -10,17 +10,16 @@
     {# IMAGE #}
     <div class="row slrn-widget__body">
         <img 
-            class="slrn-widget__image" 
-            src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 200 ) }}" 
-            alt="{{ mooc.getTitle() }}"
-            width="234" 
-            height="200" 
-        />
+                class="slrn-widget__image" 
+                src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 200 ) }}" 
+                alt="{{ mooc.getTitle() }}"
+                width="234" 
+                height="200" 
+        />  
     </div>
     {# PROGRESSION #}
     {% if progression is not null %}
     <div class="row slrn-widget__body bg-color-primary lesson-progression">
-        {#<div class="slrn-widget__title slrn-widget_row">{{ 'my_progress'|trans({}, 'platform') }}</div>#}
         <span class='presentation__mooc__progression__wrapper'>
             <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
             <span class='presentation__mooc__progression__100'>
