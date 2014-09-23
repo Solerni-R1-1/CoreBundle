@@ -567,4 +567,119 @@ class AnalyticsManager
     	return $result;
     }
     
+    public function getSkillBadgeParticitpationRate(AbstractWorkspace $workspace) {
+    	$result = array();
+    	
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	$users = $session->getUsers();
+    	$nbUsers = count($users);
+    	// This array will contains, for each badge, the list of users and associated badge.
+    	// $badges[badgeId][0..*]['user'] = UserEntity
+    	// $badges[badgeId][0..*]['badge'] = UserBadge (containing the badge, the resource, the status, etc.)
+    	$badges = array();
+    	
+    	foreach ($users as $user) {
+    		$userBadges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace);
+    		
+    		foreach ($userBadges as $userBadge) {
+    			$badgeId = $userBadge['badge']->getId();
+    			if (!isset($badges[$badgeId])) {
+    				$badges[$badgeId] = array();
+    				$resultArray = array();
+    				$resultArray['badge'] = $userBadge['badge']->getName();
+    				$resultArray['data'] = array();
+    				$result[$badgeId] = $resultArray;
+    			}
+    			
+    			$badgeAndUser = array();
+    			$badgeAndUser['badge'] = $userBadge;
+    			$badgeAndUser['user'] = $user;
+    			
+    			$badges[$badgeId][] = $badgeAndUser;
+    		}
+    	}
+    	
+    	// We then start putting data in result array.
+    	// The result array will look like :
+    	// $result[badgeId]
+    	//		=> ['badge'] : The badge entity
+    	//		=> ['data']
+    	//				=> ['percentage'][DateString (Y-m-d)]
+    	//						=> [0] = DateString (Y-m-d)
+    	//						=> [1] = value
+    	//				=> ['total'][DateString (Y-m-d)]
+    	//						=> [0] = DateString (Y-m-d)
+    	//						=> [1] = value
+    	//				=> ['count'][DateString (Y-m-d)]
+    	//						=> [0] = DateString (Y-m-d)
+    	//						=> [1] = value
+    	foreach ($badges as $badgeId => $badgeUsers) {
+    		$data = &$result[$badgeId]['data'];
+    		$totalData = array();
+    		$percentageData = array();
+    		$countData = array();
+    		foreach ($badgeUsers as $badgeUser) {
+    			$user = $badgeUser['user'];
+    			$userBadge = $badgeUser['badge'];
+    			
+    			if (isset($userBadge['resource']['resource']['drop']) 
+    					&& $userBadge['resource']['resource']['drop'] != null) {
+    				$startDate = $userBadge['resource']['resource']['drop']->getDropDate()->format('Y-m-d');
+    			
+	    			if (!isset($totalData[$startDate])) {
+	    				$totalData[$startDate] = array();
+	    				$totalData[$startDate][0] = $startDate;
+	    				$percentageData[$startDate] = array();
+	    				$percentageData[$startDate][0] = $startDate;
+	    				$countData[$startDate] = array();
+	    				$countData[$startDate][0] = $startDate;
+	    				$countData[$startDate][1] = 0;
+	    			}
+	    			$countData[$startDate][1]++;
+    			}
+    		}
+    		$data['percentage'] = $percentageData;
+    		$data['total'] = $totalData;
+    		$data['count'] = $countData;
+    	}
+    	
+    	// We now need to complete the data with the missing dates
+    	$from = $session->getStartDate();
+    	$to = $session->getEndDate();
+    	
+    	$now = new \DateTime();
+    	if ($now < $to) {
+    		$to = $now;
+    	}
+    	
+    	$nbDays = $from->diff($to, true)->format('%a');
+    	
+    	for ($i = 0; $i < $nbDays; $i++) {
+    		$currDateString = $from->format('Y-m-d');
+	    	foreach ($result as &$badgeResult) {
+	    		$data = &$badgeResult['data'];
+	    		$totalData = &$data['total'];
+	    		$percentageData = &$data['percentage'];
+	    		$countData = &$data['count'];
+	    		
+	    		if (!isset($countData[$currDateString])) {
+	    			$countData[$currDateString] = array();
+	    			$countData[$currDateString][0] = $currDateString;
+	    			$countData[$currDateString][1] = 0;
+	    		}
+	    	}
+	    	$from = $from->add(new \DateInterval('P1D'));
+    	}
+		
+    	// Order the arrays...
+    	foreach ($result as &$badgeResult) {
+    		ksort(&$badgeResult['data']['count']);
+    		ksort(&$badgeResult['data']['total']);
+    		ksort(&$badgeResult['data']['percentage']);
+    	}
+    	
+    	print_r($result);
+    		
+    	return $result;
+    }
 }

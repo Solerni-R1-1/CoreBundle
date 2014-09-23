@@ -125,6 +125,7 @@ class MoocAnalyticsController extends Controller
     public function analyticsMoocBadgesPieChartAction( $workspace, $user ) {
         
         $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace);
+        $skillBadgesParticipationRates = $this->analyticsManager->getSkillBadgeParticitpationRate($workspace);
         
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsBadgesPiechart.html.twig',
