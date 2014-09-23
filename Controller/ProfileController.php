@@ -436,4 +436,21 @@ class ProfileController extends Controller
         $response = new JsonResponse($data);
         return $response;
     }
+    
+    /**
+     * @EXT\Route(
+     *     "/delete/{userId}",
+     *      name="claro_user_delete"
+     * )
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template()
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @EXT\Method({"GET"})
+     */
+    public function deleteUserProfileAction( User $loggedUser )
+    {
+        return array(
+            'user' => $loggedUser
+        );
+    }
 }
