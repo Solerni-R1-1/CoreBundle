@@ -7,20 +7,15 @@
 
 {% if mooc is defined and mooc %}
 <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--workspace">
-    {# HEADER FOND + POLICE #}
-    <div class="londrina-solid row slrn-widget__header bg-color-second">
-        <a href="{{ path( 'mooc_view', { 'moocId': mooc.getId(), 'moocName': mooc.getTitle()|slugify()|raw }) }}">{{ mooc.getTitle() }}</a>
-    </div>
     {# IMAGE #}
     <div class="row slrn-widget__body">
-        <a href="{{ path( 'mooc_view', { 'moocId': mooc.getId(), 'moocName': mooc.getTitle()|slugify()|raw }) }}">
-            <img 
-                class="slrn-widget__image" 
-                src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 167 ) }}" 
-                alt="{{ mooc.getTitle() }}"
-                width="234" 
-                height="167" />
-        </a>    
+        <img 
+            class="slrn-widget__image" 
+            src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 200 ) }}" 
+            alt="{{ mooc.getTitle() }}"
+            width="234" 
+            height="200" 
+        />
     </div>
     {# PROGRESSION #}
     {% if progression is not null %}
