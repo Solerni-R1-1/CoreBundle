@@ -240,7 +240,7 @@ drag_file_here: 'Déplacez le fichier ici'
 drop_file: 'Déposez le fichier'
 dsn: dsn
 edit: Modifier
-edit_password: 'Modifier votre mot de passe'
+edit_password: 'Modifier mon mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
 edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
@@ -252,6 +252,8 @@ edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modif
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
+edit_profile_upload: 'Choisissez un fichier'
+edit_profile_upload_file_name: 'Aucun fichier choisi'
 editable: Modifiable
 email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
@@ -427,7 +429,6 @@ my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
 my_portfolio: 'Mon portfolio'
-my_profile: 'Mon profil'
 my_profile: Mon profil
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
@@ -483,6 +484,7 @@ permissions: Permissions
 personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
+current_picture_profile: Photo de profil actuellement utilisée
 platform_appearance: 'Apparence de la plateforme'
 platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_auth_mode: 'Mode d''authentification'
@@ -700,7 +702,7 @@ tune: 'Personnaliser'
 tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
 tune_public_url_success: 'Personnalisation de l''URL de votre profil public effectuée avec succès.'
 tune_your_public_profile: 'Personnalisez votre profil public'
-tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
+tune_your_public_profile_url: 'Personnaliser l''URL de votre profil public'
 type: Type
 type_s: Type(s)
 unable_to_start_gmail: 'La connexion avec le service SMTP de Gmail ne peut pas être établie. Veuillez vérifier que le nom d`utilisateur et le mot de passe que vous avez renseignés sont corrects.'
@@ -1077,3 +1079,13 @@ mooc_register_modal_mooc_name: 'Vous vous êtes inscrit au MOOC "%moocName%".'
 mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débutera le %moocDate% prochain.</strong>'
 mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
 mooc_register_modal_text2: 'A très bientôt.'
+
+user_wish_to_unsubscribe: Vous souhaitez vous désinscrire de Solerni ?
+unsubscribe_self: se désinscrire
+back_to_profile: Retour au profil
+
+slrn_public_profile_undiscoverable: Profil privé
+slrn_public_profile_undiscoverable_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+public_profile_undiscoverable_anonymously: Profil privé
+public_profile_undiscoverable_anonymously_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+

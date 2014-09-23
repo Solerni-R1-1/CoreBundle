@@ -466,6 +466,8 @@ body.subnavbar-fixed {
 .body-without-subnavbar .content { padding-top: 0; }
 .body-forum .content { padding-top: 0; }
 .body-blog .content { padding-top: 0; }
+.body-profile .content { padding-top: 0; }
+
 
 /* HIDE FLASHBOX ON DASHBOARD */
 body.dsk .alert { display: none; }
@@ -560,12 +562,14 @@ body.dsk .alert { display: none; }
 .slrn-forgot-password--link { margin: 1em 0; color: #333; display: block; }
 .slrn-forgot-password--link:hover { color: #333; } 
 .btn { font-weight: 800; }
+
 .btn-primary { background-color: #FF004F; border-color: #FF004F; }
+
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
-.open .dropdown-toggle.btn-primary { background-color: #D90045; border-color: #D90045; }
+.open .dropdown-toggle.btn-primary { background-color: #D90045; border-color: #D90045; outline: 0; }
 
 .form-horizontal .slrn-checkbox-label { 
     width: 95%; 
@@ -1248,7 +1252,7 @@ input[type="file"] { height: auto; }
 
 .slrn-resource-manager-main .slrn-resource-nav__inner > li > a { padding-top: .5em; padding-bottom: .5em; }
 
-.slrn-resource-manager-main .navbar > .slrn-resource-nav__inner > .slrn-resource-nav__btn > .btn-primary { color: #FFF; }
+.slrn-resource-manager-main .navbar > .slrn-resource-nav__inner > .slrn-resource-nav__btn > .btn-primary { color: #FFF; outline: 0; }
 
 .slrn-resource-manager-main .navbar > .slrn-resource-nav__inner > .slrn-resource-nav__btn:first-child > .btn-primary { margin: 0 1em 0 0;  }
 
@@ -1597,17 +1601,33 @@ input[type="file"] { height: auto; }
     content: ">";
 }
 
-.btn-gris{
-	background-color: #999999;
-	border-color: #999999;
-    color: #FFF;
-}
-.btn-gris:hover, .btn-gris:focus, .btn-gris:active, .btn-gris.active, .open .dropdown-toggle.btn-gris {
-	background-color: #888686;
-	border-color: #888686;
+.btn-gris {
+    outline:            0;
+	background-color:   #999999;
+	border-color:       #999999;
+    color:              #FFF;
 }
 
-.btn-blue{
+.btn-gris:hover,
+.btn-gris:focus,
+.btn-gris:active,
+.btn-gris.active,
+.open .dropdown-toggle.btn-gris {
+	background-color:   #888686;
+	border-color:       #888686;
+    outline:            0;
+}
+
+.btn-gris .caret {
+    border-top-color: #FFF;
+}
+
+.btn-gris:hover .caret,
+.btn-gris:focus .caret {
+    border-top-color: #333;
+}
+
+.btn-blue {
 	background-color: #4B667C;
 	border-color: #4B667C;
     color: #FFF;
@@ -1794,4 +1814,182 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-login-mooc-register {
 	color: #333;
+}
+
+/* PROFILE */
+
+.slrn-profile-button {
+    position:   relative;
+    width:      200px;
+    text-align: left; 
+}
+
+.slrn-profile-button:hover,
+.slrn-profile-button:focus {
+    color:              #FFF;
+    background-color:   #999;
+}
+
+.slrn-profile-button:focus {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.slrn-profile-button:hover .caret,
+.slrn-profile-button:focus .caret {
+    border-top-color: #FFF;
+}
+
+.slrn-profile-button .caret {
+    float:      right;
+    position:   relative;
+    top:        8px;
+}
+
+.slrn-profile-button + .dropdown-menu {
+    top:                        94%;
+    width:                      200px;
+    background-color:           #999;
+    padding:                    0;
+    margin:                     0;
+    border-top-left-radius:     0;
+    border-top-right-radius:    0;
+}
+
+.slrn-profile-button + .dropdown-menu > li {
+    border-top: 2px solid #EEEEEF;
+}
+
+.slrn-profile-button + .dropdown-menu > li:hover a {
+    background-color: #606060;
+}
+
+.slrn-profile-button + .dropdown-menu > li > a {
+    white-space:    normal;
+    color:          #FFF;
+    padding:        8px 10px;
+}
+
+.slrn-profile-details {
+    padding:            1.5em;
+    background-color:   #F6F6F8;
+}
+
+.slrn-profile-avatar {
+    width:          150px;
+    height:         150px;
+    border:         6px solid #C3C3C4;
+    border-radius:  5px;
+}
+
+.slrn-profile-details-list {
+    list-style: none inside none;
+    padding:    0;
+}
+
+.slrn-profile-details-list li {
+    line-height: 1.5;
+}
+
+.slrn-profile_informations {
+    padding: 0 2em;
+}
+
+.slrn-profile_informations .description_block {
+    margin-top:     40px;
+    margin-bottom:  1em;
+    width:          700px;
+}
+
+.no_underline {
+    text-decoration: none !important;
+}
+
+.slrn-row {
+    margin-left:    -15px;
+    margin-right:   -15px;
+}
+
+.slrn-top-back-link {
+    display:        block;
+    margin-bottom:  40px;
+}
+
+.slrn-profile-form label {
+    height:         2em;
+    line-height:    2em;
+    color:          #606060;
+}
+
+.slrn-profile-form input {
+    color:  #606060;
+    border: 3px solid #999;
+}
+
+.slrn-upload-file-name {
+    display:        inline-block;
+    margin-left:    1em;
+}
+
+.slrn-profile-form .mce-edit-area {
+    border: 2px solid #999 !important;
+    border-radius: 4px !important;
+}
+
+.slrn-unsubscribe {
+    text-align: center;
+}
+
+.slrn-form-group-button {
+    margin-top: 20px;
+}
+
+.slrn-grey-block {
+    background-color: #EEEEEF;
+    padding: 1em;
+    margin: 0 0 1em 0;
+}
+
+.slrn-info-block {
+    padding-left:   4.2em;
+    position:       relative;
+    min-height:     5em;
+    font-size:      1.3em;
+    color:          #4C667D;
+    line-height:    1.4;
+}
+
+.slrn-info-block:before {
+    content:        "";
+    background:     transparent url(../../clarolinecore/images/sprites_solerni.png) no-repeat 0 -657px scroll;
+    width:          31px;
+    height:         66px;
+    position:       absolute;
+    left:           1em;
+}
+
+.slrn-info-block--public-url {
+    width: 660px;
+}
+
+.slrn-current-url {
+    color: #606060;
+}
+
+.slrn-more-info {
+    height:         1.5em;
+    line-height:    1.5em;
+    margin-left:    -15px;
+    font-size:      1.5em;
+    color:          #999;
+}
+
+.slrn-more-info .tooltip-inner {
+    background-color:   #999;
+    width:              400px;
+    max-width:          400px;
+}
+
+.slrn-more-info .tooltip.top .tooltip-arrow {
+    border-top-color: #999;
 }
