@@ -9,7 +9,21 @@
     {% endif %}
 {% endspaceless %}{% endblock %}
 
-{% block bodyClasses %}subnavbar-fixed{% endblock %}
+{# no subnavbar for personnal workspaces. We need to find out workspace #}
+{% if workspace is not defined %}
+    {% if mooc is defined %}
+        {% set workspace = mooc.getWorkspace() %}
+    {% endif %}
+    {% if session is defined and session is not null %}
+        {% set workspace = session.getMooc().getWorkspace() %}
+    {% endif %}
+{% endif %}
+    {% set noTabs = false %}
+    {% if app.user and workspace is defined and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+        {% set noTabs = true %}
+    {% endif %}
+
+{% block bodyClasses %}{% if workspace is defined and noTabs == false %}subnavbar-fixed{% endif %}{% endblock %}
 
 {# WE DO NOT USE BREADCRUMB 
 {% block breadcrumb %}
@@ -56,8 +70,8 @@
     {% if _resource is defined and workspace is not defined %}
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
-    {% if params %}
-        {% render controller( "ClarolineCoreBundle:Solerni:renderSolerniTabs", params ) %}
+    {% if params and workspace is defined and noTabs == false %}
+        {% render controller( "ClarolineCoreBundle:Mooc\\Mooc:renderSolerniTabs", params ) %}
     {% endif %}
 {% endblock %}
 
@@ -67,7 +81,7 @@
         {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
-        {% if (is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) and app.user.personalWorkspace.getId() != workspace.getId()) or is_granted('ROLE_ADMIN') %}
+        {% if (is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) and app.user.personalWorkspace.getId() != workspace.getId()) or is_granted('ROLE_WS_CREATOR') %}
             {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
         {% endif %}
 

@@ -33,6 +33,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Symfony\Component\Translation\TranslatorInterFace;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -51,6 +52,7 @@ class MessageController
     private $utils;
     private $pagerFactory;
     private $mailManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -64,7 +66,8 @@ class MessageController
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -78,7 +81,8 @@ class MessageController
         SecurityContextInterface $securityContext,
         Utilities $utils,
         PagerFactory $pagerFactory,
-        MailManager $mailManager
+        MailManager $mailManager,
+        TranslatorInterface $translator
     )
     {
         $this->request = $request;
@@ -92,6 +96,7 @@ class MessageController
         $this->utils = $utils;
         $this->pagerFactory = $pagerFactory;
         $this->mailManager = $mailManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -158,7 +163,7 @@ class MessageController
      */
     public function sendAction(User $sender, Message $parent = null)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE);
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -319,6 +324,7 @@ class MessageController
      * @param array   $groups
      * @param array   $workspaces
      * @param Message $message
+     * @param string    $form
      *
      * @return Response
      */
@@ -331,9 +337,62 @@ class MessageController
     )
     {
         if ($message) {
+
+            //Quickfix : we only authorize 1 child per message
+            $childs = $message->getChildren();
+            while($message
+                    && $childs != null 
+                    && !empty($childs)){
+                
+                if($childs[0] == null){
+                    break;
+                }
+                $message = $childs[0];
+                $childs = $message->getChildren();
+            }
+
+            //echo $message->getId().'<hr/>';
+
             $this->messageManager->markAsRead($user, array($message));
             $ancestors = $this->messageManager->getConversation($message);
-            $sendString = $message->getSenderUsername();
+
+            $receivers = array();
+
+            // We add the send
+            // except if the sender is ourself
+            if( $message->getSenderUsername() !== $user->getUserName()) {
+                $userSender = $this->userManager->getUserByUsername($message->getSenderUsername()); 
+                if($userSender != null){
+                    $receivers[$userSender->getId()] = $userSender; 
+                }
+            }
+
+            $dests = $message->getUserMessages();
+            foreach ($dests as $dest) {
+
+                $user_receivers = $dest->getUser();
+
+                // We add the receiver
+                // except if it's ourself
+                // except if the receiver is also the sender to avoid spam
+                if($user_receivers->getId() !== $user->getId()
+                    && !array_key_exists($user_receivers->getId(), $receivers)) {
+                    $receivers[$user_receivers->getId()] = $user_receivers;    
+                    //echo 'inclus : '.$user_receivers->getUserName().'<hr/>';
+                } else {
+                    //echo 'exclus : '.$user_receivers->getUserName().'<hr/>';
+                }
+            }
+
+            /*foreach ($receivers as $id => $user_tmp) {
+                echo $user_tmp->getUsername().' ';
+            }
+            echo '<hr/>';*/
+
+            $sendString = $this->messageManager->generateStringTo(array_values($receivers), $groups, $workspaces);
+        //die($sendString);
+            
+
             $object = 'Re: ' . $message->getObject();
             $this->checkAccess($message, $user);
         } else {
@@ -343,7 +402,7 @@ class MessageController
             $ancestors = array();
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object));
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object, $this->translator));
 
         return array(
             'ancestors' => $ancestors,
@@ -682,6 +741,10 @@ class MessageController
             if (strtolower($user->getUsername()) === strtolower($username)) {
                 return true;
             }
+        }
+
+        if($message->getParent() != null){
+            return $this->checkAccess($message->getParent(), $user);
         }
 
         throw new AccessDeniedException("This isn't your message");

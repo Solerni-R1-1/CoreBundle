@@ -1,3 +1,4 @@
+{# this is the lesson block widget on the left on the lesson (Page Apprendre) #}
 {% for lesson in lessons %}
 {% if lesson.isRegistered == false %}
 	Vous n'avez pas rejoint de MOOC ? Solerni vous propose
@@ -11,7 +12,7 @@
         
 <div class='presentation__mooc'>
 
-	<div class="presentation__mooc__pic">
+	<div class="presentation__mooc__pic presentation__mooc__pic--2-column">
 		<span class='{% if lesson.isRegistered == true %}mooc__pic_w{% else %}mooc__pic_wf{% endif %} '>
 			{% if lesson.lessonThumbnail.src is defined %}
 			   <img class='mooc__pic' height='180px' width='230px' src='{{ lesson.lessonThumbnail.src }}' alt='{{ lesson.lessonThumbnail.alt }}' />

@@ -170,17 +170,19 @@ class RoleManager
      * @param \Claroline\CoreBundle\Entity\Role                $role
      * @param boolean                                          $sendMail
      */
-    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
+    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false, $createLog = true)
     {
         if (!$ars->hasRole($role->getName())) {
             $ars->addRole($role);
             $this->om->startFlushSuite();
 
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $ars)
-            );
+            if ($createLog) {
+	            $this->dispatcher->dispatch(
+	                'log',
+	                'Log\LogRoleSubscribe',
+	                array($role, $ars)
+	            );
+            }
             $this->om->persist($ars);
             $this->om->endFlushSuite();
 
@@ -664,5 +666,21 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+    }
+    
+    public function hasUserAccess(User $user, AbstractWorkspace $workspace) {
+    	$result = false;
+    	
+    	$roles = $this->getRolesByWorkspace($workspace);
+    	foreach ($roles as $role) {
+    		foreach ($user->getRoles() as $userRole) {
+    			if ($role->getName() == $userRole) {
+    				$result = true;
+    				break;
+    			}
+    		}
+    	}
+    	
+    	return $result;
     }
 }

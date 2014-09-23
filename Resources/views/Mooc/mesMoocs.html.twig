@@ -1,0 +1,92 @@
+{# Mes moocs template #}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}
+    {{ parent() }}{{ 'my_moocs'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>.presentation__mooc { display: none; }</style>
+{% endblock %}
+
+{% block bodyClasses %}dsk{% endblock %}
+
+{% block section_content %}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'mes_moocs' }
+        ) %}
+<div class='col-xs-9 col-md-9'>
+    <div class='dsk__article__mooc'>
+        <div class='clearfix'></div>
+        <h2 class="slrn-content-main-title">
+            {{ 'my_moocs'|trans({}, 'platform') }}
+        </h2>
+        <ul class="my-moocs-nav">
+            <li class="my-moocs-nav__item moocs-all" data-target="mooc-all">{{ 'all'|trans({}, 'platform' )}} (<span class="count">0</span>)</li>
+            <li class="my-moocs-nav__item moocs-running  my-moocs-nav__item--active" data-target="mooc-running">{{ 'running'|trans({}, 'platform' )}} (<span class="count">0</span>)</li>
+            <li class="my-moocs-nav__item moocs-to-come" data-target="mooc-to-come">{{ 'to_come'|trans({}, 'platform' )}} (<span class="count">0</span>)</li>
+            <li class="my-moocs-nav__item moocs-over" data-target="mooc-over">{{ 'over'|trans({}, 'platform' )}} (<span class="count">0</span>)</li>
+        </ul>
+        <div class="slrn-moocs-list">
+            {% render controller(
+                'ClarolineCoreBundle:Mooc\\Mooc:getUserSessionsList',
+                {}
+            ) %}
+        </div>
+    </div>
+
+    <div class='clearfix'></div>
+{% endblock %}
+    
+{% block javascripts %}
+  {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+
+            var allMoocs = jQuery('.slrn-moocs-list .presentation__mooc');
+            var allButtons = jQuery('.my-moocs-nav__item');
+            
+            allButtons
+                .each(function() {
+                    // Each button counts its targets
+                    targetType = jQuery(this).data('target');
+
+                    if ( targetType == 'mooc-all' ) {
+                        jQuery(this).find('.count').html(
+                            allMoocs.length
+                        ); 
+                    } else {
+                        jQuery(this).find('.count').html(
+                            jQuery('.slrn-moocs-list .presentation__mooc[data-mooc-status="' + targetType + '"]').length    
+                        );
+                    }
+                })
+                .on( 'click', function() {
+                    // Check target type from component
+                    targetType = jQuery(this).data('target');
+                    // Modify classes
+                    allButtons.removeClass('my-moocs-nav__item--active');
+                    jQuery(this).addClass('my-moocs-nav__item--active');
+                    // show all
+                    if ( targetType == 'mooc-all' ) {
+                        allMoocs.slideDown(250);
+                    } else {
+                        // show or hide each component depending on component status
+                        allMoocs.each( function() {
+                            if ( jQuery(this).data('mooc-status') != targetType ) {
+                               jQuery(this).slideUp(250);
+                            } else {
+                               jQuery(this).slideDown(250);
+                            }
+                        });    
+                    }
+                });
+                
+                jQuery('.moocs-running').click();
+                
+        });
+        
+    </script>
+{% endblock %}

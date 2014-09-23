@@ -15,7 +15,12 @@
 
     {# ADDING SOLERNI STYLESHEETS #}
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/solerni.css') }}" screen="media" />
+
+    {# ADDING BXslider STYLESHEETS #}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/bxslider.css') }}" screen="media" />
     
+    {% block stylesheetsAdditionnals %}{% endblock %}
+
     {# Font-Awesome CSS + Fonts #}
       {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
     '../vendor/fortawesome/font-awesome/less/font-awesome.less'
@@ -52,8 +57,8 @@
 {% endblock %}
 
 {% block favicon %}
-    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
-    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/apple-touch-icon.png')}}"/>
 {% endblock %}
 
 {% block layout %}
@@ -109,34 +114,22 @@
                 {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
             {% endif %}
         {% endblock %}
-        {# DISPLAY HEADER IMAGE FOR SIGNING IN  #}
-        {% block loggingHeaderImage %}{% endblock %}
+        {# DISPLAY HEADER IMAGE #}
+        {% block solerniHeaderImage %}{% endblock %}
         {# SUBNAV BAR (ONGLETS) #}
         {% block subnavbar %}{% endblock %}
 
         {# BREADCRUMB & CONTENT #}
         <div class="container slrn-content-container">
-             {% block content_container %}
-            {#
-            
-            <div class="container">
-              <div class="row">
-                <div class="col-md-12">
-                    {% block breadcrumb %}{% endblock %}
-                </div>
-            </div>
-            #}
-
-            
+             {% block content_container %}          
             <div class="row content">
                 {# CONTENT #}
                 <section class="col-md-12">
                     {% block content %}{% endblock %}
                 </section>
             </div>
+            {% endblock %}
         </div>
-        <div id="push"></div>
-        {% endblock %}
     </div>
    {% block footer %}
         {% if not is_path_mode %}
@@ -224,34 +217,14 @@
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/bxslider/jquery.bxslider.min.js') }}"></script>
     <script type="text/javascript">
         $('body').tooltip({
             selector: '[data-toggle=tooltip]'
         });
     </script>
-    
-    {% if is_facebook_available() %}
-    <script>
-        (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/fr_FR/all.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        window.fbAsyncInit = function() {
-            // init the FB JS SDK
-            FB.init({
-                appId      : '{{ get_facebook_app_id() }}',        // App ID from the app dashboard
-                status     : true,                                 // Check Facebook Login status
-                xfbml      : true,
-                cookie     : true
-            });
-            $('.slrn-facebook-connect').removeAttr('disabled');
-            $('#btn-logout').on('click', function() {
-                FB.logout(function(respose){});
-            });
-        };
-    </script>
-    {% endif %}
+    <!--[if IE 9 ]>
+        <script src="{{ asset('bundles/clarolinecore/js/jquery.placeholder.js') }}"></script>
+        <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
+    <![endif]-->
 {% endblock %}

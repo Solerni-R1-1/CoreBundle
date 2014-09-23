@@ -1,0 +1,23 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mooc_accessconstraints_create'|trans({}, 'platform') }}</h1>
+
+    {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form(form) }}
+    
+    <a class="btn btn-primary js-submit-button" href="#">{{ 'validate'|trans({}, 'platform') }}</a>
+    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_owners') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('.js-submit-button').on('click', function(event) {
+            event.preventDefault();
+            $('#claroline_corebundle_mooc_accessconstraints_save').trigger('click');
+        })
+    </script>
+    
+{% endblock %}

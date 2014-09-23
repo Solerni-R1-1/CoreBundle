@@ -41,8 +41,12 @@ class ActionConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
+        $action = $this->getRule()->getAction();
+        $posBracket = strrpos($action, ']');
+        // Remove useless '[ ]' part for the query
+        $action = substr($action, ($posBracket !== FALSE ? $posBracket + 1 : 0));
         return $queryBuilder
                 ->andWhere('l.action = :action')
-                ->setParameter('action', $this->getRule()->getAction());
+                ->setParameter('action', $action);
     }
 }

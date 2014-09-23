@@ -1,29 +1,84 @@
+{# this is the profile menu on the left #}
 <aside class="col-xs-3 col-md-3">
     <div class="col-xs-12 col-md-12 slrn-profile-widget">
         <div class="row dsk__avatar__wrapper">
             <div class="dsk__avatar">
-            {% if userThumbnail.src  is not null %}
-                <img src="{{ asset('thumbnails/') ~  userThumbnail.src }}" alt='{{ userThumbnail.alt }} {{ userFirstname }} {{ userLastname }}'/>
+            {% if userThumbnailSrc is not null %}
+                <img 
+                    class="dsk__avatar__thumb" 
+                    src="{{ image( 'thumbnails/' ~ userThumbnailSrc ).scaleResize(66,66)}}"
+                    alt="{{ 'avatar'|trans({}, 'platform') }} {{ user.getFirstName() }} {{ user.getLastName() }}"
+                    width="66"
+                    height="66"
+                 >
             {% endif %}
             </div>
-            <div class="dsk__hello">Bonjour {{ userFirstname }} {{ userLastname }}</div>
-            <div class="dsk__profil"><a class='dsk__profil__link' href='{{ urls.profil }}'>Voir Mon profil</a></div>
+            <div class="dsk__hello">Bonjour {{ user.getFirstName() }} {{ user.getLastName() }}</div>
+            <div class="dsk__profil">
+                <a class='dsk__profil__link' 
+                   href='{{ path( 'claro_profile_view', { 'userId': user.getId() } ) }}'>Voir Mon profil
+                </a>
+            </div>
         </div>
         <div class="row dsk__menu__wrapper">
-            {#<h3 class='dsk__menu__h3'>Tableau de bord</h3>#}
             <ul class='dsk__menu'>
+
                 {% if renderingContext == 'dashboard' %}{% set dashboardIsActive = 'active ' %}{% endif %}
-                <li class="dsk__menu__item"><span class="dsk__menu__span"><a class='{% if dashboardIsActive is defined %}{{ dashboardIsActive }}{% endif %}dsk__menu__link' href="{{ path( 'claro_desktop_open' ) }}">{{ 'dashboard' | trans({}, 'platform') }}</a></span></li>
+                <li class="dsk__menu__item">
+                    <span class="dsk__menu__span">
+                        <a class='{% if dashboardIsActive is defined %}{{ dashboardIsActive }}{% endif %}dsk__menu__link' 
+                           href="{{ path( 'claro_desktop_open' ) }}">{{ 'dashboard' | trans({}, 'platform') }}
+                        </a>
+                    </span>
+                </li>
+
+                {% if renderingContext == 'mes_moocs' %}{% set mesMoocsIsActive = 'active ' %}{% endif %}
+                <li class="dsk__menu__item">
+                    <span class="dsk__menu__span">
+                        <a class='{% if mesMoocsIsActive is defined %}{{ mesMoocsIsActive }}{% endif %}dsk__menu__link' 
+                           href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'mes moocs' | trans({}, 'platform') }}
+                        </a>
+                    </span>
+                </li>
+
                 {% if renderingContext == 'badges' %}{% set badgesIsActive = 'active ' %}{% endif %}
-                <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='{% if badgesIsActive is defined %}{{ badgesIsActive }}{% endif %}dsk__menu__link' href="{{ path('claro_profile_view_badges') }}">Mes badges</a></span></li>
+                <li class="dsk__menu__item">
+                    <span class='dsk__menu__span'>
+                        <a class='{% if badgesIsActive is defined %}{{ badgesIsActive }}{% endif %}dsk__menu__link' 
+                           href="{{ path('claro_profile_view_badges') }}">Mes badges
+                        </a>
+                    </span>
+                </li>
+                
                 {% if renderingContext == 'my_badges' %}{% set myBadgesIsActive = 'active ' %}{% endif %}
-                <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='{% if myBadgesIsActive is defined %}{{ myBadgesIsActive }}{% endif %}dsk__menu__link' href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges', 'myBadgesFilter': 'my_evals' } ) }}">Mes évaluations</a></span></li>
+                <li class="dsk__menu__item">
+                    <span class='dsk__menu__span'>
+                        <a class='{% if myBadgesIsActive is defined %}{{ myBadgesIsActive }}{% endif %}dsk__menu__link' 
+                           href="{{ path( 'solerni_user_evaluations', {} ) }}">Mes évaluations
+                        </a>
+                    </span>
+                </li>
+                
                 {% if renderingContext == 'my_library' %}{% set myLibraryIsActive = 'active ' %}{% endif %}
-                <li class="dsk__menu__item"><span class='dsk__menu__span'><a class='{% if myLibraryIsActive is defined %}{{ myLibraryIsActive }}{% endif %}dsk__menu__link' href="{{ urls.resource }}">{{ 'my_library' | trans({}, 'platform') }}</a></span></li>
+                <li class="dsk__menu__item">
+                    <span class='dsk__menu__span'>
+                        <a class='{% if myLibraryIsActive is defined %}{{ myLibraryIsActive }}{% endif %}dsk__menu__link' 
+                           href="{{ path('claro_workspace_open_tool', { 
+                                        'workspaceId': user.getPersonalWorkspace().getId(), 
+                                        'toolName': 'resource_manager' } ) }}">{{ 'my_library' | trans({}, 'platform') }}
+                        </a>
+                    </span>
+                </li>
+                
+                {% if renderingContext == 'my_messages' %}{% set myMessagesIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item">
                    <span class='dsk__menu__span'>
-                      <a class='dsk__menu__link' href="{{ urls.message }}">{% if nbMessages != 0 %} <span class='dsk__menu__span__right'>{{ nbMessages }}</span> {% endif %}
-                       Ma messagerie</a>
+                      <a class='{% if myMessagesIsActive is defined %}{{ myMessagesIsActive }}{% endif %} dsk__menu__link' 
+                         href="{{ path('claro_message_list_received', {} ) }}">
+                            {% if nbMessages != 0 %} 
+                                <span class='dsk__menu__span__right'>{{ nbMessages }}</span> 
+                            {% endif %}Ma messagerie
+                      </a>
                    </span>
                 </li>
             </ul>

@@ -129,7 +129,8 @@ class ResourceManager
         AbstractWorkspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
-        array $rights = array()
+        array $rights = array(),
+    	$createLog = true
     )
     {
         $this->om->startFlushSuite();
@@ -176,7 +177,9 @@ class ResourceManager
 
         $node->setPathForCreationLog($parentPath . $name);
         $node->setIcon($icon);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
+        if ($createLog) {
+        	$this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
+        }
         $this->om->endFlushSuite();
 
         return $resource;
@@ -260,7 +263,7 @@ class ResourceManager
     public function findAndSortChildren(ResourceNode $parent)
     {
         //a little bit hacky but retrieve all children of the parent
-        $nodes = $this->resourceNodeRepo->findChildren($parent, array('ROLE_ADMIN'));
+        $nodes = $this->resourceNodeRepo->findChildren($parent, array('ROLE_WS_CREATOR'));
         $sorted = array();
         //set the 1st item.
         foreach ($nodes as $node) {
@@ -302,13 +305,14 @@ class ResourceManager
      */
     public function sort(array $nodes)
     {
+    	$start = count($nodes);
         $sortedResources = array();
 
         if (count($nodes) > 0) {
             if ($this->haveSameParents($nodes)) {
                 $parent = $this->resourceNodeRepo->find($nodes[0]['parent_id']);
                 $sortedList = $this->findAndSortChildren($parent);
-
+				$sortedListCount = count($sortedList);
                 foreach ($sortedList as $sortedItem) {
                     foreach ($nodes as $node) {
                         if ($node['id'] === $sortedItem['id']) {
@@ -320,6 +324,8 @@ class ResourceManager
                 throw new \Exception("These resources don't share the same parent");
             }
         }
+
+        $end = count($sortedResources);
 
         return $sortedResources;
     }
@@ -806,7 +812,7 @@ class ResourceManager
         $roles = $this->roleManager->getStringRolesFromToken($token);
 
         foreach ($roles as $role) {
-            if ($role === 'ROLE_ADMIN') {
+            if ($role === 'ROLE_WS_CREATOR') {
                 $isAdmin = true;
             }
         }

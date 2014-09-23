@@ -28,13 +28,9 @@
 'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'This placeholder is optional and will be replaced by the author first name': 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
-'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
 'This placeholder is optional and will be replaced by the author last name': 'Ce placeholder est optionnel et sera remplacé par le nom de l''auteur'
-'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
 'This placeholder is optional and will be replaced by your platform name': 'Ce placeholder est optionnel et sera remplacé par le nom de la plateforme'
-'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
 'This placeholder is required and will be replaced by the actual mail content': 'Ce placeholder est requis et sera remplacé par le contenu du mail'
-'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
 'This variable is optional and will be replaced by your platform name': 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 'This variable is required and will be replaced by the actual mail content': 'Ce variable est requis et sera replacé par le contenu du mail'
 'Upload a file': 'Télécharger un fichier'
@@ -85,6 +81,7 @@ add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
+add_sessions_confirm_message: 'Ainsi qu''ajouter les élément(s) sélectionné(s) aux session(s) : '
 add_subcategory: 'Ajouter une sous-catégorie'
 add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
@@ -99,7 +96,7 @@ admin_analytics_no_data: 'Aucune donnée.'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_third_party_application: 'Applications tierces'
-admin_workspace_tag_form_name: Nom
+admin_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
@@ -183,6 +180,7 @@ csv_users_import_infos_required: Requis
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
 cut: Couper
+mes moocs: 'Mes Moocs'
 dashboard: 'Tableau de bord'
 data_col: 'Colonne des données'
 database: 'Base de données'
@@ -258,9 +256,15 @@ editable: Modifiable
 email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
 email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
+mail_already_exists: 'Un utilisateur avec l''adresse mail %email% existe déjà (lignes : %lines%)'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
+error_sessions_same_forum: 'Deux sessions ne peuvent pas avoir le même forum.'
+error_session_end_date_inferior_start_date: 'La date de fin doit être supérieure à la date de début.'
+error_session_invalid_start_inscription_date: 'L''inscription ne peut pas commencer après le début de la session.'
+error_session_end_inscription_date_inferior_start_inscription_date: 'La date de fin d''inscription doit être supérieure à la date de début d''inscription.'
+error_session_end_inscription_date_superior_end_date: 'L''inscription ne peut pas terminer après la fin de la session.'
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
@@ -446,6 +450,7 @@ no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
+no_session_choice: 'Pas de session'
 none: Aucun
 not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
 not_blank_expected: 'Cette valeur ne peut pas être vide'
@@ -456,7 +461,7 @@ notifications: 'Notifications'
 oauth: Oauth
 object: Objet
 ok: Ok
-only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
+only_for_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
 operation_done: 'Opération effectuée.'
 options: Options
@@ -521,7 +526,7 @@ public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concorda
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
 public_registration: 'Inscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
-public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
+public_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
@@ -540,9 +545,9 @@ remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %cou
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
-remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
-remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
-remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
+remove_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
+remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 rename: Renommer
 rename_category: 'Renommer la catégorie'
@@ -592,8 +597,9 @@ roles: Rôles
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
 save_as_template: 'Sauvegarder comme modèle'
-save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
+save_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 search: Rechercher
+search_maj: RECHERCHER
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
@@ -602,7 +608,7 @@ see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
-select_contacts_title: 'Sélectionnez les destinataires'
+select_contacts_title: 'Sélectionnez le(s) destinataire(s)'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
@@ -610,7 +616,6 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send: Envoyer
-send: envoyer
 send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
@@ -669,7 +674,7 @@ to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
 to_message: À
 to_platform_users: 'aux utilisateurs de la plateforme'
-to_workspace_members: 'aux membres de cet espace'
+to_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
 tool: Outil
 tool_form_displayName: 'Nom affiché'
@@ -714,7 +719,7 @@ up: Monter
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
-url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
+url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
@@ -725,6 +730,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
+username_already_exists: 'Un utilisateur avec le nom d''utilisateur %username% existe déjà (lignes : %lines%)'
 username_or_email: 'Nom d''utilisateur ou email'
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
@@ -745,7 +751,7 @@ visibility: Visibilité
 visible: Visible
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
-warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
+warning_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
 widget_display_form_name: Nom
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
@@ -765,12 +771,13 @@ workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" ét
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
 workspace_edit_form_creator : 'Créateur de l''espace'
-workspace_edit_form_description: Description
+workspace_edit_form_description: Description de l'espace
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
-workspace_edit_form_number : Nombre de personnes inscrit à l''espace
+workspace_edit_form_number : Nombre d'inscrits
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
+workspace_edit_form_isMooc: Est un MOOC
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
@@ -821,15 +828,16 @@ connect_with_mail: 'Je me connecte avec mon email'
 register_with_mail: 'Je m''inscris avec mon email'
 must_use_password: 'Vous devez saisir votre mot de passe'
 login_failure: 'Vos identifiants sont incorrects. Merci de réessayer'
+login_register_mooc: 'S''inscrire à <strong>%moocName%</strong>'
 btn_connect_message: 'Je me connecte'
 forgot_password: 'J''ai oublié mon mot de passe'
 user_form_mail: 'Adresse email'
 user_form_firstName: 'Prénom'
 user_form_lastName: 'Nom'
-user_form_firstName_invalid: 'Vous devez saisir votre prénom'
-user_form_lastName_invalid: 'Vous devez saisir votre nom'
-user_form_username: 'Identifiants de connexion'
-user_form_username_invalid: 'Votre nom d''utilisateur ne doit contenir que des lettres et des chiffres et posséder au minimum 3 caractères'
+user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux.'
+user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux.'
+user_form_username: 'Pseudo'
+user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres et posséder au minimum 3 caractères'
 mail: 'Email'
 mail_invalid: 'Vous devez saisir une adresse email valide'
 user_form_plainPassword_first: 'Mot de passe'
@@ -837,7 +845,8 @@ user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 c
 user_form_plainPassword_second: 'Vérification du mot de passe'
 password_mismatch : 'Les mots de passe ne correspondent pas'
 account_created: 'Votre compte utilisateur a été crée'
-what_is_solerni: 'A propos de Solerni'
+what_is_solerni: 'A propos'
+catalogue: 'Catalogue'
 no_message: 'Pas de nouveaux message'
 solerni_homepage: 'Retour à l''accueil'
 solerni_hello: 'Bonjour'
@@ -872,3 +881,194 @@ go_to_evaluation: 'Aller dans mon espace d''évaluation'
 get_this_badge: 'Obtenir ce badge'
 my_evals: 'Mes évaluations'
 get_more_badges: 'Obtenir plus de badges'
+show_my_evals: Afficher mes évaluations
+
+back_to_parameters: 'Retour à l''administration'
+
+#Mooc Form Edit
+workspace_form_isMooc: 'Mooc'
+claroline_corebundle_mooc: 'Formulaire d''édition du MOOC'
+claroline_corebundle_mooc_title: 'Titre'
+claroline_corebundle_mooc_alias: 'Alias'
+claroline_corebundle_mooc_description: 'Description du mooc'
+claroline_corebundle_mooc_owner: 'Propriétaire'
+claroline_corebundle_mooc_isPublic: 'MOOC public'
+claroline_corebundle_mooc_accessConstraints: 'Règles d''accès'
+claroline_corebundle_mooc_categories: 'Catégories'
+claroline_corebundle_mooc_aboutPageDescription: 'Page En savoir +'
+claroline_corebundle_mooc_file: 'Image d''illustration'
+claroline_corebundle_mooc_illustrationPath: 'Illustration du mooc'
+claroline_corebundle_mooc_postEndAction: 'Après fermeture'
+claroline_corebundle_mooc_duration: 'Durée <br><span style="font-weight:normal">(en semaines)</span>'
+claroline_corebundle_mooc_weeklyTime: 'Durée hebdomadaire'
+claroline_corebundle_mooc_language: 'Langue'
+claroline_corebundle_mooc_cost: 'Tarif'
+claroline_corebundle_mooc_hasVideo: 'Vidéos'
+claroline_corebundle_mooc_hasSubtitle: 'Avec sous-titres'
+claroline_corebundle_mooc_prerequisites: 'Prérequis'
+claroline_corebundle_mooc_teamDescription: 'Equipe pédagogique'
+claroline_corebundle_mooc_badgesUrl: 'URL de détail des badges'
+claroline_corebundle_mooc_badgesText: 'Description des badges'
+claroline_corebundle_mooc_googleAnalyticsToken: 'Token Google Analytics'
+claroline_corebundle_mooc_hasFacebookShare: 'Activer le partage Facebook'
+claroline_corebundle_mooc_hasTweeterShare: 'Activer le partage Twitter'
+claroline_corebundle_mooc_hasGplusShare: 'Activer le partage G+'
+claroline_corebundle_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
+claroline_corebundle_mooc_lesson: 'Cours du MOOC'
+claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
+claroline_corebundle_moocs : 'Moocs'
+claroline_corebundle_mooc_certificationType : 'Certification'
+claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
+claroline_corebundle_mooc_blog: Blog du Mooc
+choose_blog_mooc: -- Choisir un blog pour le mooc --
+
+
+workspace_edit: 'Paramètres du workspace'
+mooc_edit: 'Paramètres du MOOC'
+sessions_edit: 'Gestion des sessions du MOOC'
+add_session: 'Créer une nouvelle session'
+delete_session: 'Supprimer la session'
+#categories
+
+mooc_categories: 'Catégories des MOOCs'
+mooc_categories_create: 'Créer une catégorie'
+mooc_categories_list: 'Liste des catégories'
+mooc_categories_list_empty: 'Aucune catégorie'
+mooc_category_name: 'catégorie'
+mooc_categories_edit: 'Editer une catégorie'
+mooc_category_edit: 'Nom de la catégorie'
+mooc_category_create: 'Nom de la catégorie'
+delete_category_confirm_message: Supprimer une catégorie
+delete_category_confirm_title: Supprimer cette catégorie
+
+mooc_owners: 'Propriétaires de MOOCs'
+mooc_owner_create: 'Créer un propriétaire'
+mooc_owner_list: 'Liste des propriétaires'
+mooc_owner_list_empty: 'Aucun propriétaire'
+mooc_owner_edit: 'Propriétaire à éditer'
+mooc_owner_create: 'Créer un propriétaire'
+delete_owner_confirm_message: Supprimer un propriétaire
+delete_owner_confirm_title: Supprimer ce propriétaire
+
+claroline_corebundle_mooc_owner_name: 'Nom du propriétaire'
+claroline_corebundle_mooc_owner_description: 'Slogan ou description'
+claroline_corebundle_mooc_owner_logoPath: 'Logo'
+claroline_corebundle_mooc_owner_logoFile: 'Choisir un logo'
+claroline_corebundle_mooc_owner_dressingPath: 'Image d''habillage'
+claroline_corebundle_mooc_owner_dressingFile: 'Choisir une image d''habillage'
+
+mooc_accessconstraints: 'Règles d''accès aux MOOCs'
+mooc_accessconstraints_create: 'Créer un ensemble de règles d''accès'
+mooc_accessconstraints_list: 'Liste des règles d''accès'
+mooc_accessconstraints_list_empty: 'Aucun ensemble de règles d''accès'
+mooc_accessconstraints_edit: 'Modifier une Règle d''accès'
+delete_accessConstraint_confirm_message: Supprimer une règle d'accès
+delete_accessConstraint_confirm_title: Supprimer cette règle d'accès
+
+claroline_corebundle_mooc_accessconstraints_name: 'Nom de l''ensemble de règles'
+claroline_corebundle_mooc_accessconstraints_whitelist: 'Liste blanche'
+claroline_corebundle_mooc_accessconstraints_patterns: 'Patterns'
+claroline_corebundle_mooc_accessconstraints_moocOwner: 'Propriétaire'
+
+
+create_mooc: Créer un mooc
+search_engine: Moteur de recherche
+search_entities_to_index: Entités à indexer
+mooc_administration: Administration générale des MOOCs
+back_to_mooc_parameters: Retour à l'administration des MOOCs
+mooc_list: Liste des MOOCs
+mooc_parameters: Editer le MOOC
+entity_cannot_be_deleted: 'Cette entité ne peut pas supprimée car associée aux MOOCs suivants :'
+workspace_parameters: 'Paramètres du workspace'
+
+mooc_by_entreprise: Les Moocs proposés par %entreprise%
+proposed_by: Proposé par
+know_more: En savoir +
+mooc_archives: Accéder aux archives du cours
+get_warned_next_session: M'avertir de la prochaine session
+mooc_is_over: Mooc terminé
+go_to_mooc: Accéder au mooc
+subscribe_to_mooc: S'inscrire au mooc
+inscription_closed: Inscription terminée
+session_full: Mooc complet
+mooc_private: mooc privé
+my_moocs: Mes moocs
+display_all_my_moocs: Afficher mes moocs
+running: En cours
+to_come: A venir
+over: Terminé
+no_moocs_owner: Pas de Mooc disponible pour cette entreprise
+no_evals_yet: <p>Vous n'avez pas d'évaluations en cours.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
+
+new message: Nouveau message
+add_destinataires : Ajouter le(s) destinataire(s)
+
+mailsystem: Messagerie
+dashboard_widget_message_default_text: Retrouvez votre dernier message dans cet espace
+show_mailsystem: Afficher ma messagerie
+last_message: 'Dernier message :'
+@at: à
+
+no_badges: Aucun badge obtenu
+dashboard_widget_badges_default_text: Rejoignez un Mooc et tentez d'obtenir des badges !
+show_badges: Afficher mes badges
+last_badge: 'Dernier badge obtenu :'
+
+no_evals: Aucune évaluation en cours
+dashboard_widget_evals_default_text: Rejoignez un Mooc et passez un badge de compétences
+
+in_progress_badges: %number% évaluation%plural% en cours
+
+choose_lesson_mooc: -- Choisir un cours pour le mooc --
+choose_language_mooc: -- Choisir une langue --
+fr_FR: Français
+en_EN: Anglais
+mooc_certif_badge: Badge
+mooc_certif_attestation: Attestation de réussite
+choose_replay_mooc: -- Choisir une action --
+mooc_can_replay: Rejouable
+mooc_cannot_replay: Non rejouable
+mooc_choose_owner: -- Choisir un propriétaire pour ce MOOC --
+
+session_start_date: Début de session
+session_end_date: Fin de session
+session_start_subscription: Début pour l'inscription
+session_end_subscription: Fin pour l'inscription
+session_title: Titre de la session
+session_max_users: Nombre maximum d'inscrits<br><span style="font-weight:normal">(0 pour aucune limite)</span>
+session_choose_forum: -- Choisir un forum de session --
+constraint_whitelist: Liste blanche<br><span style="font-weight:normal">(1 adresse email par ligne)</span>
+constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@domaine.ext, 1 par ligne)</span>
+constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
+
+
+fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
+see_all_owner_moocs: Voir tous les moocs
+mooc_analytics: Statistiques du MOOC
+mooc_analytics_home: Claroline
+mooc_analytics_details: Détails du MOOC
+mooc_analytics_badges_piechart: Badges (Piecharts)
+mooc_analytics_badges_chart: Badges (Charts)
+mooc_analytics_export: Exports
+
+mooc_analytics_export: Exportez les données du MOOC
+export_badge_knowledge: Badges de connaissances
+export_badge_skill: Badge de compétences
+export_subscriptions_stats: Statistiques d'inscription
+export_active_users: Utilisateurs les plus actifs
+export_forum_stats: Statistiques du forum
+
+mooc_subscriptions_follow_up: Suivi des inscriptions
+mooc_workspace_interactions: Ouvertures et interactions par heure
+mooc_forum_publication: Publication dans le forum
+mooc_users_activity: Répartition des utilisateurs par activité / inactivité
+mooc_badges_knowledge_piechart: Répartition des badges de connaissances par statut
+mooc_badges_skill_piechart: Répartition des badges de compétences par statut
+mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
+mooc_badges_skill_chart: Répartition cumulée des badges de compétences
+
+mooc_register_modal_title: '<b>Bienvenue</b>,'
+mooc_register_modal_mooc_name: 'Vous vous êtes inscrit au MOOC "%moocName%".'
+mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débutera le %moocDate% prochain.</strong>'
+mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
+mooc_register_modal_text2: 'A très bientôt.'

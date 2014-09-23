@@ -35,25 +35,60 @@
     {% set nbPages = groups.getNbPages() %}
     <div id="contacts-list-page" class="contacts-list-page">
 
-        {% if nbPages > 1 %}
+        {#{% if nbPages > 1 %}
             {{ renderPager(search, groups) }}
-        {% endif %}
+        {% endif %} #}
         <div class="table-responsive">
-            <table class="table table-bordered">
-                <tr>
-                    <th>{{ 'name'|trans({}, 'platform') }}</th>
-                    <th></th>
-                </tr>
-                {% for group in groups %}
+            <table class="table table-condensed table-solerni scrollable">
+                <thead>
                     <tr>
-                        <td>{{ group.getName() }}</td>
-                        <td><input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}"></td>
+                        <th style='width:20px'></th>
+                        <th style='width:518px'>{{ 'name'|trans({}, 'platform') }}</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                        <tr>
+                            <td style='width:20px'><input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}"></td>
+                            <td style='width:500px'>{{ group.getName() }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
+            <div class='counter_b counter0'>0 sélectionné</div>
+            <div class='counter_b counter1 hide'>1 sélectionné</div>
+            <div class='counter_b counterX hide'><span class='counterValue'></span> sélectionnés</div>
         </div>
         {% if nbPages > 1 %}
             {{ renderPager(search, groups) }}
         {% endif %}
     </div>
+    <script>
+    
+        $('.contact-chk').on('click', function (e) {
+
+            if ( $( this )[0].checked) {
+                $( this ).parent().parent().addClass('selected');
+            } else {
+                $( this ).parent().parent().removeClass('selected');                
+            }
+
+            cpt = 0;
+            $('.contact-chk').each(function( index ) {
+              if($( this )[0].checked){
+                cpt++;
+              }
+            });
+
+            //hide all
+            $( '.counter_b' ).addClass('hide');
+
+            //display one
+            if(cpt == 0){$( '.counter0' ).removeClass('hide'); $('#add-contacts-confirm-ok').attr("disabled", "disabled"); }
+            if(cpt == 1){$( '.counter1' ).removeClass('hide'); $('#add-contacts-confirm-ok').removeAttr("disabled");}
+            if(cpt > 1){$( '.counterX' ).removeClass('hide'); $( '.counterValue' ).text(cpt); $('#add-contacts-confirm-ok').removeAttr("disabled");}
+
+        });
+        
+    </script>
 {% endif %}

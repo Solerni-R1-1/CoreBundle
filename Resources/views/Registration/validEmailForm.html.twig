@@ -1,0 +1,54 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block bodyClasses %}sign-in{% endblock %}
+
+{% block title %}{{ 'validateAccount' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+
+
+{% block solerniHeaderImage %}
+     <div class="slrn-header">
+        <div class="container slrn-header_w">
+            <div class="slrn-header__body">
+                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/header-inscription-post.png') }}" alt="" width="" height="" />
+                <h1 class="slrn-header__content" ></h1>
+            </div>
+        </div>
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/account_validation_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <div class="col-md-12 col-xs-12">
+    	{% if msg == 'accountValidation_key_ok' %}
+    		<h1 class="slrn-section-title">Votre compte est validé avec succès.</h1>
+            <p>Nous allons vous conduire vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
+    	{% else %}
+    		<h1 class="slrn-section-title">Problème à l'activation du compte</h1>
+    		
+        	<span class="label label-warning">La clé {{key}} ne correspond pas à l'email {{mail}}, ou bien votre compte est déjà activé.</span>
+            <p class="top-margin">Veuillez patientez, nous allons vous diriger vers la page adéquate.</p>
+	        {#<p>Merci de remplir ce formulaire avec votre mail et le code fournit dans le mail envoyé</p>
+	        <ul>
+        		<li><a href='{{ path('claro_registration_send_mail', { 'mail': mail , 'hash' : hash}) }}' class='slrn-red-link'>Cliquez sur ce lien pour recevoir de nouveau le mail d'activation.</a></li>
+        	</ul>
+    		{{ form(form) }}#}
+    	{% endif %}
+        <script>
+            window.setTimeout(function() {
+                window.location.href = "{{ path('claro_desktop_open') }}";
+            }, 3000);
+        </script>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator/jquery.form-validator.js') }}"></script>
+    <!--[if IE 9 ]>
+        <script src="{{ asset('bundles/clarolinecore/js/jquery.placeholder.js') }}"></script>
+        <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
+{% endblock %}

@@ -1057,7 +1057,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         foreach ($users as $user) {
             $resultArray[] = array(
                 'id'   => $user->getId(),
-                'text' => $user->getFirstName() . ' ' . $user->getLastName()
+                'text' => $user->getFirstName() . ' ' . $user->getLastName() . ' (' . $user->getUsername() . ')'
             );
         }
 
@@ -1142,5 +1142,23 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('publicUrl', $data);
 
         return $query->getSingleResult();
+    }
+    
+    public function findByUsernameIn(array $usernames) {
+    	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
+    			WHERE u.username IN (:usernames)';
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("usernames", $usernames);
+    	
+    	return $query->getResult();
+    }
+    
+    public function findByMailIn(array $mails) {
+    	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
+    			WHERE u.mail IN (:mails)';
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("mails", $mails);
+    	 
+    	return $query->getResult();
     }
 }

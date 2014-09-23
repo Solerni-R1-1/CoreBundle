@@ -98,18 +98,27 @@ class AuthenticationController
      */
     public function loginAction()
     {
+    	$data = array();
+    	$session = $this->request->getSession();
+    	
+    	
         if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $this->request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } else {
-            $error = $this->request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
+            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+        }        
+        
+        $lastUsername = $session->get(SecurityContext::LAST_USERNAME);
+        
+        if ($session->has("moocSession")) {
+        	$moocSession = $session->get("moocSession");
+        	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+        	$data['moocSession'] = $moocSession;
         }
 
-        $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
-
-        return array(
-            'last_username' => $lastUsername,
-            'error' => $error
-        );
+        $data['last_username'] = $lastUsername;
+        $data['error'] = $error;
+        return $data;
     }
 
     /**
@@ -181,6 +190,14 @@ class AuthenticationController
             $user = $this->userManager->getUserbyEmail($data['mail']);
 
             if (!empty($user)) {
+
+                if ( $user->isFacebookAccount() === TRUE ) {
+                    return array(
+                        'error' => $this->translator->trans('fb_forbidden', array(), 'platform'),
+                        'form' => $form->createView()
+                    );
+                }
+
                 $user->setHashTime(time());
                 $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
                 $user->setResetPasswordHash($password);
@@ -232,7 +249,7 @@ class AuthenticationController
             );
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $currentTime = time();
 
         // the link is valid for 24h
@@ -259,13 +276,14 @@ class AuthenticationController
     public function newPasswordAction($hash)
     {
         $user = $this->userManager->getResetPasswordHash($hash);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $plainPassword = $data->getPlainPassword();
             $user->setPlainPassword($plainPassword);
+            $user->setResetPasswordHash(null);
             $this->om->persist($user);
             $this->om->flush();
             $this->request->getSession()
@@ -287,6 +305,7 @@ class AuthenticationController
      */
     public function postAuthenticationAction($format)
     {
+
         $formats = array('json', 'xml');
 
         if (!in_array($format, $formats)) {

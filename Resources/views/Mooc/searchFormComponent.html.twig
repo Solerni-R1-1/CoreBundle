@@ -1,0 +1,39 @@
+{# Display search form #}
+<li role="presentation">
+    <form id='search_form' class="slrn-search-form slrn-search-form--inactive" method="GET" action="{{ path('orange_search') }}">
+        <input name="q" id='q' placeholder="{{ 'search_maj'|trans({}, 'platform') }}" class="slrn-search-form__input">
+    </form>
+</li>
+<script>
+    $( document ).ready(function() {
+        
+        
+        function getQueryStringParams(sParam)
+        {
+            var sPageURL = window.location.hash;
+            var sPageQuery = sPageURL.slice( sPageURL.indexOf('?') + 1, sPageURL.length );
+            var sURLVariables = sPageQuery.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) 
+            {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) 
+                {
+                    return sParameterName[1];
+                }
+            }
+        }
+        // Check if params contains q so we populate the input field
+        var queryKeywords = getQueryStringParams('q');
+        if ( queryKeywords ) {
+            $("#q").val(queryKeywords);
+        }
+
+        $("#search_form").submit(function(e){
+            keywords = $("#q").val();
+            query = 'page=1&rpp=10&q='+ keywords +'&fs=&ss=&afs=mcat,owner,type&sb=false';
+            window.location.href = "{{ path('orange_search') }}#?" + query;
+            return false;
+        });
+    });
+    
+</script>

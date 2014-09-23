@@ -21,58 +21,41 @@
                 {{ params.dropdown | raw }}
             </ul>
         {% endif %}
-        {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) is not empty %}<span class="slrn-item__marqueur"></span>{% endif %}
+        {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) %}<span class="slrn-item__marqueur"></span>{% endif %}
     </li>
 {% endmacro %}
     
 {# END MACRO START RENDER #}
 {% block topBar %}
     
-    {% block leftSide %}
-        {# OLD MENU DE GAUCHE // unused now I keep it for reference
-        {% import _self as topbar 
-        {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
-            {{ topbar.item({'name':'home', 'href':path('claro_index'), 'title':'home'}) }}
-        {% endif %}
-        {{ topbar.item({'name': 'desktop', 'breakhide': true, 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
-        {% if canAdministrate == true %}
-            {{ topbar.item({'name': 'administration', 'breakhide': true, 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
-        {% endif %}
-        {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
-        {% else %}
-            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
-        {% endif %}
-        {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'icon':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
-        {% else %}
-            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
-        {% endif %}
-        {% if '/icap_notification/'|compareRoute('true') is empty %}
-            {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
-        {% endif %}
-        #}
-    {% endblock leftSide %}
+    {% block leftSide %}{% endblock leftSide %}
     
     {# DISPLAY THE LINK TO CMS PRESENTATION #}
     {% block whatIsSolerni %}
+        {% include ('ClarolineCoreBundle:Mooc:searchFormComponent.html.twig') %}
         {% import _self as topbar %}
-        {{ topbar.item({'name':'what_is_solerni', 'breakhide': true, 'id':'what_is_solerni', 'href':path( 'solerni_static_page', { 'name': 'cms_quoi' } ), 'title':'Découvrez Solerni' }) }}
+        {{ topbar.item({
+            'name':'what_is_solerni', 
+            'breakhide': true, 
+            'id':'what_is_solerni', 
+            'href':path( 'solerni_static_page', { 'name': 'cms_quoi' } ),
+            'title':'Découvrez Solerni' }) }}
+        {{ topbar.item({
+            'name':'catalogue',
+            'breakhide': true, 
+            'id':'catalogue', 
+            'href':path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false',
+            'title':'Découvrez Le catalogue Solerni', 
+            'marqueur': true, 
+            'route': '/catalogue', 
+            'css':'slrn-topbar-item' }) }}
     {% endblock %}
         
     {% block rightSide %}
         {% import _self as topbar %}
-        {# DROPDOWN WORKSPACE MENU
-        {% if isInAWorkspace %}
-            {% set workspacesName = currentWorkspace.getName() | length > 16 ? currentWorkspace.getName() | slice(0, 16) ~ '...' : currentWorkspace.getName() %}
-        {% else %}
-            {% set workspacesName =  'workspaces' %}
-        {% endif %}
-        {{ topbar.item({'name':workspacesName, 'icon':'', 'route':'/workspaces/', 'title':block('dropdownWorkspace')}) }}
-        #}
     
         {# DISPLAY LINK TO DASHBOARD & MESSAGES AND NUMBER OF #}
-        {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':'desktop/tool/open/home', 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
+        {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':['desktop/tool/open/home', 'mes_moocs', 'profile/badge', 'mes_evaluations', 'workspaces/' ~ app.user.getPersonalWorkspace().getId() ~ '/open/tool/resource_manager', 'message'], 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
         {% if countUnreadMessages == 0 %}
             {% set countUnreadMessages = '' %}
             {% set messagesTitle = 'no_message' | trans({'%count%': countUnreadMessages}, 'platform') %}
@@ -144,41 +127,24 @@
     {% endblock dropdowLogin %}
 
     {% block dropdownLogged %}
-        {# OLD DROPDOWN MENU FOR LOGGED USER
-        {{ topbar.item({ 'name':'my_profile', 'href':path('claro_profile_view'), 'icon':'user'}) }}
-        <li role="presentation" class="divider"></li>
-        {% if personalWs is not null %}
-            {{ topbar.item({ 'name':'my_workspace', 'href':path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'icon':'book' }) }}
-        {% endif %}
-		{{ topbar.item({ 'name':'my_agenda', 'href':path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'icon':'calendar'}) }}
-        {{ topbar.item({ 'name':'my_resources', 'href':path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'icon':'folder-close' }) }}
-        {{ topbar.item({ 'name':'my_badges', 'href':path('claro_profile_view_badges'), 'icon':'trophy'}) }}
-        <li role="presentation" class="divider"></li>
-        #}
-        {#{{ topbar.item({ 'name':'profile_parameters', 'href':path('claro_profile_form', {'user': app.user.id}),  'route':'profile_parameters', 'css':'slrn-topbar-item__sub' }) }}
-        <li class="divider"></li>#}
         {{ topbar.item({ 'name':'my_account', 'href':path('claro_profile_view', {'userId': app.user.id}), 'route':'my_account', 'css':'slrn-topbar-item__sub' }) }}
         <li class="divider"></li>
         {% if is_granted('ROLE_ADMIN') %}
             {{ topbar.item({ 'name':'administration', 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'css':'slrn-topbar-item__sub'  }) }}
         	<li class="divider"></li>
         {% endif %}	
-        
         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
         	{% import _self as topbar %}
-            
-            	{{ topbar.item({ 'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
-            	<li class="divider"></li>
-            	{{ topbar.item({ 'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
-	        	<li class="divider"></li>
-	            {{ topbar.item({ 'name':'create_workspace', 'href':path('claro_workspace_creation_form'), 'icon':'pencil', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
-	            <li class="divider"></li>
-		        
+            {{ topbar.item({ 'name':'Moocs', 'href':path('admin_parameters_mooc'), 'icon':'cog', 'route':'/admin/parameters/mooc/', 'css':'slrn-topbar-item__sub'  }) }}
+        	<li class="divider"></li>
+            {#{{ topbar.item({ 'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
+            <li class="divider"></li>#}
+	        {{ topbar.item({ 'name':'create_mooc', 'href':path('claro_workspace_creation_form'), 'icon':'pencil', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
+	        <li class="divider"></li>
+            {{ topbar.item({ 'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
+	        <li class="divider"></li>    
         {% endif %}
-        
-        
-        
-        
+
         {% if isImpersonated %}
             {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}
         {% else %}

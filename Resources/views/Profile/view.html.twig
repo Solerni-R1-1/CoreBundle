@@ -19,11 +19,13 @@
                                 {{ 'edit_profile'|trans({}, 'platform') }}
                             </a>
                         </li>
+                        {% if FALSE == user.isFacebookAccount %}
                         <li role="presentation" >
                             <a role="menuitem" href="{{ path('claro_user_password_edit') }}">
                                 {{ 'edit_password'|trans({}, 'platform') }}
                             </a>
                         </li>
+                        {% endif %}
                         <li role="presentation" >
                             <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
                                 {{ 'see_public_profile'|trans({}, 'platform') }}

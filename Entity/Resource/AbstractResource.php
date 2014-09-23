@@ -39,6 +39,10 @@ abstract class AbstractResource
         $this->resourceNode = $resourceNode;
     }
 
+    /**
+     * 
+     * @return ResourceNode
+     */
     public function getResourceNode()
     {
         return $this->resourceNode;

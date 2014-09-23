@@ -61,7 +61,9 @@ class WorkspaceVoter implements VoterInterface
 
             foreach ($roles as $role) {
                 if ($role === $manager->getName()) {
-                    return VoterInterface::ACCESS_GRANTED;
+                	if ($attributes[0] !== 'parameters') {
+                    	return VoterInterface::ACCESS_GRANTED;
+                	}
                 }
             }
 

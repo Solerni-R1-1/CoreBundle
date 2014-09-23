@@ -262,7 +262,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE );
 
         return array('form' => $form->createView());
     }
@@ -283,30 +283,34 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE );
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
-            $type = $form->get('type')->getData() == 'simple' ?
-                Configuration::TYPE_SIMPLE :
-                Configuration::TYPE_AGGREGATOR;
+            $type = Configuration::TYPE_SIMPLE;
             $config = Configuration::fromTemplate(
-                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+                $this->templateDir . $ds . 'default.zip'
             );
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
             $config->setDisplayable($form->get('displayable')->getData());
             $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());            
+            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
             $config->setWorkspaceDescription($form->get('description')->getData());
+            $config->setIsMooc($form->get('isMooc')->getData());
             
             $user = $this->security->getToken()->getUser();
-            $this->workspaceManager->create($config, $user);
+            $workspace = $this->workspaceManager->create($config, $user);
             $this->tokenUpdater->update($this->security->getToken());
-            $route = $this->router->generate('claro_workspace_list');
-
+            
+            if ( $form->get('isMooc')->getData() ) {
+                $route = $this->router->generate('claro_workspace_edit_form', array('workspace' => $workspace->getId() ));
+            } else {
+                $route = $this->router->generate('claro_workspace_list');
+            }
+            
             return new RedirectResponse($route);
         }
 
@@ -386,6 +390,7 @@ class WorkspaceController extends Controller
         $currentRoles = $this->utils->getRoles($this->security->getToken());
         //do I need to display every tools.
         $hasManagerAccess = false;
+        $hasAdminAccess = false;
         $managerRole = $this->roleManager->getManagerRole($workspace);
 
         foreach ($currentRoles as $role) {
@@ -394,13 +399,22 @@ class WorkspaceController extends Controller
             }
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            $hasManagerAccess = true;
+        if ($this->security->isGranted('ROLE_ADMIN') || $this->security->isGranted('ROLE_WS_CREATOR') ) {
+            $hasAdminAccess = true;
         }
 
-        //if manager or admin, show every tools
+        //if ws creator or admin, show every tools
+        if ($hasAdminAccess) {
+            $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+        } else 
+       	// if manager, show everything but mooc parameters
         if ($hasManagerAccess) {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+            foreach ($orderedTools as $i => $orderedTool) {
+            	if ($orderedTool->getName() == "parameters") {
+            		unset($orderedTools[$i]);
+            	}
+            }
         //otherwise only shows the relevant tools
         } else {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
@@ -434,31 +448,54 @@ class WorkspaceController extends Controller
      */
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
-        $this->assertIsGranted($toolName, $workspace);
-
-        $event = $this->eventDispatcher->dispatch(
-            'open_tool_workspace_' . $toolName,
-            'DisplayTool',
-            array($workspace)
-        );
-
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Log\LogWorkspaceToolRead',
-            array($workspace, $toolName)
-        );
-
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Log\LogWorkspaceEnter',
-            array($workspace)
-        );
-
-        if ($toolName === 'resource_manager') {
-            $this->session->set('isDesktop', false);
+        // Redirect user if he's not registered to a session in the workspace and is not ADMIN
+        $user = $this->security->getToken()->getUser();
+        if (    $workspace->isMooc() && 
+                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $user ) &&
+                ! $this->security->isGranted('ROLE_WS_CREATOR')
+                
+            ) {
+            
+            return $this->redirect( $this->get('router')
+                                        ->generate('mooc_view', array( 
+                                            'moocId' => $workspace->getMooc()->getId(), 
+                                            'moocName' => $workspace->getMooc()->getTitle()))
+            );
         }
-
-        return new Response($event->getContent());
+        
+        if ( $this->assertIsGranted($toolName, $workspace, false) ) {
+            
+            $event = $this->eventDispatcher->dispatch(
+	            'open_tool_workspace_' . $toolName,
+	            'DisplayTool',
+	            array($workspace)
+	        );
+	
+	        $this->eventDispatcher->dispatch(
+	            'log',
+	            'Log\LogWorkspaceToolRead',
+	            array($workspace, $toolName)
+	        );
+	
+	        $this->eventDispatcher->dispatch(
+	            'log',
+	            'Log\LogWorkspaceEnter',
+	            array($workspace)
+	        );
+	
+	        if ($toolName === 'resource_manager') {
+	            $this->session->set('isDesktop', false);
+	        }
+	
+	        return new Response($event->getContent());
+        } else {
+        	return $this->redirect( $this->get('router')
+        			->generate('mooc_view', array(
+        					'moocId' => $workspace->getMooc()->getId(),
+        					'moocName' => $workspace->getMooc()->getTitle()))
+        	);
+        }
+        
     }
 
     /**
@@ -1131,11 +1168,17 @@ class WorkspaceController extends Controller
         return new Response('error', 400);
     }
 
-    private function assertIsGranted($attributes, $object = null)
+    private function assertIsGranted($attributes, $object = null, $throwException = true)
     {
         if (false === $this->security->isGranted($attributes, $object)) {
-            throw new AccessDeniedException();
+        	if ($throwException) {
+            	throw new AccessDeniedException();
+        	} else {
+        		return false;
+        	}
         }
+        
+        return true;
     }
 
     private function checkWorkspaceManagerAccess(AbstractWorkspace $workspace)

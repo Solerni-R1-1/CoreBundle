@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -131,6 +132,24 @@ abstract class AbstractWorkspace
     */
 
     protected $creationDate;
+    
+    /**
+     * @var Claroline\CoreBundle\Entity\Mooc\Mooc
+     * 
+     * @ORM\OneToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\Mooc", 
+     *      cascade={"persist", "remove"},
+     *      mappedBy="workspace"
+     * )
+     */
+    protected $mooc;
+    
+    /**
+     *
+     * @var boolean
+     */
+    protected $isMooc;
+    
 
     public function __construct()
     {
@@ -272,6 +291,39 @@ abstract class AbstractWorkspace
             $date = date('d-m-Y H:i', $this->creationDate);
 
             return (new \Datetime($date));
+        }
+    }
+
+    /**
+     * 
+     * @return Mooc
+     */
+    public function getMooc()
+    {
+        return $this->mooc;
+    }
+
+    public function setMooc( Mooc $mooc )
+    {
+        $this->mooc = $mooc;
+        
+        return $this;
+    }
+    
+    public function isMooc() {
+        return ( null !== $this->getMooc() );
+    }
+    
+    public function getIsMooc() {
+        $this->isMooc();
+    }
+
+    public function setIsMooc( $isMooc ) {
+        if ( $isMooc && ! $this->getMooc() ) {
+            $mooc = new Mooc();
+            $mooc->setWorkspace($this);
+            $this->setMooc($mooc);
+            return true;
         }
     }
 

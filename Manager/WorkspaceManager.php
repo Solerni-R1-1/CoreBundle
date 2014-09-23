@@ -159,7 +159,7 @@ class WorkspaceManager
      *
      * @throws UnknownToolException
      */
-    public function create(Configuration $config, User $manager)
+    public function create(Configuration $config, User $manager, $createLog = true)
     {
         $config->check();
         $this->om->startFlushSuite();
@@ -172,11 +172,12 @@ class WorkspaceManager
         $workspace->setDisplayable($config->isDisplayable());
         $workspace->setSelfRegistration($config->getSelfRegistration());
         $workspace->setSelfUnregistration($config->getSelfUnregistration());
+        $workspace->setIsMooc($config->isMooc());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-        $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER']);
+        $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER'], false, $createLog);
         $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
         $dir->setName($workspace->getName());
         $rights = $config->getPermsRootConfiguration();
@@ -188,7 +189,8 @@ class WorkspaceManager
             $workspace,
             null,
             null,
-            $preparedRights
+            $preparedRights,
+        	$createLog
         );
 
         $toolsConfig = $config->getToolsConfiguration();
@@ -226,7 +228,9 @@ class WorkspaceManager
             $position++;
         }
 
-        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
+        if ($createLog) {
+        	$this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
+        }
         $this->om->persist($workspace);
         $this->om->endFlushSuite();
 
@@ -244,6 +248,19 @@ class WorkspaceManager
     {
         $this->om->persist($workspace);
         $this->om->flush();
+        
+        // Code moved from postUpdateListener.
+        // http://docs.doctrine-project.org/en/2.0.x/reference/events.html#postupdate-postremove-postpersist
+        // can't modify entity or entity relations in postUpdate of this entity...
+        if ($workspace->getMooc() != null) {
+        	$constraints = array();
+        	$accessContraints = $workspace->getMooc()->getAccessConstraints();
+        	if (!empty($accessContraints)) {
+        		$constraints = $accessContraints->toArray();
+        	}
+        	$service = $this->container->get('orange.moocaccesscontraints_service');
+        	$service->processUpgrade($constraints);
+        }
     }
 
     /**
@@ -253,9 +270,35 @@ class WorkspaceManager
      */
     public function deleteWorkspace(AbstractWorkspace $workspace)
     {
+    	// Delete Mooc before resources
+    	$mooc = $workspace->getMooc();
+    	if ($mooc != null) {
+	    	// Delete all SessionByUser tuple associated to the sessions of this workspace
+	    	$this->om->getRepository("ClarolineCoreBundle:Mooc\SessionsByUsers")->deleteAllByWorkspace($workspace);
+    		$mooc->setLesson(null);
+    		$sessions = $mooc->getMoocSessions();
+    		if ($sessions != null) {
+    			foreach ($sessions as $session) {
+    				$session->setForum(null);	
+    				$this->om->persist($session);
+    				$this->om->remove($session);
+    			}
+    		}
+    		$this->om->persist($mooc);
+    		$this->om->remove($mooc);
+    		$this->om->flush();
+    	}
+    	
+    	// Delete badge rules
+    	$this->om->getRepository("ClarolineCoreBundle:Badge\BadgeRule")->deleteBadgeRulesAssociatedToWorkspaceResources($workspace);
+    	
+    	// Dissociate badges from workspace
+    	$this->om->getRepository("ClarolineCoreBundle:Badge\Badge")->dissociateFromWorkspace($workspace);
+    	
+    	// Delete resources
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $children = $root->getChildren();
-
+        
         if ($children) {
             foreach ($children as $node) {
                 $this->resourceManager->delete($node);

@@ -18,6 +18,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceType extends AbstractType
 {
+    
+    private $options;
+
+    public function __construct( $options = array() ) {
+        $this->options = $options;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('required' => true));
@@ -38,27 +45,7 @@ class WorkspaceType extends AbstractType
         } else {
             $builder->add('description', 'tinymce', array('required' => false));
         }
-        $builder->add(
-            'type',
-            'choice',
-            array(
-                'choices' => array(
-                    'simple' => 'Simple',
-                    'aggregator' => 'Aggregator',
-                ),
-                'multiple' => false,
-                'required' => true
-            )
-        );
-
-        $builder->add(
-            'template',
-            'entity',
-            array(
-                'class' => 'ClarolineCoreBundle:Workspace\Template',
-                'property' => 'name'
-            )
-        );
+       
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add(
@@ -69,6 +56,8 @@ class WorkspaceType extends AbstractType
                 'attr' => array('checked' => 'checked')
             )
         );
+        $builder->add('isMooc', 'checkbox', array( 'required' => false, 'data' => true ));
+ 
     }
 
     public function getName()

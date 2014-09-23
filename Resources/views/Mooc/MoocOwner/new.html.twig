@@ -1,0 +1,21 @@
+{% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
+
+{% block content -%}
+
+    <h1>{{ 'mooc_owner_create'|trans({}, 'platform') }}</h1>
+            {{ form(form) }}
+    
+    <a class="btn btn-primary js-submit-button" href="#">{{ 'validate'|trans({}, 'platform') }}</a>
+    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_owners') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('.js-submit-button').on('click', function(event) {
+            event.preventDefault();
+            $('#claroline_corebundle_mooc_owner_save').trigger('click');
+        })
+    </script>
+    
+{% endblock %}

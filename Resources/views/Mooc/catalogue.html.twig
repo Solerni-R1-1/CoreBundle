@@ -1,0 +1,15 @@
+{% extends 'OrangeSearchBundle:Search:response.html.twig' %}
+
+{% block bodyClasses %}{% endblock %}
+
+{% block solerniHeaderImage %}
+     <div class="slrn-header slrn-header--slim">
+        <div class="container slrn-header_w container">
+            <div class="slrn-header__body">
+                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/header-catalogue.png') }}" alt="Consulter le catalogue" width="228" height="91" />
+                <h1 class="slrn-header__content" >Découvrez les moocs<br>proposés par Solerni</h1>
+            </div>
+        </div>
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/logging_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+    </div>
+{% endblock %}

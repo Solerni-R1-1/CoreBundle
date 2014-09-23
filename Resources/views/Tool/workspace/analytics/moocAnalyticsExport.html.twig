@@ -1,0 +1,54 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+    'name': 'analytics'|trans({}, 'platform'),
+    'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h2 class="panel-title">{{ 'mooc_analytics_export'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}
+
+        <div class="">
+            <div class="panel panel-default">
+                <div id="analytics-barchart" class="panel-body">
+                    <div id="container-barchart">
+                        <div id="activity-bar-chart" class="bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body logs-container">
+        <a class="btn btn-gris margin-large" href="{{ path('solerni_export_badges_knowledge_stats', {'workspace':workspace.getId()}) }}">
+            {{ 'export_badge_knowledge'|trans({}, 'platform') }}
+        </a>
+        <a class="btn btn-gris" href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">
+            {{ 'export_badge_skill'|trans({}, 'platform') }}
+        </a>
+        <a class="btn btn-gris" href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">
+            {{ 'export_subscriptions_stats'|trans({}, 'platform') }}
+        </a>
+        <a class="btn btn-gris" href="{{ path('solerni_export_active_users_stats', {'workspace':workspace.getId(), 'nbDays':5}) }}">
+            {{ 'export_active_users'|trans({}, 'platform') }}
+        </a>
+        <a class="btn btn-gris" href="{{ path('solerni_export_forum_stats', {'workspace':workspace.getId(), 'from':'2012-08-01', 'to':'2014-12-12'}) }}">
+            {{ 'export_forum_stats'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}

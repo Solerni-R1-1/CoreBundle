@@ -4,6 +4,18 @@
 
 {% block formTitle %}J'ai déjà un compte, je me connecte{% endblock %}
 
+{% block solerniHeaderImage %}
+     <div class="slrn-header">
+        <div class="container slrn-header_w">
+            <div class="slrn-header__body">
+                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/registration_title.png') }}" alt="" width="" height="" />
+                <h1 class="slrn-header__content" >Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs</h1>
+            </div>
+        </div>
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/registration_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+    </div>
+{% endblock %}
+
 {% block signinForm %}
     <div class='content-element panel panel-default'>
         <div class="panel-heading">
@@ -32,6 +44,33 @@
         </form>
         <small><a class="slrn-forgot-password--link" href ="{{ path('claro_security_forgot_password')}}" tabindex="4">{{ 'forgot_password'|trans({}, 'platform') }}</a></small>
     </div>
+
+ {% if is_facebook_available() %}
+    <script>
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/fr_FR/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        window.fbAsyncInit = function() {
+            // init the FB JS SDK
+            FB.init({
+                appId      : '{{ get_facebook_app_id() }}',        // App ID from the app dashboard
+                status     : true,                                 // Check Facebook Login status
+                xfbml      : true,
+                cookie     : true
+            });
+            $('.slrn-facebook-connect').removeAttr('disabled');
+            $('#btn-logout').on('click', function() {
+                FB.logout(function(respose){});
+            });
+        };
+    </script>
+    {% endif %}
+
+
 {% endblock %}
     
 {% block alternateText %}

@@ -1,0 +1,77 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'parameters' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+{{
+    macros.breadcrumbs([
+        {
+            'icon': 'icon-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_parameters_index')
+        },
+        {
+            'name': 'parameters'|trans({}, 'platform'),
+            'href': ''
+        }
+    ])
+}}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title slrn-section-title--sub">{{ 'mooc_administration'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('admin_parameters_mooc_categories') }}">
+            {{ 'mooc_categories'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('admin_parameters_mooc_owners') }}">
+            {{ 'mooc_owners'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('admin_parameters_mooc_accessconstraints') }}">
+            {{ 'mooc_accessconstraints'|trans({}, 'platform') }}
+        </a>
+    </div>
+    <div class="panel-heading margin-top-md">
+        <h3 class="panel-title slrn-section-title--sub">{{ 'search_engine'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('orange_search_admin') }}">
+            {{ 'search_entities_to_index'|trans({}, 'platform') }}
+        </a>
+    </div>
+    <div class="panel-heading margin-top-md">
+        <h3 class="panel-title slrn-section-title--sub">{{ 'mooc_list'|trans({}, 'platform') }}</h3>
+    </div>
+        <table class="slrn-categories-list">
+            {% for mooc in moocs %}
+                <tr>
+                    <td class="slrn-bold">{{ mooc.getTitle() }}</td>
+                    <td>
+                        {% if mooc.getOwner() %}
+                            {{ mooc.getOwner().getName() }} 
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if mooc.isPublic() %}
+                            Public
+                        {% else %}
+                            Privé
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-gris js-submit-button" href="{{ path('claro_workspace_edit_form', { 'workspace': mooc.getWorkspace().getId() }) }}">
+                            {{ 'mooc_parameters'|trans({}, 'platform') }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-gris js-submit-button" href="{{ path('claro_workspace_open_tool', { 'workspaceId': mooc.getWorkspace().getId(), 'toolName': 'parameters' }) }}">
+                            {{ 'workspace_parameters'|trans({}, 'platform') }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+{% endblock %}

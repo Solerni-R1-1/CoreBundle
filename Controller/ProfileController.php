@@ -225,7 +225,7 @@ class ProfileController extends Controller
             $editYourself = true;
         }
 
-        $roles = $this->roleManager->getPlatformRoles($loggedUser);
+        $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->createForm(
             new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
         );
@@ -312,14 +312,21 @@ class ProfileController extends Controller
      */
     public function editPasswordAction(User $loggedUser)
     {
-        $form = $this->createForm(new ResetPasswordType(), $loggedUser);
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
+
+        $form = $this->createForm(new ResetPasswordType($translator), $loggedUser);
         $form->handleRequest($this->request);
+
+        //We don't allow edit password for FB account
+        if( $loggedUser->isFacebookAccount() === TRUE){
+            return $this->redirect($this->generateUrl('claro_profile_view'));
+        }
 
         if ($form->isValid()) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
-            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-            $translator = $this->get('translator');
+            
 
             try {
                 /** @var \Claroline\CoreBundle\Entity\User $user */
@@ -402,13 +409,29 @@ class ProfileController extends Controller
      * @EXT\Method({"POST"})
      */
     public function checkPublicUrlAction(Request $request)
-    {
-        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($request->request->get('publicUrl'));
-        $data = array('check' => false);
+    {   
+        $publicUrl = $request->request->get('publicUrl');   
+        $isValid = true;
 
-        if (null === $existedUser) {
-            $data['check'] = true;
+        // If it's always okay : 
+        //  We test the pattern
+        if($isValid){
+            $pattern = User::$patternUrlPublic;
+            if(!preg_match($pattern, $publicUrl)) {
+                $isValid = false;
+            }
         }
+
+        // If it's always okay : 
+        //  We test the unicity
+        if($isValid){
+            $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+            if (null !== $existedUser) {
+                $isValid = false;
+            }
+        }
+        
+        $data = array('check' => $isValid);
 
         $response = new JsonResponse($data);
         return $response;

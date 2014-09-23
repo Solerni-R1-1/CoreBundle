@@ -1,0 +1,34 @@
+{% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
+
+{% block content -%}
+    <a class="btn btn-gris" href="{{ path('admin_parameters_mooc') }}">{{ 'back_to_mooc_parameters'|trans({}, 'platform') }}</a>
+    <h1>{{ 'mooc_owners'|trans({}, 'platform') }}</h1>
+    
+    <a class="btn btn-primary" href="{{ path('admin_parameters_mooc_owner_new') }}">
+      {{ 'mooc_owner_create'|trans({}, 'platform') }}
+    </a>
+    
+     <h2>{{ 'mooc_owner_list'|trans({}, 'platform') }}</h2>
+     
+    <table class="slrn-categories-list">
+        {% if entities|length == 0 %}
+            {{ 'mooc_owner_list_empty'|trans({}, 'platform') }}
+        {% else  %}
+            {% for entity in entities %}
+                <tr>
+                    <td>{{ entity.name }}</td>
+                    <td>
+                       <a class="btn btn-gris" href="{{ path('admin_parameters_mooc_owner_edit', { 'id': entity.id }) }}">{{ 'edit'|trans({}, 'platform') }}</a>
+                    </td>
+                    <td>
+                        {{ form_start( forms[loop.index0] ) }} {# this opens the form tag #}
+                            {{ form_widget( forms[loop.index0]._token ) }}
+                            {% include 'ClarolineCoreBundle:Partials/Administration:entityDeleteButton.html.twig' %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+    {% include 'ClarolineCoreBundle:Partials/Administration:deleteModal.html.twig' with { 'entityType': 'owner' } %}
+{% endblock %}

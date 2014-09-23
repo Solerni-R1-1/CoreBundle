@@ -2,73 +2,81 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
-{# WE DO NOT USE BREACRUMBS
-{% block breadcrumb %}
-    {{
-        macros.desktopBreadcrumbs([
-            {
-                'name': 'home'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
- #}
-
 {% block bodyClasses %}dsk{% endblock %}
 
 {% block section_content %}
-        {# DISPLAY LEFT COLUMN : USER PROFILE #}
         {% render controller(
-        'ClarolineCoreBundle:Solerni:getDesktopProfileWidget'
-    ) %}
-    {#<div class="panel-heading relative">
-        <h3 class="panel-title">
+            'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
+            { 'renderingContext': 'dashboard' }
+        ) %}
+<div class='col-xs-9 col-md-9'>
+    <div class='dsk__article__mooc'>
+        <div class='clearfix'></div>
+        <h2 class="slrn-content-main-title">
             {{ 'dashboard'|trans({}, 'platform') }}
-        </h3>
-       {# Bouton d'édition de la page  
-        <div class="float-right-top">
-            <a class="btn btn-primary" href="{{ path('claro_display_desktop_home_tabs_with_config', {'tabId': tabId}) }}" role="button">
-                <i id="switch-config-mode" class="icon-pencil"></i>
-            </a>
+        </h2>
+
+        <div class="dsk__my_moocs_header">
+            <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>
+            <a class="slrn-link-right pink_link"href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'display_all_my_moocs'|trans({}, 'platform') }}</a>
         </div>
-    </div>#}
-
-    <div class="panel-body">
-        {# Tabs de navigation #}
-        {# <ul class="nav nav-tabs margin-bottom-md">
-            {% for adminHomeTabConfig in adminHomeTabConfigs %}
-            {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-            <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}">
-                <a href="{{
-                    path(
-                        'claro_display_desktop_home_tabs_without_config',
-                        {'tabId': adminHomeTab.getId()}
-                    )
-                    }}"
-                    class="hometab-link"
-                >
-                    {{ adminHomeTab.getName() }}
-                </a>
-            </li>
-            {% endfor %}
-            {% for userHomeTabConfig in userHomeTabConfigs %}
-            {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
-            <li class="hometab-element {% if userHomeTab.getId() == tabId %} active {% endif %}">
-                <a href="{{
-                    path(
-                        'claro_display_desktop_home_tabs_without_config',
-                        {'tabId': userHomeTab.getId()}
-                    )
-                    }}"
-                    class="hometab-link"
-                >
-                    {{ userHomeTab.getName() }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul> #}
-
-        {% block homeTab %}{% endblock %}
+                
+        {# change display if we have more than one active mooc #}
+        {% if app.user.getMoocSessions()|length == 1 %}
+            {% set sessionComponentLayout = '2-column' %}
+        {% else %}
+            {% set sessionComponentLayout = 'slider-small' %}
+        {% endif %}
+        {% render controller(
+            'ClarolineCoreBundle:Mooc\\Mooc:getUserSessionsList',
+            {
+                'sessionComponentLayout': sessionComponentLayout
+            }
+        ) %}
     </div>
+     <div class='dsk__article__footer'>
+        {# Inject message block widget #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
+            {
+                'target':       'message',
+                'mainTitle':    'mailsystem'|trans({}, 'platform'),
+                'statusText':   'no_message'|trans({}, 'platform'),
+                'iconClass':    'ico__messagerie',
+                'subText':      'dashboard_widget_message_default_text'|trans({}, 'platform'),   
+                'footerUrl':    path('claro_message_list_received', {} ),
+                'footerText':   'show_mailsystem'|trans({}, 'platform')
+            }
+        ) %}
+         
+        {# Inject badges block widget #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
+            {
+                'target':           'badges',
+                'mainTitle':        'my_badges'|trans({}, 'platform'),
+                'statusText':       'no_badges'|trans({}, 'platform'),
+                'iconClass':        'ico__badge',
+                'subText':          'dashboard_widget_badges_default_text'|trans({}, 'platform'),   
+                'footerUrl':        path('claro_profile_view_badges', {} ),
+                'footerText':       'show_badges'|trans({}, 'platform')
+            }
+        ) %}
+         
+        {# Inject evaluations block widget #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
+            {
+                'target':       'evals',
+                'mainTitle':    'my_evals'|trans({}, 'platform'),
+                'statusText':   'no_evals'|trans({}, 'platform'),
+                'iconClass':    'ico__eval',
+                'subText':      'dashboard_widget_evals_default_text'|trans({}, 'platform'), 
+                'footerUrl':    path( 'solerni_static_page', { 'name': 'cms_faq' } ),
+                'footerText':   'page_my_badges'|trans({}, 'platform')
+            }
+        ) %}
+     </div>
+</div>
+<div class='clearfix'></div>
 {% endblock %}

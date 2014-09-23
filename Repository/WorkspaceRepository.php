@@ -568,4 +568,17 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+    
+    public function findAllWorkspacesUserIsRegisteredTo(User $user) {
+    	$dql = '
+    		SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+    		JOIN w.mooc m
+    		JOIN m.moocSessions s
+    		WHERE :user MEMBER OF s.users';
+    	
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        
+        return $query->getResult();
+    }
 }

@@ -1,24 +1,33 @@
+{# widget on top of the left column when we are inside a mooc #}
+{% if session is defined and session %}
+    {% set mooc = session.getMooc() %}
+{% elseif workspace is defined %}
+    {% set mooc = workspace.getMooc() %}
+{% endif %}
+
+{% if mooc is defined and mooc %}
 <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--workspace">
-    {# HEADER FOND + POLICE #}
-    <div class="londrina-solid row slrn-widget__header bg-color-second"><a href="{{ path( 'solerni_static_page', { 'name': 'static_lesson' } ) }}">{{ workspaceName }}</a></div>
     {# IMAGE #}
     <div class="row slrn-widget__body">
-        {% if workspaceThumbnail is not null %}
-        <a href="{{ path( 'solerni_static_page', { 'name': 'static_lesson' } ) }}">
-            <img class="slrn-widget__image" src="{{ workspaceThumbnail.src }}" alt="{{ workspaceThumbnail.alt }}" width="{{ workspaceThumbnail.width }}" height="{{ workspaceThumbnail.height }}" />
-        </a>    
-        {% endif %}
+        <img 
+            class="slrn-widget__image" 
+            src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( 234 , 200 ) }}" 
+            alt="{{ mooc.getTitle() }}"
+            width="234" 
+            height="200" 
+        />
     </div>
     {# PROGRESSION #}
-    {% if renderProgression %}
-    <div class="row slrn-widget__body bg-color-primary">
-        <div class="slrn-widget__title slrn-widget_row">{{ 'my_progress'|trans({}, 'platform') }}</div>
-        <span class="presentation__mooc__progression__wrapper">
-            <span class="presentation__mooc__progression__text">{{ workspaceUserProgression }}%</span>
-            <span class="presentation__mooc__progression__100">
-                <span class="presentation__mooc__progression__xx" style="width:{{ workspaceUserProgression }}%"></span>
+    {% if progression is not null %}
+    <div class="row slrn-widget__body bg-color-primary lesson-progression">
+        {#<div class="slrn-widget__title slrn-widget_row">{{ 'my_progress'|trans({}, 'platform') }}</div>#}
+        <span class='presentation__mooc__progression__wrapper'>
+            <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
+            <span class='presentation__mooc__progression__100'>
+                <span class='presentation__mooc__progression__xx' style='width:{{ progression }}%'></span>
             </span>
         </span>
     </div>
     {% endif %}
 </div>
+{% endif %}

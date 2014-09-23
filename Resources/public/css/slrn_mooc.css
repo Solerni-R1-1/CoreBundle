@@ -1,0 +1,117 @@
+
+
+.sider {
+	background-color: #EEEEEF;
+	padding: 0;
+}
+
+.sider h2 {
+	background-color:   #4B667C;
+	color:              #EEEEEF;
+	pointer-events:     none;
+	font-weight:        bold;
+	font-size:          1em;
+	padding:            5px 10px;
+	line-height:        30px;
+	margin:             0;
+}
+
+.sider__content {
+	padding:    25px 10px;
+	font-size:  0.9em;
+}
+
+.essentiels {
+	padding-left:   30px;
+    list-style:     none;
+}
+
+.essentiels li {
+	position:       relative;
+	text-transform: uppercase;
+	margin:         25px 0;
+	font-size:      0.90em;
+	min-height:     25px;
+    line-height:    1.2;
+}
+
+.essentiels li:first-child {
+    margin-top: 0;
+}
+
+.essentiels-icon {
+	content:        "";
+	position:       absolute;
+	width:          24px;
+	height:         24px;
+	top:            -3px;
+	left:           -17%;
+    pointer-events: none;
+	background:     transparent url("../images/sprites_solerni.png") no-repeat 0 0 scroll;
+}
+
+.essentiels__date { background-position: -210px -88px; }
+.essentiels__duree { background-position: -210px -113px; }
+.essentiels__tarif { top: -5px; background-position: -210px -139px; }
+.essentiels__certif { background-position: -210px -164px; }
+.essentiels__lang { background-position: -210px -189px; }
+.essentiels__video { background-position: -210px -214px; }
+.essentiels__subscription { background-position: -210px -239px; }
+
+.content_center{
+	text-align: center;
+}
+
+.sider_social { float: right; width: 300px; }
+.sider_social__text {
+    color: #999999;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 17px;
+    position: absolute;
+}
+.sider_social_link {
+  color: #FFF;
+  display: inline-block;
+  margin: 5px 7px 0;
+  font-weight: 800;
+}
+
+.sider_social_link__icon {
+  background-image: url("../images/icone-social.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 32px;
+  margin: 10px 0;
+  text-indent: -999em;
+  width: 32px;
+}
+
+.social_facebook { background-position:0px 0px; }
+.social_twitter { background-position:-46px 0px; }
+.social_linkedin { background-position:-93px 0px; }
+.social_googlep { background-position:-140px 0px; }
+.social_blog { background-position:-187px 0px; }
+.social_rss { background-position:-234px 0px; }
+.sider_social_link:hover .social_facebook { background-position:0px -41px; }
+.sider_social_link:hover .social_twitter{ background-position:-46px -41px; }
+.sider_social_link:hover .social_linkedin{ background-position:-93px -41px; }
+.sider_social_link:hover .social_googlep{ background-position:-140px -41px; }
+.sider_social_link:hover .social_blog{ background-position:-187px -41px; }
+.sider_social_link:hover .social_rss{ background-position:-234px -41px; }
+
+
+
+/************************/
+.contentBlock{
+	padding: 2em; 
+}
+
+/*************************/
+
+
+a.link__more{
+	color: #FF004F;
+	text-transform: initial;
+}
+/* */

@@ -30,6 +30,8 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\MoocSessionManager;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 class RolesController extends Controller
 {
@@ -37,6 +39,7 @@ class RolesController extends Controller
     private $userManager;
     private $groupManager;
     private $resourceManager;
+    private $moocSessionManager;
     private $rightsManager;
     private $security;
     private $formFactory;
@@ -45,15 +48,16 @@ class RolesController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "security"         = @DI\Inject("security.context"),
-     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
-     *     "router"           = @DI\Inject("router"),
-     *     "request"          = @DI\Inject("request")
+     *     "roleManager"      	= @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"      	= @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"     	= @DI\Inject("claroline.manager.group_manager"),
+     *     "resourceManager"  	= @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"    	= @DI\Inject("claroline.manager.rights_manager"),
+     *     "moocSessionManager" = @DI\Inject("claroline.manager.mooc_session_manager"),
+     *     "security"         	= @DI\Inject("security.context"),
+     *     "formFactory"      	= @DI\Inject("claroline.form.factory"),
+     *     "router"           	= @DI\Inject("router"),
+     *     "request"          	= @DI\Inject("request")
      * })
      */
     public function __construct(
@@ -62,6 +66,7 @@ class RolesController extends Controller
         GroupManager $groupManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
+    	MoocSessionManager $moocSessionManager,
         SecurityContextInterface $security,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
@@ -73,6 +78,7 @@ class RolesController extends Controller
         $this->groupManager = $groupManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
+        $this->moocSessionManager = $moocSessionManager;
         $this->security = $security;
         $this->formFactory = $formFactory;
         $this->router = $router;
@@ -262,10 +268,27 @@ class RolesController extends Controller
      */
     public function removeUserFromRoleAction(User $user, Role $role, AbstractWorkspace $workspace)
     {
-        $this->checkAccess($workspace);
-        $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
+    	$this->checkAccess($workspace);
+    	$this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
+    
+    	return new Response('success');
+    }
+    
 
-        return new Response('success');
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/remove/session/{session}/user/{user}",
+     *     name="claro_workspace_remove_session_from_user",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     */
+    public function removeUserFromSessionAction(User $user, MoocSession $session, AbstractWorkspace $workspace)
+    {
+    	$this->checkAccess($workspace);
+    	$this->moocSessionManager->removeUserFromSession($user, $session);
+    
+    	return new Response('success');
     }
 
     /**
@@ -372,17 +395,27 @@ class RolesController extends Controller
      *     class="ClarolineCoreBundle:Role",
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *     class="ClarolineCoreBundle:Mooc\MoocSession",
+     *     options={"multipleIds"=true, "name"="sessionIds"}
+     * )
      *
      * @param array $users
      * @param array $roles
+     * @param array $sessions
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return Response
      */
-    public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
+    public function addUsersToRolesAction(array $users, array $sessions, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
+        
+        if (!empty($sessions)) {
+        	$this->moocSessionManager->addUsersToSession($users, $sessions);
+        }
 
         return new Response('success');
     }
@@ -397,10 +430,27 @@ class RolesController extends Controller
      */
     public function removeGroupFromRoleAction(Group $group, Role $role, AbstractWorkspace $workspace)
     {
-        $this->checkAccess($workspace);
-        $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
+    	$this->checkAccess($workspace);
+    	$this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
+    
+    	return new Response('success');
+    }
+    
 
-        return new Response('success');
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/remove/session/{session}/group/{group}",
+     *     name="claro_workspace_remove_session_from_group",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     */
+    public function removeGroupFromSessionAction(Group $group, MoocSession $session, AbstractWorkspace $workspace)
+    {
+    	$this->checkAccess($workspace);
+    	$this->moocSessionManager->removeGroupFromSession($group, $session);
+    
+    	return new Response('success');
     }
 
     /**
@@ -414,6 +464,11 @@ class RolesController extends Controller
      *     "groups",
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds"=true, "name"="groupIds"}
+     * )   
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *      class="ClarolineCoreBundle:Mooc\MoocSession",
+     *      options={"multipleIds"=true, "name"="sessionIds"}
      * )
      * @EXT\ParamConverter(
      *     "roles",
@@ -421,10 +476,13 @@ class RolesController extends Controller
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
      */
-    public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
-    {
+    public function addGroupsToRolesAction(array $groups, array $sessions, array $roles, AbstractWorkspace $workspace) {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($groups, $roles, true);
+        
+        if (!empty($sessions)) {
+        	$this->moocSessionManager->addGroupsToSession($groups, $sessions);
+        }
 
         return new Response('success');
     }
@@ -525,15 +583,15 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/{group}/page/{page}/search/{search}/{max}/order/{order}",
+     *     "/{workspace}/groups/{group}/page/{page}/search/{search}/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_users_of_group_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "/{workspace}/groups/{group}/page/{page}/{max}/order/{order}",
+     *     "/{workspace}/groups/{group}/page/{page}/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_users_of_group",
-     *     defaults={"page"=1, "max"=50, "search"="", "order"="id"},
+     *     defaults={"page"=1, "max"=50, "search"="", "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -550,7 +608,8 @@ class RolesController extends Controller
         $page,
         $search,
         $max,
-        $order
+        $order,
+    	$direction
     )
     {
         $this->checkAccess($workspace);
@@ -588,7 +647,9 @@ class RolesController extends Controller
         $usernames = '';
 
         foreach ($users as $user) {
-            $usernames .= $user->getUsername() . ';';
+            //$usernames .= $user->getUsername() . ' ('.$user->getUsername().' '.$user->getUsername().');';
+            //TODO kevin voir pour réactiver au dessus ?
+            $usernames .= $user->getUsername().';';
         }
 
         return new Response($usernames, 200);

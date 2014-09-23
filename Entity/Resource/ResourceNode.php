@@ -151,6 +151,7 @@ class ResourceNode
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
+     *     cascade={"persist"},
      *     mappedBy="resourceNode"
      * )
      */

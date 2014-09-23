@@ -1,0 +1,117 @@
+{# WE FIND OUT IF USER IS REGISTERED #}
+{% set isRegistered = false %}
+{% if user != 'anon.' %}
+    {% set sessionUsers = session.getUsers() %}
+    {% for sessionUser in sessionUsers %}
+        {% if sessionUser.getId() == user.getId() %}
+            {% set isRegistered = true %}
+        {% endif %}
+    {% endfor %}
+    {% set sessionGroups = session.getGroups() %}
+    {% for sessionGroup in sessionGroups %}
+		{% for userGroup in user.getGroups() %}
+            {% if sessionGroup.getId() == userGroup.getId() %}
+                {% set isRegistered = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+{# display session component #}
+{% set mooc = session.getMooc() %}
+{% if mooc.getCost() == 0 or mooc.getCost() is null %}
+    {% set price = 'gratuit' %}
+{% else %}
+    {% set price = mooc.getCost() ~ '€' %}
+{% endif %}
+{# determine mooc status for classification #}
+{% if session.getEndDate() < date() %}
+    {% set moocStatus = 'mooc-over' %}
+{% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() or session.getStartDate() > date() and isRegistered %}
+    {% set moocStatus = 'mooc-to-come' %}
+{% else %}
+    {% set moocStatus = 'mooc-running' %}
+{% endif %}
+{# define image size and number of words in description #}
+{% if sessionComponentLayout == '3-column' %}
+    {% set imageSize = { 'width': 324, 'height': 232 } %}
+    {% set descriptionWords = 25 %}
+{% elseif sessionComponentLayout == 'slider-small'  %}
+    {% set imageSize = { 'width': 335, 'height': 239 } %}
+    {% set descriptionWords = 18 %}  
+{% else %}
+    {% set imageSize = { 'width': 301, 'height': 216 } %}
+    {% set descriptionWords = 12 %}  
+{% endif %}
+
+<div class="presentation__mooc presentation__mooc--{{ sessionComponentLayout }}" data-mooc-status="{{ moocStatus }}">
+    {# first column : pic & progression #}
+	<div class="presentation__mooc__block presentation__mooc__pic">
+        <img class="presentation__mooc__block__image" 
+                 src="{{ image( mooc.getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
+                 alt="{{ mooc.getTitle() }}" 
+                 width="{{ imageSize.width }}" 
+                 height="{{ imageSize.height }}"
+        >
+        {# owner logo #}
+        <img class="presentation__mooc__block__logo" src="{{ image( mooc.getOwner().getLogoWebPath() ).scaleResize( null, 35 ) }}" height=35>
+        {% if progression is defined and progression is not null and isRegistered %}
+            <span class='presentation__mooc__progression__wrapper'>
+                <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
+                <span class='presentation__mooc__progression__100'>
+                    <span class='presentation__mooc__progression__xx' style='width:{{ progression }}%'></span>
+                </span>
+            </span>
+        {% endif %}
+	</div>
+    {# second column : text and button #}
+	<div class="presentation__mooc__block presentation__mooc__text">
+		<h2 class="presentation__mooc__text__title">
+            {{ mooc.getTitle() }}
+        </h2>
+        <span class="presentation__mooc__text__subtitle">
+            {{ 'proposed_by'|trans({}, 'platform') }}
+                <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">
+                    {{ mooc.getOwner().getName() }}
+                </a>
+        </span>
+        <div class="presentation__mooc__text__desc">
+            {{ mooc.getDescription|textTruncate( descriptionWords )|raw }}
+            <a class="pink_link" href="{{ path( 'mooc_view', { 'moocId': mooc.getId(), 'moocName': mooc.getTitle()|slugify()|raw }) }}">
+                {{ 'know_more'|trans({}, 'platform') }}
+            </a>
+        </div>
+        <div class="presentation__mooc__text__button">
+            {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+        </div>
+	</div>
+    {# third column : meta information #}
+    {% if sessionComponentLayout != 'slider-small' %}
+        <div class="presentation__mooc__block presentation__mooc__meta">
+            <span class="presentation__mooc__meta__date">
+                <p>Début le {{ session.getStartDate|date('d.m.Y') }}</p>
+                <p>Fin le {{ session.getEndDate|date('d.m.Y') }}</p>
+            </span>
+            <span class="presentation__mooc__meta__badge">
+
+                    Badgeant
+
+            </span>
+            <span class="presentation__mooc__meta__price">
+
+                    {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
+                        Mooc gratuit
+                    {% else %}
+                        Mooc gratuit
+                        {#{{ mooc.getCost() }}&nbsp;€#}{# use it when we need to print cost #}
+                    {% endif %}
+
+            </span>
+        </div>
+    {% endif %}
+    {% if not mooc.isPublic %}
+        <div class="mooc_private_layer">
+              {{ 'mooc_private'|trans({}, 'platform') }}
+        </div>
+    {% endif %}
+</div>
+

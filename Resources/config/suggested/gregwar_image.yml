@@ -1,0 +1,4 @@
+gregwar_image:
+    cache_dir:  vendor/gregwar/cache
+    fallback_image: http://solerni.localhost/bundles/clarolinecore/images/logo-solerni-color.png
+    throw_exception: false

@@ -37,6 +37,9 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
+    public static $patternUrlPublic = '#^[0-9a-zA-Z\.\_]*$#';
+    public static $patternReplaceUrlPublic = '#[^0-9a-zA-Z\.\_]#';
+
     /**
      * @var integer
      *
@@ -293,6 +296,47 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="is_first_visit", type="boolean")
      */
     protected $isFirstVisit = true;
+    
+     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Mooc\MoocSession",
+     *      mappedBy="users"
+     * )
+     */
+    protected $moocSessions;
+
+
+    /**
+     * @ORM\Column(name="is_validate", type="boolean")
+     */
+    protected $isValidate = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="key_validate", type="string", nullable=true, unique=false)
+     */
+    protected $keyValidate;
+
+
+    /**
+     * @var SessionsByUsers[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", 
+     *      mappedBy="user", 
+     *      cascade={"all"}
+     * )
+     */
+    protected $sessionsByUsers;
+
+
+    /**
+     * @ORM\Column(name="is_facebook_account", type="boolean", nullable=true)
+     */
+    protected $isFacebookAccount = false;
+    
 
     public function __construct()
     {
@@ -306,6 +350,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->userBadges        = new ArrayCollection();
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
+        $this->moocSessions      = new ArrayCollection();
+        $this->sessionsByUsers   = new ArrayCollection();
+        $this->keyValidate       = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
     /**
@@ -971,7 +1018,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function isPublicUrlValid(ExecutionContextInterface $context)
     {
         // Search for whitespaces
-        if (preg_match("/\s/", $this->getPublicUrl())) {
+        if (!preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
         }
     }
@@ -986,4 +1033,49 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->isFirstVisit = $boolean;
     }
 
+    public function getMoocSessions()
+    {
+        return $this->moocSessions;
+    }
+
+    public function setMoocSessions(ArrayCollection $moocSessions)
+    {
+        $this->moocSessions = $moocSessions;
+    }
+
+    public function getIsValidate(){
+        return $this->isValidate;
+    }
+
+    public function setIsValidate($isValidate){
+        $this->isValidate = $isValidate;
+    }
+
+    public function getKeyValidate(){
+        return $this->keyValidate;
+    }
+
+    public function setKeyValidate($keyValidate){
+        $this->keyValidate = $keyValidate;
+    }
+
+    public function getSessionsByUsers(){
+        return $this->sessionsByUsers;
+    }
+
+    public function setSessionsByUsers(ArrayCollection $sessionsByUsers){
+        $this->sessionsByUsers = $sessionsByUsers;
+    }
+
+    public function isFacebookAccount(){
+        return $this->isFacebookAccount;
+    }
+
+    public function setFacebookAccount($isFacebookAccount){
+        $this->isFacebookAccount = $isFacebookAccount;
+    }
+    
+    public function __toString() {
+    	return "User(".$this->id.") : ".$this->username;
+    }
 }

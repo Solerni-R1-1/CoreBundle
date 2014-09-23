@@ -131,13 +131,15 @@
                 if (!this.parameters.isPickerMode) {
                     //determine if is workspace mode and remove a part of elements in the breadcrumb
                     if (this.parameters.isWorkspace) {
-                        $('ul.breadcrumb li').slice(2).remove();
+                        $('ul.ressource-breadcrumb li').slice(2).remove();
                     } else {
-                        $('ul.breadcrumb li:not(:first)').remove();
+                        $('ul.ressource-breadcrumb li:not(:first)').remove();
                     }
-
-                    $('ul.breadcrumb').append(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
-                    $('body').on('click', 'ul.breadcrumb li a', function () {
+                    //console.log(nodes);
+                    if ( ! this.parameters.isPersonnalWorkspace ) {
+                        $('ul.ressource-breadcrumb').html(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
+                    }
+                    $('body').on('click', 'ul.ressource-breadcrumb li a', function () {
                         event.preventDefault();
                         window.Claroline.ResourceManager.Controller.dispatcher.trigger('breadcrumb-click', {
                             nodeId: $(this).data('node-id'),
@@ -146,14 +148,19 @@
                         });
                     });
 
-                    // add current folder to the title of the panel
-                    if (nodes.length > 1) {
-                        $('.panel .panel-heading .panel-title span').html(' - ' + $('ul.breadcrumb li').last().text());
-                    } else {
-                        $('.panel .panel-heading .panel-title span').html('');
+                    // add current folder to the title of the panel if this is not a personnal workspace
+                    if ( ! this.parameters.isPersonnalWorkspace ) {
+                        $('.panel .panel-heading .panel-title').html( $('ul.ressource-breadcrumb li').last().text() );
                     }
+                    /*if (nodes.length > 1) {
+                        $('.panel .panel-heading .panel-title').html( $('ul.ressource-breadcrumb li').last().text() );
+                        console.log ( 'update title' );
+                    } else {
+                        console.log ( 'update title on root' );
+                         $('.panel .panel-heading .panel-title').html( $('ul.ressource-breadcrumb li').last().text() );
+                    }*/
                 } else {
-                    $(this.el).addClass('breadcrumb');
+                    $(this.el).addClass('ressource-breadcrumb');
                     $(this.el).html(Twig.render(ResourceManagerBreadcrumbs, {
                         'nodes': nodes
                     }));
@@ -851,6 +858,7 @@
                     } else {
                         if (event.resourceType === 'directory') {
                             this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                            /**/
                         } else {
                             this.open(event.resourceType, event.nodeId, event.directoryHistory);
                         }

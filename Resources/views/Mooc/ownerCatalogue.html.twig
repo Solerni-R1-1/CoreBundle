@@ -1,0 +1,61 @@
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/clarolinecore/css/slrn_mooc.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ owner.getName() }} {% endblock %}
+
+{% block subnavbar %}
+    <section class="slrn-header slrn-header--slim slrn-header--owner">
+        <div class="row slrn-header__column">
+            {% if owner.getDressingWebPath() %}
+                <img class="header-background-img" src="{{ image(owner.getDressingWebPath()).zoomCrop(966,216) }}" alt="{{ owner.getName() }}">
+            {% endif %}
+            <div class="col-xs-3 col-md-3 slrn-header__logo">
+                {% if owner.getLogoWebPath() %}
+                    <img class="header-logo-img" src="{{ image(owner.getLogoWebPath()).scaleResize(null,100) }}"  alt="{{ owner.getName() }}">
+                {% endif %}
+            </div>
+            <div class="col-xs-9 col-md-9 slrn-header__description">
+                <h1>{{ owner.getName() }}</h1>
+                <div>{{ owner.getDescription() }}</div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block section_content %}
+<section class="mooc-list mooc-list--owner">
+ 	<h3 class="list-title slrn-bold">{{'mooc_by_entreprise'|trans({'%entreprise%': owner.getName() }, 'platform')}}</h3>
+            {% if sessions|length == 0 %}
+                {{ 'no_moocs_owner'|trans({}, 'platform') }}
+            {% else %}
+                {% for session in sessions %}
+                     {% render controller(
+                        'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
+                        { 
+                            'session': session, 
+                            'sessionComponentLayout': '3-column',
+                            'showUserProgression': true 
+                        }
+                    ) %}
+                {% endfor %}
+            {% endif %}
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/xxx.js') }}"></script> #}
+{% endblock %}
+

@@ -1,0 +1,40 @@
+{% extends 'ClarolineCoreBundle:Badge/Tool/MyWorkspace:layout.html.twig' %}
+
+{% set pageContext = 'my_evals' %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}
+    {{ parent() }}{{ 'my_evals'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block bodyClasses %}{{ parent() }} body-without-subnavbar{% endblock %}
+
+{% block section_body %}
+    {% if WorkspacesBadgeList|length == 0 %}
+        {{ 'no_evals_yet'|trans({'%url%': path( 'solerni_static_page', { 'name': 'static_eval' } ) }, 'platform')|raw }}
+    {% else %}
+        {# for each badgePager render all badges #}
+        {% for BadgeList in WorkspacesBadgeList %}
+            {% set workspace = BadgeList.workspace %}
+            {% set mooc = workspace.getMooc() %}
+            {% set badges = BadgeList.badges %}
+            {# echo name and owner #}
+            <div class="dsk__my_moocs_header">       
+                <h2 class="slrn-section-title">{{ mooc.getTitle() }}</h2>
+                <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">
+                    <img class="slrn-link-right"
+                         src="{{ image(mooc.getOwner().getLogoWebPath()).scaleResize(null,40) }}" 
+                         alt="{{ mooc.getOwner().getName() }}"
+                         width=""
+                         height="40"
+                    >
+                </a>
+            </div>
+            {# echo all badges #}
+            <div class="slrn-my_badges-list">
+                {% include 'ClarolineCoreBundle:Badge/Template/Tool:list.html.twig' %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

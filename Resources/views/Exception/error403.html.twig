@@ -2,7 +2,7 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'unauthorized' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block message %}
+{% block content %}
     {#{'unauthorized' | trans({}, 'platform') }#}
     <div class="row">
         <div class="col-md-offset-3 col-md-6">

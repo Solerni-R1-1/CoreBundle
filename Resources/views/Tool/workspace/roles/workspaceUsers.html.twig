@@ -98,7 +98,7 @@
                 {% endif %}
             </div>
                 <div class="col-md-4">
-                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
+                    {{ maxResultsSelectBox(max, '$(\'#search-button\').trigger(\'click\');', 'users_per_page') }}
                 </div>
             </div>
             <div class="table-responsive">
@@ -110,6 +110,7 @@
                             <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(), direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
+                            <th>{{ 'session'|trans({}, 'platform') }}</th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
@@ -122,7 +123,7 @@
                                 <td>{{ user.getFirstName() }}</td>
                                 <td>{{ user.getMail() }}</td>
 
-                                <td>
+                                <td class="cell-roles">
                                     {% for role in user.getEntityRoles() %}
                                         {% if role.getWorkspace() == workspace %}
                                             <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
@@ -147,6 +148,30 @@
                                         {% endfor %}
                                     {% endfor %}
 
+                                </td>
+                                <td class="cell-sessions">
+                                    {% for session in user.getMoocSessions() %}
+                                        {% if session.getMooc().getWorkspace() == workspace %}
+                                            <span class="label label-success" id="label-{{ session.getId () }}-{{ user.getId()}}">
+                                                {{ session.getTitle() }}
+                                                <i class="icon-remove-sign pointer-hand remove-role-button"
+                                                    href="{{ path('claro_workspace_remove_session_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'session': session.getId() } ) }}">
+                                                </i>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% set groups = user.getGroups() %}
+                                        {% for group in groups %}
+                                        {% for session in group.getMoocSessions() %}
+                                            {% if session.getMooc().getWorkspace() == workspace %}
+                                                <span title="{{ group.getName() }}" class="label label-default" id="label-session-{{ session.getId () }}-{{ user.getId()}}">
+                                                    {{ session.getTitle() }}
+                                                </span>
+
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -180,7 +205,12 @@
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().parent().parent().remove();
+                	var parent = target.parent().parent().parent();
+                    target.parent().remove();
+                    var roles = parent.find(".cell-roles");
+                    if (roles.is(':empty')) {
+                        parent.remove();
+                    }
                 }
             });
         });

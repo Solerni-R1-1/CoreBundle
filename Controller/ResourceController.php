@@ -34,8 +34,9 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ResourceController
+class ResourceController extends Controller
 {
     private $sc;
     private $resourceManager;
@@ -186,14 +187,27 @@ class ResourceController
      */
     public function openAction(ResourceNode $node, $resourceType)
     {
+        // redirect user to inscription if he's not registered to a session and is not ADMIN
+        $workspace = $node->getWorkspace();
+        if (    $workspace->isMooc() && 
+                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
+                ! $this->sc->isGranted('ROLE_WS_CREATOR')
+            ) {
+                return $this->redirect( $this->get('router')
+                            ->generate('mooc_view', array( 
+                                'moocId' => $workspace->getMooc()->getId(), 
+                                'moocName' => $workspace->getMooc()->getTitle()))
+                );
+        }
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $this->checkAccess('OPEN', $collection);
+        $resourceArray = array($this->resourceManager->getResourceFromNode($node));
         $event = $this->dispatcher->dispatch(
             'open_'.$resourceType,
             'OpenResource',
-            array($this->resourceManager->getResourceFromNode($node))
+            $resourceArray
         );
         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
 
@@ -392,10 +406,10 @@ class ResourceController
                 readfile($file);
             }
         );
-
+        
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName.'"');
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
 
@@ -440,7 +454,7 @@ class ResourceController
         $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
         $canChangePosition = false;
         $nodesWithCreatorPerms = array();
-
+        
         if ($node === null) {
             $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
             $isRoot = true;
@@ -453,7 +467,7 @@ class ResourceController
             $this->checkAccess('OPEN', $collection);
 
             if ($user !== 'anon.') {
-                if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
+                if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_WS_CREATOR')) {
                     $canChangePosition = true;
                 }
             }
@@ -466,12 +480,24 @@ class ResourceController
             $adminTypes = [];
             $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken());
 
-            if ($isOwner || $this->sc->isGranted('ROLE_ADMIN')) {
+            if ($isOwner || $this->sc->isGranted('ROLE_WS_CREATOR')) {
                 $resourceTypes = $this->resourceManager->getAllResourceTypes();
 
                 foreach ($resourceTypes as $resourceType) {
                     $adminTypes[$resourceType->getName()] = $this->translator
                         ->trans($resourceType->getName(), array(), 'resource');
+                }
+            } else {
+            	$session = $this->entityManager
+            			->getRepository('ClarolineCoreBundle:Mooc\MoocSession')
+            			->guessMoocSession($node->getWorkspace(), $user);
+                if ( $session && $session->getForum() ) {
+                    foreach ($nodes as $i => $item) {
+                        if ($item['type'] == 'claroline_forum'
+                                && $item['id'] != $session->getForum()->getId()) {
+                            unset ($nodes[$i]);
+                        }
+                    }
                 }
             }
 
@@ -519,6 +545,7 @@ class ResourceController
 
         $jsonResponse->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
         $jsonResponse->headers->add(array('Expires' => '-1'));
+
 
         return $jsonResponse;
     }
@@ -654,7 +681,7 @@ class ResourceController
      */
     public function restoreNodeOrderAction(ResourceNode $parent, User $user)
     {
-        if ($user !== $parent->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+        if ($user !== $parent->getCreator() && !$this->sc->isGranted('ROLE_WS_CREATOR')) {
             throw new AccessDeniedException();
         }
 
@@ -729,7 +756,7 @@ class ResourceController
      */
     public function insertBefore(ResourceNode $node, User $user, ResourceNode $next = null)
     {
-        if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+        if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_WS_CREATOR')) {
             throw new AccessDeniedException();
         }
 

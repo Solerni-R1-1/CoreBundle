@@ -82,3 +82,15 @@ wed: Mer
 wednesday: Mercredi
 week: semaine
 workspace: 'Espace d''activités'
+
+#Short
+SU: D
+MO: L
+TU: M
+WE: M
+TH: J
+FR: V
+SA: S
+
+slrn_prev: '<'
+slrn_next: '>'

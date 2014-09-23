@@ -10,6 +10,24 @@
 (function () {
     'use strict';
 
+    //If errors
+    if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
+
+        var css = '';
+        if($('#message_form_to').offsetParent().hasClass( "col-md-9" )){
+            css = "col-md-9";
+        } else {
+            css = "col-md-6";
+        }
+        $('#message_form_to').offsetParent().after('<div id="message_form_to_error" class="' + css + '">' + 
+            '<div class="help-block field-error">' + 
+            $('#message_form_to').next().html()
+            + '</div></div>');
+        ;
+
+        $('#message_form_to').next().remove();
+    }
+
     $('#message_form_to').offsetParent().html(
         '<div class="input-group">' +
             $('#message_form_to').offsetParent().html() +
@@ -20,6 +38,9 @@
             '</span>' +
         '</div>'
     );
+    
+
+    
 
     var currentType = 'user';
 
@@ -83,10 +104,19 @@
         });
     }
 
+    function cleanToList(toList){
+        //Clean meta information
+        var reg = new RegExp("/\([^\)]*\)/", "g");
+        return toList.replace(reg, toList);
+    }
+
     function displayPager(type, normalRoute, searchRoute)
     {
         currentType = type;
         var toList = $('#message_form_to').val();
+
+        var toList = cleanToList(toList);
+
         var toListArray = toList.split(';');
         var search = toListArray[toListArray.length - 1].trim();
         var route;
@@ -130,7 +160,11 @@
                         }
 
                         currentValue += datas;
+
+                        //Fix selection of user
                         $('#message_form_to').attr('value', currentValue);
+                        $('#message_form_to').val(currentValue);
+
                     }
                 },
                 type: 'GET',
@@ -159,6 +193,7 @@
 
     $('#users-nav-tab').on('click', function () {
         $('#groups-nav-tab').attr('class', '');
+        $('#workspaces-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
         displayPager(
             'user',
@@ -169,6 +204,7 @@
 
     $('#groups-nav-tab').on('click', function () {
         $('#users-nav-tab').attr('class', '');
+        $('#workspaces-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
         displayPager(
             'group',
@@ -178,7 +214,8 @@
     });
 
     $('#workspaces-nav-tab').on('click', function () {
-        $('#workspaces-nav-tab').attr('class', '');
+        $('#groups-nav-tab').attr('class', '');
+        $('#users-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
         displayPager(
             'workspace',

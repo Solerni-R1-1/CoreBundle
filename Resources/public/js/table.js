@@ -148,6 +148,7 @@
                             $('.chk-item:checked').each(function (index, element) {
                                 $(element).parent().parent().remove();
                             });
+                            $('#check-all-items').prop('checked', false);
                         }
                     }
                 });
@@ -158,10 +159,10 @@
 
         $('#check-all-items').click(function () {
             if ($('#check-all-items').is(':checked')) {
-                $('.chk-item').attr('checked', true);
+                $('.chk-item').prop('checked', true);
             }
             else {
-                $('.chk-item').attr('checked', false);
+                $('.chk-item').prop('checked', false);
             }
         });
     };

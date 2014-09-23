@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-
+use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * @DI\Service("claroline.authentication_handler")
  */
@@ -47,6 +47,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $termsOfService;
     private $manager;
     private $router;
+    private $session;
+
+    private $breakChain = false;
 
     /**
      * @DI\InjectParams({
@@ -57,7 +60,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "termsOfService"         = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router"                 = @DI\Inject("router")
+     *     "router"                 = @DI\Inject("router"),
+     *     "session"                = @DI\Inject("session")
      * })
      *
      */
@@ -69,7 +73,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         FormFactory $formFactory,
         TermsOfServiceManager $termsOfService,
         ObjectManager $manager,
-        Router $router
+        Router $router,
+        Session $session
     )
     {
         $this->securityContext = $context;
@@ -80,6 +85,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->termsOfService = $termsOfService;
         $this->manager = $manager;
         $this->router = $router;
+        $this->session = $session;
     }
 
     /**
@@ -88,6 +94,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onLoginSuccess(InteractiveLoginEvent $event)
     {
         $user = $this->securityContext->getToken()->getUser();
+
         $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->securityContext->setToken($token);
@@ -96,8 +103,12 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->securityContext->getToken()->getUser();
-
-        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
+        
+        if( $this->session->has('moocSession') ) {
+        	$moocSession = $this->session->get('moocSession');
+            $uri = $this->router->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
+            $this->session->remove('moocSession');
+        } elseif ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
             $uri = $user->getLastUri();
         } else {
             $uri = $this->router->generate('claro_desktop_open');
@@ -115,7 +126,13 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $event = $this->showTermOfServices($event);
+        if(!$this->breakChain){
+            $event = $this->isAValidAccount($event);    
+        }
+        if(!$this->breakChain){
+            $event = $this->showTermOfServices($event);
+        }
+
     }
 
     /**
@@ -150,9 +167,51 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         }
     }
 
+    private function isAValidAccount(GetResponseEvent $event){
+
+        $authorizedUrl = array(
+                    'claro_registration_send_mail',
+                    'claro_registration_validate_user_form', 
+                    'claro_registration_validate_user',
+                    'orange_cms_api_user',
+                    'orange_cms_api_route',
+                    'orange_cms_api_moocs',
+                    'orange_search',
+                    'solerni_catalogue',
+            );
+
+        ;
+
+        //Case of FB account
+        if ($event->isMasterRequest() and
+            $user = $this->getUser($event->getRequest()) and
+            !$user->getIsValidate() && 
+            $user->isFacebookAccount()) {
+        	
+            $user->setIsValidate(true);
+            $this->manager->persist($user);
+            $this->manager->flush();
+            return $event;
+        }
+
+        if ($event->isMasterRequest() and
+            $user = $this->getUser($event->getRequest()) and
+            !$user->getIsValidate() and
+            !$this->isImpersonated() and 
+            !in_array($event->getRequest()->attributes->get('_route'), $authorizedUrl)) {
+
+            $uri = $this->router->generate('claro_registration_send_mail', array('mail' => $user->getMail()));
+            $response = new RedirectResponse($uri);
+            $event->setResponse($response);
+            $this->breakChain = true;
+        }
+        return $event;
+    }
+
     private function showTermOfServices(GetResponseEvent $event)
     {
         if ($event->isMasterRequest() and
+            $this->configurationHandler->getParameter('terms_of_service') and
             $user = $this->getUser($event->getRequest()) and
             !$user->hasAcceptedTerms() and
             !$this->isImpersonated()and
@@ -190,8 +249,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      */
     private function getUser($request)
     {
-        if ($this->configurationHandler->getParameter('terms_of_service') and
-            $request->get('_route') !== 'claroline_locale_change' and
+        if ($request->get('_route') !== 'claroline_locale_change' and
             $request->get('_route') !== 'claroline_locale_select' and
             $request->get('_route') !== 'bazinga_exposetranslation_js' and
             $token = $this->securityContext->getToken() and
@@ -210,7 +268,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'login',
             'orange_cms_api_user',
             'orange_cms_api_route',
-            'orange_cms_api_moocs'
+            'orange_cms_api_moocs',
         );
     }
 

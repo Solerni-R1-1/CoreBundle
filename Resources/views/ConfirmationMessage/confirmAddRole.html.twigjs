@@ -1,8 +1,13 @@
 {% twig_js name="confirmAddRole" %}
 
 {# no transchoice filter in twigjs... #}
-
 {{ 'add_roles_confirm_message'|trans({'%count%': nbItems}, 'platform') }}
 {% for role in roles %}
  {{ role }} {% if not loop.last %}, {% endif %}
-{% endfor %}
+{% endfor %}<br />
+{% if sessions is not empty %}
+{{ 'add_sessions_confirm_message'|trans({}, 'platform') }}
+	{% for session in sessions %}
+ {{ session }} {% if not loop.last %}, {% endif %}
+	{% endfor %}
+{% endif %}

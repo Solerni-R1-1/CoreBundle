@@ -1,0 +1,146 @@
+.flat_block{
+	padding:0;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.flat_block > li{
+	display: inline-block;
+	vertical-align: top;
+	padding: 15px 17px;
+	color: #999999;
+	background-color: #EEEEEF;
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 0.95em;
+	margin-right: 5px;
+}
+
+.flat_block > li.active{
+	background-color: #4B667C;
+}
+
+.flat_block > li > a {
+	color:#606060;
+}
+
+.flat_block > li.active > a{
+	color:#FFFFFF;
+}
+
+#link_message_removed_layout{
+	float:right;
+}
+
+.action-bar{
+	height: 50px;
+}
+
+.btn-tools{
+	width: 38px;
+	height: 38px;
+	padding: 0;
+	background: transparent url(../images/sprites_solerni.png) no-repeat 0 0 scroll;
+	border: 0 none;
+	float: right;
+	margin-right: 10px;
+	outline: 0;
+	display:none;
+}
+
+.search-bar{
+	min-height: 40px;
+}
+
+.btn-tools-trash{ background-position: -135px -504px; }
+.btn-tools-trash:hover { background-position: -135px -542px; }
+
+.btn-tools-restore{ background-position: -224px -504px; }
+.btn-tools-restore:hover { background-position: -224px -542px; }
+
+.table-solerni > thead > tr > th,
+.table-solerni > thead > tr > td,
+.table-solerni > tbody > tr > th,
+.table-solerni > tbody > tr > td,
+.table-solerni > tfoot > tr > th,
+.table-solerni > tfoot > tr > td {
+	border:0 none;
+	color: #606060;
+}
+
+.table-solerni > tbody > tr > td, 
+.table-solerni > tbody > tr.active > td{
+	background-color: #FFFFFF;
+	word-break: break-all;
+}
+
+.table-solerni > tbody > tr.unread > td{
+	color:#4B667C;
+	font-weight: bold;
+}
+.table-solerni > tbody > tr.selected > td{
+	font-weight: bold;
+}
+
+
+.table-solerni > thead > tr > th,
+.table-solerni > thead > tr > td,
+.table-solerni > tbody > tr > th,
+.table-solerni > tfoot > tr > th{
+	padding: 10px 5px;
+	background-color: #EEEEEF;
+	text-transform: uppercase;
+}
+
+
+#message_form label{
+	display: none;
+}
+#message_form .col-md-9{
+	width: 100%;
+}
+
+table.scrollable {
+    width: 100%;
+}
+
+table.scrollable thead, 
+table.scrollable tbody, 
+table.scrollable tr, 
+table.scrollable td, 
+table.scrollable th { display: block; }
+
+table.scrollable tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+table.scrollable thead th {
+    height: 40px;
+}
+
+table.scrollable tbody {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+table.scrollable thead {
+    /* fallback */
+}
+
+
+table.scrollable tbody td, 
+table.scrollable thead th {
+    float: left;
+	overflow: hidden;
+}
+
+.counter_b{
+	font-weight: bold;
+}
+
+.slrn-message-new {
+    padding: 7px 15px 0 0;
+}

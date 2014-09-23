@@ -1331,24 +1331,7 @@
 
             for (var i = 0; i < topDomains.length; i++) {
                 if (topDomains[i] === ext) {
-                    if(ext==='.uk') {
-                        //Run Extra Checks for UK Domain Names
-                        var domainParts = val.split('.');
-                        var tld2 = domainParts[domainParts.length-2];
-                        for(var j = 0; j < ukTopDomains.length; j++) {
-                            if(ukTopDomains[j] === tld2) {
-                                hasTopDomain = true;
-                                break;
-                            }
-                        }
-
-                        if(hasTopDomain)
-                            break;
-
-                    } else {
-                        hasTopDomain = true;
-                        break;
-                    }
+                    hasTopDomain = true;
                 }
             }
 

@@ -16,7 +16,7 @@
                 {{ form_widget(form.group) }}
             </div>
 
-            <div class="col-lg-2 text-center">
+            <div class="col-lg-1 text-center">
                 <p>{{ 'or'|trans }}</p>
             </div>
 
@@ -25,8 +25,8 @@
                 {{ form_label(form.user) }}
                 {{ form_errors(form.user) }}
             </div>
-            <div class="col-lg-3">
-                {{ form_widget(form.user) }}
+            <div class="col-lg-4">
+                {{ form_widget(form.user, { 'attr': {'style': 'display: block;'} }) }}
             </div>
         </div>
 

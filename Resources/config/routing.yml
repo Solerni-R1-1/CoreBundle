@@ -73,6 +73,11 @@ claro_log:
     prefix: log
     type: annotation
 
+claro_export_analytics:
+    resource: "@ClarolineCoreBundle/Controller/AnalyticsExportController.php"
+    prefix: analytics/export
+    type: annotation
+
 claro_log_admin:
     resource: "@ClarolineCoreBundle/Controller/Log/AdministrationController.php"
     prefix: admin
@@ -264,6 +269,22 @@ solerni_static_page:
     type: annotation
     prefix: /static
 
+mooc_view:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocController.php"
+    type: annotation
+
+mooc_view_session:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocController.php"
+    type: annotation
+
+solerni_mes_moocs:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/CatalogueController.php"
+    type: annotation
+
+solerni_catalogue:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/CatalogueController.php"
+    type: annotation
+
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
@@ -286,3 +307,46 @@ claro_admin_plugins:
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
+
+claro_admin_category:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocCategoryController.php"
+    prefix: admin/parameters/mooc/categories
+    type: annotation
+
+claro_admin_owner:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocOwnerController.php"
+    prefix: admin/parameters/mooc/owners
+    type: annotation
+
+claro_admin_accessconstraints:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocAccessConstraintsController.php"
+    prefix: admin/parameters/mooc/access_constraints
+    type: annotation
+
+claro_mooc_admin:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/AdministrationController.php"
+    prefix: admin/parameters/mooc
+    type: annotation
+
+claro_tranfo:
+    resource: "@ClarolineCoreBundle/Controller/TransfoController.php"
+    type: annotation
+
+claro_registration_send_mail:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    prefix: register
+    type: annotation
+
+claro_registration_validate_user:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    prefix: register
+    type: annotation
+
+claro_registration_validate_user_form:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    prefix: register
+    type: annotation
+    
+claro_mooc_analytics:
+    resource: "@ClarolineCoreBundle/Controller/Mooc/MoocAnalyticsController.php"
+    type: annotation

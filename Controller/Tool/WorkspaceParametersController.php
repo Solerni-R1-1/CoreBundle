@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +32,9 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Form\Mooc\MoocType;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormError;
 
 class WorkspaceParametersController extends Controller
 {
@@ -170,6 +174,7 @@ class WorkspaceParametersController extends Controller
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
+
         
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
@@ -180,14 +185,45 @@ class WorkspaceParametersController extends Controller
         } else {
             $url = '';
         }
+        
+        /* Add custom form Mooc if workspace is mooc */
+        if ( $workspace->isMooc() ) {
+            
+            /* Get lessons and forums from current workspace*/
+            $mooc = $workspace->getMooc();
+            $doctrine = $this->getDoctrine();
 
-        return array(
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-            'url' => $url,
-            'user' => $user,
-            'count' => $count
-        );
+            $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+            $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
+            $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+            $blogResourceType = $resourceTypeRepository->findOneByName('icap_blog');
+            
+            /* generate form */
+            $form_mooc = $this->formFactory->create( FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType, $blogResourceType ), $mooc );
+            
+            /* Return MOOC data and form */
+            $returnArray = array(
+                'form' => $form->createView(),
+                'form_mooc' => $form_mooc->createView(),
+                'workspace' => $workspace,
+                'url' => $url,
+                'user' => $user,
+                'count' => $count,
+                'illustration' => $mooc->getIllustrationWebPath()
+            ); 
+        } else {
+            $form->add('isMooc', 'checkbox', array( 'required' => false, 'data' => false ));
+            /* return only WS data if not MOOC */
+            $returnArray = array(
+                'form' => $form->createView(),
+                'workspace' => $workspace,
+                'url' => $url,
+                'user' => $user,
+                'count' => $count
+            ); 
+        }
+        
+        return $returnArray;
     }
 
     /**
@@ -212,36 +248,203 @@ class WorkspaceParametersController extends Controller
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $this->workspaceManager->createWorkspace($workspace);
-            $this->workspaceManager->rename($workspace, $workspace->getName());
-            $displayable = $workspace->isDisplayable();
-
-            if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
-                $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
-            }
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_open_tool',
-                    array(
-                        'workspaceId' => $workspace->getId(),
-                        'toolName' => 'parameters'
-                    )
-                )
+        $isMooc = $workspace->isMooc();   
+        $user = $this->security->getToken()->getUser();
+        $count = $this->workspaceManager->countUsers($workspace->getId());
+        if ($workspace->getSelfRegistration()) {
+            $url = $this->router->generate(
+                'claro_workspace_subscription_url_generate',
+                array('workspace' => $workspace->getId()),
+                true
             );
         } else {
-            $workspace->setName($wsRegisteredName);
-            $workspace->setCode($wsRegisteredCode);
+            $url = '';
         }
+        
+        // workspace form + possible checkbox isMooc
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
+        $form->add('isMooc', 'checkbox', array( 'required' => false, 'data' => false ));
+        $form->handleRequest($this->request);
+        
+        // Creating the mooc is we checkboxed isMooc
+        if ( $form->get('isMooc')->getData() && ! $isMooc ) {
+            $isMooc = $workspace->setIsMooc( $form->get('description')->getData() );
+        }
+        
+        if ( $isMooc ) { // 
+            $mooc = $workspace->getMooc();
+            /* Store current sessions to compare with submitted form */
+            $originalSessions = new ArrayCollection();
+            foreach ( $mooc->getMoocSessions() as $session ) {
+                $originalSessions->add( $session );
+            }
 
-        return array(
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-        );
+            /* Store current contraints to compare with submitted form */
+            $originalConstraints = new ArrayCollection();
+            foreach ( $mooc->getAccessConstraints() as $constraint ) {
+                $originalConstraints->add( $constraint );
+            }
+        
+            /* Get lessons and forums from current workspace*/
+            $doctrine = $this->getDoctrine();
+            $resourceTypeRepository = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+            $forumResourceType = $resourceTypeRepository->findOneByName('claroline_forum');
+            $lessonResourceType = $resourceTypeRepository->findOneByName('icap_lesson');
+            $blogResourceType = $resourceTypeRepository->findOneByName('icap_blog');
+            
+            // Generate mooc form
+            $form_mooc = $this->formFactory->create(FormFactory::TYPE_MOOC, array( $workspace, $lessonResourceType, $forumResourceType, $blogResourceType ), $mooc );
+            $form_mooc->handleRequest($this->request);
+        }
+        
+        if ( $isMooc ) {
+            if ( $form->isValid() || && $form_mooc->isValid() ) {
+            	$forumIds = array();
+            	$hasErrors = false;
+                /* Setting current mooc for newly added sessions */
+                foreach ( $mooc->getMoocSessions() as $i => $moocSession ) {
+                   	if (  ! $moocSession->getMooc() ) {
+                        $moocSession->setMooc( $mooc );
+                   	}
+					
+                   	$forum = $moocSession->getForum();
+                   	$form_session = $form_mooc->get('moocSessions')->get($i);
+                   	if ($forum != null) {
+	                   	if (in_array($forum->getId(), $forumIds)) {
+		                   	$form_session->get('forum')->addError(new FormError($this->get('translator')->trans(
+						            'error_sessions_same_forum', 
+						            array(), 
+						            'platform'
+					            )));
+		                   	$hasErrors = true;
+	                   	}
+						$forumIds[] = $forum->getId();
+	                }
+	                
+	                $startDate = $moocSession->getStartDate();
+	                $endDate = $moocSession->getEndDate();
+	                $startInscriptionDate = $moocSession->getStartInscriptionDate();
+	                $endInscriptionDate = $moocSession->getEndInscriptionDate();
+	                
+	                if ($endDate <= $startDate) {
+	                	$form_session->get('endDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_end_date_inferior_start_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                }
+	                if ($startInscriptionDate >= $startDate) {
+	                	$form_session->get('startInscriptionDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_invalid_start_inscription_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                	
+	                }
+	                if ($endInscriptionDate <= $startInscriptionDate) {
+	                	$form_session->get('endInscriptionDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_end_inscription_date_inferior_start_inscription_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                	
+	                }
+	                if ($endInscriptionDate > $endDate) {
+	                	$form_session->get('endInscriptionDate')->addError(new FormError($this->get('translator')->trans(
+						            'error_session_end_inscription_date_superior_end_date', 
+						            array(), 
+						            'platform'
+					            )));
+		                $hasErrors = true;
+	                	
+	                }
+                }
+                
+                if ($hasErrors) {
+                	return array(
+                			'form' => $form->createView(),
+                			'form_mooc' => $form_mooc->createView(),
+                			'workspace' => $workspace,
+                			'url' => $url,
+                			'user' => $user,
+                			'count' => $count,
+                			'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
+                	);
+                }
+
+                /* remove sessions from database if deleted */
+                foreach ( $originalSessions as $moocSession ) {
+                    if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
+                        $this->getDoctrine()->getManager()->remove($moocSession);
+                    }
+                }
+
+               /* Setting current mooc for each constraint */
+                foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {              
+                    $accessConstraint->addMooc($mooc);
+                }
+
+
+                /*Remove mooc from constraint deleted from mooc*/
+                foreach ( $originalConstraints as $constraint) {
+                    if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
+                        $constraint->removeMooc($mooc);
+                    }
+                }
+
+                $this->workspaceManager->createWorkspace($workspace);
+                $this->workspaceManager->rename($workspace, $workspace->getName());
+                $displayable = $workspace->isDisplayable();
+
+                if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                    $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+                }
+
+                return $this->redirect(
+                    $this->generateUrl( 'admin_parameters_mooc')
+                );
+            } else {
+                $workspace->setName($wsRegisteredName);
+                $workspace->setCode($wsRegisteredCode);
+            }
+
+
+            return array(
+                'form' => $form->createView(),
+                'form_mooc' => $form_mooc->createView(),
+                'workspace' => $workspace,
+                'url' => $url,
+                'user' => $user,
+                'count' => $count,
+                'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
+            );
+        } else {
+            if ( $form->isValid() ) {
+                $this->workspaceManager->createWorkspace($workspace);
+                $this->workspaceManager->rename($workspace, $workspace->getName());
+                $displayable = $workspace->isDisplayable();
+
+                if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                    $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+                }
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'claro_workspace_open_tool',
+                        array(
+                            'workspaceId' => $workspace->getId(),
+                            'toolName' => 'parameters'
+                        )
+                    )
+                );
+            } else {
+                $workspace->setName($wsRegisteredName);
+                $workspace->setCode($wsRegisteredCode);
+            }
+        }
     }
 
     /**
@@ -330,6 +533,7 @@ class WorkspaceParametersController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
+            $user->setFacebookAccount(false); 
             $this->userManager->createUser($user);
             $this->workspaceManager->addUserAction($workspace, $user);
             return $this->redirect(
@@ -348,4 +552,5 @@ class WorkspaceParametersController extends Controller
             throw new AccessDeniedException();
         }
     }
+    
 }
