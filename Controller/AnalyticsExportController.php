@@ -118,8 +118,18 @@ class AnalyticsExportController extends Controller {
 				ksort($userBadges);
 				$usersBadges[$user->getId()]['badges'] = $userBadges;
 			}
-	
-			
+
+			foreach($usersBadges as $userBadges) {
+				$indexBadge = 4;
+				$nbBadges = count($userBadges['badges']);
+				foreach($userBadges['badges'] as $userBadge) {
+					$headerCSV[$indexBadge] = $userBadge['badge']->getName();
+					$headerCSV[$indexBadge + $nbBadges] = $userBadge['badge']->getName()." obtenu ?";
+					$indexBadge++;
+				}
+				break;
+			}
+			ksort($headerCSV);
 			
 			// For all user associated to his badges
 			foreach ($usersBadges as $userBadges) {
@@ -290,6 +300,133 @@ class AnalyticsExportController extends Controller {
 			}
 
 			array_unshift($rowsCSV, $headerCSV);
+			$content = $this->createCSVFromArray($rowsCSV);
+	
+			return new Response($content, 200, array(
+					'Content-Type' => 'application/force-download',
+					'Content-Disposition' => 'attachment; filename="export.csv"'
+			));
+		} else {
+			throw $this->createNotFoundException('Ce workspace ne contient pas de mooc');
+		}
+	}
+	
+	/**
+	 * @EXT\Route(
+	 *     "{workspace}/badges/participation/knowledge",
+	 *     name="solerni_export_badges_knowledge_participation_stats"
+	 * )
+	 *
+	 * @param AbstractWorkspace $workspace
+	 *
+	 * @return Response
+	 */
+	public function exportKnowledgeBadgesParticipationStatsAction(AbstractWorkspace $workspace) {
+		return $this->exportBadgesParticipationStatsAction($workspace, false, true);
+	}
+	
+	/**
+	 * @EXT\Route(
+	 *     "{workspace}/badges/participation/skill",
+	 *     name="solerni_export_badges_skill_participation_stats"
+	 * )
+	 *
+	 * @param AbstractWorkspace $workspace
+	 *
+	 * @return Response
+	 */
+	public function exportSkillBadgesParticipationStatsAction(AbstractWorkspace $workspace) {
+		return $this->exportBadgesParticipationStatsAction($workspace, true, false);	
+	}
+	
+	public function exportBadgesParticipationStatsAction(AbstractWorkspace $workspace, $skillBadges, $knowledgeBadges) {
+		if ($workspace->isMooc()) {
+			$badgesIndex = array();
+			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+			$workspaceUsers = $currentSession->getUsers();
+
+			$headerCSV = array();
+			$headerCSV[0] = "LastName";
+			$headerCSV[1] = "FirstName";
+			$headerCSV[2] = "Username";
+			$headerCSV[3] = "Mail";
+			$indexBadges = 4;
+			$rowsCSV = array();
+			
+			$usersBadges = array();
+
+			// Get all badges for all users and sort them
+			foreach ($workspaceUsers as $user) {
+				$usersBadges[$user->getId()] = array();
+				$usersBadges[$user->getId()]['user'] = $user;
+				$userBadges = array();
+				$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, $skillBadges, $knowledgeBadges);
+				foreach($badges as $badge) {
+					$userBadges[$badge['badge']->getId()] = $badge;
+				}
+				ksort($userBadges);
+				$usersBadges[$user->getId()]['badges'] = $userBadges;
+			}
+			
+
+			foreach($usersBadges as $userBadges) {
+				$indexBadge = 4;
+				$nbBadges = count($userBadges['badges']);
+				foreach($userBadges['badges'] as $userBadge) {
+					$headerCSV[$indexBadge] = $userBadge['badge']->getName();
+					$indexBadge++;
+				}
+				break;
+			}
+			
+			// For all user associated to his badges
+			foreach ($usersBadges as $userBadges) {
+				/* @var $user User */
+				$user = $userBadges['user'];
+				$badges = $userBadges['badges'];
+				$nbBadges = count($badges);
+				$rowCSV = array();
+				$rowCSV[0] = $user->getLastName();
+				$rowCSV[1] = $user->getFirstName();
+				$rowCSV[2] = $user->getUsername();
+				$rowCSV[3] = $user->getMail();
+	
+				$nbOwnedBadges = 0;
+				$totalNotes = 0;
+				$nbNotes = 0;
+	
+				$indexBadge = 4;
+				foreach ($badges as $badge) {
+					/* @var $badgeEntity Badge */
+					$badgeEntity = $badge['badge'];
+					$badgeName = $badgeEntity->getName();
+					
+					/* @var $drop Drop */
+					if (isset($badge['resource']['resource']['drop'])) {
+						$drop = $badge['resource']['resource']['drop'];
+					} else {
+						$drop = null;
+					}
+					if (isset($badge['resource']['resource']['firstAttempt'])) {
+						$firstAttempt = $badge['resource']['resource']['firstAttempt'];
+					} else {
+						$firstAttempt = null;
+					}
+	
+					if ($drop != null || $firstAttempt != null) {
+						$rowCSV[$indexBadge] = "oui";
+					} else {
+						$rowCSV[$indexBadge] = "non";
+					}
+					$indexBadge++;
+				}				 
+				ksort($rowCSV);
+				$rowsCSV[] = $rowCSV;
+				 
+			}
+
+			array_unshift($rowsCSV, $headerCSV);
+			
 			$content = $this->createCSVFromArray($rowsCSV);
 	
 			return new Response($content, 200, array(

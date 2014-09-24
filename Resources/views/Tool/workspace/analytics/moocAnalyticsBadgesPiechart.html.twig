@@ -42,6 +42,7 @@
                                     <div id="analytics-badge-{{ loop.index0 }}-pie-chart" class="pie-chart"></div>
                                 </div>
                             </div>
+                            <div id="collapse-badge-{{ loop.index0 }}-chart" class="line-chart"></div>
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -62,6 +63,7 @@
                                     <div id="analytics-badge-{{ loop.index0 }}-pie-chart" class="pie-chart"></div>
                                 </div>
                             </div>
+                            <div id="collapse-badge-{{ loop.index0 }}-chart" class="line-chart"></div>
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -76,7 +78,17 @@
         badge{{ loop.index0 }}Rates.push(["Success", {{ badge['success'] }}]);
         badge{{ loop.index0 }}Rates.push(["Failure", {{ badge['failure'] }}]);
         badge{{ loop.index0 }}Rates.push(["Abandon", {{ badge['inProgress'] }}]);
-        badge{{ loop.index0 }}Rates.push(["Available", {{ badge['available'] }}]);
+        badge{{ loop.index0 }}Rates.push(["Not started", {{ badge['available'] }}]);
+
+        var badge{{ loop.index0 }}Percentages = $.map({{ badgesParticipationRates[badge['id']]['data']['percentage']|json_encode|raw }}, function(value, index) {
+        	return [value];
+        });
+        var badge{{ loop.index0 }}Total = $.map({{ badgesParticipationRates[badge['id']]['data']['total']|json_encode|raw }}, function(value, index) {
+        	return [value];
+        });
+        var badge{{ loop.index0 }}Count = $.map({{ badgesParticipationRates[badge['id']]['data']['count']|json_encode|raw }}, function(value, index) {
+        	return [value];
+        });
         {% endfor %}
     {% endif %}
         
@@ -139,6 +151,96 @@
                             }
                     );
                 }
+                
+            	if (badge{{ loop.index0 }}Count.length > 0) {
+                        
+                    var participationPlot{{ loop.index0 }} = $.jqplot(
+                        'collapse-badge-{{ loop.index0 }}-chart',
+                        [badge{{ loop.index0 }}Percentages, badge{{ loop.index0 }}Total, badge{{ loop.index0 }}Count],
+                        {
+                            title: {show: false},
+                            grid: {
+                                drawBorder: true,
+                                borderWidth: 1.0,
+                                shadow: false,
+                                background: bg_color
+                            },
+                            axesDefaults: {
+                                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                                tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                            },
+							axes: {
+                                xaxis: {    
+                                	renderer: $.jqplot.DateAxisRenderer,
+                                    tickOptions: {
+                                        formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                        showGridline: false,
+                                        showMark: true,
+                                        angle: -20,
+                                        fontSize: '10px'
+                                    },
+                                    numberTicks:10,
+                                    label: "Date",
+                                    pad: 0
+                                },
+                                yaxis: {
+                                	label: "Pourcentage de participation",
+                                    min:0,
+                                    max:100,
+                                    showTickMarks: true,
+                                    numberTicks: 5
+                                },
+                                y2axis: {
+                                	label: "Total de participations",
+                                    min:0,
+                                    showTickMarks: true,
+                                    numberTicks: 5
+                                },
+                                y3axis: {
+                                	label: "Participations",
+                                    min:0,
+                                    showTickMarks: true,
+                                    numberTicks: 5
+                                }
+                            },
+                            highlighter: {
+                                show: true,
+                                sizeAdjust: 1,
+                                tooltipOffset:12,
+                                tooltipLocation:'n',
+                                tooltipAxes:'xy',
+                                formatString:'%s <br/> %d',
+                                tooltipFadeSpeed:'fast'
+                            },
+                            cursor: {
+                                show: true,
+                                zoom: true,
+                                showTooltip: false
+                            },
+                            seriesDefaults: {
+                                showMarker:((badge{{ loop.index0 }}Count.length<10)?true:false),
+                                markerOptions:{shadow:false},
+                                shadow:false,
+                                showLine:true,
+                                useNegativeColors: false,
+                                fill: true,
+                                lineWidth: 1.5,
+                                fillAndStroke: true,
+                                fillAlpha: 0.12,
+                                rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                            },
+                            series: [
+                                 {yaxis:'yaxis', label:'Pourcentage de participation'},
+                                 {yaxis:'y2axis', label:'Total de participations'},
+                                 {yaxis:'y3axis', label:'Participations'}
+                            ],
+                            legend: {
+            					show: true,
+            					placement: 'outsideGrid'
+                            }
+                        }
+                    );
+				}
                 {% endfor %}
             {% endif %}
         

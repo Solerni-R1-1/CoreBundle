@@ -1,0 +1,43 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+    'name': 'analytics'|trans({}, 'platform'),
+    'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h2 class="panel-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}
+    </div>
+    
+    <div class="panel-body logs-container">
+    	<div class="slrn-statistic-wrapper">
+		    <hr class="slrn-hr" />
+		    {% if keynumbers is defined and keynumbers is not empty %}
+			<table border="1">
+		        {% for keynumber in keynumbers %}
+		        <tr>
+		           	<td>{{ keynumber['key'] }} : </td>
+		           	<td>{{ keynumber['value'] }}</td>
+		        </tr>
+		       	{% endfor %}
+		   </table>
+		   {% endif %}
+		</div>
+	</div>
+{% endblock %}

@@ -567,9 +567,9 @@ class LogRepository extends EntityRepository
     				"date" => $date
     		));
     	
-    	return $qb->getQuery()->getResult();
+    	return $qb->getQuery()->getSingleScalarResult();
     }
-    
+
     public function countRegisteredUsers(AbstractWorkspace $workspace) {
     	$qb = $this->createQueryBuilder('l')
     	->select("COUNT(DISTINCT l.doer)")
@@ -577,8 +577,40 @@ class LogRepository extends EntityRepository
     	->setParameters(array(
     			"workspace" => $workspace
     	));
-    	 
-    	return $qb->getQuery()->getResult();
+    
+    	return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countLogsUsersTodayByAction(AbstractWorkspace $workspace, $action) {
+    	$todayAtMidnight = new \DateTime('today midnight');
+    	$qb = $this->createQueryBuilder('l')
+    	->select("COUNT(DISTINCT l.doer)")
+    	->where("l.workspace = :workspace")
+    	->andWhere("l.action = :action")
+    	->andWhere("l.dateLog >= :todayAtMidnight")
+    	->setParameters(array(
+    			"workspace" 		=> $workspace,
+    			"action"			=> $action,
+    			"todayAtMidnight" 	=> $todayAtMidnight
+    	));
+    
+    	return $qb->getQuery()->getSingleScalarResult();
+    }
+
+
+    public function countLogsUsersActionByDate(AbstractWorkspace $workspace, $action) {
+    	$qb = $this->createQueryBuilder('l')
+    	->select("COUNT(DISTINCT l.doer) as number, l.dateLog")
+    	->where("l.workspace = :workspace")
+    	->andWhere("l.action = :action")
+    	->groupBy("l.dateLog")
+    	->setParameters(array(
+    			"workspace" 		=> $workspace,
+    			"action"			=> $action
+    	));
+        		
+    	$result = $qb->getQuery()->getResult();
+    	return $result;
     }
     
 	public function getLastConnection(AbstractWorkspace $workspace, User $user) {

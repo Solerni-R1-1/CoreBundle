@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Controller\Badge\Tool\BadgeController;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Icap\DropzoneBundle\Entity\Drop;
+use Claroline\ForumBundle\Entity\Message;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -280,7 +281,7 @@ class AnalyticsManager
     	$logs = $this->logRepository->findBy(array(
     			"workspace" => $workspace
     	));
-    	for ($i = 1; $i < 25; $i++) {
+    	for ($i = 0; $i < 24; $i++) {
     		$audience[0][$i] = 0;
     		$audience[1][$i] = 0;
     	}
@@ -389,11 +390,11 @@ class AnalyticsManager
      * @return number
      */
     public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5) {
-    	$date = new \DateTime();
+    	$date = new \DateTime("today midnight");
     	$date->sub(new \DateInterval("P".$nbDays."D"));
     	
-    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date)[0][1];
-    	$nbTotal =  $this->logRepository->countRegisteredUsers($workspace)[0][1];
+    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date);
+    	$nbTotal =  $this->logRepository->countRegisteredUsers($workspace);
     	return [$nbActive , $nbTotal];
     }
     
@@ -505,6 +506,7 @@ class AnalyticsManager
     					$rateBadge['inProgress'] = 0;
     					$rateBadge['available'] = 0;
     					$rateBadge['name'] = $badgeName;
+    					$rateBadge['id'] = $badgeEntity->getId();
     					$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
     					$rates[$badgeName] = $rateBadge;
     				}
@@ -567,7 +569,7 @@ class AnalyticsManager
     	return $result;
     }
     
-    public function getSkillBadgeParticitpationRate(AbstractWorkspace $workspace) {
+    public function getBadgesParticitpationRate(AbstractWorkspace $workspace) {
     	$result = array();
     	
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
@@ -579,7 +581,7 @@ class AnalyticsManager
     	$badges = array();
     	
     	foreach ($users as $user) {
-    		$userBadges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace);
+    		$userBadges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, true);
     		
     		foreach ($userBadges as $userBadge) {
     			$badgeId = $userBadge['badge']->getId();
@@ -622,20 +624,29 @@ class AnalyticsManager
     			$user = $badgeUser['user'];
     			$userBadge = $badgeUser['badge'];
     			
-    			if (isset($userBadge['resource']['resource']['drop']) 
-    					&& $userBadge['resource']['resource']['drop'] != null) {
-    				$startDate = $userBadge['resource']['resource']['drop']->getDropDate()->format('Y-m-d');
-    			
-	    			if (!isset($totalData[$startDate])) {
-	    				$totalData[$startDate] = array();
-	    				$totalData[$startDate][0] = $startDate;
-	    				$percentageData[$startDate] = array();
-	    				$percentageData[$startDate][0] = $startDate;
-	    				$countData[$startDate] = array();
-	    				$countData[$startDate][0] = $startDate;
-	    				$countData[$startDate][1] = 0;
+    			if ($userBadge['badge']->isSkillBadge()) {
+	    			if (isset($userBadge['resource']['resource']['drop']) 
+	    					&& $userBadge['resource']['resource']['drop'] != null) {
+	    				$startDate = $userBadge['resource']['resource']['drop']->getDropDate()->format('Y-m-d');
+	    			
+		    			if (!isset($countData[$startDate])) {
+		    				$countData[$startDate] = array();
+		    				$countData[$startDate][0] = $startDate;
+		    				$countData[$startDate][1] = 0;
+		    			}
+		    			$countData[$startDate][1]++;
 	    			}
-	    			$countData[$startDate][1]++;
+    			} else {
+    				if (isset($userBadge['resource']['resource']['firstAttempt'])
+	    					&& $userBadge['resource']['resource']['firstAttempt'] != null) {
+    					$startDate = $userBadge['resource']['resource']['firstAttempt']->getStart()->format('Y-m-d');
+    					if (!isset($countData[$startDate])) {
+    						$countData[$startDate] = array();
+    						$countData[$startDate][0] = $startDate;
+    						$countData[$startDate][1] = 0;
+    					}
+    					$countData[$startDate][1]++;
+	    			}
     			}
     		}
     		$data['percentage'] = $percentageData;
@@ -646,6 +657,7 @@ class AnalyticsManager
     	// We now need to complete the data with the missing dates
     	$from = $session->getStartDate();
     	$to = $session->getEndDate();
+    	$previousDateString = null;
     	
     	$now = new \DateTime();
     	if ($now < $to) {
@@ -667,19 +679,122 @@ class AnalyticsManager
 	    			$countData[$currDateString][0] = $currDateString;
 	    			$countData[$currDateString][1] = 0;
 	    		}
+	    		$percentageData[$currDateString] = array();
+	    		$percentageData[$currDateString][0] = $currDateString;
+	    		$totalData[$currDateString] = array();
+	    		$totalData[$currDateString][0] = $currDateString;
+	    		
+	    		if ($previousDateString == null) {
+	    			$totalData[$currDateString][1] = 0;
+	    			$percentageData[$currDateString][1] = 0;
+	    		} else {
+	    			$totalData[$currDateString][1] = $countData[$currDateString][1] + $totalData[$previousDateString][1];
+	    			$percentageData[$currDateString][1] = ($totalData[$currDateString][1] * 100) / $nbUsers;
+	    		}
 	    	}
 	    	$from = $from->add(new \DateInterval('P1D'));
+	    	$previousDateString = $currDateString;
     	}
 		
     	// Order the arrays...
     	foreach ($result as &$badgeResult) {
-    		ksort(&$badgeResult['data']['count']);
-    		ksort(&$badgeResult['data']['total']);
-    		ksort(&$badgeResult['data']['percentage']);
+    		ksort($badgeResult['data']['count']);
+    		ksort($badgeResult['data']['total']);
+    		ksort($badgeResult['data']['percentage']);
     	}
-    	
-    	print_r($result);
     		
     	return $result;
+    }
+
+    /**************************************
+     * Requests for keynumbers analytics. *
+     **************************************/
+    
+    public function getTotalSubscribedUsers(AbstractWorkspace $workspace) {
+    	return $this->logRepository->countRegisteredUsers($workspace);
+    }
+    
+    public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace) {
+    	return $this->logRepository->countLogsUsersTodayByAction($workspace, "workspace-role-subscribe_user");
+    }
+    
+    public function getNumberConnectionsToday(AbstractWorkspace $workspace) {
+    	return $this->logRepository->countLogsUsersTodayByAction($workspace, "workspace-enter");
+    }
+    
+    public function getMeanNumberConnectionsDaily(AbstractWorkspace $workspace) {
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	$from = $session->getStartDate();
+    	$to = $session->getEndDate();
+    	
+    	$connectionsByDays = $this->logRepository->countLogsUsersActionByDate($workspace, "workspace-enter");
+    	$nbDays = $from->diff($to, true)->format("%a");
+    	
+    	$total = 0;
+    	foreach ($connectionsByDays as $connectionByDay) {
+    		$total += $connectionByDay['number'];
+    	}
+    	
+    	return $total / $nbDays;
+    }
+    
+    public function getNumberActiveUsers(AbstractWorkspace $workspace, $nbDays) {
+    	$date = new \DateTime("today midnight");
+    	$date->sub(new \DateInterval("P".$nbDays."D"));
+    	
+    	return $this->logRepository->countActiveUsersSinceDate($workspace, $date);
+    }
+
+    public function getHourMostConnection(AbstractWorkspace $workspace) {
+    	$hourlyAudience = $this->getHourlyAudience($workspace)[0];
+    	
+    	$max = 0;
+    	$index = 0;
+    	foreach($hourlyAudience as $hour => $audience) {
+    		if ($audience > $max) {
+    			$max = $audience;
+    			$index = $hour;
+    		}
+    	}
+    	return $index;
+    }
+    
+    public function getHourMostActivity(AbstractWorkspace $workspace) {
+    	$hourlyAudience = $this->getHourlyAudience($workspace)[1];
+    	
+    	$max = 0;
+    	$index = 0;
+    	foreach($hourlyAudience as $hour => $audience) {
+    		if ($audience > $max) {
+    			$max = $audience;
+    			$index = $hour;
+    		}
+    	}
+    	return $index;
+    }
+    
+    public function getTotalForumPublications(AbstractWorkspace $workspace) {
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	if ($session->getForum() != null) {
+	    	$forum = $session->getForum();
+	    	return $this->messageRepository->countNbMessagesInForum($forum);
+    	} else {
+    		return 0;
+    	}
+    }
+    
+    public function getForumPublicationsDailyMean(AbstractWorkspace $workspace) {
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	if ($session != null && $session->getForum() != null) {
+	    	$from = $session->getStartDate();
+	    	$to = $session->getEndDate();
+	    	
+	    	$nbDays = $from->diff($to, true)->format('%a');
+	    	
+	    	$nbMessages = $this->getTotalForumPublications($workspace);
+	    	return $nbMessages / $nbDays;
+    	} else {
+    		return 0;
+    	}
     }
 }

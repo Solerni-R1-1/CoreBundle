@@ -38,8 +38,14 @@
         <a class="btn btn-gris margin-large" href="{{ path('solerni_export_badges_knowledge_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_badge_knowledge'|trans({}, 'platform') }}
         </a>
+        <a class="btn btn-gris" href="{{ path('solerni_export_badges_knowledge_participation_stats', {'workspace':workspace.getId()}) }}">
+            {{ 'export_badge_participation_knowledge'|trans({}, 'platform') }}
+        </a>
         <a class="btn btn-gris" href="{{ path('solerni_export_badges_skill_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_badge_skill'|trans({}, 'platform') }}
+        </a>
+        <a class="btn btn-gris" href="{{ path('solerni_export_badges_skill_participation_stats', {'workspace':workspace.getId()}) }}">
+            {{ 'export_badge_participation_skill'|trans({}, 'platform') }}
         </a>
         <a class="btn btn-gris" href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_subscriptions_stats'|trans({}, 'platform') }}
