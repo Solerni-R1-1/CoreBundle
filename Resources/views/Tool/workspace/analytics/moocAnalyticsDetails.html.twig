@@ -42,6 +42,17 @@
             <div class="count_by_day_chart_legend">
                 <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
             </div>
+            {% if mostActiveUsers is defined and mostActiveUsers is not empty %}
+            <table border="1">
+	            {% for i in 0..min(9, mostActiveUsers|length - 1) %}
+	            	{% set mostActiveUser = mostActiveUsers[i] %}
+	           	<tr>
+	            	<td>{{ mostActiveUser['user'].getFirstname() }} {{ mostActiveUser['user'].getLastname() }}</td>
+	            	<td>{{ mostActiveUser['nbLogs'] }}</td>
+	            </tr>
+	            {% endfor %}
+	        </table>
+	        {% endif %}
         </div>
 
         <div class="slrn-statistic-wrapper">
@@ -67,6 +78,17 @@
 	            	<td>{{ forumPublisher['username'] }}</td>
 	            	<td>{{ forumPublisher['mail'] }}</td>
 	            	<td>{{ forumPublisher['nbPublications'] }}</td>
+	            </tr>
+	            {% endfor %}
+	        </table>
+	        {% endif %}
+	        {% if forumMostActiveSubjects is defined and forumMostActiveSubjects is not empty %}
+            <table border="1">
+	            {% for i in 0..min(9, forumMostActiveSubjects|length - 1) %}
+	            	{% set forumMostActiveSubject = forumMostActiveSubjects[i] %}
+	           	<tr>
+	            	<td>{{ forumMostActiveSubject['subject'].getTitle() }}</td>
+	            	<td>{{ forumMostActiveSubject['nbMessages'] }}</td>
 	            </tr>
 	            {% endfor %}
 	        </table>

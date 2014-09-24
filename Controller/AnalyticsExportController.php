@@ -97,10 +97,10 @@ class AnalyticsExportController extends Controller {
 			$workspaceUsers = $currentSession->getUsers();
 
 			$headerCSV = array();
-			$headerCSV[0] = "LastName";
-			$headerCSV[1] = "FirstName";
-			$headerCSV[2] = "Username";
-			$headerCSV[3] = "Mail";
+			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$indexBadges = 4;
 			$rowsCSV = array();
 			
@@ -208,10 +208,10 @@ class AnalyticsExportController extends Controller {
 	
 	
 			$headerCSV = array();
-			$headerCSV[0] = "LastName";
-			$headerCSV[1] = "FirstName";
-			$headerCSV[2] = "Username";
-			$headerCSV[3] = "Mail";
+			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$rowsCSV = array();
 			$badgeMaxTries = array();
 			$usersBadges = array();
@@ -346,10 +346,10 @@ class AnalyticsExportController extends Controller {
 			$workspaceUsers = $currentSession->getUsers();
 
 			$headerCSV = array();
-			$headerCSV[0] = "LastName";
-			$headerCSV[1] = "FirstName";
-			$headerCSV[2] = "Username";
-			$headerCSV[3] = "Mail";
+			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$indexBadges = 4;
 			$rowsCSV = array();
 			
@@ -462,10 +462,10 @@ class AnalyticsExportController extends Controller {
 		
 		$headerCSV = array();
 
-		$headerCSV[0] = "Firstname";
-		$headerCSV[1] = "Lastname";
-		$headerCSV[2] = "Username";
-		$headerCSV[3] = "Mail";
+		$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 		$headerCSV[4] = "Subscription date";
 		$headerCSV[5] = "Subscription time";
 		$rowsCSV[] = $headerCSV;
@@ -533,11 +533,11 @@ class AnalyticsExportController extends Controller {
 			$rowsCSV = array();
 	
 			$headerCSV = array();
-	
-			$headerCSV[0] = "Firstname";
-			$headerCSV[1] = "Lastname";
-			$headerCSV[2] = "Username";
-			$headerCSV[3] = "Mail";
+
+			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$headerCSV[4] = "Subscription date";
 			$headerCSV[5] = "Last connection date";
 			$rowsCSV[] = $headerCSV;
@@ -602,11 +602,11 @@ class AnalyticsExportController extends Controller {
 		
 		$headerCSV = array();
 		$header = array();
-		
-		$header[0] = $this->translator->trans('mooc_analytics_publisher_name', array(), 'platform');
-		$header[1] = $this->translator->trans('mooc_analytics_publisher_firstname', array(), 'platform');
-		$header[2] = $this->translator->trans('mooc_analytics_publisher_username', array(), 'platform');
-		$header[3] = $this->translator->trans('mooc_analytics_publisher_mail', array(), 'platform');
+
+		$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 		$header[4] = $this->translator->trans('mooc_analytics_publisher_nb_pub', array(), 'platform');
 		
 		$headerCSV[] = $header;
@@ -617,6 +617,52 @@ class AnalyticsExportController extends Controller {
 		$rowsCSV = array_merge($headerCSV, $data);
 		$content = $this->createCSVFromArray($rowsCSV);
 		
+		return new Response($content, 200, array(
+				'Content-Type' => 'application/force-download',
+				'Content-Disposition' => 'attachment; filename="export.csv"'
+		));
+	}
+	
+	/**
+	 * @EXT\Route(
+	 *     "{workspace}/users/activity",
+	 *     name="solerni_export_users_activity"
+	 * )
+	 *
+	 * @param AbstractWorkspace $workspace
+	 *
+	 * @return Response
+	 */
+	public function exportUsersActivityAction(AbstractWorkspace $workspace) {
+		$headerCSV = array();
+		$header = array();
+	
+		$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$header[4] = $this->translator->trans('mooc_analytics_users_nb_logs', array(), 'platform');
+	
+		$headerCSV[] = $header;
+	
+		$usersActivity = $this->analyticsManager->getMostActiveUsers($workspace);
+		$data = array();
+		foreach ($usersActivity as $userActivity) {
+			/* @var $user User */
+			$user = $userActivity['user'];
+			$row = array();
+			$row[] = $user->getLastName();
+			$row[] = $user->getFirstName();
+			$row[] = $user->getUsername();
+			$row[] = $user->getMail();
+			$row[] = $userActivity['nbLogs'];
+			
+			$data[] = $row;
+		}
+	
+		$rowsCSV = array_merge($headerCSV, $data);
+		$content = $this->createCSVFromArray($rowsCSV);
+
 		return new Response($content, 200, array(
 				'Content-Type' => 'application/force-download',
 				'Content-Disposition' => 'attachment; filename="export.csv"'

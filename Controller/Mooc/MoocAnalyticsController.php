@@ -169,16 +169,21 @@ class MoocAnalyticsController extends Controller
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to);
         $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace);
         $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to);
+        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365);
+        $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace);
+        
         
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsDetails.html.twig',
             array(
-                'hourlyAudience'        => $hourlyAudience,
-                'subscriptionStats'     => $subscriptionStats,
-                'forumContributions'    => $forumContributions,
-            	'forumPublishers'		=> $forumPublishers,
-                'activeUsers'           => $activeUsers,
-                'workspace'             => $workspace
+                'hourlyAudience'        	=> $hourlyAudience,
+                'subscriptionStats'     	=> $subscriptionStats,
+            	'forumMostActiveSubjects'	=> $forumMostActiveSubjects,
+                'forumContributions'    	=> $forumContributions,
+            	'forumPublishers'			=> $forumPublishers,
+                'activeUsers'           	=> $activeUsers,
+                'workspace'             	=> $workspace,
+            	'mostActiveUsers'			=> $mostActiveUsers
             )
         );
     }
