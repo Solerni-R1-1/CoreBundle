@@ -1051,11 +1051,12 @@ mooc_analytics_details: Détails du MOOC
 mooc_analytics_badges_piechart: Badges (Piecharts)
 mooc_analytics_badges_chart: Badges (Charts)
 mooc_analytics_export: Exports
-mooc_analytics_publisher_name: Nom
-mooc_analytics_publisher_firstname: Prénom
-mooc_analytics_publisher_username: Pseudo
-mooc_analytics_publisher_mail: Adresse e-mail
+mooc_analytics_user_name: Nom
+mooc_analytics_user_firstname: Prénom
+mooc_analytics_user_username: Pseudo
+mooc_analytics_user_mail: Adresse e-mail
 mooc_analytics_publisher_nb_pub: Nombre de publications
+mooc_analytics_users_nb_logs: Activité
 
 mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
 mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
@@ -1073,7 +1074,8 @@ export_badge_skill: Badges de compétences
 export_badge_participation_knowledge: Participation aux badges de connaissances
 export_badge_participation_skill: Participation aux badges de compétences
 export_subscriptions_stats: Statistiques d'inscription
-export_active_users: Utilisateurs les plus actifs
+export_active_users: Liste des utilisateurs actifs/inactifs
+export_users_activity: Utilisateurs les plus actifs
 export_forum_stats: Statistiques du forum
 
 mooc_subscriptions_follow_up: Suivi des inscriptions

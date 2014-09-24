@@ -797,4 +797,20 @@ class AnalyticsManager
     		return 0;
     	}
     }
+    
+    public function getMostActiveSubjects(AbstractWorkspace $workspace, $nbDays) {
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	if ($session != null && $session->getForum() != null) {
+    		$since = new \DateTime("today midnight");
+    		$since = $since->sub(new \DateInterval('P'.$nbDays.'D'));
+	    	$forum = $session->getForum();
+	    	return $this->messageRepository->countNbMessagesInForumGroupBySubjectSince($forum, $since);
+    	} else {
+    		return null;
+    	}
+    }
+    
+    public function getMostActiveUsers(AbstractWorkspace $workspace) {
+    	return $this->logRepository->countAllLogsByUsers($workspace);
+    }
 }

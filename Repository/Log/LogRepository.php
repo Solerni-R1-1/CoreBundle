@@ -609,7 +609,27 @@ class LogRepository extends EntityRepository
     			"action"			=> $action
     	));
         		
-    	$result = $qb->getQuery()->getResult();
+    	$result = $qb->getQuery()->getSingleScalarResult();
+    	return $result;
+    }
+
+    public function countAllLogsByUsers(AbstractWorkspace $workspace) {
+    	$dql = "
+	    	SELECT count(l) as nbLogs, u as user FROM Claroline\CoreBundle\Entity\User u 
+	    	JOIN Claroline\CoreBundle\Entity\Log\Log l
+    		
+    		WHERE l.receiver = u
+    		AND l.workspace = :workspace
+    		GROUP BY user
+    		ORDER BY nbLogs DESC";
+    
+    
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters(array(
+    			"workspace" 		=> $workspace
+    	));
+    
+    	$result = $query->getResult();
     	return $result;
     }
     

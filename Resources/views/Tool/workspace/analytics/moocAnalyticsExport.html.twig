@@ -50,6 +50,9 @@
         <a class="btn btn-gris" href="{{ path('solerni_export_subscriptions_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_subscriptions_stats'|trans({}, 'platform') }}
         </a>
+        <a class="btn btn-gris margin-large" href="{{ path('solerni_export_users_activity', {'workspace':workspace.getId()}) }}">
+            {{ 'export_users_activity'|trans({}, 'platform') }}
+        </a>
         <a class="btn btn-gris" href="{{ path('solerni_export_active_users_stats', {'workspace':workspace.getId(), 'nbDays':5}) }}">
             {{ 'export_active_users'|trans({}, 'platform') }}
         </a>
