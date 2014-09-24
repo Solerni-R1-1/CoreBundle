@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * Description of StaticController
@@ -76,6 +77,76 @@ class MoocAnalyticsController extends Controller
         $this->analyticsManager = $analyticsManager;
     }
 
+
+    /**
+     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/keynumbers", name="claro_mooc_analytics_keynumbers")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function analyticsMoocKeynumbersAction(AbstractWorkspace $workspace, User $user) {
+    	$nbConnectionsToday = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('connections_today'),
+    			"value" => $this->analyticsManager->getNumberConnectionsToday($workspace));
+    	
+    	$meanConnectionsDaily = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('mean_connections_daily'),
+    			"value" => $this->analyticsManager->getMeanNumberConnectionsDaily($workspace));
+    	
+    	$nbSubscriptionsToday = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_today'),
+    			"value" => $this->analyticsManager->getTotalSubscribedUsersToday($workspace));
+    	
+    	$nbSubscriptions = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_total'),
+    			"value" => $this->analyticsManager->getTotalSubscribedUsers($workspace));
+    	
+    	$nbActiveUsers = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
+    			"value" => $this->analyticsManager->getNumberActiveUsers($workspace, 5));
+    	
+    	$mostConnectedHour = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),
+    			"value" => $this->analyticsManager->getHourMostConnection($workspace));
+    	
+    	$mostActiveHour = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('activity_hour'),
+    			"value" => $this->analyticsManager->getHourMostActivity($workspace));
+    	
+    	$nbForumPublications = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_total'),
+    			"value" => $this->analyticsManager->getTotalForumPublications($workspace));
+    	
+    	$meanForumPublicationsDaily = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_daily_mean'),
+    			"value" => $this->analyticsManager->getForumPublicationsDailyMean($workspace));
+    	
+    	return $this->render(
+    			'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsKeynumbers.html.twig',
+    			array(
+    					'workspace'      => $workspace,
+    					'keynumbers'	=> array(
+    							$nbConnectionsToday,
+    							$meanConnectionsDaily,
+    							$nbSubscriptionsToday,
+    							$nbSubscriptions,
+    							$nbActiveUsers,
+    							$mostConnectedHour,
+    							$mostActiveHour,
+    							$nbForumPublications,
+    							$meanForumPublicationsDaily
+    					)
+    			)
+    	);
+    }
+    
+    private function getTranslationKeyForKeynumbers($id) {
+    	return $this->translator->trans('mooc_analytics_keynumbers_'.$id, array(), 'platform');
+    }
+
     /**
      * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/details", name="claro_mooc_analytics_details")
      * @EXT\ParamConverter(
@@ -93,7 +164,6 @@ class MoocAnalyticsController extends Controller
         if ($now < $to) {
         	$to = $now;
         }
-        
     	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace);
         $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to);
@@ -125,13 +195,14 @@ class MoocAnalyticsController extends Controller
     public function analyticsMoocBadgesPieChartAction( $workspace, $user ) {
         
         $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace);
-        $skillBadgesParticipationRates = $this->analyticsManager->getSkillBadgeParticitpationRate($workspace);
+        $badgesParticipationRates = $this->analyticsManager->getBadgesParticitpationRate($workspace);
         
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsBadgesPiechart.html.twig',
             array(
-                'workspace'             => $workspace,
-                'badgesSuccessRates'    => $badgesSuccessRates
+                'workspace'             		=> $workspace,
+                'badgesSuccessRates'    		=> $badgesSuccessRates,
+            	'badgesParticipationRates'	=> $badgesParticipationRates
             )
         );
     }

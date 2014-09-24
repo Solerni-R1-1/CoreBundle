@@ -69,8 +69,8 @@
 	            	<td>{{ forumPublisher['nbPublications'] }}</td>
 	            </tr>
 	            {% endfor %}
-	        {% endif %}
 	        </table>
+	        {% endif %}
         </div>
         
         <div class="slrn-statistic-wrapper">
@@ -86,11 +86,11 @@
 <script type="text/javascript">
    
     var workspaceAccess = $.map({{ hourlyAudience[0]|json_encode|raw }}, function(value, index) {
-		return [value];
+		return [[index, value]];
     });
 
     var workspaceActions = $.map({{ hourlyAudience[1]|json_encode|raw }}, function(value, index) {
-		return [value];
+		return [[index, value]];
     });
 
     var cumulatedSubscriptions = $.map({{ subscriptionStats[0]|json_encode|raw }}, function(value, index) {
@@ -149,7 +149,8 @@
                     axes: {
                         xaxis: {                            
                             label: "Heure de la journée",
-                            pad: 0
+                            pad: 0,
+                            min:0
                         },
                         yaxis: {
                         	label: "Nombre de connections",

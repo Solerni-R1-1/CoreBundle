@@ -314,12 +314,15 @@ class BadgeManager
     				if ( $badgeRessourceNode ) {
     					$associatedDropzone = $evalDropzoneRepo->findOneByResourceNode( $badgeRessourceNode );
     					$associatedDrop = $evalDropRepo->findOneBy( array( 'dropzone' => $associatedDropzone, 'user' => $loggedUser ) );
-    					$associatedResource = array( 'dropzone' => $associatedDropzone, 'drop' => $associatedDrop );
+    					$associatedResource = array(
+    							'dropzone' => $associatedDropzone,
+    							'drop' => $associatedDrop);
     				}
     			}
     		}
     	} else if (strpos ($resourceType, 'exercise')) {
     		$exercisesRepo = $this->entityManager->getRepository('UJMExoBundle:Exercise');
+    		$paperRepo = $this->entityManager->getRepository('UJMExoBundle:Paper');
     		foreach ( $badgeRules = $badge->getRules() as $BadgeRule ) {
     			if ( strpos( $BadgeRule->getAction(), $resourceType ) ) {
     				$badgeRessourceNode = $BadgeRule->getResource();
@@ -327,6 +330,15 @@ class BadgeManager
     					$associatedExercise = $exercisesRepo->findOneByResourceNode( $badgeRessourceNode );
     					$maxMark = $this->exerciseService->getExerciseTotalScore($associatedExercise->getId());
     					$marks = $exercisesRepo->getExerciseMarksForUser($associatedExercise, $loggedUser);
+    					$papers = $paperRepo->getExerciseUserPapers(
+    							$loggedUser->getId(),
+    							$associatedExercise->getId(),
+    							"start");
+    					if (count($papers) > 0) {
+    						$firstAttempt = $papers[0];
+    					} else {
+    						$firstAttempt = null;
+    					}
     					$normalizedMarks = array();
     					$bestMark = 0;
     					foreach ($marks as $mark) {
@@ -336,7 +348,13 @@ class BadgeManager
     							$bestMark = $normalizedMark;
     						}
     					}
-    					$associatedResource = array( 'exercise' => $associatedExercise, 'bestMark' => $bestMark, 'marks' => $normalizedMarks);
+    					
+    					$associatedResource = array(
+    							'exercise' => $associatedExercise,
+    							'bestMark' => $bestMark,
+    							'marks' => $normalizedMarks,
+    							'firstAttempt' => $firstAttempt
+    					);
     				}
     			}
     		}

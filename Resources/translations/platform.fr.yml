@@ -1046,6 +1046,7 @@ fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux rés
 see_all_owner_moocs: Voir tous les moocs
 mooc_analytics: Statistiques du MOOC
 mooc_analytics_home: Claroline
+mooc_analytics_keynumbers: Chiffres clés
 mooc_analytics_details: Détails du MOOC
 mooc_analytics_badges_piechart: Badges (Piecharts)
 mooc_analytics_badges_chart: Badges (Charts)
@@ -1056,9 +1057,21 @@ mooc_analytics_publisher_username: Pseudo
 mooc_analytics_publisher_mail: Adresse e-mail
 mooc_analytics_publisher_nb_pub: Nombre de publications
 
+mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
+mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
+mooc_analytics_keynumbers_subscriptions_today: "Nombre d'inscrits du jour"
+mooc_analytics_keynumbers_subscriptions_total: "Nombre total d'inscrits"
+mooc_analytics_keynumbers_active_users: "Nombre d'utilisateurs actifs (1)"
+mooc_analytics_keynumbers_connection_hour: "Plage horaire moyenne la plus connectée"
+mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active"
+mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum"
+mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour"
+
 mooc_analytics_export: Exportez les données du MOOC
 export_badge_knowledge: Badges de connaissances
-export_badge_skill: Badge de compétences
+export_badge_skill: Badges de compétences
+export_badge_participation_knowledge: Participation aux badges de connaissances
+export_badge_participation_skill: Participation aux badges de compétences
 export_subscriptions_stats: Statistiques d'inscription
 export_active_users: Utilisateurs les plus actifs
 export_forum_stats: Statistiques du forum
