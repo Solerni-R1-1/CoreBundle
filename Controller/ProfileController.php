@@ -153,7 +153,7 @@ class ProfileController extends Controller
                     $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
                 }
 
-                return $this->redirect($this->generateUrl('claro_user_public_profile_preferences'));
+                return $this->redirect($this->generateUrl('claro_profile_view'));
             }
         }
 
@@ -365,6 +365,11 @@ class ProfileController extends Controller
      */
     public function editPublicUrlAction(User $loggedUser)
     {
+        // Redirect user if he has already modified his public URL
+        if ( $loggedUser->hasTunedPublicUrl() ) {
+            return $this->redirect($this->generateUrl('claro_profile_view'));
+        }
+        
         $currentPublicUrl = $loggedUser->getPublicUrl();
         $form = $this->createForm(new UserPublicProfileUrlType(), $loggedUser);
         $form->handleRequest($this->request);
@@ -440,7 +445,7 @@ class ProfileController extends Controller
     /**
      * @EXT\Route(
      *     "/delete/{userId}",
-     *      name="claro_user_delete"
+     *      name="claro_user_delete_page"
      * )
      * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template()
@@ -449,8 +454,28 @@ class ProfileController extends Controller
      */
     public function deleteUserProfileAction( User $loggedUser )
     {
+    
         return array(
             'user' => $loggedUser
         );
+
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/delete/{userId}",
+     *      name="claro_user_delete_action"
+     * )
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template()
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @EXT\Method({"POST"})
+     */
+    public function deleteUserProfilePostAction( User $loggedUser )
+    {
+        $this->userManager->deleteUser($loggedUser);
+        $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($loggedUser));
+        
+        return $this->redirect( $this->generateUrl('solerni_static_page', array( 'name' => 'cms_url' ) ) );
     }
 }

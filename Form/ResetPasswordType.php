@@ -41,19 +41,23 @@ class ResetPasswordType extends AbstractType
             array(
                 'type' => 'password',
                 'invalid_message' => 'password_mismatch',
-                'first_options' => array('label' => 'new_password'),
-                'second_options' => array('label' => 'repeat_password'),
-               // 'options' => array('attr' => array('class' => 'plainPasswordFirstClasses'))
-                'options' => array( 'attr' => array( 
-                            'placeholder' => 'Mot de passe',
-                            'class' => 'plainPasswordFirstClasses',
-                            'data-validation' => 'length', 
-                            'data-validation-length' => 'min4', 
-                            'data-name' => 'pass_confirmation', 
-                            'data-validation-error-msg' => $this->translator->trans('user_rules_password', array(), 'platform') 
-                        ))
-                
-
+                'first_options' => array('label' => 'new_password', 
+                                            'attr' => array (
+                                                'data-name' => 'pass_confirmation',
+                                                'placeholder' => 'Mot de passe',
+                                                'class' => 'plainPasswordFirstClasses',
+                                                'data-validation' => 'length',
+                                                'data-validation-length' => 'min4',
+                                                'data-validation-error-msg' => $this->translator->trans('user_rules_password', array(), 'platform')
+                ) ),
+                'second_options' => array('label' => 'repeat_password',
+                                            'attr' => array (
+                                                'data-name' => 'pass',
+                                                'placeholder' => 'Répétez le mot de passe',
+                                                'class' => 'plainPasswordFirstClasses',
+                                                'data-validation' => 'confirmation',
+                                                'data-validation-error-msg' => $this->translator->trans('password_mismatch', array(), 'platform')
+                ) )
             )
         );
     }

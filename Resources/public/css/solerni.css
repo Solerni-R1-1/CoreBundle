@@ -1818,6 +1818,13 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 /* PROFILE */
 
+.slrn-content-main-title--profile {
+    font-size:      24px;
+    font-weight:    800;
+    color:          #333;
+    margin-top:     40px;
+}
+
 .slrn-profile-button {
     position:   relative;
     width:      200px;
@@ -1871,6 +1878,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-profile-details {
+    position:           relative;
     padding:            1.5em;
     background-color:   #F6F6F8;
 }
@@ -1898,7 +1906,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 .slrn-profile_informations .description_block {
     margin-top:     40px;
     margin-bottom:  1em;
-    width:          700px;
+    width:          685px;
 }
 
 .no_underline {
@@ -1984,12 +1992,56 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     color:          #999;
 }
 
-.slrn-more-info .tooltip-inner {
+.slrn-more-info .tooltip-inner,
+.slrn-profile-details .tooltip-inner {
     background-color:   #999;
+    padding:            .8em .5em;
+}
+
+.slrn-profile-details .tooltip-inner {
+    width:              130px;
+    max-width:          130px;  
+}
+
+.slrn-more-info .tooltip-inner {
     width:              400px;
     max-width:          400px;
 }
 
-.slrn-more-info .tooltip.top .tooltip-arrow {
+.slrn-more-info .tooltip.top .tooltip-arrow,
+.slrn-profile-details .tooltip.top .tooltip-arrow {
     border-top-color: #999;
+}
+
+.share_policies,
+.preferences label {
+    color: #999;
+}
+
+.share_policies label, 
+.share_policies strong {
+    font-weight: normal;
+}
+
+.slrn-margin-top-40 {
+    margin-top: 40px;
+}
+
+.slrn-icon-profile {
+    
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    
+    width:  36px;
+    height: 36px;
+    background: transparent url(../images/sprites_solerni.png) no-repeat -204px -384px scroll;
+}
+
+.slrn-icon-profile--arobase {
+    right:  70px;
+}
+
+.slrn-icon-profile--message {
+    background-position: -240px -384px;
 }

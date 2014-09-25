@@ -8,7 +8,9 @@
             <a href="{{ path('claro_profile_view') }}" class="black_link slrn-top-back-link">
                 <i class="icon-chevron-left no_underline"> </i>{{ 'back_to_profile'|trans({}, 'platform') }}
             </a>
-            <h3 class="slrn-content-main-title">{{ 'profil_edition'|trans({}, 'platform') }}</h3>
+            <h1 class="slrn-content-main-title slrn-content-main-title--profile">
+                {{ 'profil_edition'|trans({}, 'platform') }}
+            </h1>
         </div>
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
@@ -174,7 +176,7 @@
     <hr class="slrn-hr--lightgrey">
     <div class="slrn-unsubscribe">
         {{ 'user_wish_to_unsubscribe'|trans({}, 'platform') }}
-        <a class="pink_link" href="{{path('claro_user_delete', { 'userId': app.user.getId() } )}}">
+        <a class="pink_link" href="{{path('claro_user_delete_page', { 'userId': app.user.getId() } )}}">
             {{ 'unsubscribe_self'|trans({}, 'platform' )}}
         </a>
     </div>
