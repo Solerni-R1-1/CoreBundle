@@ -1890,6 +1890,11 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     border-radius:  5px;
 }
 
+.slrn-profile-avatar .profile_picture {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .slrn-profile-details-list {
     list-style: none inside none;
     padding:    0;

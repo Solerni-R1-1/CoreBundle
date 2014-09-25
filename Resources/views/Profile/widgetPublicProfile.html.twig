@@ -12,10 +12,14 @@
             <div class="avatar slrn-profile-avatar">
                 {% if user.getPicture() != "" %}
                     <img src="{{ image( 'uploads/pictures/' ~  user.getPicture() ).zoomCrop(150,150) }}" 
-                         class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
+                         class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}"
+                         height="150" width="150"
+                         >
                 {% else %}
                     <img src="{{ image( 'bundles/clarolinecore/images/avatar.jpg' ).zoomCrop(150,150) }}" 
-                         class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
+                         class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}"
+                         height="150" width="150"
+                         >
                 {% endif %}
             </div>
         </aside>
