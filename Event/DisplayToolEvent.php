@@ -27,7 +27,7 @@ class DisplayToolEvent extends Event implements DataConveyorEventInterface
     }
 
     public function setContent($content)
-    {
+    {       
         $this->isPopulated = true;
         $this->content = $content;
     }
