@@ -35,8 +35,9 @@ use Claroline\CoreBundle\Entity\User;
  * @author Simon Vart <svart@sii.fr>
  * 
  * @copyright 2014 @ sii.fr for Orange
- *           
+ * 
  */
+
 class MoocAnalyticsController extends Controller
 {
     
@@ -75,76 +76,6 @@ class MoocAnalyticsController extends Controller
         $this->mailManager = $mailManager;
         $this->moocService = $moocService;
         $this->analyticsManager = $analyticsManager;
-    }
-
-
-    /**
-     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/keynumbers", name="claro_mooc_analytics_keynumbers")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     */
-    public function analyticsMoocKeynumbersAction(AbstractWorkspace $workspace, User $user) {
-    	$nbConnectionsToday = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('connections_today'),
-    			"value" => $this->analyticsManager->getNumberConnectionsToday($workspace));
-    	
-    	$meanConnectionsDaily = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('mean_connections_daily'),
-    			"value" => $this->analyticsManager->getMeanNumberConnectionsDaily($workspace));
-    	
-    	$nbSubscriptionsToday = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_today'),
-    			"value" => $this->analyticsManager->getTotalSubscribedUsersToday($workspace));
-    	
-    	$nbSubscriptions = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_total'),
-    			"value" => $this->analyticsManager->getTotalSubscribedUsers($workspace));
-    	
-    	$nbActiveUsers = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
-    			"value" => $this->analyticsManager->getNumberActiveUsers($workspace, 5));
-    	
-    	$mostConnectedHour = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),
-    			"value" => $this->analyticsManager->getHourMostConnection($workspace));
-    	
-    	$mostActiveHour = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('activity_hour'),
-    			"value" => $this->analyticsManager->getHourMostActivity($workspace));
-    	
-    	$nbForumPublications = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_total'),
-    			"value" => $this->analyticsManager->getTotalForumPublications($workspace));
-    	
-    	$meanForumPublicationsDaily = array(
-    			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_daily_mean'),
-    			"value" => $this->analyticsManager->getForumPublicationsDailyMean($workspace));
-    	
-    	return $this->render(
-    			'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsKeynumbers.html.twig',
-    			array(
-    					'workspace'      => $workspace,
-    					'keynumbers'	=> array(
-    							$nbConnectionsToday,
-    							$meanConnectionsDaily,
-    							$nbSubscriptionsToday,
-    							$nbSubscriptions,
-    							$nbActiveUsers,
-    							$mostConnectedHour,
-    							$mostActiveHour,
-    							$nbForumPublications,
-    							$meanForumPublicationsDaily
-    					)
-    			)
-    	);
-    }
-    
-    private function getTranslationKeyForKeynumbers($id) {
-    	return $this->translator->trans('mooc_analytics_keynumbers_'.$id, array(), 'platform');
     }
 
     /**

@@ -1,16 +1,9 @@
 <ul id="analytics-navbar" class="nav nav-tabs margin-bottom-md">
     <li{% if path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'analytics'} ) == app.request.requesturi %} class="active"{% endif %}>
         <a href="{{path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'analytics'} )}}">
-            {{ 'mooc_analytics_home' | trans({}, 'platform') }}
-        </a>
-    </li>
-    
-    <li{% if path('claro_mooc_analytics_keynumbers', {'workspaceId': workspace.getId() }) == app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_mooc_analytics_keynumbers', {'workspaceId': workspace.getId() })}}">
             {{ 'mooc_analytics_keynumbers' | trans({}, 'platform') }}
         </a>
     </li>
-
     <li{% if path('claro_mooc_analytics_details', {'workspaceId': workspace.getId() }) == app.request.requesturi %} class="active"{% endif %}>
         <a href="{{path('claro_mooc_analytics_details', {'workspaceId': workspace.getId() })}}">
             {{ 'mooc_analytics_details' | trans({}, 'platform') }}

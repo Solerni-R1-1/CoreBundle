@@ -32,6 +32,7 @@ use Claroline\CoreBundle\Controller\Badge\Tool\BadgeController;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Icap\DropzoneBundle\Entity\Drop;
 use Claroline\ForumBundle\Entity\Message;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -56,15 +57,17 @@ class AnalyticsManager
     private $badgeRepository;
     /** @var BadgeManager */
     private $badgeManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
      *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
      *     "moocService"   = @DI\Inject("orange.mooc.service"),
-     *     "badgeManager"  = @DI\Inject("claroline.manager.badge")
+     *     "badgeManager"  = @DI\Inject("claroline.manager.badge"),
+     *     "translator"    = @DI\Inject("translator")
      * })
      */
-    public function __construct(ObjectManager $objectManager, MoocService $moocService, BadgeManager $badgeManager)
+    public function __construct(ObjectManager $objectManager, MoocService $moocService, BadgeManager $badgeManager, TranslatorInterface $translator)
     {
         $this->om            	= $objectManager;
         $this->moocService 		= $moocService;
@@ -76,6 +79,7 @@ class AnalyticsManager
         $this->logRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
         $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
         $this->badgeRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Badge\Badge');
+        $this->translator       = $translator;
 
     }
 
@@ -812,5 +816,62 @@ class AnalyticsManager
     
     public function getMostActiveUsers(AbstractWorkspace $workspace) {
     	return $this->logRepository->countAllLogsByUsers($workspace);
+    }
+    
+    public function getAnalyticsMoocKeyNumbers(AbstractWorkspace $workspace, User $user) {
+   	$nbConnectionsToday = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('connections_today'),
+    			"value" => $this->getNumberConnectionsToday($workspace));
+    	
+    	$meanConnectionsDaily = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('mean_connections_daily'),
+    			"value" => $this->getMeanNumberConnectionsDaily($workspace));
+    	
+    	$nbSubscriptionsToday = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_today'),
+    			"value" => $this->getTotalSubscribedUsersToday($workspace));
+    	
+    	$nbSubscriptions = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_total'),
+    			"value" => $this->getTotalSubscribedUsers($workspace));
+    	
+    	$nbActiveUsers = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
+    			"value" => $this->getNumberActiveUsers($workspace, 5));
+    	
+    	$mostConnectedHour = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),
+    			"value" => $this->getHourMostConnection($workspace));
+    	
+    	$mostActiveHour = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('activity_hour'),
+    			"value" => $this->getHourMostActivity($workspace));
+    	
+    	$nbForumPublications = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_total'),
+    			"value" => $this->getTotalForumPublications($workspace));
+    	
+    	$meanForumPublicationsDaily = array(
+    			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_daily_mean'),
+    			"value" => $this->getForumPublicationsDailyMean($workspace));
+        
+        return array(
+            'workspace' => $workspace,
+            'keynumbers' => array(
+                $nbConnectionsToday,
+                $meanConnectionsDaily,
+                $nbSubscriptionsToday,
+                $nbSubscriptions,
+                $nbActiveUsers,
+                $mostConnectedHour,
+                $mostActiveHour,
+                $nbForumPublications,
+                $meanForumPublicationsDaily
+            )
+        );
+    }
+    
+    private function getTranslationKeyForKeynumbers($id) {
+    	return $this->translator->trans('mooc_analytics_keynumbers_'.$id, array(), 'platform');
     }
 }
