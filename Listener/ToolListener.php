@@ -19,6 +19,8 @@ use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
 
 /**
  * @DI\Service()
@@ -31,17 +33,20 @@ class ToolListener
     private $formFactory;
     private $templating;
     private $httpKernel;
+    private $security;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
 
     /**
      * @DI\InjectParams({
+     *     "security"         = @DI\Inject("security.context"),
      *     "container"        = @DI\Inject("service_container"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "templating"       = @DI\Inject("templating"),
      *     "httpKernel"       = @DI\Inject("http_kernel")
+     * 
      * })
      */
     public function __construct(
@@ -49,6 +54,7 @@ class ToolListener
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
+        SecurityContextInterface $security,
         $templating,
         $httpKernel
     )
@@ -59,6 +65,7 @@ class ToolListener
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->httpKernel = $httpKernel;
+        $this->security = $security;
     }
 
     /**
@@ -226,10 +233,18 @@ class ToolListener
 
     public function workspaceAnalytics($workspace)
     {
-        return $this->templating->render(
+        /*return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig',
             $this->container->get('claroline.manager.analytics_manager')->getWorkspaceAnalytics($workspace)
+        );*/
+        
+        $user = $this->security->getToken()->getUser();
+        
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/workspace/analytics:moocAnalyticsKeynumbers.html.twig',
+            $this->container->get('claroline.manager.analytics_manager')->getAnalyticsMoocKeyNumbers($workspace, $user)
         );
+        
     }
 
     public function desktopAgenda()
