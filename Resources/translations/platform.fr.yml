@@ -122,7 +122,7 @@ back: Retour
 back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
-base_informations: 'Informations de base'
+base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription'
 by: par
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
@@ -820,7 +820,7 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
-public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+public_url_help: 'L''URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 manage_tools: Gérer les outils
 create_role: Créer un rôle
 uncompress_file: Décompresser le fichier si possible
@@ -1103,4 +1103,12 @@ slrn_public_profile_undiscoverable: Profil privé
 slrn_public_profile_undiscoverable_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
 public_profile_undiscoverable_anonymously: Profil privé
 public_profile_undiscoverable_anonymously_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+profile_options_personalize: Options de personnalisation
+slrn_edit_public_profile: Gérer les préférences du profil public
 
+slrn_my_public_profile: Mon profil public
+slrn_unsubscribe_me: Se désinscrire de Solerni
+slrn_solerni_unsubscribe_intro: Etes-vous sûr de vouloir vous désinscrire de Solerni ?
+slrn_solerni_unsubscribe_text: Une fois que vous serez désinscrit, vous ne pourrez plus consulter votre parcours au sein des moocs auxquels vous êtes inscrit.
+yes_unsubscribe_me: Oui, me désinscrire de Solerni
+no_unsubscription: Non, conservez mon compte
