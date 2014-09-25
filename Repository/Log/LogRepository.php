@@ -609,7 +609,7 @@ class LogRepository extends EntityRepository
     			"action"			=> $action
     	));
         		
-    	$result = $qb->getQuery()->getSingleScalarResult();
+    	$result = $qb->getQuery()->getResult();
     	return $result;
     }
 
