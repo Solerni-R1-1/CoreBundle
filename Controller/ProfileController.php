@@ -454,7 +454,7 @@ class ProfileController extends Controller
      */
     public function deleteUserProfileAction( User $loggedUser )
     {
-    
+     
         return array(
             'user' => $loggedUser
         );
@@ -475,6 +475,7 @@ class ProfileController extends Controller
     {
         $this->userManager->deleteUser($loggedUser);
         $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($loggedUser));
+        $this->security->setToken(NULL);
         
         return $this->redirect( $this->generateUrl('solerni_static_page', array( 'name' => 'cms_url' ) ) );
     }
