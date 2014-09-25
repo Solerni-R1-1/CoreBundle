@@ -194,11 +194,11 @@ class UserManager
     public function deleteUser(User $user)
     {
         //soft delete~
-        $user->setMail('mail#' . $user->getId());
-        $user->setFirstName('firstname#' . $user->getId());
-        $user->setLastName('lastname#' . $user->getId());
+        //$user->setMail('mail#' . $user->getId());
+        //$user->setFirstName('firstname#' . $user->getId());
+        //$user->setLastName('lastname#' . $user->getId());
         $user->setPlainPassword(uniqid());
-        $user->setUsername('username#' . $user->getId());
+        //$user->setUsername('username#' . $user->getId());
         $user->setIsEnabled(false);
 
         // keeping the user's workspace with its original code

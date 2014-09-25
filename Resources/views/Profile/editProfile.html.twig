@@ -5,13 +5,18 @@
 {% block content %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ 'profil_edition'|trans({}, 'platform') }}</h3>
+            <a href="{{ path('claro_profile_view') }}" class="black_link slrn-top-back-link">
+                <i class="icon-chevron-left no_underline"> </i>{{ 'back_to_profile'|trans({}, 'platform') }}
+            </a>
+            <h1 class="slrn-content-main-title slrn-content-main-title--profile">
+                {{ 'profil_edition'|trans({}, 'platform') }}
+            </h1>
         </div>
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
         {{ macros.flashBox() }}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
-            <div class="panel-body">
+            <div class="panel-body slrn-profile-form">
                 {# FIRST NAME #}
                 <div class="form-group row">
                     {{ form_label(form.firstName) }}
@@ -44,14 +49,64 @@
                         {{ form_errors(form.mail) }} 
                     </div>
                 </div>
-                {# PICTURE FILE #}
-                <div class="form-group row">
+                {# CURRENT PROFILE PICTURE #}
+                {% if form.picture.vars.value %}
+                    <div class="form-group row hide">
+                    {{ form_label(form.picture) }}
+                    <div class="col-md-9 col-xs-9">
+                        {{ form_widget(form.picture) }}
+                        {{ form_errors(form.picture) }} 
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">
+                            {{ 'current_picture_profile'|trans({}, 'platform')}}
+                        </label>
+                        <div class="cold-md-9 col-xs-9">
+                            <img src="{{ image( 'uploads/pictures/' ~ form.picture.vars.value ).zoomCrop( 150, 150 ) }}" width="150" height="150">
+                        </div>
+                    </div>
+                {% endif %}
+                {# PICTURE INPUT #}
+                <div class="form-group row hide">
                     {{ form_label(form.pictureFile) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.pictureFile) }}
-                        {{ form_errors(form.pictureFile) }} 
+                        {{ form_errors(form.pictureFile) }}
                     </div>
                 </div>
+                {# UPLOAD BUTTON #}
+                <div class="form-group row">
+                    <label class="control-label col-md-3">
+                        {{ 'picture_profile'|trans({}, 'platform')}}
+                    </label>
+                    <div class="cold-md-9 col-xs-9">
+                        <a id="js-upload-file" class="btn btn-gris">{{ 'edit_profile_upload'|trans({}, 'platform')}}</a>
+                        <span class="slrn-upload-file-name">
+                            {% if form.picture.vars.value %}
+                                {{ form.picture.vars.value }}
+                            {% else %}
+                                {{ 'edit_profile_upload_file_name'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <script>
+                    jQuery(document).ready( function() {
+                        hiddenUploadField = jQuery('#profile_form_pictureFile');
+                        
+                        jQuery('#js-upload-file').on( 'click', function() {
+                            hiddenUploadField.click();
+                        });
+                        
+                        hiddenUploadField.change( function() {
+                            fileName = hiddenUploadField.val().split('\\');
+                            jQuery('.slrn-upload-file-name').html( fileName[fileName.length-1] );
+                        });
+                        
+                                
+                    });
+                </script>
                 {# DESCRIPTION #}
                 <div class="form-group row">
                     {{ form_label(form.description) }}
@@ -101,7 +156,7 @@
                         </div>
                     </div> 
                 {% endif %}
-                {# CACHE : TOKEN #}
+                {# CACHE : TOKEN #}                 
                 <div class="form-group row hide">
                     {{ form_label(form._token, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                     <div class="col-md-9 col-xs-9 slrn-accepted-terms">
@@ -109,10 +164,20 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-                <a href="{{ cancelUrl }}" class="btn btn-default" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
+            <div class="form-group row slrn-form-group-button">
+                <div class="col-md-3 col-xs-3"></div>
+                <div class="col-md-9 col-xs-9">
+                    <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                    <a href="{{ path('claro_profile_view') }}" class="btn btn-gris" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
+                </div>
             </div>
         </form>
+    </div>
+    <hr class="slrn-hr--lightgrey">
+    <div class="slrn-unsubscribe">
+        {{ 'user_wish_to_unsubscribe'|trans({}, 'platform') }}
+        <a class="pink_link" href="{{path('claro_user_delete_page', { 'userId': app.user.getId() } )}}">
+            {{ 'unsubscribe_self'|trans({}, 'platform' )}}
+        </a>
     </div>
 {% endblock %}

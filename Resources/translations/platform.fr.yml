@@ -122,7 +122,7 @@ back: Retour
 back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
-base_informations: 'Informations de base'
+base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription'
 by: par
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
@@ -240,7 +240,7 @@ drag_file_here: 'Déplacez le fichier ici'
 drop_file: 'Déposez le fichier'
 dsn: dsn
 edit: Modifier
-edit_password: 'Modifier votre mot de passe'
+edit_password: 'Modifier mon mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
 edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
@@ -252,6 +252,8 @@ edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modif
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
+edit_profile_upload: 'Choisissez un fichier'
+edit_profile_upload_file_name: 'Aucun fichier choisi'
 editable: Modifiable
 email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
@@ -427,7 +429,6 @@ my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
 my_portfolio: 'Mon portfolio'
-my_profile: 'Mon profil'
 my_profile: Mon profil
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
@@ -483,6 +484,7 @@ permissions: Permissions
 personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
+current_picture_profile: Photo de profil actuellement utilisée
 platform_appearance: 'Apparence de la plateforme'
 platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_auth_mode: 'Mode d''authentification'
@@ -700,7 +702,7 @@ tune: 'Personnaliser'
 tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
 tune_public_url_success: 'Personnalisation de l''URL de votre profil public effectuée avec succès.'
 tune_your_public_profile: 'Personnalisez votre profil public'
-tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
+tune_your_public_profile_url: 'Personnaliser l''URL de votre profil public'
 type: Type
 type_s: Type(s)
 unable_to_start_gmail: 'La connexion avec le service SMTP de Gmail ne peut pas être établie. Veuillez vérifier que le nom d`utilisateur et le mot de passe que vous avez renseignés sont corrects.'
@@ -818,7 +820,7 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
-public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+public_url_help: 'L''URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 manage_tools: Gérer les outils
 create_role: Créer un rôle
 uncompress_file: Décompresser le fichier si possible
@@ -1092,3 +1094,21 @@ mooc_register_modal_mooc_name: 'Vous vous êtes inscrit au MOOC "%moocName%".'
 mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débutera le %moocDate% prochain.</strong>'
 mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
 mooc_register_modal_text2: 'A très bientôt.'
+
+user_wish_to_unsubscribe: Vous souhaitez vous désinscrire de Solerni ?
+unsubscribe_self: se désinscrire
+back_to_profile: Retour au profil
+
+slrn_public_profile_undiscoverable: Profil privé
+slrn_public_profile_undiscoverable_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+public_profile_undiscoverable_anonymously: Profil privé
+public_profile_undiscoverable_anonymously_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+profile_options_personalize: Options de personnalisation
+slrn_edit_public_profile: Gérer les préférences du profil public
+
+slrn_my_public_profile: Mon profil public
+slrn_unsubscribe_me: Se désinscrire de Solerni
+slrn_solerni_unsubscribe_intro: Etes-vous sûr de vouloir vous désinscrire de Solerni ?
+slrn_solerni_unsubscribe_text: Une fois que vous serez désinscrit, vous ne pourrez plus consulter votre parcours au sein des moocs auxquels vous êtes inscrit.
+yes_unsubscribe_me: Oui, me désinscrire de Solerni
+no_unsubscription: Non, conservez mon compte

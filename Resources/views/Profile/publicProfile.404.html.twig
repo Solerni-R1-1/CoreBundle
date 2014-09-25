@@ -1,17 +1,22 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
-{% block title %}{{ 'public_profile_undiscoverable'|trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ 'slrn_public_profile_undiscoverable'|trans({}, 'platform') }}{% endblock %}
 
 {% block content %}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
-            <h3 class="panel-title">
-                {{ 'public_profile_undiscoverable'|trans({}, 'platform') }}
-            </h3>
+            {% if app.user and app.user.getId() == user.Id %}
+                <a href="{{ path('claro_profile_view') }}" class="black_link slrn-top-back-link">
+                    <i class="icon-chevron-left no_underline"> </i>{{ 'back_to_profile'|trans({}, 'platform') }}
+                </a>
+            {% endif %}
+            <h1 class="slrn-content-main-title slrn-content-main-title--profile">
+                {{ 'slrn_public_profile_undiscoverable'|trans({}, 'platform') }}
+            </h1>
         </div>
         <div class="panel-body">
             <p>
-                {{ 'public_profile_undiscoverable_text'|trans({'%publicUrl%': publicUrl}, 'platform') | raw }}<br>
+                {{ 'slrn_public_profile_undiscoverable_text'|trans({'%first_name%': user.firstName, '%last_name%': user.lastName}, 'platform') | raw }}
             </p>
         </div>
     </div>

@@ -54,7 +54,7 @@ class ProfileType extends AbstractType
 
         if (!$this->isAdmin) {
             $builder
-                ->add('username', 'text', array('label' => 'User name'))
+                ->add('username', 'text', array('label' => 'user_form_username'))
                 ->add(
                     'administrativeCode',
                     'text',
@@ -64,7 +64,7 @@ class ProfileType extends AbstractType
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
         } else {
-            $builder->add('username', 'text', array('label' => 'User name'))
+            $builder->add('username', 'text', array('label' => 'user_form_username'))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
                 ->add('mail', 'email', array('required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
@@ -104,6 +104,7 @@ class ProfileType extends AbstractType
                 'label' => 'picture_profile'
             )
         )
+        ->add('picture','text', array('label' => 'picture'))
 
         ->add(
             'description',

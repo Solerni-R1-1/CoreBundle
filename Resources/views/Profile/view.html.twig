@@ -2,16 +2,18 @@
 
 {% block title %}{{ 'my_profile'|trans({}, 'platform') ~ ' - ' ~ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
 
+{% block bodyClasses %}body-profile{% endblock %}
+
 {% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
 
 {% block content %}
     <!--{{ macros.flashBox() }}-->
     <div class="panel panel-default panel-user">
-        <div class="panel-heading relative">
+        <div class="slrn-row relative">
             {% if canEdit %}
                 <div class="dropdown float-right-top">
-                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary" role="button">
-                        {{ 'actions' | trans({}, 'platform') }} <span class="icon-gear"></span> <i class="caret"></i>
+                    <a data-toggle="dropdown" href="#" class="btn btn-gris slrn-profile-button" role="button">
+                        {{ 'parameters' | trans({}, 'platform') }}<i class="caret"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li role="presentation" >
@@ -46,69 +48,14 @@
                     </ul>
                 </div>
             {% endif %}
-            <h3 class="panel-title">
-                {#{{ 'user_profile'|trans({}, 'platform') }}#}
-				{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}
-            </h3>
+            <h1 class="slrn-content-main-title slrn-content-main-title--profile">
+				{{ 'my_profile'|trans({}, 'platform') }}
+            </h1>
         </div>
         <div class="panel-body">
             <div class="row">
-                <aside class="col-md-2 profile_aside" role="complementary">
-                    <div class="avatar">
-                        {% if user.getPicture() != "" %}
-                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
-                        {% else %}
-                            <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
-                        {% endif %}
-                    </div>
-                    {#<div class="informations">
-                        <p class="text-center text-muted">
-                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
-                        </p>
-                    </div>#}
-                    {#<ul class="nav nav-pills nav-stacked contact_methods">
-                        <li>
-                            <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                                <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                                <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                    </ul>#}
-                </aside>
-                <div class="col-md-6 profile_informations">
-					<ul class="col-md-12">
-                    	<li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
-                    	<li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
-                	</ul>
-					 <div class="informations">
-						 {% if '' != user.getDescription() %}
-                        <div class="description_block">
-                            {#<p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>#}
-                            <div class="description">
-                                {{ user.getDescription() |raw }}
-                            </div>
-                        </div>
-                    {% endif %}
-                        <p class="text-muted">
-                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
-                        </p>
-                    </div>
-                    {% if user.getId() != app.user.getId() %}
-                        <p>
-                            <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                            <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
-                        </p>
-                    {% endif %}
-                    {#<h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
-                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    {% if user.getPhone() is not null %}
-                        <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
-                    {% endif %}#}
-                </div>
+                {% set isEditProfilePage = false %}
+                {% include('ClarolineCoreBundle:Profile:widgetPublicProfile.html.twig') %}
             </div>
         </div>
     </div>
