@@ -328,31 +328,31 @@ class BadgeManager
     				$badgeRessourceNode = $BadgeRule->getResource();
     				if ( $badgeRessourceNode ) {
     					$associatedExercise = $exercisesRepo->findOneByResourceNode( $badgeRessourceNode );
-    					$maxMark = $this->exerciseService->getExerciseTotalScore($associatedExercise->getId());
-    					$marks = $exercisesRepo->getExerciseMarksForUser($associatedExercise, $loggedUser);
     					$papers = $paperRepo->getExerciseUserPapers(
     							$loggedUser->getId(),
     							$associatedExercise->getId(),
     							"start");
+
+    					$bestMark = 0;
+    					$normalizedScores = array();
+    					foreach ($papers as $paper) {
+    						$normalizedScore = $this->exerciseService->getPaperNormalizedScore($paper);
+    						if ($normalizedScore > $bestMark) {
+    							$bestMark = $normalizedScore;
+    						}
+    						$normalizedScores[] = $normalizedScore;
+    					}
+    					    					
     					if (count($papers) > 0) {
     						$firstAttempt = $papers[0];
     					} else {
     						$firstAttempt = null;
     					}
-    					$normalizedMarks = array();
-    					$bestMark = 0;
-    					foreach ($marks as $mark) {
-    						$normalizedMark = ($mark['noteExo'] / $maxMark) * 20;
-    						$normalizedMarks[] = $normalizedMark;
-    						if ($normalizedMark > $bestMark) {
-    							$bestMark = $normalizedMark;
-    						}
-    					}
     					
     					$associatedResource = array(
     							'exercise' => $associatedExercise,
     							'bestMark' => $bestMark,
-    							'marks' => $normalizedMarks,
+    							'marks' => $normalizedScores,
     							'firstAttempt' => $firstAttempt
     					);
     				}

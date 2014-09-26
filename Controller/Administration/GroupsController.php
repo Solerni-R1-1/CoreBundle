@@ -29,6 +29,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Form\ImportUserType;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 //This class belongs to the Users admin tool.
 class GroupsController extends Controller
@@ -43,6 +47,7 @@ class GroupsController extends Controller
     private $toolManager;
     private $sc;
     private $userAdminTool;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -54,7 +59,8 @@ class GroupsController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context")
+     *     "sc"                 = @DI\Inject("security.context"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -66,19 +72,21 @@ class GroupsController extends Controller
         Request $request,
         RouterInterface $router,
         SecurityContextInterface $sc,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+    	TranslatorInterface $translator
     )
     {
-        $this->userManager     = $userManager;
-        $this->roleManager     = $roleManager;
-        $this->groupManager    = $groupManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory     = $formFactory;
-        $this->request         = $request;
-        $this->router          = $router;
-        $this->toolManager     = $toolManager;
-        $this->userAdminTool   = $this->toolManager->getAdminToolByName('user_management');
-        $this->sc              = $sc;
+        $this->userManager		= $userManager;
+        $this->roleManager		= $roleManager;
+        $this->groupManager		= $groupManager;
+        $this->eventDispatcher	= $eventDispatcher;
+        $this->formFactory		= $formFactory;
+        $this->request			= $request;
+        $this->router			= $router;
+        $this->toolManager		= $toolManager;
+        $this->userAdminTool	= $this->toolManager->getAdminToolByName('user_management');
+        $this->sc				= $sc;
+        $this->translator       = $translator;
     }
 
     /**
@@ -437,7 +445,7 @@ class GroupsController extends Controller
         );
     }
 
-    /**
+ /**
      * @EXT\Route("/{groupId}/import", name="claro_admin_import_users_into_group_form")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -455,9 +463,71 @@ class GroupsController extends Controller
     {
         $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        
+        $files = array();
+        $fs = new Filesystem();
+        $finder = new Finder();
+        $importFailureTempFolder = sys_get_temp_dir()."/claroline/import/failure/groups/".$group->getId();
+        if ($fs->exists($importFailureTempFolder)) {
+        	$finder->files()->in($importFailureTempFolder);
+        }
+        foreach ($finder as $file) {
+        	$fileData = array();
+        	$fileData['path'] = $file->getRealPath(); 
+        	$filename = $file->getRelativePathname();
+        	$fileData['fileName'] = $filename;
+        	$explodedFilename = explode('_', explode('.', $filename)[0]); 
+        	$time = $explodedFilename[2]."_".$explodedFilename[3];
+        	$fileData['date'] = \DateTime::createFromFormat("Y-m-d_H-i", $time);
+        	$files[$time] = $fileData;
+        }
+        
+        ksort($files);
 
-        return array('form' => $form->createView(), 'group' => $group);
+        return array('form' => $form->createView(), 'group' => $group, 'files' => $files);
     }
+
+    /**
+     * @EXT\Route("/import/download/reject", name="claro_admin_import_file_download")
+     * @EXT\Method("GET")
+     *
+     * @return Response
+     */
+    public function downloadImportRejectFileAction()
+    {
+    	$this->checkOpen();
+    	 
+    	$filepath = $this->getRequest()->get("filepath");
+    	
+    	$content = file_get_contents($filepath);
+    	 
+    	return new Response($content, 200, array(
+    			'Content-Type' => 'application/force-download',
+    			'Content-Disposition' => 'attachment; filename="rejected_import_users.csv"'
+    	));
+    }
+    
+
+    /**
+     * @EXT\Route("/import/delete/reject", name="claro_admin_import_file_delete")
+     * @EXT\Method("GET")
+     *
+     * @return Response
+     */
+    public function deleteImportRejectFileAction()
+    {
+    	$this->checkOpen();
+
+    	$filepath = $this->getRequest()->get("filepath");
+    	
+    	if (unlink($filepath)) {
+    		return new Response(200);
+    	} else {
+    		return new Response(500);
+    	}
+    }
+    
+    
 
     /**
      * @EXT\Route("/{groupId}/import", name="claro_admin_import_users_into_group")
@@ -478,37 +548,237 @@ class GroupsController extends Controller
         $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($this->request);
-
+        
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
-
-            foreach ($lines as $line) {
-                $users[] = str_getcsv($line, ';');
+            $parsedFile = $this->filterImportUsers($file);
+            
+            if (count($parsedFile['valid']) > 0) {
+	            $ctx    = new \ZMQContext();
+	            $sender = new \ZMQSocket($ctx, \ZMQ::SOCKET_PUSH);
+	            $sender->connect("tcp://localhost:11112");
+	            
+	            $message = array(
+	            		'class_name'	=> "ClarolineCoreBundle:User",
+	            		'group'			=> $group->getId(),
+	            		'users' 		=> $parsedFile['valid'],
+	            		'user'			=> $this->getUser()->getId()
+	            );
+	            $sender->send(json_encode($message));
             }
+            
+            $shouldWriteRejectFile = array();
+            foreach ($parsedFile['rejected'] as $error => $lines) {
+            	foreach ($lines as $lineIndex => $line) {
+            		$shouldWriteRejectFile = true;
+            		break 2;
+            	}
+            }
+            
+			if ($shouldWriteRejectFile) {
+	            $handle = fopen('php://memory', 'r+');
 
-            $ctx    = new \ZMQContext();
-            $sender = new \ZMQSocket($ctx, \ZMQ::SOCKET_PUSH);
-            $sender->connect("tcp://localhost:11112");
-            
-            $message = array(
-            		'class_name'	=> "ClarolineCoreBundle:User",
-            		'group'			=> $group->getId(),
-            		'users' 		=> $users,
-            		'user'			=> $this->getUser()->getId()
-            );
-            $sender->send(json_encode($message));
-            
-            
-            /*$this->userManager->importUsers($users);
-            $this->groupManager->importUsers($group, $users);*/
+	            foreach ($parsedFile['rejected'] as $error => $lines) {
+	            	switch($error) {
+	            		case "file_mail":
+	            			$errorString = "Duplicate mail addresses in file";
+	            			break;
 
+            			case "file_username":
+            				$errorString = "Duplicate usernames in file";
+            				break;
+
+            			case "db_mail":
+            				$errorString = "Mail address already exists in database";
+            				break;
+
+            			case "db_username":
+            				$errorString = "Username already exists in database";
+            				break;
+            				
+            			default:
+            				$errorString = "Unknown error";
+            				break;
+	            	}
+	            	fputs($handle, "*****    ".$errorString."    *****".PHP_EOL);
+	            	foreach ($lines as $lineIndex => $line) {
+	            		fputs($handle, $line.PHP_EOL);
+	            	}
+	            }
+	            
+	            rewind($handle);
+	            $content = stream_get_contents($handle);
+	            fclose($handle);
+	            
+	            $fs = new Filesystem();
+	            $importFailureTempFolder = sys_get_temp_dir()."/claroline/import/failure/groups/".$group->getId();
+	            if (!$fs->exists($importFailureTempFolder)) {
+	            	$fs->mkdir($importFailureTempFolder, 0700);
+	            }
+            	$now = new \DateTime();
+            	$filename = $importFailureTempFolder."/import_reject_".$now->format("Y-m-d_H-i").".csv";
+            	$fs->touch($filename);
+            	file_put_contents($filename, $content);
+			}
+            
             return new RedirectResponse(
-                $this->router->generate('claro_admin_user_of_group_list', array('groupId' => $group->getId()))
+                $this->router->generate('claro_admin_import_users_into_group_form', array('groupId' => $group->getId()))
             );
+        } else {
+	        return array('form' => $form->createView(), 'group' => $group);
         }
+    }
+    
+    public function filterImportUsers($file) {
+    	$result = array();
+    	$result['rejected'] = array();
+    	$result['rejected']['file_mail'] = array();
+    	$result['rejected']['file_username'] = array();
+    	$result['rejected']['db_mail'] = array();
+    	$result['rejected']['db_username'] = array();
+    	$result['valid'] = array();
 
-        return array('form' => $form->createView(), 'group' => $group);
+    	$lines = str_getcsv(file_get_contents($file), PHP_EOL);
+    	$users = array();
+    	$usernames = array();
+    	$mails = array();
+    	
+    	foreach ($lines as $i => $line) {
+    		$result['valid'][$i] = str_getcsv($line, ";");
+    		$user = explode(';', $line);
+    		$firstName = $user[0];
+    		$lastName = $user[1];
+    		$username = $user[2];
+    		$pwd = $user[3];
+    		$email = $user[4];
+    		$code = isset($user[5])? $user[5] : null;
+    		$phone = isset($user[6])? $user[6] : null;
+    	
+    		if (!array_key_exists($email, $mails)) {
+	    		$mails[$email] = array($i);
+    		} else {
+	    		$mails[$email][] = $i;
+    		}
+    		
+    		if (!array_key_exists($username, $usernames)) {
+	    		$usernames[$username] = array($i);
+    		} else {
+	    		$usernames[$username][] = $i;
+    		}
+    	
+    		$newUser = new User();
+    		$newUser->setFirstName($firstName);
+    		$newUser->setLastName($lastName);
+    		$newUser->setUsername($username);
+    		$newUser->setPlainPassword($pwd);
+    		$newUser->setMail($email);
+    		$newUser->setAdministrativeCode($code);
+    		$newUser->setPhone($phone);
+    		$users[$i] = $newUser;
+    	}
+    	
+    	foreach ($usernames as $username => $linesIndexes) {
+    		$rejects = &$result['rejected']['file_username'];
+    		if (count($linesIndexes) > 1) {
+    			foreach ($linesIndexes as $lineIndex) {
+    				$rejects[$lineIndex] = $lines[$lineIndex];
+    				unset($result['valid'][$lineIndex]);
+    			}
+    			
+    			/*$msg = $this->translator->trans(
+    					'username_found_at',
+    					array('%username%' => $username, '%lines%' => $this->getLines($lines)),
+    					'platform'
+    			) . ' ';*/
+    		}
+    		ksort($rejects);
+    	}
+    	
+    	foreach ($mails as $mail => $linesIndexes) {
+    		$rejects = &$result['rejected']['file_mail'];
+    		if (count($linesIndexes) > 1) {
+    			foreach ($linesIndexes as $lineIndex) {
+    				$rejects[$lineIndex] = $lines[$lineIndex];
+    				unset($result['valid'][$lineIndex]);
+    			}
+    			/*$msg = $this->translator->trans(
+    					'email_found_at',
+    					array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
+    					'platform'
+    			) . ' ';*/
+    		}
+    		ksort($rejects);
+    	}
+    	
+    	// Validate users
+    	$repo = $this->getDoctrine()->getManager()->getRepository("ClarolineCoreBundle:User");
+    	
+    	$alreadyExistingUsernames = $repo->findByUsernameIn(array_keys($usernames));
+    	$alreadyExistingMails = $repo->findByMailIn(array_keys($mails));
+    	
+    	$rejects = &$result['rejected']['db_username'];
+    	foreach ($alreadyExistingUsernames as $alreadyExistingUser) {
+    		foreach ($users as $lineIndex => $user) {
+    			if ($user->getUsername() == $alreadyExistingUser->getUsername()) {
+    				$rejects[$lineIndex] = $lines[$lineIndex];    
+    				unset($result['valid'][$lineIndex]);
+    			}
+    		}
+    		/*$msg = $this->translator->trans(
+    				'username_already_exists',
+    				array('%username%' => $user->getUsername(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
+    				'platform'
+    		) . ' ';*/
+    	}
+    	ksort($rejects);
+
+    	$rejects = &$result['rejected']['db_mail'];
+    	foreach ($alreadyExistingMails as $alreadyExistingUser) {
+    		foreach ($users as $lineIndex => $user) {
+    			if ($user->getMail() == $alreadyExistingUser->getMail()) {
+    				$rejects[$lineIndex] = $lines[$lineIndex];
+    				unset($result['valid'][$lineIndex]);
+    			}
+    		}
+    		/*$msg = $this->translator->trans(
+    				'mail_already_exists',
+    				array('%email%' => $user->getMail(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
+    				'platform'
+    		) . ' ';*/
+    	}
+    	ksort($rejects);
+    	
+    	return $result;
+    }
+    
+    /**
+     * @param \Symfony\Component\Form\Form $form
+     *
+     * @return array
+     */
+    private function getErrorMessages(\Symfony\Component\Form\Form $form)
+    {
+    	$errors = array();
+    
+    	if ($form->count() > 0) {
+    		foreach ($form->all() as $child) {
+    			/**
+    			 * @var \Symfony\Component\Form\Form $child
+    			 */
+    			if (!$child->isValid()) {
+    				$errors[$child->getName()] = $this->getErrorMessages($child);
+    			}
+    		}
+    	} else {
+    		/**
+    		 * @var \Symfony\Component\Form\FormError $error
+    		 */
+    		foreach ($form->getErrors() as $key => $error) {
+    			$errors[] = $error->getMessage();
+    		}
+    	}
+    
+    	return $errors;
     }
 
     private function checkOpen()

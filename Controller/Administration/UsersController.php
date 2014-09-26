@@ -355,9 +355,9 @@ class UsersController extends Controller
             $sender->send(json_encode($message));
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
+        } else {
+        	return array('form' => $form->createView());
         }
-
-        return array('form' => $form->createView());
     }
 
     private function checkOpen()
