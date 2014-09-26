@@ -16,7 +16,7 @@
         </div>
         <div class="panel-body">
             <p>
-                {{ 'public_profile_undiscoverable_anonymously_text'|trans({'%loginUrl%': path('claro_security_login'), '%publicUrl%': publicUrl}, 'platform') | raw }}.<br>
+                {{ 'public_profile_undiscoverable_anonymously_text'|trans({'%loginUrl%': path('claro_security_login'), '%publicUrl%': publicUrl, '%first_name%': user.firstName, '%last_name%': user.lastName}, 'platform') | raw }}.<br>
             </p>
         </div>
     </div>

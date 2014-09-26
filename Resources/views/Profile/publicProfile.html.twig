@@ -2,14 +2,24 @@
 
 {% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
 
+{% if app.user and app.user.getId != user.getId %}
+    {% set isMyProfile = false %}
+    {% block bodyClasses %}body-not-my-profile{% endblock %}
+{% else %}
+    {% set isMyProfile = true %}
+{% endif %}
+
+
 {#{% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}#}
 
 {% block content %}
-    <a href="{{ path('claro_profile_view') }}" class="black_link slrn-top-back-link">
-        <i class="icon-chevron-left no_underline"> </i>{{ 'back_to_profile'|trans({}, 'platform') }}
-    </a>
-    <h1 class="slrn-content-main-title slrn-content-main-title--profile">
-        {{ 'slrn_my_public_profile'|trans({}, 'platform') }}
-    </h1>
-   {% include('ClarolineCoreBundle:Profile:widgetPublicProfile.html.twig') %}
+    {% if isMyProfile %}
+        <a href="{{ path('claro_profile_view') }}" class="black_link slrn-top-back-link">
+            <i class="icon-chevron-left no_underline"> </i>{{ 'back_to_profile'|trans({}, 'platform') }}
+        </a>
+        <h1 class="slrn-content-main-title slrn-content-main-title--profile">
+            {{ 'slrn_my_public_profile'|trans({}, 'platform') }}
+        </h1>
+    {% endif %}
+    {% include('ClarolineCoreBundle:Profile:widgetPublicProfile.html.twig') %}
 {% endblock %}
