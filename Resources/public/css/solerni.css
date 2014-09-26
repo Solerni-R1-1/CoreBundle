@@ -1816,6 +1816,33 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 	color: #333;
 }
 
+.slrn-analytics-table {
+    width:          100%;
+    margin-bottom:  40px;
+}
+
+.slrn-analytics-table__tr {
+    border:         1px solid #333;
+}
+
+.slrn-analytics-table__td {
+    padding:        .5em .25em;
+    line-height:    1.2;
+}
+
+.slrn-analytics-table__tr .slrn-analytics-table__td:first-child {
+    width: 35%;
+}
+
+.slrn-analytics-table__tr:nth-child(even) {
+    background-color: #EEEEEF;
+}
+
+.slrn-analytics-footnote {
+    font-size: .8em;
+}
+
+
 /* PROFILE */
 
 .slrn-content-main-title--profile {
