@@ -326,5 +326,46 @@ abstract class AbstractWorkspace
             return true;
         }
     }
+    
+    public function getAllUsers($includeManagers = true) {
+    	$managers = array();
+    	$users = array();
+    	foreach ($this->getRoles() as $role) {
+    		/* @var $role Role  */
+    		if (strpos($role->getName(), "MANAGER") !== false) {
+    			foreach ($role->getUsers() as $roleUser) {
+    				$managers[$roleUser->getId()] = $roleUser;
+    			}
+    			
+    			foreach ($role->getGroups() as $group) {
+    				/* @var $group Group */
+	    			foreach ($group->getUsers() as $groupUser) {
+	    				$managers[$groupUser->getId()] = $groupUser;
+	    			}
+    			}
+    		} else {
+    			foreach ($role->getUsers() as $roleUser) {
+    				$users[$roleUser->getId()] = $roleUser;
+    			}
+    			foreach ($role->getGroups() as $group) {
+    				/* @var $group Group */
+	    			foreach ($group->getUsers() as $groupUser) {
+	    				$users[$groupUser->getId()] = $groupUser;
+	    			}
+    			}
+    		}
+    	}
+    	
+    	if ($includeManagers) {
+    		array_merge($users, $managers);
+    	} else {
+    		foreach ($managers as $key => $manager) {
+    			unset($users[$key]);
+    		}
+    	}
+    	
+    	return array_unique($users);
+    	
+    }
 
 }

@@ -33,6 +33,8 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Icap\DropzoneBundle\Entity\Drop;
 use Claroline\ForumBundle\Entity\Message;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Group;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -315,7 +317,16 @@ class AnalyticsManager
     	$subscriptions[] = array();
 
     	// Get information from database
-    	$logs = $this->logRepository->findAllBetween($workspace, $from, $to, "workspace-role-subscribe_user");
+    	$logs = $this->logRepository->findAllBetween(
+    			$workspace,
+    			$from,
+    			$to,
+    			array(
+    				"workspace-role-subscribe_user",	
+    				"workspace-role-subscribe_group",
+    				"workspace-role-unsubscribe_user",
+    				"workspace-role-unsubscribe_group"
+    			));
     	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
 
     	// Extract data
@@ -354,9 +365,18 @@ class AnalyticsManager
     			$subscriptions[1][$index][0] = $currDate;
     			$subscriptions[1][$index][1] = 0;
     		}
-    		$nbSubscriptions++;
+    		if ($log->getAction() == "workspace-role-subscribe_user") {
+    			$step = 1;
+    		} else if ($log->getAction() == "workspace-role-subscribe_group") {
+    			$step = count($log->getReceiverGroup()->getUsers());
+    		} else if ($log->getAction() == "workspace-role-unsubscribe_user") { 
+    			$step = -1;
+    		} else if ($log->getAction() == "workspace-role-unsubscribe_group") {
+    			$step = -count($log->getReceiverGroup()->getUsers());
+    		}
+    		$nbSubscriptions+= $step;
     		$subscriptions[0][$index][1] = $nbSubscriptions;
-    		$subscriptions[1][$index][1]++;
+    		$subscriptions[1][$index][1]+= $step;
     		$lastDate = $currDate;
     	}
     	$currDate = $to->format("Y-m-d");
@@ -398,7 +418,9 @@ class AnalyticsManager
     	$date->sub(new \DateInterval("P".$nbDays."D"));
     	
     	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date);
-    	$nbTotal =  $this->logRepository->countRegisteredUsers($workspace);
+    	$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date);
+    	$nbTotal = count($workspace->getAllUsers(true));
+    	
     	return [$nbActive , $nbTotal];
     }
     
@@ -493,7 +515,7 @@ class AnalyticsManager
     		$workspaceUsers = array();
     		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     		
-    		$users = $session->getUsers();
+    		$users = $session->getAllUsers(false);
     		
     		foreach ($users as $user) {
     			/* @var $user User */
@@ -577,8 +599,9 @@ class AnalyticsManager
     	$result = array();
     	
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	$users = $session->getUsers();
+    	$users = $session->getAllUsers(false);
     	$nbUsers = count($users);
+    	
     	// This array will contains, for each badge, the list of users and associated badge.
     	// $badges[badgeId][0..*]['user'] = UserEntity
     	// $badges[badgeId][0..*]['badge'] = UserBadge (containing the badge, the resource, the status, etc.)
@@ -693,7 +716,7 @@ class AnalyticsManager
 	    			$percentageData[$currDateString][1] = 0;
 	    		} else {
 	    			$totalData[$currDateString][1] = $countData[$currDateString][1] + $totalData[$previousDateString][1];
-	    			$percentageData[$currDateString][1] = ($totalData[$currDateString][1] * 100) / $nbUsers;
+	    			$percentageData[$currDateString][1] = floatval($totalData[$currDateString][1] * 100) / $nbUsers;
 	    		}
 	    	}
 	    	$from = $from->add(new \DateInterval('P1D'));
@@ -715,7 +738,7 @@ class AnalyticsManager
      **************************************/
     
     public function getTotalSubscribedUsers(AbstractWorkspace $workspace) {
-    	return $this->logRepository->countRegisteredUsers($workspace);
+    	return count($workspace->getAllUsers(false));
     }
     
     public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace) {
