@@ -60,16 +60,24 @@ class AnalyticsManager
     /** @var BadgeManager */
     private $badgeManager;
     private $translator;
+    
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
      *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
      *     "moocService"   = @DI\Inject("orange.mooc.service"),
      *     "badgeManager"  = @DI\Inject("claroline.manager.badge"),
-     *     "translator"    = @DI\Inject("translator")
+     *     "translator"    = @DI\Inject("translator"),
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager")
      * })
      */
-    public function __construct(ObjectManager $objectManager, MoocService $moocService, BadgeManager $badgeManager, TranslatorInterface $translator)
+    public function __construct(
+    		ObjectManager $objectManager,
+    		MoocService $moocService,
+    		BadgeManager $badgeManager,
+    		TranslatorInterface $translator,
+    		RoleManager $roleManager)
     {
         $this->om            	= $objectManager;
         $this->moocService 		= $moocService;
@@ -82,6 +90,7 @@ class AnalyticsManager
         $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
         $this->badgeRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Badge\Badge');
         $this->translator       = $translator;
+        $this->roleManager		= $roleManager;
 
     }
 
@@ -433,7 +442,12 @@ class AnalyticsManager
     		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     		if ($session != null && $session->getForum() != null) { 
 		    	$forum = $session->getForum();
-		    	$messages = $this->messageRepository->findAllPublicationsBetween($forum, $from, $to);
+		    	$managerRole = $this->roleManager->getManagerRole($workspace);
+		    	$messages = $this->messageRepository->findAllPublicationsBetween(
+		    			$forum,
+		    			$from,
+		    			$to,
+		    			array("ROLE_ADMIN", $managerRole->getName()));
 		    	
 		    	$contributions = array();
 		    	$contributions[0] = array();
@@ -444,6 +458,7 @@ class AnalyticsManager
 		    	$index = -1;
 		    	$lastDate = $to->format("Y-m-d");
 		    	foreach ($messages as $i => $message) {
+		    		/* @var $message Message */
 		    		$currDate = $message->getCreationDate()->format("Y-m-d");
 		    		if ($lastDate != $currDate) {
 			    		// We need to put, in the array, the dates which have no logs. Starts here.
@@ -564,7 +579,7 @@ class AnalyticsManager
     			
     		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     		if ($session != null && $session->getForum() != null) {
-    			$users = $session->getUsers();
+    			$users = $session->getAllUsers(false);
     			
     			// Extract data
     			foreach ($users as $user) {
@@ -804,7 +819,8 @@ class AnalyticsManager
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	if ($session->getForum() != null) {
 	    	$forum = $session->getForum();
-	    	return $this->messageRepository->countNbMessagesInForum($forum);
+	    	$managerRole = $this->roleManager->getManagerRole($workspace);
+	    	return $this->messageRepository->countNbMessagesInForum($forum, array("ROLE_ADMIN", $managerRole->getName()));
     	} else {
     		return 0;
     	}
@@ -831,14 +847,18 @@ class AnalyticsManager
     		$since = new \DateTime("today midnight");
     		$since = $since->sub(new \DateInterval('P'.$nbDays.'D'));
 	    	$forum = $session->getForum();
-	    	return $this->messageRepository->countNbMessagesInForumGroupBySubjectSince($forum, $since);
+		    $managerRole = $this->roleManager->getManagerRole($workspace);
+	    	return $this->messageRepository->countNbMessagesInForumGroupBySubjectSince(
+	    			$forum,
+	    			$since,
+	    			array("ROLE_ADMIN", $managerRole->getName()));
     	} else {
     		return null;
     	}
     }
     
     public function getMostActiveUsers(AbstractWorkspace $workspace) {
-    	return $this->logRepository->countAllLogsByUsers($workspace);
+    	return $this->logRepository->countAllLogsByUsers($workspace, false);
     }
     
     public function getAnalyticsMoocKeyNumbers(AbstractWorkspace $workspace, User $user) {

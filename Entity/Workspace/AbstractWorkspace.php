@@ -362,7 +362,16 @@ abstract class AbstractWorkspace
     		foreach ($managers as $key => $manager) {
     			unset($users[$key]);
     		}
+    		
+    		foreach ($users as $key => $user) {
+    			foreach ($user->getRoles() as $roleName) {
+    				if ($roleName == "ROLE_ADMIN") {
+    					unset($users[$key]);
+    				}
+    			}
+    		}
     	}
+    	
     	
     	return array_unique($users);
     	
