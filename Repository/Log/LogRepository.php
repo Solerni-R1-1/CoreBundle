@@ -578,11 +578,6 @@ class LogRepository extends EntityRepository
     				WITH l.receiverGroup = g
     			WHERE l.workspace = :workspace
     			AND l.dateLog > :date";
-    	/*$qb = $this->createQueryBuilder('l')
-    	->select("COUNT(DISTINCT g.user)")
-    	->join("l.receiverGroup", "g")
-    	->where("l.workspace = :workspace")
-    	->andWhere("l.dateLog > :date")*/
     	$query = $this->_em->createQuery($dql);
     	$query->setParameters(array(
     			"workspace" => $workspace,
@@ -635,20 +630,23 @@ class LogRepository extends EntityRepository
     	return $result;
     }
 
-    public function countAllLogsByUsers(AbstractWorkspace $workspace) {
+    public function countAllLogsByUsers(AbstractWorkspace $workspace, $includeManagers = true) {
+    	$users = $workspace->getAllUsers($includeManagers);
     	$dql = "
 	    	SELECT count(l) as nbLogs, u as user FROM Claroline\CoreBundle\Entity\User u 
 	    	JOIN Claroline\CoreBundle\Entity\Log\Log l
     		
     		WHERE l.receiver = u
     		AND l.workspace = :workspace
+    		AND u IN (:users)
     		GROUP BY user
     		ORDER BY nbLogs DESC";
     
     
     	$query = $this->_em->createQuery($dql);
     	$query->setParameters(array(
-    			"workspace" 		=> $workspace
+    			"workspace" 		=> $workspace,
+    			"users"				=> $users
     	));
     
     	$result = $query->getResult();

@@ -255,12 +255,11 @@ class MoocSession extends AbstractIndexable
     	$users = array();
     	$workspace = $this->getMooc()->getWorkspace();
     	$roles = $workspace->getRoles();
-    	
+    	$managerRoles = array("ROLE_ADMIN");
     	// Get manager role for this workspace
     	foreach ($roles as $role) {
     		if (strpos($role->getName(), "MANAGER") !== false) {
-    			$managerRole = $role;
-    			break;
+    			$managerRoles[] = $role->getName();
     		}
     	}
     	
@@ -270,10 +269,12 @@ class MoocSession extends AbstractIndexable
     		
     		if (!$includeManagers) {
 	    		foreach ($user->getRoles(true) as $userRole) {
-					if ($userRole == $managerRole->getName()) {
-						$shouldGet = false;
-						break;
-					}
+	    			foreach ($managerRoles as $managerRole) {
+						if ($userRole == $managerRole) {
+							$shouldGet = false;
+							break;
+						}
+	    			}
 	    		}
     		}
     		
@@ -289,9 +290,11 @@ class MoocSession extends AbstractIndexable
 	    	
 	    		if (!$includeManagers) {
 	    			foreach ($user->getRoles(true) as $userRole) {
-	    				if ($userRole == $managerRole->getName()) {
-	    					$shouldGet = false;
-	    					break;
+	    				foreach ($managerRoles as $managerRole) {
+		    				if ($userRole == $managerRole) {
+		    					$shouldGet = false;
+		    					break;
+		    				}
 	    				}
 	    			}
 	    		}
