@@ -467,7 +467,7 @@ body.subnavbar-fixed {
 .body-forum .content { padding-top: 0; }
 .body-blog .content { padding-top: 0; }
 .body-profile .content { padding-top: 0; }
-
+.body-not-my-profile .content { padding-top: 40px; }
 
 /* HIDE FLASHBOX ON DASHBOARD */
 body.dsk .alert { display: none; }
