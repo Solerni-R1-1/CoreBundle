@@ -541,48 +541,97 @@ class LogRepository extends EntityRepository
     	return count($qb->getQuery()->getResult());
     }
     
-    public function findAllBetween(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $action) {
-    	$qb = $this->createQueryBuilder('l')->orderBy('l.dateLog')
-    	->where("l.dateLog >= :from")
-    	->andWhere("l.dateLog <= :to")
-    	->andWhere("l.action IN (:action)")
-    	->andWhere("l.workspace = :workspace")
-    	->setParameters(array(
-    			"from" => $from,
-    			"to" => $to,
-    			"action" => $action,
-    			"workspace" => $workspace
-    	));
+    public function findAllBetween(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $action, $filteredRoles = array()) {
+    	$parameters = array(
+    		"from" => $from,
+    		"to" => $to,
+    		"action" => $action,
+    		"workspace" => $workspace
+    	);
+    	if (count($filteredRoles) > 0) {
+    		$dql = "SELECT l
+    				FROM Claroline\CoreBundle\Entity\Log\Log l
+    				WHERE l.dateLog >= :from
+    				AND l.dateLog <= :to
+    				AND l.action IN (:action)
+    				AND l.workspace = :workspace
+    				AND (l.receiver IS NULL
+    				OR l.receiver NOT IN (
+    					SELECT u FROM Claroline\CoreBundle\Entity\User u
+    					JOIN u.roles as r
+    					WHERE r.name IN (:roles)))";
+    		$parameters['roles'] = $filteredRoles;
+    	} else {
+    		$dql = "SELECT l
+    				FROM Claroline\CoreBundle\Entity\Log\Log l
+    				WHERE l.dateLog >= :from
+    				AND l.dateLog <= :to
+    				AND l.action IN (:action)
+    				AND l.workspace = :workspace";
+    	}
     	
-    	return $qb->getQuery()->getResult();
-    }
-
-    public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
-    	$qb = $this->createQueryBuilder('l')
-    	->select("COUNT(DISTINCT l.receiver)")
-    	->where("l.workspace = :workspace")
-    	->andWhere("l.dateLog > :date")
-    	->setParameters(array(
-    			"workspace" => $workspace,
-    			"date" => $date
-    	));
-    	 
-    	return $qb->getQuery()->getSingleScalarResult();
-    }
-
-    public function countActiveGroupsUsersSinceDate(AbstractWorkspace $workspace, $date) {
-    	$dql = "SELECT COUNT(DISTINCT u)
-    			FROM Claroline\CoreBundle\Entity\Group g
-    			JOIN g.users u
-    			JOIN Claroline\CoreBundle\Entity\Log\Log l
-    				WITH l.receiverGroup = g
-    			WHERE l.workspace = :workspace
-    			AND l.dateLog > :date";
     	$query = $this->_em->createQuery($dql);
-    	$query->setParameters(array(
+    	$query->setParameters($parameters);
+    	
+    	return $query->getResult();
+    }
+
+    public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date, $filteredRoles = array()) {
+    	$parameters = array(
     			"workspace" => $workspace,
     			"date" => $date
-    	));
+    	);
+    	if (count($filteredRoles) > 0) {
+    		$dql = "SELECT COUNT(DISTINCT l.doer) FROM Claroline\CoreBundle\Entity\Log\Log l
+    				WHERE l.workspace = :workspace
+    				AND l.dateLog > :date
+    				AND l.doer NOT IN (
+    					SELECT u FROM Claroline\CoreBundle\Entity\User u
+    					JOIN u.roles r
+    					WHERE r IN (:roles))";
+    		$parameters['roles'] = $filteredRoles;
+    	} else {
+    		$dql = "SELECT COUNT(DISTINCT l.doer) FROM Claroline\CoreBundle\Entity\Log\Log l
+    				WHERE l.workspace = :workspace
+    				AND l.dateLog > :date";
+    	}
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters($parameters);
+    	
+    	 
+    	return $query->getSingleScalarResult();
+    }
+
+    public function countActiveGroupsUsersSinceDate(AbstractWorkspace $workspace, $date, $filteredRoles = array()) {
+    	$parameters = array(
+    			"workspace" => $workspace,
+    			"date" => $date
+    	);
+    	if (count($filteredRoles) > 0) {
+	    	$dql = "SELECT COUNT(DISTINCT u)
+	    			FROM Claroline\CoreBundle\Entity\Group g
+	    			JOIN g.users u
+	    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+	    				WITH l.receiverGroup = g
+	    			WHERE l.workspace = :workspace
+	    			AND l.dateLog > :date
+	    			AND u NOT IN (
+    					SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+    					JOIN u2.roles r
+    					WHERE r IN (:roles))";
+    		$parameters['roles'] = $filteredRoles;
+    	} else {
+    		$dql = "SELECT COUNT(DISTINCT u)
+	    			FROM Claroline\CoreBundle\Entity\Group g
+	    			JOIN g.users u
+	    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+	    				WITH l.receiverGroup = g
+	    			WHERE l.workspace = :workspace
+	    			AND l.dateLog > :date";
+    	}
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters($parameters);
     	 
     	return $query->getSingleScalarResult();
     }
@@ -598,20 +647,31 @@ class LogRepository extends EntityRepository
     	return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function countLogsUsersTodayByAction(AbstractWorkspace $workspace, $action) {
+    public function countLogsUsersTodayByAction(AbstractWorkspace $workspace, $action, $excludeRoles = null) {
     	$todayAtMidnight = new \DateTime('today midnight');
-    	$qb = $this->createQueryBuilder('l')
-    	->select("COUNT(DISTINCT l.doer)")
-    	->where("l.workspace = :workspace")
-    	->andWhere("l.action = :action")
-    	->andWhere("l.dateLog >= :todayAtMidnight")
-    	->setParameters(array(
+    	$parameters = array(
     			"workspace" 		=> $workspace,
     			"action"			=> $action,
     			"todayAtMidnight" 	=> $todayAtMidnight
-    	));
+    	);
+    	$dql = "SELECT COUNT(DISTINCT l.doer)
+    			FROM Claroline\CoreBundle\Entity\Log\Log l
+    			WHERE l.workspace = :workspace
+    			AND l.action = :action
+    			AND l.dateLog >= :todayAtMidnight ";
+    	
+    	if ($excludeRoles != null) {
+    		$dql .= " AND l.doer NOT IN (
+	    				SELECT u
+	    				FROM Claroline\CoreBundle\Entity\User u
+	    				JOIN u.roles r
+	    				WHERE r.name IN (:roles))";
+    		$parameters['roles'] = $excludeRoles;
+    	}
+    	$query = $this->_em->createQuery($dql);
+    	$query ->setParameters($parameters);
     
-    	return $qb->getQuery()->getSingleScalarResult();
+    	return $query->getSingleScalarResult();
     }
 
 
@@ -630,12 +690,11 @@ class LogRepository extends EntityRepository
     	return $result;
     }
 
-    public function countAllLogsByUsers(AbstractWorkspace $workspace, $includeManagers = true) {
-    	$users = $workspace->getAllUsers($includeManagers);
+    public function countAllLogsByUsers(AbstractWorkspace $workspace, $filteredRoles = array()) {
+    	$users = $workspace->getAllUsers($filteredRoles);
     	$dql = "
 	    	SELECT count(l) as nbLogs, u as user FROM Claroline\CoreBundle\Entity\User u 
 	    	JOIN Claroline\CoreBundle\Entity\Log\Log l
-    		
     		WHERE l.receiver = u
     		AND l.workspace = :workspace
     		AND u IN (:users)
@@ -668,20 +727,33 @@ class LogRepository extends EntityRepository
 	    $result = $qb->getQuery()->getResult(); 
     	return count($result) > 0 ? $result[0] : null;
     } 
-    
+
     public function getLastSubscription(AbstractWorkspace $workspace, User $user) {
-  	  $qb = $this->createQueryBuilder('l')
-	    	->select("l")
-	    	->where("l.workspace = :workspace")
-	    	->andWhere("l.doer = :user")
-	    	->andWhere("l.action = 'workspace-role-subscribe_user'")
-	    	->orderBy("l.dateLog", "DESC")
-	    	->setParameters(array(
-	    			"workspace" => $workspace,
-	    			"user" => $user
+    	$dql = "SELECT l FROM Claroline\CoreBundle\Entity\Log\Log l
+    			WHERE 
+    				((l.action = 'workspace-role-subscribe_user' AND l.receiver = :user)
+    				OR (l.action = 'workspace-role-subscribe_group' AND l.receiverGroup IN (:groups)))
+    			AND l.workspace = :workspace
+    			
+    			ORDER BY l.dateLog DESC";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$groups = array();
+    	foreach ($user->getGroups() as $group) {
+    		$groups[] = $group;
+    	}
+    	$query->setParameters(array(
+	    		"workspace" => $workspace,
+	    		"user" => $user,
+    			"groups" => $groups
 	    	));
-    	 
-	    $result = $qb->getQuery()->getResult(); 
-    	return count($result) > 0 ? $result[0] : null;
-    } 
+    
+    	$result = $query->getResult();
+    	
+    	if (count($result) > 0) {
+    		return $result[0];
+    	} else { 
+    		return null;
+    	}
+    }
 }

@@ -27,6 +27,7 @@ use Claroline\ForumBundle\Repository\MessageRepository;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Claroline\CoreBundle\Manager\RoleManager;
 
 
 /**
@@ -55,25 +56,31 @@ class AnalyticsExportController extends Controller {
 	
 	/** @var Translator */
 	private $translator;
+	
+	/** @var RoleManager */
+	private $roleManager;
 
 	/**
 	 * @DI\InjectParams({
 	 *     "badgeManager"            = @DI\Inject("claroline.manager.badge"),
 	 *     "moocService"			 = @DI\Inject("orange.mooc.service"),
 	 *     "container"				 = @DI\Inject("service_container"),
-	 *     "analyticsManager"		 = @DI\Inject("claroline.manager.analytics_manager")
+	 *     "analyticsManager"		 = @DI\Inject("claroline.manager.analytics_manager"),
+	 *     "roleManager"			 = @DI\Inject("claroline.manager.role_manager")
 	 *     })
 	 */
 	public function _construct(
 			$container,
 			BadgeManager $badgeManager,
 			MoocService $moocService, 
-			AnalyticsManager $analyticsManager) {
+			AnalyticsManager $analyticsManager,
+			RoleManager $roleManager) {
 		$this->setContainer($container);
 		
 		$this->badgeManager = $badgeManager;
 		$this->moocService = $moocService;
 		$this->analyticsManager = $analyticsManager;
+		$this->roleManager = $roleManager;
 		
 		$this->logRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
 		$this->messageRepository = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
@@ -92,15 +99,22 @@ class AnalyticsExportController extends Controller {
 	 */
 	public function exportSkillBadgesStatsAction(AbstractWorkspace $workspace) {
 		if ($workspace->isMooc()) {
+	    	// Init the roles to filter the stats.
+	    	$excludeRoles = array();
+	    	$managerRole = $this->roleManager->getManagerRole($workspace);
+	    	$excludeRoles[] = $managerRole->getName();
+	    	$excludeRoles[] = "ROLE_ADMIN";
+	    	$excludeRoles[] = "ROLE_WS_CREATOR";
+	    	
 			$badgesIndex = array();
 			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			$workspaceUsers = $currentSession->getUsers();
+			$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
 
 			$headerCSV = array();
-			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$indexBadges = 4;
 			$rowsCSV = array();
 			
@@ -201,17 +215,24 @@ class AnalyticsExportController extends Controller {
 	 */
 	public function exportKnowledgeBadgesStatsAction(AbstractWorkspace $workspace) {
 		if ($workspace->isMooc()) {
+	    	// Init the roles to filter the stats.
+	    	$excludeRoles = array();
+	    	$managerRole = $this->roleManager->getManagerRole($workspace);
+	    	$excludeRoles[] = $managerRole->getName();
+	    	$excludeRoles[] = "ROLE_ADMIN";
+	    	$excludeRoles[] = "ROLE_WS_CREATOR";
+	    	
 			$exerciseRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
 			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			$workspaceUsers = $currentSession->getUsers();
+			$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
 				
 	
 	
 			$headerCSV = array();
-			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$rowsCSV = array();
 			$badgeMaxTries = array();
 			$usersBadges = array();
@@ -341,15 +362,22 @@ class AnalyticsExportController extends Controller {
 	
 	public function exportBadgesParticipationStatsAction(AbstractWorkspace $workspace, $skillBadges, $knowledgeBadges) {
 		if ($workspace->isMooc()) {
+	    	// Init the roles to filter the stats.
+	    	$excludeRoles = array();
+	    	$managerRole = $this->roleManager->getManagerRole($workspace);
+	    	$excludeRoles[] = $managerRole->getName();
+	    	$excludeRoles[] = "ROLE_ADMIN";
+	    	$excludeRoles[] = "ROLE_WS_CREATOR";
+			
 			$badgesIndex = array();
 			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			$workspaceUsers = $currentSession->getUsers();
+			$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
 
 			$headerCSV = array();
-			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$indexBadges = 4;
 			$rowsCSV = array();
 			
@@ -449,6 +477,13 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportSubscriptionsStatsAction(AbstractWorkspace $workspace) {
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
 		$from = $currentSession->getStartDate();
 		$to = $currentSession->getEndDate();
@@ -462,36 +497,57 @@ class AnalyticsExportController extends Controller {
 		
 		$headerCSV = array();
 
-		$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-		$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 		$headerCSV[4] = "Subscription date";
 		$headerCSV[5] = "Subscription time";
 		$rowsCSV[] = $headerCSV;
 		
 		// Get information from database
-		$logs = $this->logRepository->findAllBetween($workspace, $from, $to, "workspace-role-subscribe_user");
+		$logs = $this->logRepository->findAllBetween($workspace, $from, $to, 
+    			array(
+    				"workspace-role-subscribe_user",	
+    				"workspace-role-subscribe_group"),
+    			$excludeRoles);
 		$users = array();
 		
 		// Extract data
 		foreach ($logs as $i => $log) {
 			/* @var $log Log */
-			$user = $log->getReceiver();
-			
-			if (!in_array($user->getId(), $users)) { 
-				$rowCSV = array();
-				$rowCSV[0] = $user->getLastName();
-				$rowCSV[1] = $user->getFirstName();
-				$rowCSV[2] = $user->getUsername();
-				$rowCSV[3] = $user->getMail();
-				$rowCSV[4] = $log->getDateLog()->format("d/m/Y");
-				$rowCSV[5] = $log->getDateLog()->format("H:i:s");
-				
-				$rowsCSV[] = $rowCSV;
-				
-				$users[] = $user->getId();
+			if ($log->getReceiverGroup() != null) {
+				foreach ($log->getReceiverGroup()->getUsers() as $user) {
+					if (!in_array($user->getId(), $users)) {
+						$rowCSV = array();
+						$rowCSV[0] = $user->getLastName();
+						$rowCSV[1] = $user->getFirstName();
+						$rowCSV[2] = $user->getUsername();
+						$rowCSV[3] = $user->getMail();
+						$rowCSV[4] = $log->getDateLog()->format("d/m/Y");
+						$rowCSV[5] = $log->getDateLog()->format("H:i:s");
+							
+						$rowsCSV[] = $rowCSV;
+						$users[] = $user->getId();
+					}
+				}
+			} else {
+				$user = $log->getReceiver();
+
+				if (!in_array($user->getId(), $users)) {
+					$rowCSV = array();
+					$rowCSV[0] = $user->getLastName();
+					$rowCSV[1] = $user->getFirstName();
+					$rowCSV[2] = $user->getUsername();
+					$rowCSV[3] = $user->getMail();
+					$rowCSV[4] = $log->getDateLog()->format("d/m/Y");
+					$rowCSV[5] = $log->getDateLog()->format("H:i:s");
+					
+					$rowsCSV[] = $rowCSV;
+					$users[] = $user->getId();
+				}
 			}
+			
 		}
 
 		$content = $this->createCSVFromArray($rowsCSV);
@@ -514,36 +570,32 @@ class AnalyticsExportController extends Controller {
 	 */
 	public function exportConnectionStatsAction(AbstractWorkspace $workspace, $nbDays) {
 		if ($workspace->isMooc()) {
+	    	// Init the roles to filter the stats.
+	    	$excludeRoles = array();
+	    	$managerRole = $this->roleManager->getManagerRole($workspace);
+	    	$excludeRoles[] = $managerRole->getName();
+	    	$excludeRoles[] = "ROLE_ADMIN";
+	    	$excludeRoles[] = "ROLE_WS_CREATOR";
+
+	    	$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
 			$badgesIndex = array();
-			$workspaceUsers = array();
+			$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
 			$mooc = $workspace->getMooc();
-			$sessions = $mooc->getMoocSessions();
-	
-			// Get all distinct users for all sessions
-			foreach ($sessions as $session) {
-				/* @var $session MoocSession */
-				$users = $session->getUsers();
-				foreach ($users as $user) {
-					/* @var $user User */
-					if (!in_array($user, $workspaceUsers, true)) {
-						$workspaceUsers[] = $user;
-					}
-				}
-			}
+			
 			$rowsCSV = array();
 	
 			$headerCSV = array();
 
-			$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-			$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-			$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-			$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+			$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+			$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+			$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$headerCSV[4] = "Subscription date";
 			$headerCSV[5] = "Last connection date";
 			$rowsCSV[] = $headerCSV;
 	
 			// Extract data
-			foreach ($users as $user) {
+			foreach ($workspaceUsers as $user) {
 				// Get information from database
 				$lastConnectionLog = $this->logRepository->getLastConnection($workspace, $user);
 				$lastSubscriptionLog = $this->logRepository->getLastSubscription($workspace, $user);
@@ -591,6 +643,13 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportForumStatsAction(AbstractWorkspace $workspace) {
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
 		$from = $currentSession->getStartDate();
 		$to = $currentSession->getEndDate();
@@ -612,7 +671,7 @@ class AnalyticsExportController extends Controller {
 		$headerCSV[] = $header;
 		 
 
-		$data = $this->analyticsManager->getForumStats($workspace, $from, $to);
+		$data = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
 		
 		$rowsCSV = array_merge($headerCSV, $data);
 		$content = $this->createCSVFromArray($rowsCSV);
@@ -634,6 +693,13 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportUsersActivityAction(AbstractWorkspace $workspace) {
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	
 		$headerCSV = array();
 		$header = array();
 	
@@ -645,7 +711,7 @@ class AnalyticsExportController extends Controller {
 	
 		$headerCSV[] = $header;
 	
-		$usersActivity = $this->analyticsManager->getMostActiveUsers($workspace);
+		$usersActivity = $this->analyticsManager->getMostActiveUsers($workspace, $excludeRoles);
 		$data = array();
 		foreach ($usersActivity as $userActivity) {
 			/* @var $user User */

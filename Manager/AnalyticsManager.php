@@ -288,7 +288,7 @@ class AnalyticsManager
      *    - The first is the workspace connections for every hour of the day
      *    - The second is the workspace associated logs (which are not connections) for every hour of the day
      */
-    public function getHourlyAudience(AbstractWorkspace $workspace) {
+    public function getHourlyAudience(AbstractWorkspace $workspace, $filteredRoles) {
     	$audience = array();
     	$audience[] = array();
     	$audience[] = array();
@@ -301,6 +301,14 @@ class AnalyticsManager
     		$audience[1][$i] = 0;
     	}
     	foreach ($logs as $i => $log) {
+    		$user = $log->getDoer();
+    		if ($user != null) { // If user doesn't exists, it is anonymous. Let anonymous in the stats...
+	    		foreach ($user->getRoles() as $role) {
+	    			if (in_array($role, $filteredRoles)) {
+	    				continue 2;
+	    			}
+	    		}
+    		}
     		$hour = intval($log->getDateLog()->format('H'));
     		if ($log->getAction() == "workspace-enter") {
     			$audience[0][$hour]++;
@@ -320,7 +328,7 @@ class AnalyticsManager
      * @param \DateTime $from
      * @param \DateTime $to
      */
-    public function getSubscriptionsForPeriod(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    public function getSubscriptionsForPeriod(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $filteredRoles) {
     	$subscriptions = array();
     	$subscriptions[] = array();
     	$subscriptions[] = array();
@@ -334,8 +342,8 @@ class AnalyticsManager
     				"workspace-role-subscribe_user",	
     				"workspace-role-subscribe_group",
     				"workspace-role-unsubscribe_user",
-    				"workspace-role-unsubscribe_group"
-    			));
+    				"workspace-role-unsubscribe_group"),
+    			$filteredRoles);
     	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
 
     	// Extract data
@@ -422,13 +430,13 @@ class AnalyticsManager
      * @param number $nbDays
      * @return number
      */
-    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5) {
+    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5, $filteredRoles) {
     	$date = new \DateTime("today midnight");
     	$date->sub(new \DateInterval("P".$nbDays."D"));
     	
-    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date);
-    	$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date);
-    	$nbTotal = count($workspace->getAllUsers(true));
+    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date, $filteredRoles);
+    	$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date, $filteredRoles);
+    	$nbTotal = count($workspace->getAllUsers($filteredRoles));
     	
     	return [$nbActive , $nbTotal];
     }
@@ -523,14 +531,14 @@ class AnalyticsManager
      * @param AbstractWorkspace $workspace
      * @return Array of badges success rates [[badge1success, badge1failure],[badge2success][badge2failure],...]
      */
-    public function getBadgesSuccessRate(AbstractWorkspace $workspace) {
+    public function getBadgesSuccessRate(AbstractWorkspace $workspace, $filteredRoles) {
     	$rates = array();
     	
     	if ($workspace->isMooc()) {
     		$workspaceUsers = array();
     		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     		
-    		$users = $session->getAllUsers(false);
+    		$users = $session->getAllUsers($filteredRoles);
     		
     		foreach ($users as $user) {
     			/* @var $user User */
@@ -570,7 +578,7 @@ class AnalyticsManager
     	return $rates;
     }
     
-    public function getForumStats(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    public function getForumStats(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $filteredRoles) {
     	$result = array();
     	$userRows = array();
     	if ($workspace->isMooc()) {
@@ -579,7 +587,7 @@ class AnalyticsManager
     			
     		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     		if ($session != null && $session->getForum() != null) {
-    			$users = $session->getAllUsers(false);
+    			$users = $session->getAllUsers($filteredRoles);
     			
     			// Extract data
     			foreach ($users as $user) {
@@ -610,13 +618,12 @@ class AnalyticsManager
     	return $result;
     }
     
-    public function getBadgesParticitpationRate(AbstractWorkspace $workspace) {
+    public function getBadgesParticitpationRate(AbstractWorkspace $workspace, $filteredRoles) {
     	$result = array();
     	
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	$users = $session->getAllUsers(false);
+    	$users = $session->getAllUsers($filteredRoles);
     	$nbUsers = count($users);
-    	
     	// This array will contains, for each badge, the list of users and associated badge.
     	// $badges[badgeId][0..*]['user'] = UserEntity
     	// $badges[badgeId][0..*]['badge'] = UserBadge (containing the badge, the resource, the status, etc.)
@@ -752,19 +759,25 @@ class AnalyticsManager
      * Requests for keynumbers analytics. *
      **************************************/
     
-    public function getTotalSubscribedUsers(AbstractWorkspace $workspace) {
-    	return count($workspace->getAllUsers(false));
+    public function getTotalSubscribedUsers(AbstractWorkspace $workspace, $filterRoles) {
+    	return count($workspace->getAllUsers($filterRoles));
     }
     
-    public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace) {
-    	return $this->logRepository->countLogsUsersTodayByAction($workspace, "workspace-role-subscribe_user");
+    public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace, $filterRoles) {
+    	return $this->logRepository->countLogsUsersTodayByAction(
+    			$workspace,
+    			"workspace-role-subscribe_user",
+    			$filterRoles);
     }
     
-    public function getNumberConnectionsToday(AbstractWorkspace $workspace) {
-    	return $this->logRepository->countLogsUsersTodayByAction($workspace, "workspace-enter");
+    public function getNumberConnectionsToday(AbstractWorkspace $workspace, $filterRoles) {
+    	return $this->logRepository->countLogsUsersTodayByAction(
+    			$workspace,
+    			"workspace-enter",
+    			$filterRoles);
     }
     
-    public function getMeanNumberConnectionsDaily(AbstractWorkspace $workspace) {
+    public function getMeanNumberConnectionsDaily(AbstractWorkspace $workspace, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	$from = $session->getStartDate();
     	$to = $session->getEndDate();
@@ -780,14 +793,14 @@ class AnalyticsManager
     	return $total / $nbDays;
     }
     
-    public function getNumberActiveUsers(AbstractWorkspace $workspace, $nbDays) {
+    public function getNumberActiveUsers(AbstractWorkspace $workspace, $nbDays, $filterRoles) {
     	$date = new \DateTime("today midnight");
     	$date->sub(new \DateInterval("P".$nbDays."D"));
     	
     	return $this->logRepository->countActiveUsersSinceDate($workspace, $date);
     }
 
-    public function getHourMostConnection(AbstractWorkspace $workspace) {
+    public function getHourMostConnection(AbstractWorkspace $workspace, $filterRoles) {
     	$hourlyAudience = $this->getHourlyAudience($workspace)[0];
     	
     	$max = 0;
@@ -801,7 +814,7 @@ class AnalyticsManager
     	return $index;
     }
     
-    public function getHourMostActivity(AbstractWorkspace $workspace) {
+    public function getHourMostActivity(AbstractWorkspace $workspace, $filterRoles) {
     	$hourlyAudience = $this->getHourlyAudience($workspace)[1];
     	
     	$max = 0;
@@ -815,18 +828,17 @@ class AnalyticsManager
     	return $index;
     }
     
-    public function getTotalForumPublications(AbstractWorkspace $workspace) {
+    public function getTotalForumPublications(AbstractWorkspace $workspace, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	if ($session->getForum() != null) {
 	    	$forum = $session->getForum();
-	    	$managerRole = $this->roleManager->getManagerRole($workspace);
-	    	return $this->messageRepository->countNbMessagesInForum($forum, array("ROLE_ADMIN", $managerRole->getName()));
+	    	return $this->messageRepository->countNbMessagesInForum($forum, $filterRoles);
     	} else {
     		return 0;
     	}
     }
     
-    public function getForumPublicationsDailyMean(AbstractWorkspace $workspace) {
+    public function getForumPublicationsDailyMean(AbstractWorkspace $workspace, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	if ($session != null && $session->getForum() != null) {
 	    	$from = $session->getStartDate();
@@ -834,14 +846,14 @@ class AnalyticsManager
 	    	
 	    	$nbDays = $from->diff($to, true)->format('%a');
 	    	
-	    	$nbMessages = $this->getTotalForumPublications($workspace);
+	    	$nbMessages = $this->getTotalForumPublications($workspace, $filterRoles);
 	    	return $nbMessages / $nbDays;
     	} else {
     		return 0;
     	}
     }
     
-    public function getMostActiveSubjects(AbstractWorkspace $workspace, $nbDays) {
+    public function getMostActiveSubjects(AbstractWorkspace $workspace, $nbDays, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	if ($session != null && $session->getForum() != null) {
     		$since = new \DateTime("today midnight");
@@ -851,52 +863,76 @@ class AnalyticsManager
 	    	return $this->messageRepository->countNbMessagesInForumGroupBySubjectSince(
 	    			$forum,
 	    			$since,
-	    			array("ROLE_ADMIN", $managerRole->getName()));
+	    			$filterRoles);
     	} else {
     		return null;
     	}
     }
     
-    public function getMostActiveUsers(AbstractWorkspace $workspace) {
-    	return $this->logRepository->countAllLogsByUsers($workspace, false);
+    public function getMostActiveUsers(AbstractWorkspace $workspace, $filterRoles) {
+    	$users = $workspace->getAllUsers($filterRoles);
+    	$mostActiveUsers = $this->logRepository->countAllLogsByUsers($workspace, $filterRoles);
+    	foreach ($users as $user) {
+    		$found = false;
+    		foreach($mostActiveUsers as $activeUser) {
+    			if ($activeUser['user']->getId() == $user->getId()) {
+    				$found = true;
+    				break;
+    			}
+    		}
+    		if (!$found) {
+    			$notActiveUser = array();
+    			$notActiveUser['user'] = $user;
+    			$notActiveUser['nbLogs'] = 0;
+    			$mostActiveUsers[] = $notActiveUser;
+    		}
+    	}
+    	return $mostActiveUsers;
     }
     
     public function getAnalyticsMoocKeyNumbers(AbstractWorkspace $workspace, User $user) {
-   	$nbConnectionsToday = array(
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	
+   		$nbConnectionsToday = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connections_today'),
-    			"value" => $this->getNumberConnectionsToday($workspace));
+    			"value" => $this->getNumberConnectionsToday($workspace, $excludeRoles));
     	
     	$meanConnectionsDaily = array(
     			"key" => $this->getTranslationKeyForKeynumbers('mean_connections_daily'),
-    			"value" => $this->getMeanNumberConnectionsDaily($workspace));
+    			"value" => $this->getMeanNumberConnectionsDaily($workspace, $excludeRoles));
     	
     	$nbSubscriptionsToday = array(
     			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_today'),
-    			"value" => $this->getTotalSubscribedUsersToday($workspace));
+    			"value" => $this->getTotalSubscribedUsersToday($workspace, $excludeRoles));
     	
     	$nbSubscriptions = array(
     			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_total'),
-    			"value" => $this->getTotalSubscribedUsers($workspace));
+    			"value" => $this->getTotalSubscribedUsers($workspace, $excludeRoles));
     	
     	$nbActiveUsers = array(
     			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
-    			"value" => $this->getNumberActiveUsers($workspace, 5));
+    			"value" => $this->getNumberActiveUsers($workspace, 5, $excludeRoles));
     	
     	$mostConnectedHour = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),
-    			"value" => $this->getHourMostConnection($workspace));
+    			"value" => $this->getHourMostConnection($workspace, $excludeRoles));
     	
     	$mostActiveHour = array(
     			"key" => $this->getTranslationKeyForKeynumbers('activity_hour'),
-    			"value" => $this->getHourMostActivity($workspace));
+    			"value" => $this->getHourMostActivity($workspace, $excludeRoles));
     	
     	$nbForumPublications = array(
     			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_total'),
-    			"value" => $this->getTotalForumPublications($workspace));
+    			"value" => $this->getTotalForumPublications($workspace, $excludeRoles));
     	
     	$meanForumPublicationsDaily = array(
     			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_daily_mean'),
-    			"value" => $this->getForumPublicationsDailyMean($workspace));
+    			"value" => $this->getForumPublicationsDailyMean($workspace, $excludeRoles));
         
         return array(
             'workspace' => $workspace,

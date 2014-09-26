@@ -327,54 +327,30 @@ abstract class AbstractWorkspace
         }
     }
     
-    public function getAllUsers($includeManagers = true) {
-    	$managers = array();
+    public function getAllUsers($filteredRoles = array()) {
     	$users = array();
     	foreach ($this->getRoles() as $role) {
-    		/* @var $role Role  */
-    		if (strpos($role->getName(), "MANAGER") !== false) {
-    			foreach ($role->getUsers() as $roleUser) {
-    				$managers[$roleUser->getId()] = $roleUser;
-    			}
-    			
-    			foreach ($role->getGroups() as $group) {
-    				/* @var $group Group */
-	    			foreach ($group->getUsers() as $groupUser) {
-	    				$managers[$groupUser->getId()] = $groupUser;
-	    			}
-    			}
-    		} else {
-    			foreach ($role->getUsers() as $roleUser) {
-    				$users[$roleUser->getId()] = $roleUser;
-    			}
-    			foreach ($role->getGroups() as $group) {
-    				/* @var $group Group */
-	    			foreach ($group->getUsers() as $groupUser) {
-	    				$users[$groupUser->getId()] = $groupUser;
-	    			}
-    			}
+    		foreach ($role->getUsers() as $roleUser) {
+    			$users[$roleUser->getId()] = $roleUser;
+    		}
+    		foreach ($role->getGroups() as $group) {
+    			/* @var $group Group */
+	    		foreach ($group->getUsers() as $groupUser) {
+	    			$users[$groupUser->getId()] = $groupUser;
+	    		}
     		}
     	}
     	
-    	if ($includeManagers) {
-    		array_merge($users, $managers);
-    	} else {
-    		foreach ($managers as $key => $manager) {
-    			unset($users[$key]);
-    		}
-    		
-    		foreach ($users as $key => $user) {
-    			foreach ($user->getRoles() as $roleName) {
-    				if ($roleName == "ROLE_ADMIN") {
-    					unset($users[$key]);
-    				}
+    	foreach ($users as $key => $user) {
+    		foreach ($user->getRoles(true) as $role) {
+    			if (in_array($role, $filteredRoles)) {
+    				unset($users[$key]);
+    				break;
     			}
     		}
     	}
-    	
     	
     	return array_unique($users);
-    	
     }
 
 }
