@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractIndexable;
 use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * MoocSession
@@ -241,6 +242,67 @@ class MoocSession extends AbstractIndexable
     public function getTitle()
     {
         return $this->title;
+    }
+
+
+    /**
+     * Get all Users (from Groups too)
+     *
+     * @return PersistentCollection
+     */
+    public function getAllUsers($includeManagers = true) {
+    	$managers = array();
+    	$users = array();
+    	$workspace = $this->getMooc()->getWorkspace();
+    	$roles = $workspace->getRoles();
+    	
+    	// Get manager role for this workspace
+    	foreach ($roles as $role) {
+    		if (strpos($role->getName(), "MANAGER") !== false) {
+    			$managerRole = $role;
+    			break;
+    		}
+    	}
+    	
+    	foreach ($this->getUsers() as $user) {
+    		/* @var $user User */
+    		$shouldGet = true;
+    		
+    		if (!$includeManagers) {
+	    		foreach ($user->getRoles(true) as $userRole) {
+					if ($userRole == $managerRole->getName()) {
+						$shouldGet = false;
+						break;
+					}
+	    		}
+    		}
+    		
+    		if ($shouldGet) {
+    			$users[$user->getId()] = $user;	
+    		}
+    	}
+    	
+    	foreach ($this->getGroups() as $group) {
+    		foreach ($group->getUsers() as $user) {
+	    		/* @var $user User */
+	    		$shouldGet = true;
+	    	
+	    		if (!$includeManagers) {
+	    			foreach ($user->getRoles(true) as $userRole) {
+	    				if ($userRole == $managerRole->getName()) {
+	    					$shouldGet = false;
+	    					break;
+	    				}
+	    			}
+	    		}
+	    	
+	    		if ($shouldGet) {
+	    			$users[$user->getId()] = $user;
+	    		}
+    		}
+    	}
+    	
+    	return array_unique($users);
     }
     
     /**

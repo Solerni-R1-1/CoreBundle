@@ -545,7 +545,7 @@ class LogRepository extends EntityRepository
     	$qb = $this->createQueryBuilder('l')->orderBy('l.dateLog')
     	->where("l.dateLog >= :from")
     	->andWhere("l.dateLog <= :to")
-    	->andWhere("l.action = :action")
+    	->andWhere("l.action IN (:action)")
     	->andWhere("l.workspace = :workspace")
     	->setParameters(array(
     			"from" => $from,
@@ -556,18 +556,40 @@ class LogRepository extends EntityRepository
     	
     	return $qb->getQuery()->getResult();
     }
-    
-	public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
+
+    public function countActiveUsersSinceDate(AbstractWorkspace $workspace, $date) {
     	$qb = $this->createQueryBuilder('l')
-	    	->select("COUNT(DISTINCT l.doer)")
-    		->where("l.workspace = :workspace")
-    		->andWhere("l.dateLog > :date")
-    		->setParameters(array(
-    				"workspace" => $workspace,
-    				"date" => $date
-    		));
-    	
+    	->select("COUNT(DISTINCT l.receiver)")
+    	->where("l.workspace = :workspace")
+    	->andWhere("l.dateLog > :date")
+    	->setParameters(array(
+    			"workspace" => $workspace,
+    			"date" => $date
+    	));
+    	 
     	return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function countActiveGroupsUsersSinceDate(AbstractWorkspace $workspace, $date) {
+    	$dql = "SELECT COUNT(DISTINCT u)
+    			FROM Claroline\CoreBundle\Entity\Group g
+    			JOIN g.users u
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+    				WITH l.receiverGroup = g
+    			WHERE l.workspace = :workspace
+    			AND l.dateLog > :date";
+    	/*$qb = $this->createQueryBuilder('l')
+    	->select("COUNT(DISTINCT g.user)")
+    	->join("l.receiverGroup", "g")
+    	->where("l.workspace = :workspace")
+    	->andWhere("l.dateLog > :date")*/
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters(array(
+    			"workspace" => $workspace,
+    			"date" => $date
+    	));
+    	 
+    	return $query->getSingleScalarResult();
     }
 
     public function countRegisteredUsers(AbstractWorkspace $workspace) {
