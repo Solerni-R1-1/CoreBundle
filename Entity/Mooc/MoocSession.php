@@ -250,62 +250,37 @@ class MoocSession extends AbstractIndexable
      *
      * @return PersistentCollection
      */
-    public function getAllUsers($includeManagers = true) {
+     public function getAllUsers($filteredRoles = array()) {
     	$managers = array();
-    	$users = array();
     	$workspace = $this->getMooc()->getWorkspace();
-    	$roles = $workspace->getRoles();
-    	$managerRoles = array("ROLE_ADMIN");
-    	// Get manager role for this workspace
-    	foreach ($roles as $role) {
-    		if (strpos($role->getName(), "MANAGER") !== false) {
-    			$managerRoles[] = $role->getName();
-    		}
-    	}
     	
+    	// Get all users of session
+    	$allUsers = array();
+
     	foreach ($this->getUsers() as $user) {
-    		/* @var $user User */
-    		$shouldGet = true;
-    		
-    		if (!$includeManagers) {
-	    		foreach ($user->getRoles(true) as $userRole) {
-	    			foreach ($managerRoles as $managerRole) {
-						if ($userRole == $managerRole) {
-							$shouldGet = false;
-							break;
-						}
-	    			}
-	    		}
-    		}
-    		
-    		if ($shouldGet) {
-    			$users[$user->getId()] = $user;	
+    		if (!in_array($user, $allUsers)) {
+    			$allUsers[] = $user;
     		}
     	}
-    	
     	foreach ($this->getGroups() as $group) {
     		foreach ($group->getUsers() as $user) {
-	    		/* @var $user User */
-	    		$shouldGet = true;
-	    	
-	    		if (!$includeManagers) {
-	    			foreach ($user->getRoles(true) as $userRole) {
-	    				foreach ($managerRoles as $managerRole) {
-		    				if ($userRole == $managerRole) {
-		    					$shouldGet = false;
-		    					break;
-		    				}
-	    				}
-	    			}
-	    		}
-	    	
-	    		if ($shouldGet) {
-	    			$users[$user->getId()] = $user;
+    			if (!in_array($user, $allUsers)) {
+    				$allUsers[] = $user;
 	    		}
     		}
     	}
     	
-    	return array_unique($users);
+    	// Filter them
+    	foreach ($allUsers as $key => $user) {
+    		foreach ($user->getRoles() as $userRole) {
+    			if (in_array($userRole, $filteredRoles)) {
+    				unset($allUsers[$key]);
+    				break;
+    			}
+    		}
+    	}
+
+    	return $allUsers;
     }
     
     /**

@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\RoleManager;
 
 /**
  * Description of StaticController
@@ -48,6 +49,7 @@ class MoocAnalyticsController extends Controller
     private $mailManager;
     private $moocService;
     private $analyticsManager;
+    private $roleManager;
     
     /**
      * @DI\InjectParams({
@@ -57,7 +59,8 @@ class MoocAnalyticsController extends Controller
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
      *     "moocService"        = @DI\Inject("orange.mooc.service"),
-     *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager")
+     *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct( 
@@ -67,7 +70,8 @@ class MoocAnalyticsController extends Controller
             WorkspaceManager $workspaceManager,
             MailManager $mailManager,
             MoocService $moocService,
-            AnalyticsManager $analyticsManager
+            AnalyticsManager $analyticsManager,
+    		RoleManager $roleManager
         ) {
         $this->translator = $translator;
         $this->security = $security;
@@ -76,6 +80,7 @@ class MoocAnalyticsController extends Controller
         $this->mailManager = $mailManager;
         $this->moocService = $moocService;
         $this->analyticsManager = $analyticsManager;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -88,6 +93,7 @@ class MoocAnalyticsController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function analyticsMoocDetailsAction( $workspace, $user ) {
+    	// Base parameters
     	$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
         $from = $currentSession->getStartDate();
         $to = $currentSession->getEndDate();
@@ -95,13 +101,21 @@ class MoocAnalyticsController extends Controller
         if ($now < $to) {
         	$to = $now;
         }
-    	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace);
-        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to);
-        $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to);
-        $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace);
-        $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to);
-        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365);
-        $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace);
+
+        // Init the roles to filter the stats.
+        $excludeRoles = array();
+        $managerRole = $this->roleManager->getManagerRole($workspace);
+        $excludeRoles[] = $managerRole->getName();
+        $excludeRoles[] = "ROLE_ADMIN";
+        $excludeRoles[] = "ROLE_WS_CREATOR";
+        
+    	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace, $excludeRoles);
+        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to, $excludeRoles);
+        $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
+        $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 5, $excludeRoles);
+        $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
+        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365, $excludeRoles);
+        $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace, $excludeRoles);
         
         
         return $this->render(
@@ -129,9 +143,15 @@ class MoocAnalyticsController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function analyticsMoocBadgesPieChartAction( $workspace, $user ) {
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
         
-        $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace);
-        $badgesParticipationRates = $this->analyticsManager->getBadgesParticitpationRate($workspace);
+        $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
+        $badgesParticipationRates = $this->analyticsManager->getBadgesParticitpationRate($workspace, $excludeRoles);
         
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsBadgesPiechart.html.twig',
@@ -153,8 +173,14 @@ class MoocAnalyticsController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function analyticsMoocBadgesChartAction( $workspace, $user ) {
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
         
-         $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace);
+         $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
         
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsBadgesChart.html.twig',
