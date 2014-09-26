@@ -19,7 +19,7 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h2 class="panel-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+        <h1 class="slrn-content-main-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h1>
     </div>
     <div class="panel-body" id="workspace-list-div">
         {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}

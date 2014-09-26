@@ -1112,3 +1112,5 @@ slrn_solerni_unsubscribe_intro: Etes-vous sûr de vouloir vous désinscrire de S
 slrn_solerni_unsubscribe_text: Une fois que vous serez désinscrit, vous ne pourrez plus consulter votre parcours au sein des moocs auxquels vous êtes inscrit.
 yes_unsubscribe_me: Oui, me désinscrire de Solerni
 no_unsubscription: Non, conservez mon compte
+
+analytics_keynumbers_footnote: '(1) Nombre d''utilisateurs actifs : nombre d''apprenants s''étant connectés au moins 1 fois durant les 7 derniers jours'
