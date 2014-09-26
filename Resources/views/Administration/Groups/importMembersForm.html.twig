@@ -34,6 +34,17 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'import_users'|trans({}, 'platform') }}</h3>
     </div>
+    <div>
+    	{% for file in files %}
+    	<div>
+	    	Import reject {{ file['date'] | date('Y-m-d H:i') }}
+	    	<br />
+	    	<a class="btn btn-primary" href="{{ path('claro_admin_import_file_download', {'filepath': file['path']}) }}">Download</a>
+	    	<div class="btn btn-default delete-file" target="{{ path('claro_admin_import_file_delete', {'filepath': file['path']}) }}">Delete</div>
+	    	<br />
+	  	</div>
+    	{% endfor %}
+    </div>
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_import_users_into_group', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
             {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
@@ -78,4 +89,16 @@
             <a class="btn btn-default" href="{{ path('claro_admin_user_of_group_list', {'groupId': group.getId()}) }}" role="button">{{ 'cancel' | trans({}, 'platform' )}}</a>
         </div>
     </form>
+    <script>
+		$(".delete-file").click(function(event) {
+			$elem = $(this);
+			$.ajax({
+	            url: $(this).attr("target"),
+	            type: 'GET',
+	            success: function(nodes){
+		            $elem.parent().remove();
+	            },
+	        });
+		});
+    </script>
 {% endblock %}

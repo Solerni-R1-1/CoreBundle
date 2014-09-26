@@ -57,82 +57,83 @@ class CsvUserValidator extends ConstraintValidator
             }
         }
 
-        $usernames = array();
-        $mails = array();
+//         $usernames = array();
+//         $mails = array();
 
-        foreach ($lines as $i => $line) {
-            $user = explode(';', $line);
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $username = $user[2];
-            $pwd = $user[3];
-            $email = $user[4];
-            $code = isset($user[5])? $user[5] : null;
-            $phone = isset($user[6])? $user[6] : null;
+//         foreach ($lines as $i => $line) {
+//             $user = explode(';', $line);
+//             $firstName = $user[0];
+//             $lastName = $user[1];
+//             $username = $user[2];
+//             $pwd = $user[3];
+//             $email = $user[4];
+//             $code = isset($user[5])? $user[5] : null;
+//             $phone = isset($user[6])? $user[6] : null;
 
-            (!array_key_exists($email, $mails)) ?
-                $mails[$email] = array($i + 1):
-                $mails[$email][] = $i + 1;
-            (!array_key_exists($username, $usernames)) ?
-                $usernames[$username] = array($i + 1):
-                $usernames[$username][] = $i + 1;
+//             (!array_key_exists($email, $mails)) ?
+//                 $mails[$email] = array($i + 1):
+//                 $mails[$email][] = $i + 1;
+//             (!array_key_exists($username, $usernames)) ?
+//                 $usernames[$username] = array($i + 1):
+//                 $usernames[$username][] = $i + 1;
 
-            $newUser = new User();
-            $newUser->setFirstName($firstName);
-            $newUser->setLastName($lastName);
-            $newUser->setUsername($username);
-            $newUser->setPlainPassword($pwd);
-            $newUser->setMail($email);
-            $newUser->setAdministrativeCode($code);
-            $newUser->setPhone($phone);
-        }
-        foreach ($usernames as $username => $lines) {
-            if (count($lines) > 1) {
-                $msg = $this->translator->trans(
-                    'username_found_at',
-                    array('%username%' => $username, '%lines%' => $this->getLines($lines)),
-                    'platform'
-                ) . ' ';
-
-                $this->context->addViolation($msg);
-            }
-        }
-
-        foreach ($mails as $mail => $lines) {
-            if (count($lines) > 1) {
-                $msg = $this->translator->trans(
-                    'email_found_at',
-                    array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
-                    'platform'
-                ) . ' ';
-                $this->context->addViolation($msg);
-            }
-        }
+//             $newUser = new User();
+//             $newUser->setFirstName($firstName);
+//             $newUser->setLastName($lastName);
+//             $newUser->setUsername($username);
+//             $newUser->setPlainPassword($pwd);
+//             $newUser->setMail($email);
+//             $newUser->setAdministrativeCode($code);
+//             $newUser->setPhone($phone);
+//         }
         
-        // Validate users
-        $repo = $this->em->getRepository("ClarolineCoreBundle:User");
-        
-        $alreadyExistingUsernames = $repo->findByUsernameIn(array_keys($usernames));
-        $alreadyExistingMails = $repo->findByMailIn(array_keys($mails));
+//         foreach ($usernames as $username => $lines) {
+//             if (count($lines) > 1) {
+//                 $msg = $this->translator->trans(
+//                     'username_found_at',
+//                     array('%username%' => $username, '%lines%' => $this->getLines($lines)),
+//                     'platform'
+//                 ) . ' ';
 
-        foreach ($alreadyExistingUsernames as $user) {
-        	$msg = $this->translator->trans(
-        			'username_already_exists',
-        			array('%username%' => $user->getUsername(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
-        			'platform'
-        	) . ' ';
+//                 $this->context->addViolation($msg);
+//             }
+//         }
+
+//         foreach ($mails as $mail => $lines) {
+//             if (count($lines) > 1) {
+//                 $msg = $this->translator->trans(
+//                     'email_found_at',
+//                     array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
+//                     'platform'
+//                 ) . ' ';
+//                 $this->context->addViolation($msg);
+//             }
+//         }
+        
+//         // Validate users
+//         $repo = $this->em->getRepository("ClarolineCoreBundle:User");
+        
+//         $alreadyExistingUsernames = $repo->findByUsernameIn(array_keys($usernames));
+//         $alreadyExistingMails = $repo->findByMailIn(array_keys($mails));
+
+//         foreach ($alreadyExistingUsernames as $user) {
+//         	$msg = $this->translator->trans(
+//         			'username_already_exists',
+//         			array('%username%' => $user->getUsername(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
+//         			'platform'
+//         	) . ' ';
         	 
-        	$this->context->addViolation($msg);
-        }
+//         	$this->context->addViolation($msg);
+//         }
 
-        foreach ($alreadyExistingMails as $user) {
-                $msg = $this->translator->trans(
-                    'mail_already_exists',
-                    array('%email%' => $user->getMail(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
-                    'platform'
-                ) . ' ';
-                $this->context->addViolation($msg);
-        }
+//         foreach ($alreadyExistingMails as $user) {
+//            $msg = $this->translator->trans(
+//                 'mail_already_exists',
+//                 array('%email%' => $user->getMail(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
+// 				'platform'
+//            ) . ' ';
+//            $this->context->addViolation($msg);
+//         }
     }
 
     private function getLines($lines)
