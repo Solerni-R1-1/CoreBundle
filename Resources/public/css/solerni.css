@@ -463,10 +463,12 @@ body.subnavbar-fixed {
 .body-resource-manager .content,
 .body-badges .content,
 .body-my_badges .content,
-.body-without-subnavbar .content { padding-top: 0; }
-.body-forum .content { padding-top: 0; }
-.body-blog .content { padding-top: 0; }
-.body-profile .content { padding-top: 0; }
+.body-without-subnavbar .content,
+.body-forum .content,
+.body-blog .content,
+.body-profile .content,
+.body-mooc-analytics .content { padding-top: 0; }
+
 .body-not-my-profile .content { padding-top: 40px; }
 
 /* HIDE FLASHBOX ON DASHBOARD */
@@ -1801,10 +1803,14 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-statistic-wrapper {
-    margin-bottom: 30px;
+    margin-bottom: 80px;
 }
 
 .slrn-statistic-wrapper legend {
+    margin-bottom: 20px;
+}
+
+.slrn-statistic-wrapper legend + .slrn-grey-block {
     margin-bottom: 40px;
 }
 
@@ -1826,7 +1832,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-analytics-table__td {
-    padding:        .5em .25em;
+    padding:        .8em .4em;
     line-height:    1.2;
 }
 
@@ -1842,6 +1848,22 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     font-size: .8em;
 }
 
+.slrn-analystics-subtabs {
+    list-style: none inside none;
+    margin:     1em 0;
+    padding:    0;
+}
+
+.slrn-analystics-subtabs__item {
+    display:            inline-block;
+    margin-right:       2em;
+    text-decoration:    underline;
+    cursor:             pointer;   
+}
+
+.slrn-analystics-subtabs__item.active {
+    color: #FF004F;
+}
 
 /* PROFILE */
 

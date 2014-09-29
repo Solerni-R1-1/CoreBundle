@@ -1080,10 +1080,10 @@ export_active_users: Liste des utilisateurs actifs/inactifs
 export_users_activity: Utilisateurs les plus actifs
 export_forum_stats: Statistiques du forum
 
-mooc_subscriptions_follow_up: Suivi des inscriptions
-mooc_workspace_interactions: Ouvertures et interactions par heure
+subscriptionStats: Suivi des inscriptions
+hourlyAudience: Ouvertures et interactions par heure
 mooc_forum_publication: Publication dans le forum
-mooc_users_activity: Répartition des utilisateurs par activité / inactivité
+activeUsers: Répartition des utilisateurs par activité / inactivité
 mooc_badges_knowledge_piechart: Répartition des badges de connaissances par statut
 mooc_badges_skill_piechart: Répartition des badges de compétences par statut
 mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
@@ -1114,3 +1114,5 @@ yes_unsubscribe_me: Oui, me désinscrire de Solerni
 no_unsubscription: Non, conservez mon compte
 
 analytics_keynumbers_footnote: '(1) Nombre d''utilisateurs actifs : nombre d''apprenants s''étant connectés au moins 1 fois durant les 7 derniers jours'
+subscriptions_connections: Inscriptions et connexions
+forum: Forum

@@ -1,0 +1,101 @@
+{# Jqplot  #}
+ <script>
+    $(document).ready(function() {
+        /* Design and values */
+        var bg_color = "transparent", graph_mapped_values = [];
+        if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+        // Map data
+        {% for graph_value_set in graph_datas.graph_values %}
+            graph_mapped_values[{{loop.index0}}] = $.map({{ graph_value_set|json_encode|raw }}, function(value, index) {
+                if (Array.isArray(value)) {
+                    return [value];
+                } else {
+                    return [[index, value]];
+                }
+            });
+        {% endfor %}
+
+        if ( graph_mapped_values[0].length > 0 ) {
+            var {{ key }} = $.jqplot(
+                    '{{ key }}',
+                    [
+                        {% for graph_value_set in graph_datas.graph_values %}
+                            graph_mapped_values[{{loop.index0}}]
+                            {% if not loop.last %},{% endif %}
+                        {% endfor %}
+                
+                    ],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: true,
+                            borderWidth: 1.0,
+                            shadow: false,
+                            background: bg_color
+                        },
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                        },
+                        axes: {
+                            xaxis: {
+                            	renderer: $.jqplot.DateAxisRenderer,
+                                tickOptions: {
+                                    formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                    showGridline: false,
+                                    showMark: true,
+                                    angle: -20,
+                                    fontSize: '10px'
+                                },
+                                numberTicks:10,
+                                label: "Date",
+                                pad: 0
+                            },
+                            yaxis: {
+                            	label: "Inscriptions",
+                                min:0,
+                                showTickMarks: true,
+                                numberTicks: 5
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            sizeAdjust: 1,
+                            tooltipOffset:12,
+                            tooltipLocation:'n',
+                            tooltipAxes:'xy',
+                            formatString:'%s <br/> %d',
+                            tooltipFadeSpeed:'fast'
+                        },
+                        cursor: {
+                            show: true,
+                            zoom: true,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker:((graph_mapped_values[0].length<10)?true:false),
+                            markerOptions:{shadow:false},
+                            shadow:false,
+                            showLine:true,
+                            useNegativeColors: false,
+                            fill: true,
+                            lineWidth: 1.5,
+                            fillAndStroke: true,
+                            fillAlpha: 0.12,
+                            rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                        },
+                        series: [
+                            {yaxis:'yaxis', label:'Inscriptions totales'},
+                            {yaxis:'yaxis', label:'Inscriptions'}
+                        ],
+                        legend: {
+    						show: true,
+    						placement: 'outsideGrid'
+                        }
+                    }
+                );
+            }
+    });
+</script>
+
+

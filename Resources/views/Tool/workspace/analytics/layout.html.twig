@@ -1,0 +1,33 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+    'name': 'analytics'|trans({}, 'platform'),
+    'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{%block bodyClasses %}{{ parent() }} body-mooc-analytics{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h2 class="slrn-content-main-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analytics_navbar.html.twig'%}
+    </div>
+    
+    <div class="panel-body logs-container">
+        {% block analytic_content %}{% endblock %}
+	</div>
+{% endblock %}
+

@@ -121,14 +121,57 @@ class MoocAnalyticsController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsDetails.html.twig',
             array(
-                'hourlyAudience'        	=> $hourlyAudience,
-                'subscriptionStats'     	=> $subscriptionStats,
-            	'forumMostActiveSubjects'	=> $forumMostActiveSubjects,
-                'forumContributions'    	=> $forumContributions,
-            	'forumPublishers'			=> $forumPublishers,
-                'activeUsers'           	=> $activeUsers,
-                'workspace'             	=> $workspace,
-            	'mostActiveUsers'			=> $mostActiveUsers
+                'workspace' => $workspace,
+                'tabs'      => array(
+                    'subscriptions_connections' => array(
+                        'subscriptionStats' => array(
+                            'graph_type'    => 'line-chart',
+                            'description'   => 'subscriptionStatsDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $subscriptionStats
+                         ),
+                        'activeUsers'       => array(
+                            'graph_type'    => 'pie-chart',
+                            'description'   => 'activeUsersDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $activeUsers
+                        ),
+                        'hourlyAudience'    => array(
+                            'graph_type'    => 'line-chart',
+                            'description'   => 'hourlyAudienceDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $hourlyAudience
+                        )
+                    ),
+                    'users' => array(
+                        'mostActiveUsers'	=> array(
+                            'graph_type'    => 'table',
+                            'description'   => 'mostActiveUsersDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $mostActiveUsers
+                        ),
+                        'forumPublishers'	=> array(
+                            'graph_type'    => 'table',
+                            'description'   => 'forumPublishersDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $forumPublishers
+                        )
+                    ),
+                    'forum' => array(
+                        'forumContributions'        => array(
+                            'graph_type'    => 'line-chart',
+                            'description'   => 'forumContributionsDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $forumContributions
+                        ),
+                        'forumMostActiveSubjects'	=> array(
+                            'graph_type'    => 'table',
+                             'description'   => 'forumMostActiveSubjectsDescription',
+                            'x_renderer'    => '',
+                            'graph_values'  => $forumMostActiveSubjects
+                        )
+                    )
+                )
             )
         );
     }
