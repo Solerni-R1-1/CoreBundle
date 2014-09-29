@@ -29,7 +29,13 @@
     </span>
     {% if isRegistered %}
         {# give access to mooc archives if the user was subscribed #}
-        <a href="" class="link-btn-spacing pink_link">{{ 'mooc_archives'|trans({}, 'platform') }}</a>
+        <a href="{{ path( 'mooc_view_session', { 
+				        'moocId': session.getMooc().getId(), 
+				        'moocName': session.getMooc().getAlias(), 
+				        'sessionId': session.getId(), 
+				        'word': 'apprendre'
+				    }) }}"
+		  class="link-btn-spacing pink_link">{{ 'mooc_archives'|trans({}, 'platform') }}</a>
     {% else %}
         {# if the mooc is redoable, ask for notification #}
         {% if session.getMooc().getPostEndAction() == 1 %}
