@@ -42,7 +42,7 @@ class UserPublicProfilePreferences
      *
      * @ORM\Column(type="integer", name="share_policy")
      */
-    protected $sharePolicy = 0;
+    protected $sharePolicy = 1;
 
     /**
      * @var bool
@@ -70,7 +70,7 @@ class UserPublicProfilePreferences
      *
      * @ORM\Column(type="boolean", name="allow_message_sending")
      */
-    protected $allowMessageSending = false;
+    protected $allowMessageSending = true;
 
     /**
      * @return int
