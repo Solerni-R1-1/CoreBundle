@@ -109,6 +109,7 @@ class MoocAnalyticsController extends Controller
         $excludeRoles[] = "ROLE_ADMIN";
         $excludeRoles[] = "ROLE_WS_CREATOR";
         
+        // Fetch all the necessary data
     	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace, $excludeRoles);
         $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to, $excludeRoles);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
@@ -117,7 +118,12 @@ class MoocAnalyticsController extends Controller
         $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365, $excludeRoles);
         $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace, $excludeRoles);
         
+        // Organize the data for the new dynamic twig
+		
         
+
+        
+        // Render
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsDetails.html.twig',
             array(
@@ -128,19 +134,42 @@ class MoocAnalyticsController extends Controller
                             'graph_type'    => 'line-chart',
                             'description'   => 'subscriptionStatsDescription',
                             'x_renderer'    => 'date',
-                            'graph_values'  => $subscriptionStats
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "Inscriptions",
+                            		"series" => array(
+		                            	"Inscriptions totales" => $subscriptionStats[0],
+		                            	"Inscriptions" => $subscriptionStats[1]
+    								)
+                            	)
+                           	)
                          ),
                         'activeUsers'       => array(
                             'graph_type'    => 'pie-chart',
                             'description'   => 'activeUsersDescription',
                             'x_renderer'    => 'int',
-                            'graph_values'  => $activeUsers
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "A",
+                            		"series" => array(
+                            			"Active users" => $activeUsers
+                            		)
+                            	)
+                            )
                         ),
                         'hourlyAudience'    => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'hourlyAudienceDescription',
                             'x_renderer'    => 'int',
-                            'graph_values'  => $hourlyAudience
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "Activité sur le cours",
+                            		"series" => array(
+                            			"Nombre de connections" => $hourlyAudience[0],
+                            			"Activité sur le cours" => $hourlyAudience[1]
+                            		)
+                            	)
+                            )
                         )
                     ),
                     'users' => array(
@@ -148,13 +177,27 @@ class MoocAnalyticsController extends Controller
                             'graph_type'    => 'table',
                             'description'   => 'mostActiveUsersDescription',
                             'x_renderer'    => '',
-                            'graph_values'  => $mostActiveUsers
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "C",
+                            		"series" => array(
+                            			"Most active users" => $mostActiveUsers
+                            		)
+                            	)
+                            )
                         ),
                         'forumPublishers'	=> array(
                             'graph_type'    => 'table',
                             'description'   => 'forumPublishersDescription',
                             'x_renderer'    => '',
-                            'graph_values'  => $forumPublishers
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "D",
+                            		"series" => array(
+                            			"Forum publishers" => $forumPublishers
+                            		)
+                            	)
+                            )
                         )
                     ),
                     'forum' => array(
@@ -162,13 +205,27 @@ class MoocAnalyticsController extends Controller
                             'graph_type'    => 'line-chart',
                             'description'   => 'forumContributionsDescription',
                             'x_renderer'    => 'date',
-                            'graph_values'  => $forumContributions
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "E",
+                            		"series" => array(
+                            			"Forum contributions" => $forumContributions
+                            		)
+                            	)
+                            )
                         ),
                         'forumMostActiveSubjects'	=> array(
                             'graph_type'    => 'table',
                              'description'   => 'forumMostActiveSubjectsDescription',
                             'x_renderer'    => '',
-                            'graph_values'  => $forumMostActiveSubjects
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label" => "F",
+                            		"series" => array(
+                            			"Most active subjects" => $forumMostActiveSubjects
+                            		)
+                            	)
+                            )
                         )
                     )
                 )

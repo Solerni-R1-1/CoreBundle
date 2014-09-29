@@ -797,11 +797,11 @@ class AnalyticsManager
     	$date = new \DateTime("today midnight");
     	$date->sub(new \DateInterval("P".$nbDays."D"));
     	
-    	return $this->logRepository->countActiveUsersSinceDate($workspace, $date);
+    	return $this->logRepository->countActiveUsersSinceDate($workspace, $date, $filterRoles);
     }
 
     public function getHourMostConnection(AbstractWorkspace $workspace, $filterRoles) {
-    	$hourlyAudience = $this->getHourlyAudience($workspace)[0];
+    	$hourlyAudience = $this->getHourlyAudience($workspace, $filterRoles)[0];
     	
     	$max = 0;
     	$index = 0;
@@ -815,7 +815,7 @@ class AnalyticsManager
     }
     
     public function getHourMostActivity(AbstractWorkspace $workspace, $filterRoles) {
-    	$hourlyAudience = $this->getHourlyAudience($workspace)[1];
+    	$hourlyAudience = $this->getHourlyAudience($workspace, $filterRoles)[1];
     	
     	$max = 0;
     	$index = 0;

@@ -6,13 +6,16 @@
         
         /* Data mapping */
         {% for graph_value_set in graph_datas.graph_values %}
-            graph_mapped_values[{{ loop.index0 }}] = $.map({{ graph_value_set|json_encode|raw }}, function(value, index) {
+        	{% set loop1 = loop.index0 %}
+        	{% for serie in graph_value_set.series %}
+            graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}] = $.map({{ serie|json_encode|raw }}, function(value, index) {
                 if (Array.isArray(value)) {
                     return [value];
                 } else {
                     return [[index, value]];
                 }
             });
+            {% endfor %}
         {% endfor %}
             
         /* jqplot rendering */
@@ -20,7 +23,10 @@
             '{{ key }}',
             [
             {% for graph_value_set in graph_datas.graph_values %}
-                graph_mapped_values[{{loop.index0}}]{% if not loop.last %},{% endif %}
+	        	{% set loop1 = loop.index0 %}
+	        	{% for serie in graph_value_set.series %}
+                graph_mapped_values[{{(loop1 * 10) + loop.index0}}]{% if not loop.last %},{% endif %}
+                {% endfor %}
             {% endfor %}
             ],
             {
@@ -49,12 +55,15 @@
                         label: "Date",
                         pad: 0
                     },
-                    yaxis: {
-                        label: "Inscriptions",
+                    {% for graph_value_set in graph_datas.graph_values %}
+                    {% set yIndex = loop.index %}
+                    y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis: {
+                        label: "{{ graph_value_set.y_label }}",
                         min:0,
                         showTickMarks: true,
                         numberTicks: 5
-                    }
+                    }{% if not loop.last %},{% endif %}
+                    {% endfor %}
                 },
                 highlighter: {
                     show: true,
@@ -83,8 +92,12 @@
                     rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
                 },
                 series: [
-                    {yaxis:'yaxis', label:'Inscriptions totales'},
-                    {yaxis:'yaxis', label:'Inscriptions'}
+                    {% for graph_value_set in graph_datas.graph_values %}
+                    	{% set yIndex = loop.index %}
+    	        		{% for label, serie in graph_value_set.series %}
+                    {yaxis:'y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis', label:'{{ label }}'}{% if not loop.last %},{% endif %}
+                    	{% endfor %}
+                    {% endfor %}
                 ],
                 legend: {
                     show: true,
