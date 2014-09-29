@@ -245,9 +245,14 @@
 			<div class="modal-body">
 				<p>{{ "mooc_register_modal_title"|trans({}, "platform")|raw }}</p>
 				<p>{{ "mooc_register_modal_mooc_name"|trans({"%moocName%":mooc.getTitle()}, "platform")|raw }}</p>
+				{% if session.getStartDate() >= date() %}
 				<p>{{ "mooc_register_modal_mooc_date"|trans({"%moocDate%":session.getStartDate()|date('d/m')}, "platform")|raw }}</p>
 				<p>{{ "mooc_register_modal_text"|trans({}, "platform")|raw }}</p>
 				<p>{{ "mooc_register_modal_text2"|trans({}, "platform")|raw }}</p>
+				{% else %}
+				<p>{{ "mooc_register_modal_text_started"|trans({}, "platform")|raw }}</p>
+				<p>{{ "mooc_register_modal_text2_started"|trans({}, "platform")|raw }}</p>
+				{% endif %}
 			</div>
 			<div class="modal-footer">
 				<input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'ok'|trans({}, 'platform') }}"/>

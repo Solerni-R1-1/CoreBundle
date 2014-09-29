@@ -1095,6 +1095,10 @@ mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débute
 mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
 mooc_register_modal_text2: 'A très bientôt.'
 
+mooc_register_modal_text_started: 'Le cours est ouvert : vous pouvez y accéder dès à présent.'
+mooc_register_modal_text2_started: 'Bon MOOC !'
+
+
 user_wish_to_unsubscribe: Vous souhaitez vous désinscrire de Solerni ?
 unsubscribe_self: se désinscrire
 back_to_profile: Retour au profil
