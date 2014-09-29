@@ -127,19 +127,19 @@ class MoocAnalyticsController extends Controller
                         'subscriptionStats' => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'subscriptionStatsDescription',
-                            'x_renderer'    => '',
+                            'x_renderer'    => 'date',
                             'graph_values'  => $subscriptionStats
                          ),
                         'activeUsers'       => array(
                             'graph_type'    => 'pie-chart',
                             'description'   => 'activeUsersDescription',
-                            'x_renderer'    => '',
+                            'x_renderer'    => 'int',
                             'graph_values'  => $activeUsers
                         ),
                         'hourlyAudience'    => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'hourlyAudienceDescription',
-                            'x_renderer'    => '',
+                            'x_renderer'    => 'int',
                             'graph_values'  => $hourlyAudience
                         )
                     ),
@@ -161,7 +161,7 @@ class MoocAnalyticsController extends Controller
                         'forumContributions'        => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'forumContributionsDescription',
-                            'x_renderer'    => '',
+                            'x_renderer'    => 'date',
                             'graph_values'  => $forumContributions
                         ),
                         'forumMostActiveSubjects'	=> array(
