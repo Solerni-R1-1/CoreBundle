@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Claroline\CoreBundle\Entity\User;
+use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 
 /**
  * Description of StaticController
