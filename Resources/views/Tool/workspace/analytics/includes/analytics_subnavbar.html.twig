@@ -1,0 +1,53 @@
+<ul class="slrn-analystics-subtabs">
+    {% for tab, content in tabs %}
+        <li class="slrn-analystics-subtabs__item" data-target-id="{{ tab }}">{{ tab|trans({}, 'platform') }}</li>
+    {% endfor %}
+</ul>
+<hr class="slrn-hr">
+{% for tab, content in tabs %}
+    <div class="slrn-pseudo-tab{% if not loop.first %} hidden{% endif %}" id="{{ tab }}">
+        {% for key, graph_datas in content %}
+            <div class="slrn-statistic-wrapper">
+                <legend>{{ key|trans({}, 'platform') }}</legend>
+                <div class="slrn-grey-block">{{ graph_datas.description }}</div>
+                <div id="{{ key }}" class="{{ graph_datas.graph_type }}"></div>
+                {% if 'line-chart' == graph_datas.graph_type %}
+                    <div class="count_by_day_chart_legend">
+                        <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
+                    </div>
+                {% endif %}
+            </div>
+        
+            {% if 'line-chart' == graph_datas.graph_type %}
+                {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsLineChart.html.twig' %}
+            {% endif %}
+            {% if 'pie-chart' == graph_datas.graph_type %}
+                {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsPieChart.html.twig' %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<script>
+    $(document).ready(function() {
+        /* pseudo tabs */  
+        var buttons = jQuery('.slrn-analystics-subtabs__item');
+        var pseudoTabs = jQuery('.slrn-pseudo-tab');
+        
+        buttons.on( 'click', function() {
+            var eventSource = jQuery(this);
+            pseudoTabs.each( function() {
+                if ( eventSource.data('target-id') == jQuery(this).attr('id') ) {
+                    jQuery(this).show();
+                    buttons.removeClass('active');
+                    eventSource.addClass('active');
+                } else {
+                    jQuery(this).hide();
+                    
+                }
+            });
+            
+        });
+    });
+</script>
+

@@ -1,44 +1,18 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Tool\\workspace\\analytics:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
-
-{% block breadcrumb %}
-    {{
-    macros.workspaceBreadcrumbs(
-    workspace,
-    [
-    {
-    'name': 'analytics'|trans({}, 'platform'),
-    'href': ''
-    }
-    ]
-    )
-    }}
-{% endblock %}
-
-{% block section_content %}
-
-    <div class="panel-heading">
-        <h2 class="slrn-content-main-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+{% block analytic_content %}
+    <div class="slrn-statistic-wrapper">
+        <hr class="slrn-hr" />
+        {% if keynumbers is defined and keynumbers is not empty %}
+        <table class="slrn-analytics-table">
+            {% for keynumber in keynumbers %}
+                <tr class="slrn-analytics-table__tr">
+                    <td class="slrn-analytics-table__td">{{ keynumber['key'] }} : </td>
+                    <td class="slrn-analytics-table__td slrn-bold">{{ keynumber['value']|round(2, 'common') }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <p class="slrn-analytics-footnote">{{'analytics_keynumbers_footnote'|trans({}, 'platform')}}</p>
+       {% endif %}
     </div>
-    <div class="panel-body" id="workspace-list-div">
-        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics:analytics_navbar.html.twig'%}
-    </div>
-    
-    <div class="panel-body logs-container">
-    	<div class="slrn-statistic-wrapper">
-		    <hr class="slrn-hr" />
-		    {% if keynumbers is defined and keynumbers is not empty %}
-            <table class="slrn-analytics-table">
-                {% for keynumber in keynumbers %}
-                    <tr class="slrn-analytics-table__tr">
-                        <td class="slrn-analytics-table__td">{{ keynumber['key'] }} : </td>
-                        <td class="slrn-analytics-table__td slrn-bold">{{ keynumber['value']|round(2, 'common') }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <p class="slrn-analytics-footnote">{{'analytics_keynumbers_footnote'|trans({}, 'platform')}}</p>
-		   {% endif %}
-		</div>
-	</div>
 {% endblock %}
