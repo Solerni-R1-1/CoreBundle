@@ -485,8 +485,8 @@ class AnalyticsExportController extends Controller {
     	$excludeRoles[] = "ROLE_WS_CREATOR";
     	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-		$from = $currentSession->getStartDate();
-		$to = $currentSession->getEndDate();
+		$from = $currentSession->getStartInscriptionDate();
+		$to = $currentSession->getEndInscriptionDate();
 		
 		$now = new \DateTime();
 		if ($now < $to) {
