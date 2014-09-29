@@ -21,9 +21,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Form\FileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\ForumBundle\Entity\Message;
 
 class FileController extends Controller
 {
+	
+	const PREG_FORUM_ROUTE = "/\/forum\/subject\/([0-9]+)\/messages\/page\/([0-9]+)\/max(\/[0-9]+)?/";
     /**
      * @EXT\Route(
      *     "resource/media/{node}",
@@ -39,21 +42,53 @@ class FileController extends Controller
     public function streamMediaAction(ResourceNode $node)
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('OPEN', $collection);
-        $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
-        $path = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
-            . $file->getHashName();
 
-        $response = new StreamedResponse();
-        $response->setCallBack(
-            function () use ($path) {
-                readfile($path);
-            }
-        );
-
-        $response->headers->set('Content-Type', $node->getMimeType());
-
-        return $response;
+        $hasAccess = true;
+        if (!$this->checkAccess('OPEN', $collection, true)) {
+        	// We must check if we come from the forum to let the access to the resource...
+        	$hasAccess = false;
+        	if (isset($_SERVER['HTTP_REFERER'])) {
+        		$refererUrl = $_SERVER['HTTP_REFERER'];
+        		$currentUrl = $_SERVER['REQUEST_URI'];
+        		$matches = array();
+        		if (preg_match(FileController::PREG_FORUM_ROUTE, $refererUrl, $matches) == 1) {
+        			$subjectId = $matches[1];
+        			$page = $matches[2];
+        			$max = (isset($matches[3]) ? $matches[3] : 20);
+        			 
+        			$forumManager = $this->get('claroline.manager.forum_manager');
+        			$messages = $forumManager->getMessagesPagerById($subjectId, $page, $max);
+        			foreach ($messages as $message) {
+        				/* @var $message Message */
+        				if ($message->getCreator()->getId() == $node->getCreator()->getId()) {
+        					if (strpos($message->getContent(), $currentUrl) !== FALSE) {
+        						$hasAccess = true;
+        						break;
+        					}
+        				}
+        			}
+        		}
+        	}	
+        }
+        
+        if ($hasAccess) {
+	        $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+	        $path = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
+	            . $file->getHashName();
+	
+	        $response = new StreamedResponse();
+	        $response->setCallBack(
+	            function () use ($path) {
+	                readfile($path);
+	            }
+	        );
+	
+	        $response->headers->set('Content-Type', $node->getMimeType());
+	
+	        return $response;
+        } else {
+        	throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 
     /**
@@ -134,11 +169,16 @@ class FileController extends Controller
      *
      * @throws AccessDeniedException
      */
-    private function checkAccess($permission, ResourceCollection $collection)
+    private function checkAccess($permission, ResourceCollection $collection, $return = false)
     {
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        	if (!$return) {
+            	throw new AccessDeniedException($collection->getErrorsForDisplay());
+        	} else {
+        		return false;
+        	}
         }
+        return true;
     }
 
     /**
