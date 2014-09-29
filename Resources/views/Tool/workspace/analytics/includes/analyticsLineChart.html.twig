@@ -6,7 +6,7 @@
         
         /* Data mapping */
         {% for graph_value_set in graph_datas.graph_values %}
-            graph_mapped_values[{{loop.index0}}] = $.map({{ graph_value_set|json_encode|raw }}, function(value, index) {
+            graph_mapped_values[{{ loop.index0 }}] = $.map({{ graph_value_set|json_encode|raw }}, function(value, index) {
                 if (Array.isArray(value)) {
                     return [value];
                 } else {
@@ -37,7 +37,7 @@
                 },
                 axes: {
                     xaxis: {
-                        renderer: $.jqplot.DateAxisRenderer,
+                        {% if 'date' == graph_datas.x_renderer %}renderer: $.jqplot.DateAxisRenderer,{% endif %}
                         tickOptions: {
                             formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
                             showGridline: false,
