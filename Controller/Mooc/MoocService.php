@@ -130,6 +130,7 @@ class MoocService extends Controller
                         'resourceType' => $resourceType->getId(),
                         'doer' => $user->getId(),
                         'action' => LogChapterReadEvent::ACTION,
+                    	'workspace' => $lesson->getResourceNode()->getWorkspace()
                     ),
                     array('dateLog' => 'DESC')
                 );
