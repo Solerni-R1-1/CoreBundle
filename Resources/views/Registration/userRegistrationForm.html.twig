@@ -26,7 +26,7 @@
               method="post" {{ form_enctype(form) }}>
             <div class="panel-body">
                 {# Error Classes #}
-                {% set errorClasses = 'slrn-input slrn-input--error' %}
+                {% set errorClasses = 'slrn-input slrn-input--error error' %}
                 {% set RegularClasses = 'slrn-input' %}
                 
                 {# First Name #}
@@ -166,7 +166,7 @@
                     <div class="slrn-errors__item"><span class="help-title">Nom : </span>{{ form_errors( form.lastName ) }}</div>
                 {% endif %}
                 {% if form.username.vars.errors %}
-                    <div class="slrn-errors__item"><span class="help-title">Nom d'utilisateur : </span>{{ form_errors( form.username ) }}</div>
+                    <div class="slrn-errors__item"><span class="help-title">Pseudo : </span>{{ form_errors( form.username ) }}</div>
                 {% endif %}
                 {% if form.mail.vars.errors %}   
                     <div class="slrn-errors__item"><span class="help-title">Email : </span>{{ form_errors( form.mail ) }}</div>
