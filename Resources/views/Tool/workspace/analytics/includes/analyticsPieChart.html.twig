@@ -2,99 +2,67 @@
  <script>
     $(document).ready(function() {
         /* Design and values */
-        var bg_color = "transparent", graph_mapped_values = [];
-        if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
-        // Map data
+        var graph_mapped_values = [];
+        
+        /* Data mapping */
         {% for graph_value_set in graph_datas.graph_values %}
-            graph_mapped_values[{{loop.index0}}] = $.map({{ graph_value_set|json_encode|raw }}, function(value, index) {
-                if (Array.isArray(value)) {
-                    return [value];
-                } else {
-                    return [[index, value]];
-                }
-            });
+        	{% set loop1 = loop.index0 %}
+        	{% for key, serie in graph_value_set.series %}
+                graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}] = ["{{serie}} {{key}}", {{serie}}];
+            {% endfor %}
         {% endfor %}
-
-        if ( graph_mapped_values[0].length > 0 ) {
-            var {{ key }} = $.jqplot(
-                    '{{ key }}',
-                    [
-                        {% for graph_value_set in graph_datas.graph_values %}
-                            graph_mapped_values[{{loop.index0}}]
-                            {% if not loop.last %},{% endif %}
-                        {% endfor %}
-                
-                    ],
-                    {
-                        title: {show: false},
-                        grid: {
-                            drawBorder: true,
-                            borderWidth: 1.0,
-                            shadow: false,
-                            background: bg_color
-                        },
-                        axesDefaults: {
-                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                            tickRenderer: $.jqplot.CanvasAxisTickRenderer
-                        },
-                        axes: {
-                            xaxis: {
-                            	renderer: $.jqplot.DateAxisRenderer,
-                                tickOptions: {
-                                    formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
-                                    showGridline: false,
-                                    showMark: true,
-                                    angle: -20,
-                                    fontSize: '10px'
-                                },
-                                numberTicks:10,
-                                label: "Date",
-                                pad: 0
-                            },
-                            yaxis: {
-                            	label: "Inscriptions",
-                                min:0,
-                                showTickMarks: true,
-                                numberTicks: 5
-                            }
-                        },
-                        highlighter: {
-                            show: true,
-                            sizeAdjust: 1,
-                            tooltipOffset:12,
-                            tooltipLocation:'n',
-                            tooltipAxes:'xy',
-                            formatString:'%s <br/> %d',
-                            tooltipFadeSpeed:'fast'
-                        },
-                        cursor: {
-                            show: true,
-                            zoom: true,
-                            showTooltip: false
-                        },
-                        seriesDefaults: {
-                            showMarker:((graph_mapped_values[0].length<10)?true:false),
-                            markerOptions:{shadow:false},
-                            shadow:false,
-                            showLine:true,
-                            useNegativeColors: false,
-                            fill: true,
-                            lineWidth: 1.5,
-                            fillAndStroke: true,
-                            fillAlpha: 0.12,
-                            rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
-                        },
-                        series: [
-                            {yaxis:'yaxis', label:'Inscriptions totales'},
-                            {yaxis:'yaxis', label:'Inscriptions'}
-                        ],
-                        legend: {
-    						show: true,
-    						placement: 'outsideGrid'
-                        }
-                    }
-                );
+            
+        /* jqplot rendering */
+        var {{ key }} = $.jqplot(
+            '{{ key }}',
+            [
+                graph_mapped_values
+            ],
+            {
+                title: {show: false},
+                grid: {
+                    drawBorder: false,
+                    shadow: false,
+                    background: 'transparent',
+                    useNegativeColors: false
+                },
+                highlighter: {
+                    show: false
+                },
+                cursor: {
+                    show: false,
+                    zoom: false,
+                    showTooltip: false
+                },
+                seriesDefaults: {
+                    showMarker:((graph_mapped_values[0].length<10)?true:false),
+                    renderer: $.jqplot.PieRenderer,
+                    rendererOptions: {
+                        showDataLabels :true,
+                        dataLabelThreshold: 2,
+                        dataLabels : 'percent',
+                        sliceMargin: 0.3,
+                        dataLabelFormatString: '%.1f%%',
+                        highlightMouseOver: false
+                    },
+                    shadow:false
+                },
+                legend: {
+                    location: 's',
+                    border: 'none',
+                    renderer: $.jqplot.PieLegendRenderer,
+                    show: true,
+                    showMarker: true,
+                    rendererOptions: {
+                        numberRows : graph_mapped_values.length
+                    },
+                    backgroundColor: 'transparent',
+                    placement: 'outsideGrid'
+                }
             }
+        );
+        // Store jqplot object to invoke him when displaying tab
+        jqplots.push({{key}});
     });
 </script>
 

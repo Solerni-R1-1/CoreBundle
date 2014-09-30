@@ -446,7 +446,7 @@ body.subnavbar-fixed {
     height:             .8em;
     border-radius:      100%;
     position:           absolute;
-    top:                89%;
+    top:                88%;
     left:               46%;
     background-color:   #FF004F;
     
@@ -1814,6 +1814,11 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     margin-bottom: 40px;
 }
 
+.slrn-statistic-wrapper .line-chart table.jqplot-table-legend {
+    border: none;
+    left: 24px !important;
+}
+
 #left-bar {
     z-index: 9999;
 }
@@ -1836,7 +1841,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     line-height:    1.2;
 }
 
-.slrn-analytics-table__tr .slrn-analytics-table__td:first-child {
+.slrn-analytics-table--2cols .slrn-analytics-table__tr .slrn-analytics-table__td:first-child {
     width: 35%;
 }
 
