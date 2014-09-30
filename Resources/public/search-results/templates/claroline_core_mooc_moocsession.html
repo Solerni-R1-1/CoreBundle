@@ -12,7 +12,7 @@
         </div>
 	<div class="presentation__mooc__block presentation__mooc__text">
 		<h2 class="presentation__mooc__text__title">
-            {{document.mooc_title | truncate:30}}
+            {{document.mooc_title_t | truncate:30}}
         </h2>
         <span class="presentation__mooc__text__subtitle">
             Proposé par 
@@ -20,8 +20,8 @@
                 {{document.mooc_owner_name}}
             </a>
         </span>
-        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description | truncate:85" ng-if="!hasParameter('q')"></div>
-        <div class="presentation__mooc__text__desc" ng-bind-html = "document.content | truncate:85" ng-if="hasParameter('q')"></div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description_t | truncate:85" ng-if="!hasParameter('q')"></div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.content_t | truncate:85" ng-if="hasParameter('q')"></div>
         <div class="presentation__mooc__text__button">
             <a href="{{ document.mooc_view_url | path }}" class="btn btn-primary">
                 En savoir plus

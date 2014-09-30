@@ -396,55 +396,54 @@ class MoocSession extends AbstractIndexable
     {
        $doc = parent::fillIndexableDocument($doc);
        
-       $doc->start_date             = $this->getStartDate();
-       $doc->end_date               = $this->getEndDate();
-       $doc->start_inscription_date = $this->getStartInscriptionDate();
-       $doc->end_inscription_date   = $this->getEndInscriptionDate();
-       $doc->max_users_i            = $this->getMaxUsers();
-       $doc->title                  = $this->getTitle();
+       $doc->start_date             	= $this->getStartDate();
+       $doc->end_date               	= $this->getEndDate();
+       $doc->start_inscription_date 	= $this->getStartInscriptionDate();
+       $doc->end_inscription_date   	= $this->getEndInscriptionDate();
+       $doc->max_users_i            	= $this->getMaxUsers();
+       $doc->title                  	= $this->getTitle();
        
-       $mooc                        = $this->getMooc();
-       $doc->mooc_id                = $mooc->getId();
-       $doc->mooc_illustration_path = $mooc->getIllustrationWebPath();
-       $doc->mooc_title             = $mooc->getTitle();
-       $doc->mooc_alias             = $mooc->getAlias();
-       $doc->mooc_description		= $mooc->getDescription();
-       $doc->mooc_about_description	= $mooc->getAboutPageDescription();
-       $doc->content                = 
-               strip_tags( $mooc->getDescription() ).'<br>'.
-               $mooc->getTitle().'<br>'.
-               strip_tags( $mooc->getAboutPageDescription() );
+       $mooc                        	= $this->getMooc();
+       $doc->mooc_id                	= $mooc->getId();
+       $doc->mooc_illustration_path 	= $mooc->getIllustrationWebPath();
+       $doc->mooc_title_t         		= $mooc->getTitle();
+       $doc->mooc_alias             	= $mooc->getAlias();
+       $doc->mooc_description_t			= $mooc->getDescription();
+       $doc->mooc_about_description_t	= $mooc->getAboutPageDescription();
+       $doc->content_t					= strip_tags( $mooc->getDescription() ).'<br>'.
+               								$mooc->getTitle().'<br>'.
+               								strip_tags( $mooc->getAboutPageDescription() );
        
-       $doc->mooc_is_public_b       = $mooc->isPublic();
-       $doc->mooc_duration_i        = $mooc->getDuration();
-       $doc->mooc_weekly_time_i     = $mooc->getWeeklyTime();
-       $doc->mooc_cost_i            = $mooc->getCost();
-       $doc->mooc_language          = $mooc->getLanguage();
-       $doc->mooc_has_video_b       = $mooc->getHasVideo();
-       $doc->mooc_has_subtitle_b    = $mooc->getHasSubtitle();
-       $doc->mooc_view_url          = $this->get('router')->generate('mooc_view', array(
+       $doc->mooc_is_public_b       	= $mooc->isPublic();
+       $doc->mooc_duration_i        	= $mooc->getDuration();
+       $doc->mooc_weekly_time_i     	= $mooc->getWeeklyTime();
+       $doc->mooc_cost_i            	= $mooc->getCost();
+       $doc->mooc_language          	= $mooc->getLanguage();
+       $doc->mooc_has_video_b       	= $mooc->getHasVideo();
+       $doc->mooc_has_subtitle_b    	= $mooc->getHasSubtitle();
+       $doc->mooc_view_url          	= $this->get('router')->generate('mooc_view', array(
                                         'moocId'    => $mooc->getId(),
                                         'moocName'  => $mooc->getAlias()
                                       ));
-       $doc->mooc_session_learn_url = $this->get('router')->generate('mooc_view_session', array(
-                                        'word'      => 'apprendre',
-                                        'sessionId' => $this->getId(),
-                                        'moocId'    => $mooc->getId(),
-                                        'moocName'  => $mooc->getAlias()
-                                      ));
+       $doc->mooc_session_learn_url 	= $this->get('router')->generate('mooc_view_session', array(
+	                                        'word'      => 'apprendre',
+	                                        'sessionId' => $this->getId(),
+	                                        'moocId'    => $mooc->getId(),
+	                                        'moocName'  => $mooc->getAlias()
+	                                      ));
       
-       $doc->mooc_category_ids      = array_map(function($obj) { return $obj->getId(); }, $mooc->getCategories()->toArray());
+       $doc->mooc_category_ids      	= array_map(function($obj) { return $obj->getId(); }, $mooc->getCategories()->toArray());
        
        if ($mooc->getOwner()) {
-          $doc->mooc_owner_id       = $mooc->getOwner()->getId();
-          $doc->mooc_owner_name     = $mooc->getOwner()->getName();
-          $doc->mooc_owner_logo_url = $mooc->getOwner()->getLogoWebPath();
-          $doc->mooc_owner_cat_url  = $this->get('router')->generate('solerni_owner_catalogue', array(
+          $doc->mooc_owner_id       	= $mooc->getOwner()->getId();
+          $doc->mooc_owner_name     	= $mooc->getOwner()->getName();
+          $doc->mooc_owner_logo_url 	= $mooc->getOwner()->getLogoWebPath();
+          $doc->mooc_owner_cat_url  	= $this->get('router')->generate('solerni_owner_catalogue', array(
                                         'ownerName' => $mooc->getOwner()->getName(),
                                         'ownerId'   => $mooc->getOwner()->getId()
                                       ));
        }
-       $doc->wks_id                 = $mooc->getWorkspace()->getId();
+       $doc->wks_id                 	= $mooc->getWorkspace()->getId();
        
        return $doc;
     }
