@@ -23,7 +23,7 @@
 {% endif %}
 
 {# session is over #}
-{% if session.getEndDate() < date() %}
+{% if session.getEndDate() < date("midnight today") %}
     <span class="mooc_status">
         {{ 'mooc_is_over'|trans({}, 'platform') }}
     </span>
@@ -51,7 +51,7 @@
     <a class="btn btn-gris disabled" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
 
 {# user is not subscribed and date is over #}
-{% elseif session.getEndInscriptionDate() < date() and not isRegistered %}
+{% elseif session.getEndInscriptionDate() < date("midnight today") and not isRegistered %}
     <span class="mooc_status">
         {{ 'inscription_closed'|trans({}, 'platform') }}
     </span>
