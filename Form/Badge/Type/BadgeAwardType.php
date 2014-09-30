@@ -43,6 +43,16 @@ class BadgeAwardType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+    	$arrayUser = array(
+                'placeholder'    => $this->translator->trans('badge_award_form_user_choose', array(), 'badge'),
+                'class'          => 'ClarolineCoreBundle:User',
+                'use_controller' => true,
+                'property'       => 'username',
+                'repo_method'    => 'findByNameForAjax'
+            );
+    	if (array_key_exists('workspaceId', $options) && $options['workspaceId'] != -1) {
+    		$arrayUser['extra_data'] = array("workspaceId" => $options['workspaceId']);
+    	}
         $builder
             ->add('group', 'zenstruck_ajax_entity', array(
                 'placeholder'    => $this->translator->trans('badge_award_form_group_choose', array(), 'badge'),
@@ -51,13 +61,8 @@ class BadgeAwardType extends AbstractType
                 'property'       => 'name',
                 'repo_method'    => 'findByNameForAjax'
             ))
-            ->add('user', 'zenstruck_ajax_entity', array(
-                'placeholder'    => $this->translator->trans('badge_award_form_user_choose', array(), 'badge'),
-                'class'          => 'ClarolineCoreBundle:User',
-                'use_controller' => true,
-                'property'       => 'username',
-                'repo_method'    => 'findByNameForAjax'
-            ));
+            ->add('user', 'zenstruck_ajax_entity',
+            		$arrayUser);
     }
 
     public function getName()
@@ -67,6 +72,6 @@ class BadgeAwardType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'badge'));
+        $resolver->setDefaults(array('translation_domain' => 'badge', 'workspaceId' => -1));
     }
 }
