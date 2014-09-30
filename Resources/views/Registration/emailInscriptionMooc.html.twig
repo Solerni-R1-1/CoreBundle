@@ -31,7 +31,7 @@
 
 Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Nous vous confirmons votre inscription au Mooc {{ session.getMooc().getTitle() }} qui débutera  le {{ session.getStartDate()|date('d/m/Y') }}{% if session.getMooc().getDuration() is not empty %} pour une durée de {{ session.getMooc().getDuration() }} semaines{% endif %}.<br/>
+Nous vous confirmons votre inscription au Mooc {{ session.getMooc().getTitle() }} {% if session.getStartDate() <= date() %}qui a débuté le{% else %}qui débutera le{% endif %} {{ session.getStartDate()|date('d/m/Y') }}{% if session.getMooc().getDuration() is not empty %} pour une durée de {{ session.getMooc().getDuration() }} semaines{% endif %}.<br/>
 <br/>
 Vous recevrez très prochainement un mail de l’équipe pédagogique vous informant du déroulement du Mooc.  
 En attendant, nous vous remercions pour votre inscription et vous souhaitons beaucoup de  plaisir à suivre ce nouveau parcours d’apprentissage sur Solerni, votre plateforme de Moocs francophone collaborative.
