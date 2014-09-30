@@ -7,47 +7,51 @@
         </script>
 </ul>
 <hr class="slrn-hr">
-{% for tab, content in tabs %}
-    <div class="slrn-pseudo-tab{% if not loop.first %} hidden{% endif %}" id="{{ tab }}">
-        {% for key, graph_datas in content %}
-            <div class="slrn-statistic-wrapper">
-                    <legend>{{ key|trans({}, 'platform') }}</legend>
-                    <div class="slrn-grey-block">{{ graph_datas.description|trans({}, 'platform') }}</div>
-                {% if 'table' == graph_datas.graph_type %}
-                    <table class="slrn-analytics-table{% if graph_datas.table_values[0]|length == 2 %} slrn-analytics-table--2cols{% endif %}">
-                        {% for row in graph_datas.table_values %}
-                            <tr class="slrn-analytics-table__tr">
-                                {% if loop.first %}
-                                    {% for cell in row %}
-                                        <th class="slrn-analytics-table__th">{{ cell }}</td>
-                                    {% endfor %}
-                                {% else %}
-                                    {% for cell in row %}
-                                        <td class="slrn-analytics-table__td">{{ cell }}</td>
-                                    {% endfor %}
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <div id="{{ key }}" class="{{ graph_datas.graph_type }}"></div>
-                    {% if 'line-chart' == graph_datas.graph_type %}
-                        <div class="count_by_day_chart_legend">
-                            <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
-                        </div>
+{% if tabs|length == 0 %}
+    {{ 'analytics_no_data'|trans({}, 'platform') }}
+{% else %}
+    {% for tab, content in tabs %}
+        <div class="slrn-pseudo-tab{% if not loop.first %} hidden{% endif %}" id="{{ tab }}">
+            {% for key, graph_datas in content %}
+                <div class="slrn-statistic-wrapper">
+                        <legend>{{ key|trans({}, 'platform') }}</legend>
+                        <div class="slrn-grey-block">{{ graph_datas.description|trans({}, 'platform') }}</div>
+                    {% if 'table' == graph_datas.graph_type %}
+                        <table class="slrn-analytics-table{% if graph_datas.table_values[0]|length == 2 %} slrn-analytics-table--2cols{% endif %}">
+                            {% for row in graph_datas.table_values %}
+                                <tr class="slrn-analytics-table__tr">
+                                    {% if loop.first %}
+                                        {% for cell in row %}
+                                            <th class="slrn-analytics-table__th">{{ cell }}</td>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for cell in row %}
+                                            <td class="slrn-analytics-table__td">{{ cell }}</td>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <div id="{{ key }}" class="{{ graph_datas.graph_type }}"></div>
+                        {% if 'line-chart' == graph_datas.graph_type %}
+                            <div class="count_by_day_chart_legend">
+                                <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
+                            </div>
+                        {% endif %}
                     {% endif %}
+                </div>
+
+                {% if 'line-chart' == graph_datas.graph_type %}
+                    {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsLineChart.html.twig' %}
                 {% endif %}
-            </div>
-        
-            {% if 'line-chart' == graph_datas.graph_type %}
-                {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsLineChart.html.twig' %}
-            {% endif %}
-            {% if 'pie-chart' == graph_datas.graph_type %}
-                {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsPieChart.html.twig' %}
-            {% endif %}
-        {% endfor %}
-    </div>
-{% endfor %}
+                {% if 'pie-chart' == graph_datas.graph_type %}
+                    {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsPieChart.html.twig' %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <script>
     $(document).ready(function() {
