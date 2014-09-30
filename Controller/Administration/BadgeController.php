@@ -205,7 +205,7 @@ class BadgeController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge.award'));
+        $form = $this->createForm($this->get('claroline.form.badge.award'), null, array("workspaceId" => $badge->getWorkspace()->getId()));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

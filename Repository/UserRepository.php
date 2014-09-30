@@ -507,39 +507,53 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $upperSearch = strtoupper($search);
         $dql = '
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
+            SELECT DISTINCT u
+        	FROM Claroline\CoreBundle\Entity\User u
             WHERE u IN (
-            SELECT u1 FROM Claroline\CoreBundle\Entity\User u1
-            JOIN u1.roles r1 WITH r1 IN (
-                SELECT pr1 from Claroline\CoreBundle\Entity\Role pr1 WHERE pr1.type = ' . Role::WS_ROLE . '
-            )
-            LEFT JOIN r1.workspace wol1
-            WHERE wol1.id = :workspaceId AND u1 IN (
-                SELECT us1 FROM Claroline\CoreBundle\Entity\User us1
-                WHERE UPPER(us1.lastName) LIKE :search
-                OR UPPER(us1.firstName) LIKE :search
-                OR UPPER(us1.username) LIKE :search
-                OR CONCAT(UPPER(us1.firstName), CONCAT(\' \', UPPER(us1.lastName))) LIKE :search
-                OR CONCAT(UPPER(us1.lastName), CONCAT(\' \', UPPER(us1.firstName))) LIKE :search
-            )
-            AND u1.isEnabled = true
+            	SELECT u1
+        		FROM Claroline\CoreBundle\Entity\User u1
+            	JOIN u1.roles r1 
+        			WITH r1 IN (
+                		SELECT pr1
+        				FROM Claroline\CoreBundle\Entity\Role pr1
+        				WHERE pr1.type = ' . Role::WS_ROLE . '
+            		)
+            	LEFT JOIN r1.workspace wol1
+            	WHERE wol1.id = :workspaceId 
+        		AND u1 IN (
+                	SELECT us1 
+        			FROM Claroline\CoreBundle\Entity\User us1
+                	WHERE UPPER(us1.lastName) LIKE :search
+                	OR UPPER(us1.firstName) LIKE :search
+                	OR UPPER(us1.username) LIKE :search
+                	OR CONCAT(UPPER(us1.firstName), CONCAT(\' \', UPPER(us1.lastName))) LIKE :search
+                	OR CONCAT(UPPER(us1.lastName), CONCAT(\' \', UPPER(us1.firstName))) LIKE :search
+            	)
+            	AND u1.isEnabled = true
             )
             OR u IN (
-            SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
-            JOIN u2.groups g2
-            JOIN g2.roles r2 WITH r2 IN (
-                SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ' . Role::WS_ROLE . '
-            )
-            LEFT JOIN r2.workspace wol2
-            WHERE wol2.id = :workspaceId AND u IN (
-                SELECT us2 FROM Claroline\CoreBundle\Entity\User us2
-                WHERE UPPER(us2.lastName) LIKE :search
-                OR UPPER(us2.firstName) LIKE :search
-                OR UPPER(us2.username) LIKE :search
-                OR CONCAT(UPPER(us2.firstName), CONCAT(\' \', UPPER(us2.lastName))) LIKE :search
-                OR CONCAT(UPPER(us2.lastName), CONCAT(\' \', UPPER(us2.firstName))) LIKE :search
-            )
-            AND u2.isEnabled = true)
+            	SELECT u2
+        		FROM Claroline\CoreBundle\Entity\User u2
+            	JOIN u2.groups g2
+            	JOIN g2.roles r2 
+        			WITH r2 IN (
+                		SELECT pr2 
+        				FROM Claroline\CoreBundle\Entity\Role pr2 
+        				WHERE pr2.type = ' . Role::WS_ROLE . '
+            		)
+            	LEFT JOIN r2.workspace wol2
+            	WHERE wol2.id = :workspaceId
+        		AND u IN (
+                	SELECT us2
+        			FROM Claroline\CoreBundle\Entity\User us2
+                	WHERE UPPER(us2.lastName) LIKE :search
+	                OR UPPER(us2.firstName) LIKE :search
+	                OR UPPER(us2.username) LIKE :search
+	                OR CONCAT(UPPER(us2.firstName), CONCAT(\' \', UPPER(us2.lastName))) LIKE :search
+	                OR CONCAT(UPPER(us2.lastName), CONCAT(\' \', UPPER(us2.firstName))) LIKE :search
+            	)
+            	AND u2.isEnabled = true
+        	)
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
@@ -1048,20 +1062,35 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return array
      */
-    public function findByNameForAjax($search)
-    {
-        $resultArray = array();
-
-        $users = $this->findByName($search);
-
-        foreach ($users as $user) {
-            $resultArray[] = array(
-                'id'   => $user->getId(),
-                'text' => $user->getFirstName() . ' ' . $user->getLastName() . ' (' . $user->getUsername() . ')'
-            );
-        }
-
-        return $resultArray;
+    public function findByNameForAjax($search, $extra = array()) {
+    	$upperSearch = strtoupper($search);
+    	$upperSearch = trim($upperSearch);
+    	$upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
+    	if ($extra != null && array_key_exists("workspaceId", $extra)) {
+    		$workspaceId = $extra['workspaceId'];
+    		$joinWorkspace = "
+	    			JOIN u.roles r
+	    			JOIN r.workspace rws ";
+    		$whereWorkspace = " AND rws.id = $workspaceId";
+    	} else {
+    		$joinWorkspace = "";
+    		$whereWorkspace = "";
+    	}
+    	$dql = "
+	    	SELECT DISTINCT u.id AS id, CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(u.firstName, ' '), u.lastName), ' ('), u.username), ')') AS text FROM Claroline\CoreBundle\Entity\User u
+   			$joinWorkspace
+	    	WHERE (UPPER(u.username) LIKE :search
+	    	OR UPPER(u.administrativeCode) LIKE :search
+	    	OR UPPER(u.mail) LIKE :search
+	    	OR CONCAT(CONCAT(CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))), ' '), UPPER(u.firstName)) LIKE :search)
+	    	AND u.isEnabled = true
+	    	$whereWorkspace"
+    	;
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('search', "%{$upperSearch}%");
+    	
+    	return array_slice($query->getResult(), 0, 50);
     }
 
     /**
