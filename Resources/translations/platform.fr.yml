@@ -1050,7 +1050,8 @@ mooc_analytics: Statistiques du MOOC
 mooc_analytics_home: Claroline
 mooc_analytics_keynumbers: Chiffres clés
 mooc_analytics_details: Détails du MOOC
-mooc_analytics_badges_piechart: Badges (Piecharts)
+mooc_analytics_knowledge_badges: Badges de connaissances
+mooc_analytics_skill_badges: Badges de compétences
 mooc_analytics_badges_chart: Badges (Charts)
 mooc_analytics_export: Exports
 mooc_analytics_user_name: Nom
@@ -1070,6 +1071,9 @@ mooc_analytics_keynumbers_connection_hour: "Plage horaire moyenne la plus connec
 mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active"
 mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum"
 mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour"
+
+mooc_analytics_theme_name: Nom du thème 
+mooc_analytics_theme_nb_posts: Nombre de publications dans le thème
 
 mooc_analytics_export: Exportez les données du MOOC
 export_badge_knowledge: Badges de connaissances

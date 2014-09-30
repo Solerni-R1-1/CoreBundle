@@ -10,15 +10,15 @@
         </a>
     </li>
 
-    <li{% if path('claro_mooc_analytics_badges_piechart', {'workspaceId': workspace.getId() }) == app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_mooc_analytics_badges_piechart', {'workspaceId': workspace.getId() })}}">
-            {{ 'mooc_analytics_badges_piechart' | trans({}, 'platform') }}
+    <li{% if path('claro_mooc_analytics_knowledge_badges', {'workspaceId': workspace.getId() }) == app.request.requesturi %} class="active"{% endif %}>
+        <a href="{{path('claro_mooc_analytics_knowledge_badges', {'workspaceId': workspace.getId() })}}">
+            {{ 'mooc_analytics_knowledge_badges' | trans({}, 'platform') }}
         </a>
     </li>
 
-    <li{% if path('claro_mooc_analytics_badges_chart', {'workspaceId': workspace.getId() }) in app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_mooc_analytics_badges_chart', {'workspaceId': workspace.getId() })}}">
-            {{ 'mooc_analytics_badges_chart' | trans({}, 'platform') }}
+    <li{% if path('claro_mooc_analytics_skill_badges', {'workspaceId': workspace.getId() }) in app.request.requesturi %} class="active"{% endif %}>
+        <a href="{{path('claro_mooc_analytics_skill_badges', {'workspaceId': workspace.getId() })}}">
+            {{ 'mooc_analytics_skill_badges' | trans({}, 'platform') }}
         </a>
     </li>
     

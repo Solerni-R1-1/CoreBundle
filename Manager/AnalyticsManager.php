@@ -572,8 +572,6 @@ class AnalyticsManager
     				}
     			}
     		}
-    		
-    		
     	}
     	
     	return $rates;
@@ -619,7 +617,7 @@ class AnalyticsManager
     	return $result;
     }
     
-    public function getBadgesParticitpationRate(AbstractWorkspace $workspace, $filteredRoles) {
+    public function getBadgesParticipationRate(AbstractWorkspace $workspace, $filteredRoles) {
     	$result = array();
     	
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
