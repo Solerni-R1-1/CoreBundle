@@ -1138,3 +1138,7 @@ forumContributionsDescription: Mesurez le niveau d'activité générale du forum
 forumMostActiveSubjects: Top des thèmes les plus actifs
 forumMostActiveSubjectsDescription: Découvrez quels sont les thèmes les plus actifs (nombre de publications cumulées)
 analytics_no_data: Pas de données sur cet onglet
+SuccessRateBadge: Taux de réussite au badge
+SuccessRateDescription: identifiez les participants les plus talentueux
+ParticipationRateBadge: Evolution de la participation au badge
+ParticipationRateDescription: Mesurez la tendance de la participation au badge
