@@ -114,7 +114,6 @@ class MoocAnalyticsController extends Controller
         $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to, $excludeRoles);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
         $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 5, $excludeRoles);
-        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365, $excludeRoles);
         
         // Most active users table
         $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace, $excludeRoles);
@@ -138,7 +137,7 @@ class MoocAnalyticsController extends Controller
 			$mostActiveUsersWithHeader[] = $row;
 		}
         
-        // Most active forum publishers
+        // Most active forum publishers table
         $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
         $forumPublishersHeaders = array();
 		$forumPublishersHeaders[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
@@ -146,12 +145,18 @@ class MoocAnalyticsController extends Controller
 		$forumPublishersHeaders[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
 		$forumPublishersHeaders[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 		$forumPublishersHeaders[4] = $this->translator->trans('mooc_analytics_users_nb_published_posts', array(), 'platform');
-        
         array_unshift( $forumPublishers, $forumPublishersHeaders );
+        
+        // Most active forum themes table
+        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365, $excludeRoles);
+        $forumMostActiveSubjectsHeaders = array();
+        $forumMostActiveSubjectsHeaders[0] = $this->translator->trans('mooc_analytics_theme_name', array(), 'platform');
+        $forumMostActiveSubjectsHeaders[1] = $this->translator->trans('mooc_analytics_theme_nb_posts', array(), 'platform');
+        array_unshift($forumMostActiveSubjects, $forumMostActiveSubjectsHeaders);
         
         // Render
         return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsDetails.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
             array(
                 'workspace' => $workspace,
                 'tabs'      => array(
@@ -252,7 +257,7 @@ class MoocAnalyticsController extends Controller
     }
     
     /**
-     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/piechart", name="claro_mooc_analytics_badges_piechart")
+     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/knowledge", name="claro_mooc_analytics_knowledge_badges")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -260,7 +265,7 @@ class MoocAnalyticsController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function analyticsMoocBadgesPieChartAction( $workspace, $user ) {
+    public function analyticsMoocKnowledgeBadgesAction( $workspace, $user ) {
     	// Init the roles to filter the stats.
     	$excludeRoles = array();
     	$managerRole = $this->roleManager->getManagerRole($workspace);
@@ -269,20 +274,72 @@ class MoocAnalyticsController extends Controller
     	$excludeRoles[] = "ROLE_WS_CREATOR";
         
         $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
-        $badgesParticipationRates = $this->analyticsManager->getBadgesParticitpationRate($workspace, $excludeRoles);
+        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles);
         
+        $tabs = array();
+        // Extract knopwledge badge from arrays
+        foreach ($badgesSuccessRates as $badgeSuccessRates ) {
+              if ( $badgeSuccessRates['type'] == 'knowledge' ) {
+                $tabs[$badgeSuccessRates['name']] = array(
+                    'toto' => array( 
+                        'graph_type' => 'pie-chart',
+                        'description' => 'description',
+                        'x_data' => array(
+                                'x_renderer'    => 'int',
+                                'x_label'       => '' 
+                        ),
+                        'graph_values' => array(
+                            array(
+                                "y_label"   => "",
+                                "series"    => array(
+                                    'success' => $badgeSuccessRates['success'],
+                                    'failure' => $badgeSuccessRates['failure'],
+                                    'inProgress' => $badgeSuccessRates['inProgress'],
+                                    'available' => $badgeSuccessRates['available']
+                                )
+                            )
+                        )
+                    )
+                );
+            }
+        }
+        
+        /*
+                'tabs'      => array(
+                    'subscriptions_connections' => array(
+                        'subscriptionStats' => array(
+                            'graph_type'    => 'line-chart',
+                            'description'   => 'subscriptionStatsDescription',
+                            'x_data'        => array (
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'date'
+                            ), 
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label"   => "",
+                            		"series"    => array(
+		                            	"Inscriptions totales"  => $subscriptionStats[0],
+		                            	"Inscriptions"          => $subscriptionStats[1]
+    								)
+                            	)
+                           	)
+                         ),
+        */
         return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsBadgesPiechart.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
             array(
-                'workspace'             		=> $workspace,
+                'workspace'     => $workspace,
+                'tabs'          => $tabs
+                
+                /*
                 'badgesSuccessRates'    		=> $badgesSuccessRates,
-            	'badgesParticipationRates'	=> $badgesParticipationRates
+            	'badgesParticipationRates'      => $badgesParticipationRates*/
             )
         );
     }
 
     /**
-     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/chart", name="claro_mooc_analytics_badges_chart")
+     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/skill", name="claro_mooc_analytics_skill_badges")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -290,7 +347,7 @@ class MoocAnalyticsController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function analyticsMoocBadgesChartAction( $workspace, $user ) {
+    public function analyticsMoocSkillBadgesAction( $workspace, $user ) {
     	// Init the roles to filter the stats.
     	$excludeRoles = array();
     	$managerRole = $this->roleManager->getManagerRole($workspace);
@@ -298,13 +355,44 @@ class MoocAnalyticsController extends Controller
     	$excludeRoles[] = "ROLE_ADMIN";
     	$excludeRoles[] = "ROLE_WS_CREATOR";
         
-         $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
+        $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
+        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles);
+        
+        $tabs = array();
+        // Extract knopwledge badge from arrays
+        foreach ($badgesSuccessRates as $badgeSuccessRates ) {
+              if ( $badgeSuccessRates['type'] == 'skill' ) {
+                $graphName = 'SuccessRateBadge'.$badgeSuccessRates['id'];
+                $tabs[$badgeSuccessRates['name']] = array(
+                   $graphName => array(
+                        'graph_type' => 'pie-chart',
+                        'description' => 'description',
+                        'x_data' => array(
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'date' 
+                        ),
+                        'graph_values' => array(
+                            array(
+                                "y_label"   => "",
+                                "series"    => array(
+                                    'Réussite' => $badgeSuccessRates['success'],
+                                    'Echec' => $badgeSuccessRates['failure'],
+                                    'En cours' => $badgeSuccessRates['inProgress'],
+                                    'Disponible' => $badgeSuccessRates['available']
+                                )
+                            )
+                        )
+                    )
+                );
+            }
+        }
+        
         
         return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsBadgesChart.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
             array(
-                'workspace'      => $workspace,
-                'badgesSuccessRates'    => $badgesSuccessRates
+                'workspace' => $workspace,
+                'tabs'      => $tabs
             )
         );
     }
