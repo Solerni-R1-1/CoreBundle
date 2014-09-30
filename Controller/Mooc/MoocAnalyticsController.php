@@ -114,14 +114,40 @@ class MoocAnalyticsController extends Controller
         $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to, $excludeRoles);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
         $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 5, $excludeRoles);
-        $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
         $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365, $excludeRoles);
+        
+        // Most active users table
         $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace, $excludeRoles);
+        $mostActiveUsersWithHeader = array();
+        $row = array();
+		$row[] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$row[] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$row[] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$row[] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$row[] = $this->translator->trans('mooc_analytics_users_nb_logs', array(), 'platform');
+        $mostActiveUsersWithHeader[] = $row;
+		foreach ($mostActiveUsers as $userActivity) {
+			/* @var $user User */
+			$user = $userActivity['user'];
+			$row = array();
+			$row[] = $user->getLastName();
+			$row[] = $user->getFirstName();
+			$row[] = $user->getUsername();
+			$row[] = $user->getMail();
+			$row[] = $userActivity['nbLogs'];
+			$mostActiveUsersWithHeader[] = $row;
+		}
         
-        // Organize the data for the new dynamic twig
-		
+        // Most active forum publishers
+        $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
+        $forumPublishersHeaders = array();
+		$forumPublishersHeaders[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$forumPublishersHeaders[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$forumPublishersHeaders[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$forumPublishersHeaders[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$forumPublishersHeaders[4] = $this->translator->trans('mooc_analytics_users_nb_published_posts', array(), 'platform');
         
-
+        array_unshift( $forumPublishers, $forumPublishersHeaders );
         
         // Render
         return $this->render(
@@ -133,13 +159,16 @@ class MoocAnalyticsController extends Controller
                         'subscriptionStats' => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'subscriptionStatsDescription',
-                            'x_renderer'    => 'date',
+                            'x_data'        => array (
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'date'
+                            ), 
                             'graph_values'  => array(
                             	array(
-                            		"y_label" => "Inscriptions",
-                            		"series" => array(
-		                            	"Inscriptions totales" => $subscriptionStats[0],
-		                            	"Inscriptions" => $subscriptionStats[1]
+                            		"y_label"   => "",
+                            		"series"    => array(
+		                            	"Inscriptions totales"  => $subscriptionStats[0],
+		                            	"Inscriptions"          => $subscriptionStats[1]
     								)
                             	)
                            	)
@@ -147,12 +176,16 @@ class MoocAnalyticsController extends Controller
                         'activeUsers'       => array(
                             'graph_type'    => 'pie-chart',
                             'description'   => 'activeUsersDescription',
-                            'x_renderer'    => 'int',
+                            'x_data'             => array (
+                                'x_renderer'    => 'int',
+                                'x_label'       => ''
+                            ), 
                             'graph_values'  => array(
                             	array(
                             		"y_label" => "A",
                             		"series" => array(
-                            			"Active users" => $activeUsers
+                            			"Utilisateurs actifs"       => $activeUsers[0],
+                                        "Utilisateurs non actifs"   => $activeUsers[1]
                             		)
                             	)
                             )
@@ -160,10 +193,13 @@ class MoocAnalyticsController extends Controller
                         'hourlyAudience'    => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'hourlyAudienceDescription',
-                            'x_renderer'    => 'int',
+                            'x_data'             => array (
+                                'x_renderer'    => 'int',
+                                'x_label'       => 'hour_of_day'
+                            ),
                             'graph_values'  => array(
                             	array(
-                            		"y_label" => "Activité sur le cours",
+                            		"y_label" => "",
                             		"series" => array(
                             			"Nombre de connections" => $hourlyAudience[0],
                             			"Activité sur le cours" => $hourlyAudience[1]
@@ -176,56 +212,38 @@ class MoocAnalyticsController extends Controller
                         'mostActiveUsers'	=> array(
                             'graph_type'    => 'table',
                             'description'   => 'mostActiveUsersDescription',
-                            'x_renderer'    => '',
-                            'graph_values'  => array(
-                            	array(
-                            		"y_label" => "C",
-                            		"series" => array(
-                            			"Most active users" => $mostActiveUsers
-                            		)
-                            	)
-                            )
+                            'table_values'  => $mostActiveUsersWithHeader
                         ),
                         'forumPublishers'	=> array(
                             'graph_type'    => 'table',
                             'description'   => 'forumPublishersDescription',
-                            'x_renderer'    => '',
-                            'graph_values'  => array(
-                            	array(
-                            		"y_label" => "D",
-                            		"series" => array(
-                            			"Forum publishers" => $forumPublishers
-                            		)
-                            	)
-                            )
+                            'table_values'  => $forumPublishers
                         )
                     ),
                     'forum' => array(
                         'forumContributions'        => array(
                             'graph_type'    => 'line-chart',
                             'description'   => 'forumContributionsDescription',
-                            'x_renderer'    => 'date',
+                            'x_data'             => array (
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'date'
+                            ),
                             'graph_values'  => array(
                             	array(
                             		"y_label" => "E",
                             		"series" => array(
-                            			"Forum contributions" => $forumContributions
-                            		)
+                            			"Forum contributions" => $forumContributions[0]
+                            		),
+                                    "constants" => array(
+                                        "mean" => $forumContributions[1]
+                                    )
                             	)
                             )
                         ),
                         'forumMostActiveSubjects'	=> array(
-                            'graph_type'    => 'table',
-                             'description'   => 'forumMostActiveSubjectsDescription',
-                            'x_renderer'    => '',
-                            'graph_values'  => array(
-                            	array(
-                            		"y_label" => "F",
-                            		"series" => array(
-                            			"Most active subjects" => $forumMostActiveSubjects
-                            		)
-                            	)
-                            )
+                            'graph_type'        => 'table',
+                            'description'       => 'forumMostActiveSubjectsDescription',
+                            'table_values'      => $forumMostActiveSubjects
                         )
                     )
                 )

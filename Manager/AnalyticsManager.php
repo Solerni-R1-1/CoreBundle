@@ -464,6 +464,7 @@ class AnalyticsManager
 		    	
 		    	// Extract data
 		    	$index = -1;
+                $to->add(new \DateInterval("P1D"));
 		    	$lastDate = $to->format("Y-m-d");
 		    	foreach ($messages as $i => $message) {
 		    		/* @var $message Message */

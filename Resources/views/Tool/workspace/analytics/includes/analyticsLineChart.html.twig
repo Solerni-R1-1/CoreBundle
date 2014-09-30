@@ -25,12 +25,12 @@
             {% for graph_value_set in graph_datas.graph_values %}
 	        	{% set loop1 = loop.index0 %}
 	        	{% for serie in graph_value_set.series %}
-                graph_mapped_values[{{(loop1 * 10) + loop.index0}}]{% if not loop.last %},{% endif %}
+                    graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}]{% if not loop.last %},{% endif %}
                 {% endfor %}
             {% endfor %}
             ],
             {
-                title: {show: false},
+                title: { show: false },
                 grid: {
                     drawBorder: true,
                     borderWidth: 1.0,
@@ -43,7 +43,7 @@
                 },
                 axes: {
                     xaxis: {
-                        {% if 'date' == graph_datas.x_renderer %}renderer: $.jqplot.DateAxisRenderer,{% endif %}
+                        {% if 'date' == graph_datas.x_data.x_renderer %}renderer: $.jqplot.DateAxisRenderer,
                         tickOptions: {
                             formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
                             showGridline: false,
@@ -51,8 +51,8 @@
                             angle: -20,
                             fontSize: '10px'
                         },
-                        numberTicks:10,
-                        label: "Date",
+                        numberTicks:10,{% endif %}
+                        label: '{{ graph_datas.x_data.x_label }}',
                         pad: 0
                     },
                     {% for graph_value_set in graph_datas.graph_values %}
@@ -100,11 +100,29 @@
                     {% endfor %}
                 ],
                 legend: {
+                    location: 's',
                     show: true,
+                    border: 'none',
                     placement: 'outsideGrid'
+                }{% if graph_datas.graph_values[0].constants is defined and graph_datas.graph_values[0].constants.mean is defined %},
+                canvasOverlay: {
+                    show: true,
+                    objects: [
+                        {dashedHorizontalLine: {
+                            name: 'average',
+                            y: {{ graph_datas.graph_values[0].constants.mean }},
+                            lineWidth: 1,
+                            color: 'red',
+                            shadow: false
+                        }}
+                    ]
                 }
+                
+                {% endif %}
             }
         );
+        // Store jqplot object to invoke him when displaying tab
+        jqplots.push({{key}});
     });
 </script>
 

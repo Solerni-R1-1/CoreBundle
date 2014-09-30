@@ -3,8 +3,9 @@
 {% block analytic_content %}
     <div class="slrn-statistic-wrapper">
         <hr class="slrn-hr" />
+        <legend>{{ 'mooc_analytics_keynumbers' | trans({}, 'platform') }}</legend>
         {% if keynumbers is defined and keynumbers is not empty %}
-        <table class="slrn-analytics-table">
+        <table class="slrn-analytics-table slrn-analytics-table--2cols">
             {% for keynumber in keynumbers %}
                 <tr class="slrn-analytics-table__tr">
                     <td class="slrn-analytics-table__td">{{ keynumber['key'] }} : </td>
