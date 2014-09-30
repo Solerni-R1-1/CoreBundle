@@ -252,6 +252,9 @@
 				{% else %}
 				<p>{{ "mooc_register_modal_text_started"|trans({}, "platform")|raw }}</p>
 				<p>{{ "mooc_register_modal_text2_started"|trans({}, "platform")|raw }}</p>
+				<div class="text-center">
+				     {% include('ClarolineCoreBundle:Mooc:moocSessionButton.html.twig') with { 'session': session } %}
+				</div>
 				{% endif %}
 			</div>
 			<div class="modal-footer">
