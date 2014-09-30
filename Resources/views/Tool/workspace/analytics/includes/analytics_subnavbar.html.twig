@@ -17,9 +17,15 @@
                     <table class="slrn-analytics-table{% if graph_datas.table_values[0]|length == 2 %} slrn-analytics-table--2cols{% endif %}">
                         {% for row in graph_datas.table_values %}
                             <tr class="slrn-analytics-table__tr">
-                                {% for cell in row %}
-                                    <td class="slrn-analytics-table__td">{{ cell }}</td>
-                                {% endfor %}
+                                {% if loop.first %}
+                                    {% for cell in row %}
+                                        <th class="slrn-analytics-table__th">{{ cell }}</td>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for cell in row %}
+                                        <td class="slrn-analytics-table__td">{{ cell }}</td>
+                                    {% endfor %}
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </table>

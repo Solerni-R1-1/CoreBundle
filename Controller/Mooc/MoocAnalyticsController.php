@@ -195,7 +195,7 @@ class MoocAnalyticsController extends Controller
                             'description'   => 'hourlyAudienceDescription',
                             'x_data'             => array (
                                 'x_renderer'    => 'int',
-                                'x_label'       => 'hour_of_day'
+                                'x_label'       => 'Heure de la journée'
                             ),
                             'graph_values'  => array(
                             	array(

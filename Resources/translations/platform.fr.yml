@@ -1059,6 +1059,7 @@ mooc_analytics_user_username: Pseudo
 mooc_analytics_user_mail: Adresse e-mail
 mooc_analytics_publisher_nb_pub: Nombre de publications
 mooc_analytics_users_nb_logs: Activité
+mooc_analytics_users_nb_published_posts: Nombre de messages publiés
 
 mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
 mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
@@ -1081,9 +1082,9 @@ export_users_activity: Utilisateurs les plus actifs
 export_forum_stats: Statistiques du forum
 
 subscriptionStats: Suivi des inscriptions
-hourlyAudience: Ouvertures et interactions par heure
+hourlyAudience: Connexions et activités par heure
 mooc_forum_publication: Publication dans le forum
-activeUsers: Répartition des utilisateurs par activité / inactivité
+activeUsers: Répartition des utilisateurs actifs / inactifs
 mooc_badges_knowledge_piechart: Répartition des badges de connaissances par statut
 mooc_badges_skill_piechart: Répartition des badges de compétences par statut
 mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
@@ -1124,3 +1125,11 @@ forum: Forum
 subscriptionStatsDescription: Suivez l'évolution des inscriptions au MOOC
 activeUsersDescription: Un utilisateur actif est un utilisateur qui s'est connecté au moins une fois au cours des X derniers jours
 hourlyAudienceDescription: Découvrez quelle est la plage horaire la plus active (nombre d'actions enregistrées en simultané) et quelle est la plage horaire la plus connectée (nombre de connexions enregsitrées en simultané)
+mostActiveUsers: Top des utilisateurs les plus actifs
+mostActiveUsersDescription: Les utilisateurs les plus actifs sont les utilisateurs enregistrant le plus d'activités cumulées sur le MOOC
+forumPublishers: Top des meilleurs contributeurs
+forumPublishersDescription: Les meilleurs contributeurs sont les utilisateurs publiant le plus de messages sur le forum
+forumContributions: Niveau d'activité générale
+forumContributionsDescription: Mesurez le niveau d'activité générale du forum
+forumMostActiveSubjects: Top des thèmes les plus actifs
+forumMostActiveSubjectsDescription: Découvrez quels sont les thèmes les plus actifs (nombre de publications cumulées)
