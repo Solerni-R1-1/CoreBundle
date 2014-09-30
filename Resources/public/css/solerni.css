@@ -1836,9 +1836,15 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     border:         1px solid #333;
 }
 
-.slrn-analytics-table__td {
+.slrn-analytics-table__td,
+.slrn-analytics-table__th {
     padding:        .8em .4em;
     line-height:    1.2;
+}
+
+.slrn-analytics-table__th {
+    background-color:   #999;
+    color:              #FFF;
 }
 
 .slrn-analytics-table--2cols .slrn-analytics-table__tr .slrn-analytics-table__td:first-child {
