@@ -14,7 +14,8 @@
         <div class="slrn-pseudo-tab{% if not loop.first %} hidden{% endif %}" id="{{ tab }}">
             {% for key, graph_datas in content %}
                 <div class="slrn-statistic-wrapper">
-                        <legend>{{ key|trans({}, 'platform') }}</legend>
+                        {% set legend = key|split('_') %}
+                        <legend>{{ legend[0]|trans({}, 'platform') }}</legend>
                         <div class="slrn-grey-block">{{ graph_datas.description|trans({}, 'platform') }}</div>
                     {% if 'table' == graph_datas.graph_type %}
                         <table class="slrn-analytics-table{% if graph_datas.table_values[0]|length == 2 %} slrn-analytics-table--2cols{% endif %}">

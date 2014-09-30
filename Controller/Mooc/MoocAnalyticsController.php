@@ -303,37 +303,12 @@ class MoocAnalyticsController extends Controller
                 );
             }
         }
-        
-        /*
-                'tabs'      => array(
-                    'subscriptions_connections' => array(
-                        'subscriptionStats' => array(
-                            'graph_type'    => 'line-chart',
-                            'description'   => 'subscriptionStatsDescription',
-                            'x_data'        => array (
-                                'x_renderer'    => 'date',
-                                'x_label'       => 'date'
-                            ), 
-                            'graph_values'  => array(
-                            	array(
-                            		"y_label"   => "",
-                            		"series"    => array(
-		                            	"Inscriptions totales"  => $subscriptionStats[0],
-		                            	"Inscriptions"          => $subscriptionStats[1]
-    								)
-                            	)
-                           	)
-                         ),
-        */
+
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
             array(
                 'workspace'     => $workspace,
                 'tabs'          => $tabs
-                
-                /*
-                'badgesSuccessRates'    		=> $badgesSuccessRates,
-            	'badgesParticipationRates'      => $badgesParticipationRates*/
             )
         );
     }
@@ -362,11 +337,11 @@ class MoocAnalyticsController extends Controller
         // Extract knopwledge badge from arrays
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
               if ( $badgeSuccessRates['type'] == 'skill' ) {
-                $graphName = 'SuccessRateBadge'.$badgeSuccessRates['id'];
+                  
                 $tabs[$badgeSuccessRates['name']] = array(
-                   $graphName => array(
+                   'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
                         'graph_type' => 'pie-chart',
-                        'description' => 'description',
+                        'description' => 'SuccessRateDescription',
                         'x_data' => array(
                                 'x_renderer'    => 'date',
                                 'x_label'       => 'date' 
@@ -382,12 +357,29 @@ class MoocAnalyticsController extends Controller
                                 )
                             )
                         )
+                    ),
+                    'ParticipationRateBadge_'.$badgeSuccessRates['id'] => array(
+                        'graph_type' => 'line-chart',
+                        'description' => 'ParticipationRateDescription',
+                        'x_data' => array(
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'date' 
+                        ),
+                        'graph_values' => array(
+                            array(
+                                "y_label"   => "",
+                                "series"    => array(
+                                    'percent'   => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['percentage'],
+                                    'total'     => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
+                                    'count'     => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
+                                )
+                            )
+                        )  
                     )
-                );
+                ); 
             }
         }
-        
-        
+
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
             array(
