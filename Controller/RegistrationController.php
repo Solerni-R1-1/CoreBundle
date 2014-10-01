@@ -275,7 +275,7 @@ class RegistrationController extends Controller
             $session = $this->request->getSession();
             //Generate next url
             if($session->has('moocSession')){
-            	$moocSession = $session->has('moocSession'); 
+            	$moocSession = $session->get('moocSession'); 
             	$nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
                 $session->remove('moocSession');
             } else {
