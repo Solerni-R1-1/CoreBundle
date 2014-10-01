@@ -34,7 +34,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'import_users'|trans({}, 'platform') }}</h3>
     </div>
-    <div>
+    {% if files is defined and files %}<div>
     	{% for file in files %}
     	<div>
 	    	Import reject {{ file['date'] | date('Y-m-d H:i') }}
@@ -45,6 +45,7 @@
 	  	</div>
     	{% endfor %}
     </div>
+    {% endif %}
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_import_users_into_group', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
             {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
