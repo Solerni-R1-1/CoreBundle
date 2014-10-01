@@ -299,10 +299,14 @@ class MoocAnalyticsController extends Controller
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
               if ( $badgeSuccessRates['type'] == 'knowledge' ) {
                   
+                // TODO : DUPLICATED CODE 
+                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'] + $badgeSuccessRates['available'];
+                  
                 $tabs[$badgeSuccessRates['name']] = array(
                    'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
-                        'graph_type' => 'pie-chart',
-                        'description' => 'SuccessRateDescription',
+                        'graph_type'    => 'pie-chart',
+                        'key_data'      => "$totalUsers participants au badge.<br> " . $badgeSuccessRates['success'] ." utilisateurs ont réussi.<br>" . $badgeSuccessRates['failure'] . " utilisateurs ont échoués.<br>" . $badgeSuccessRates['inProgress'] . " n'ont pas terminés.",
+                        'description'   => 'SuccessRateDescription',
                         'x_data' => array(
                                 'x_renderer'    => 'date',
                                 'x_label'       => 'Date' 
@@ -311,10 +315,10 @@ class MoocAnalyticsController extends Controller
                             array(
                                 "y_label"   => "",
                                 "series"    => array(
-                                    'Réussite' => $badgeSuccessRates['success'],
-                                    'Echec' => $badgeSuccessRates['failure'],
-                                    'En cours' => $badgeSuccessRates['inProgress'],
-                                    'Disponible' => $badgeSuccessRates['available']
+                                    'Réussite'      => $badgeSuccessRates['success'],
+                                    'Echec'         => $badgeSuccessRates['failure'],
+                                    'En cours'      => $badgeSuccessRates['inProgress'],
+                                    'Disponible'    => $badgeSuccessRates['available']
                                 )
                             )
                         )
@@ -385,11 +389,13 @@ class MoocAnalyticsController extends Controller
         // Extract knopwledge badge from arrays
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
               if ( $badgeSuccessRates['type'] == 'skill' ) {
-                  
+
+                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'] + $badgeSuccessRates['available'];
                 $tabs[$badgeSuccessRates['name']] = array(
                    'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
                         'graph_type' => 'pie-chart',
                         'description' => 'SuccessRateDescription',
+                        'key_data'      => "$totalUsers participants au badge.<br> " . $badgeSuccessRates['success'] ." utilisateurs ont réussi.<br>" . $badgeSuccessRates['failure'] . " utilisateurs ont échoués.<br>" . $badgeSuccessRates['inProgress'] . " n'ont pas terminés.",
                         'x_data' => array(
                                 'x_renderer'    => 'date',
                                 'x_label'       => 'Date' 
