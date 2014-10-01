@@ -33,6 +33,16 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                        {% if graph_datas.export is defined %}
+                            <div class="slrn-analytics-export-wrapper slrn-analytics-export-wrapper--table">
+                                <span class="slrn-analytics-export-title">Télécharger le rapport</span>
+                                 {% for route, libelle in graph_datas.export %}
+                                    <a class="btn btn-gris" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
+                                        {{ libelle|trans({}, 'platform') }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     {% else %}
                         <div id="{{ key }}" class="{{ graph_datas.graph_type }}"></div>
                         {% if 'line-chart' == graph_datas.graph_type %}
@@ -40,9 +50,18 @@
                                 <i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em>
                             </div>
                         {% endif %}
+                        {% if graph_datas.export is defined %}
+                            <div class="slrn-analytics-export-wrapper slrn-analytics-export-wrapper--graph">
+                                <span class="slrn-analytics-export-title">Télécharger le rapport</span>
+                                 {% for route, libelle in graph_datas.export %}
+                                    <a class="btn btn-gris" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
+                                        {{ libelle|trans({}, 'platform') }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
-
                 {% if 'line-chart' == graph_datas.graph_type %}
                     {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analyticsLineChart.html.twig' %}
                 {% endif %}
