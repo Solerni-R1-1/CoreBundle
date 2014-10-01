@@ -20,6 +20,7 @@
                     {% if 'table' == graph_datas.graph_type %}
                         <table class="slrn-analytics-table{% if graph_datas.table_values[0]|length == 2 %} slrn-analytics-table--2cols{% endif %}">
                             {% for row in graph_datas.table_values %}
+                                {% if loop.index < 12 %}
                                 <tr class="slrn-analytics-table__tr">
                                     {% if loop.first %}
                                         {% for cell in row %}
@@ -27,10 +28,11 @@
                                         {% endfor %}
                                     {% else %}
                                         {% for cell in row %}
-                                            <td class="slrn-analytics-table__td">{{ cell }}</td>
+                                             <td class="slrn-analytics-table__td">{{ cell }}</td>
                                         {% endfor %}
                                     {% endif %}
                                 </tr>
+                                {% endif %}
                             {% endfor %}
                         </table>
                         {% if graph_datas.export is defined %}
