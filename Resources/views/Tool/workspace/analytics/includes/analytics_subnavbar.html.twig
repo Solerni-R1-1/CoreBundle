@@ -60,6 +60,12 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
+                        {% if graph_datas.key_data is defined %}
+                            <div class="slrn-analytics-key-data">
+                                <span class="slrn-analytics-export-title">{{'analytics_key_data'|trans({}, 'platform')}}</span>
+                                {{ graph_datas.key_data|raw }}
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
                 {% if 'line-chart' == graph_datas.graph_type %}

@@ -154,6 +154,8 @@ class MoocAnalyticsController extends Controller
         $forumMostActiveSubjectsHeaders[1] = $this->translator->trans('mooc_analytics_theme_nb_posts', array(), 'platform');
         array_unshift($forumMostActiveSubjects, $forumMostActiveSubjectsHeaders);
         
+        $totalUsers = $activeUsers[0] + $activeUsers[1];
+        
         // Render
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
@@ -185,6 +187,7 @@ class MoocAnalyticsController extends Controller
                             'export'        => array (
                                'solerni_export_active_users_stats' => 'export_active_users'
                             ),
+                            'key_data'      => "$totalUsers inscrits au MOOC.<br>$activeUsers[0] utilisateurs actifs au cours des 5 derniers jours.<br>$activeUsers[1] utilisateurs inactifs au cours des 5 derniers jours.",
                             'graph_type'    => 'pie-chart',
                             'description'   => 'activeUsersDescription',
                             'x_data'             => array (
