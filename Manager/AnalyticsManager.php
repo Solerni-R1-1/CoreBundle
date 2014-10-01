@@ -532,7 +532,7 @@ class AnalyticsManager
      * @param AbstractWorkspace $workspace
      * @return Array of badges success rates [[badge1success, badge1failure],[badge2success][badge2failure],...]
      */
-    public function getBadgesSuccessRate(AbstractWorkspace $workspace, $filteredRoles) {
+    public function getBadgesSuccessRate(AbstractWorkspace $workspace, $filteredRoles, $skillBadges, $knowledgeBadges) {
     	$rates = array();
     	
     	if ($workspace->isMooc()) {
@@ -543,7 +543,7 @@ class AnalyticsManager
     		
     		foreach ($users as $user) {
     			/* @var $user User */
-    			$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, true);
+    			$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, $skillBadges, $knowledgeBadges);
     			foreach ($badges as $badge) {
     				/* @var $badgeEntity Badge */
     				$badgeEntity = $badge['badge'];
@@ -617,8 +617,9 @@ class AnalyticsManager
     	return $result;
     }
     
-    public function getBadgesParticipationRate(AbstractWorkspace $workspace, $filteredRoles) {
+    public function getBadgesRate(AbstractWorkspace $workspace, $filteredRoles, $skillBadges, $knowledgeBadges) {
     	$result = array();
+    	$rates = array();
     	
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	$users = $session->getAllUsers($filteredRoles);
@@ -629,7 +630,7 @@ class AnalyticsManager
     	$badges = array();
     	
     	foreach ($users as $user) {
-    		$userBadges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, true, true);
+    		$userBadges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, $skillBadges, $knowledgeBadges);
     		
     		foreach ($userBadges as $userBadge) {
     			$badgeId = $userBadge['badge']->getId();
@@ -646,6 +647,35 @@ class AnalyticsManager
     			$badgeAndUser['user'] = $user;
     			
     			$badges[$badgeId][] = $badgeAndUser;
+    			
+    			// Add badge success rates temporary here. TODO : Clean up !!!
+
+    			/* @var $badgeEntity Badge */
+    			$badgeEntity = $userBadge['badge'];
+    			$badgeName = $badgeEntity->getName();
+    			
+    			if (!array_key_exists($badgeName, $rates)) {
+    				$rateBadge = array();
+    				$rateBadge['success'] = 0;
+    				$rateBadge['failure'] = 0;
+    				$rateBadge['inProgress'] = 0;
+    				$rateBadge['available'] = 0;
+    				$rateBadge['name'] = $badgeName;
+    				$rateBadge['id'] = $badgeEntity->getId();
+    				$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
+    				$rates[$badgeName] = $rateBadge;
+    			}
+    			
+    			if ($userBadge['status'] == Badge::BADGE_STATUS_OWNED) {
+    				$rates[$badgeName]['success']++;
+    			} else if ($userBadge['status'] == Badge::BADGE_STATUS_FAILED) {
+    				$rates[$badgeName]['failure']++;
+    			} else if ($userBadge['status'] == Badge::BADGE_STATUS_IN_PROGRESS) {
+    				$rates[$badgeName]['inProgress']++;
+    			} else if ($userBadge['status'] == Badge::BADGE_STATUS_AVAILABLE) {
+    				$rates[$badgeName]['available']	++;
+    			}
+    			
     		}
     	}
     	
@@ -751,7 +781,7 @@ class AnalyticsManager
     		ksort($badgeResult['data']['percentage']);
     	}
     		
-    	return $result;
+    	return array("participation" => $result, "success" => $rates);
     }
 
     /**************************************
