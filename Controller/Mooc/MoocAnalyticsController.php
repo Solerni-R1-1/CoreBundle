@@ -285,11 +285,14 @@ class MoocAnalyticsController extends Controller
     	$excludeRoles[] = "ROLE_ADMIN";
     	$excludeRoles[] = "ROLE_WS_CREATOR";
         
-        $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
-        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles);
-        
+        /*$badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles, false, true);
+        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles, false, true);*/
+    	$badgesRates = $this->analyticsManager->getBadgesRate($workspace, $excludeRoles, false, true);
+    	$badgesSuccessRates = $badgesRates["success"];
+    	$badgesParticipationRates = $badgesRates["participation"];
+    	
         $tabs = array();
-        // Extract knopwledge badge from arrays
+        // Extract knowledge badge from arrays
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
               if ( $badgeSuccessRates['type'] == 'knowledge' ) {
                   
@@ -368,8 +371,12 @@ class MoocAnalyticsController extends Controller
     	$excludeRoles[] = "ROLE_ADMIN";
     	$excludeRoles[] = "ROLE_WS_CREATOR";
         
-        $badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles);
-        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles);
+        /*$badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles, true, false);
+        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles, true, false);*/
+
+    	$badgesRates = $this->analyticsManager->getBadgesRate($workspace, $excludeRoles, true, false);
+    	$badgesSuccessRates = $badgesRates["success"];
+    	$badgesParticipationRates = $badgesRates["participation"];
         
         $tabs = array();
         // Extract knopwledge badge from arrays
