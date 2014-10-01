@@ -470,19 +470,20 @@ class GroupsController extends Controller
         $importFailureTempFolder = sys_get_temp_dir()."/claroline/import/failure/groups/".$group->getId();
         if ($fs->exists($importFailureTempFolder)) {
         	$finder->files()->in($importFailureTempFolder);
-        }
-        foreach ($finder as $file) {
-        	$fileData = array();
-        	$fileData['path'] = $file->getRealPath(); 
-        	$filename = $file->getRelativePathname();
-        	$fileData['fileName'] = $filename;
-        	$explodedFilename = explode('_', explode('.', $filename)[0]); 
-        	$time = $explodedFilename[2]."_".$explodedFilename[3];
-        	$fileData['date'] = \DateTime::createFromFormat("Y-m-d_H-i", $time);
-        	$files[$time] = $fileData;
-        }
+        	
+	        foreach ($finder as $file) {
+	        	$fileData = array();
+	        	$fileData['path'] = $file->getRealPath(); 
+	        	$filename = $file->getRelativePathname();
+	        	$fileData['fileName'] = $filename;
+	        	$explodedFilename = explode('_', explode('.', $filename)[0]); 
+	        	$time = $explodedFilename[2]."_".$explodedFilename[3];
+	        	$fileData['date'] = \DateTime::createFromFormat("Y-m-d_H-i", $time);
+	        	$files[$time] = $fileData;
+	        }
         
-        ksort($files);
+        	ksort($files);
+        }
 
         return array('form' => $form->createView(), 'group' => $group, 'files' => $files);
     }
