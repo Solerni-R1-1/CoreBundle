@@ -22,7 +22,7 @@
     <div class="col-md-12 col-xs-12">
     	{% if msg == 'accountValidation_key_ok' %}
     		<h1 class="slrn-section-title">Votre compte est validé avec succès.</h1>
-            <p>Nous allons vous conduire vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
+            <p>Nous allons vous conduire vers la page demandée. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
     	{% else %}
     		<h1 class="slrn-section-title">Problème à l'activation du compte</h1>
     		
@@ -36,7 +36,7 @@
     	{% endif %}
         <script>
             window.setTimeout(function() {
-                window.location.href = "{{ path('claro_desktop_open') }}";
+                window.location.href = "{{ nextUrl }}";
             }, 3000);
         </script>
 
