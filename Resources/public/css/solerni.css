@@ -1803,7 +1803,8 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-statistic-wrapper {
-    margin-bottom: 80px;
+    margin-bottom:  80px;
+    position:       relative;
 }
 
 .slrn-statistic-wrapper legend {
@@ -1838,7 +1839,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-analytics-table__td,
 .slrn-analytics-table__th {
-    padding:        .8em .4em;
+    padding:        10px 5px;
     line-height:    1.2;
 }
 
@@ -1849,6 +1850,12 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-analytics-table--2cols .slrn-analytics-table__tr .slrn-analytics-table__td:first-child {
     width: 35%;
+}
+
+.slrn-analytics-table--exports .slrn-analytics-table__tr .slrn-analytics-table__td:first-child {
+    width: 8%;
+    text-align: center;
+    font-size: 35px;
 }
 
 .slrn-analytics-table__tr:nth-child(even) {
@@ -2113,4 +2120,28 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-form-group-button--unsubscribe .btn {
     margin-right: 2em;
+}
+
+.slrn-analytics-export-wrapper {
+   text-align: center;
+}
+
+.slrn-analytics-export-wrapper--graph {
+    position:   absolute;
+    right:      80px;
+    top:        150px;
+}
+
+.slrn-analytics-export-wrapper--table .slrn-analytics-export-title {
+    display: block; 
+}
+
+.slrn-analytics-export-wrapper--table .btn {
+    display:    inline-block;
+    margin:     1em auto;
+}
+
+.slrn-analytics-export-wrapper--graph .btn {
+    display:    block;
+    margin:     1em auto;
 }

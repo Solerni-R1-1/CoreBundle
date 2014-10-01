@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Tool\\workspace\\analytics:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
 
@@ -16,24 +16,30 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-
-    <div class="panel-heading">
-        <h2 class="panel-title">{{ 'mooc_analytics_export'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
+{% block analytic_content %}
+    <div class="slrn-statistic-wrapper">
+        <hr class="slrn-hr" />
+        <legend>{{ 'mooc_analytics_exports' | trans({}, 'platform') }}</legend>
+        {% if exports is defined and exports is not empty %}
+        <table class="slrn-analytics-table slrn-analytics-table--2cols slrn-analytics-table--exports">
+            {% for route, libelle in exports %}
+                <tr class="slrn-analytics-table__tr">
+                    <td class="slrn-analytics-table__td">
+                        <a class="" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
+                            <i class="icon-download"></i>
+                        </a>
+                    </td>
+                    <td class="slrn-analytics-table__td slrn-bold">
+                        <a class="" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
+                            {{ libelle|trans({}, 'platform') }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+       {% endif %}
     </div>
-    <div class="panel-body" id="workspace-list-div">
-        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analytics_navbar.html.twig' %}
-
-        <div class="">
-            <div class="panel panel-default">
-                <div id="analytics-barchart" class="panel-body">
-                    <div id="container-barchart">
-                        <div id="activity-bar-chart" class="bar-chart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {#
     <div class="panel-body logs-container">
         <a class="btn btn-gris margin-large" href="{{ path('solerni_export_badges_knowledge_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_badge_knowledge'|trans({}, 'platform') }}
@@ -59,5 +65,5 @@
         <a class="btn btn-gris" href="{{ path('solerni_export_forum_stats', {'workspace':workspace.getId()}) }}">
             {{ 'export_forum_stats'|trans({}, 'platform') }}
         </a>
-    </div>
+    </div>#}
 {% endblock %}

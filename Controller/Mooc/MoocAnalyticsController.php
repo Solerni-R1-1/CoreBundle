@@ -162,23 +162,29 @@ class MoocAnalyticsController extends Controller
                 'tabs'      => array(
                     'subscriptions_connections' => array(
                         'subscriptionStats' => array(
+                            'export'        => array (
+                                'solerni_export_subscriptions_stats' => 'export_subscriptions_stats'
+                            ),
                             'graph_type'    => 'line-chart',
                             'description'   => 'subscriptionStatsDescription',
                             'x_data'        => array (
                                 'x_renderer'    => 'date',
-                                'x_label'       => 'date'
+                                'x_label'       => 'Date'
                             ), 
                             'graph_values'  => array(
                             	array(
-                            		"y_label"   => "",
+                            		"y_label"   => "Nombre d'inscriptions",
                             		"series"    => array(
-		                            	"Inscriptions totales"  => $subscriptionStats[0],
-		                            	"Inscriptions"          => $subscriptionStats[1]
+		                            	"Inscriptions cumulées"     => $subscriptionStats[0],
+		                            	"Inscriptions quotidiennes" => $subscriptionStats[1]
     								)
                             	)
                            	)
                          ),
                         'activeUsers'       => array(
+                            'export'        => array (
+                               'solerni_export_active_users_stats' => 'export_active_users'
+                            ),
                             'graph_type'    => 'pie-chart',
                             'description'   => 'activeUsersDescription',
                             'x_data'             => array (
@@ -204,10 +210,10 @@ class MoocAnalyticsController extends Controller
                             ),
                             'graph_values'  => array(
                             	array(
-                            		"y_label" => "",
+                            		"y_label" => "Nombre d'évènements",
                             		"series" => array(
-                            			"Nombre de connections" => $hourlyAudience[0],
-                            			"Activité sur le cours" => $hourlyAudience[1]
+                            			"Entrées dans le MOOC" => $hourlyAudience[0],
+                            			"Interactions dans le MOOC" => $hourlyAudience[1]
                             		)
                             	)
                             )
@@ -215,11 +221,17 @@ class MoocAnalyticsController extends Controller
                     ),
                     'users' => array(
                         'mostActiveUsers'	=> array(
+                            'export'        => array (
+                                'solerni_export_users_activity' => 'export_users_activity'
+                            ),
                             'graph_type'    => 'table',
                             'description'   => 'mostActiveUsersDescription',
                             'table_values'  => $mostActiveUsersWithHeader
                         ),
                         'forumPublishers'	=> array(
+                            'export'        => array (
+                                'solerni_export_forum_stats' => 'export_forum_stats'
+                            ),
                             'graph_type'    => 'table',
                             'description'   => 'forumPublishersDescription',
                             'table_values'  => $forumPublishers
@@ -231,13 +243,13 @@ class MoocAnalyticsController extends Controller
                             'description'   => 'forumContributionsDescription',
                             'x_data'             => array (
                                 'x_renderer'    => 'date',
-                                'x_label'       => 'date'
+                                'x_label'       => 'Date'
                             ),
                             'graph_values'  => array(
                             	array(
-                            		"y_label" => "E",
+                            		"y_label" => "Nombre de contributions",
                             		"series" => array(
-                            			"Forum contributions" => $forumContributions[0]
+                            			"Contributions dans le forum" => $forumContributions[0]
                             		),
                                     "constants" => array(
                                         "mean" => $forumContributions[1]
@@ -280,27 +292,53 @@ class MoocAnalyticsController extends Controller
         // Extract knopwledge badge from arrays
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
               if ( $badgeSuccessRates['type'] == 'knowledge' ) {
+                  
                 $tabs[$badgeSuccessRates['name']] = array(
-                    'toto' => array( 
+                   'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
                         'graph_type' => 'pie-chart',
-                        'description' => 'description',
+                        'description' => 'SuccessRateDescription',
                         'x_data' => array(
-                                'x_renderer'    => 'int',
-                                'x_label'       => '' 
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'Date' 
                         ),
                         'graph_values' => array(
                             array(
                                 "y_label"   => "",
                                 "series"    => array(
-                                    'success' => $badgeSuccessRates['success'],
-                                    'failure' => $badgeSuccessRates['failure'],
-                                    'inProgress' => $badgeSuccessRates['inProgress'],
-                                    'available' => $badgeSuccessRates['available']
+                                    'Réussite' => $badgeSuccessRates['success'],
+                                    'Echec' => $badgeSuccessRates['failure'],
+                                    'En cours' => $badgeSuccessRates['inProgress'],
+                                    'Disponible' => $badgeSuccessRates['available']
                                 )
                             )
                         )
+                    ),
+                    'ParticipationRateBadge_'.$badgeSuccessRates['id'] => array(
+                        'graph_type' => 'line-chart',
+                        'description' => 'ParticipationRateDescription',
+                        'x_data' => array(
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'Date' 
+                        ),
+                        'graph_values' => array(
+                            array(
+                                "y_label"   => "Nombre de participants",
+                                "series"    => array(
+                                    "Nombre cumulé d'utilisateurs" => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
+                                    "Inscriptions quotidiennes"    => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
+                            )),
+                            array (
+                                "y_label"       => "Pourcentage",
+                                "max"           => "100",
+                                "min"           => "0",
+                                "numberTicks"   => "10",
+                                "tickInterval"  => "10",
+                                "series"        => array(
+                                    "Pourcentage d'utilisateurs du MOOC ayant participé au badge"   => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['percentage']
+                            ))
+                        )  
                     )
-                );
+                ); 
             }
         }
 
@@ -344,7 +382,7 @@ class MoocAnalyticsController extends Controller
                         'description' => 'SuccessRateDescription',
                         'x_data' => array(
                                 'x_renderer'    => 'date',
-                                'x_label'       => 'date' 
+                                'x_label'       => 'Date' 
                         ),
                         'graph_values' => array(
                             array(
@@ -363,17 +401,24 @@ class MoocAnalyticsController extends Controller
                         'description' => 'ParticipationRateDescription',
                         'x_data' => array(
                                 'x_renderer'    => 'date',
-                                'x_label'       => 'date' 
+                                'x_label'       => 'Date' 
                         ),
                         'graph_values' => array(
                             array(
-                                "y_label"   => "",
+                                "y_label"   => "Nombre de participants",
                                 "series"    => array(
-                                    'percent'   => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['percentage'],
-                                    'total'     => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
-                                    'count'     => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
-                                )
-                            )
+                                    "Nombre cumulé d'utilisateurs" => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
+                                    "Inscriptions quotidiennes"    => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
+                            )),
+                            array (
+                                "y_label"   => "Pourcentage",
+                                "max"           => "100",
+                                "min"           => "0",
+                                "numberTicks"   => "10",
+                                "tickInterval"  => "10",
+                                "series"    => array(
+                                    "Pourcentage d'utilisateurs du MOOC ayant participé au badge"   => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['percentage']
+                            ))
                         )  
                     )
                 ); 
@@ -400,10 +445,23 @@ class MoocAnalyticsController extends Controller
      */
     public function analyticsMoocExportAction( $workspace, $user ) {
         
+        // route => libelle
+        $exports = array(
+            'solerni_export_subscriptions_stats'                    => 'export_subscriptions_stats',
+            'solerni_export_active_users_stats'                     => 'export_active_users',
+            'solerni_export_users_activity'                         => 'export_users_activity',
+            'solerni_export_forum_stats'                            => 'export_forum_stats',
+            'solerni_export_badges_knowledge_participation_stats'   => 'export_badge_participation_knowledge',
+            'solerni_export_badges_knowledge_stats'                 => 'export_badge_knowledge',
+            'solerni_export_badges_skill_participation_stats'       => 'export_badge_participation_skill',
+            'solerni_export_badges_skill_stats'                     => 'export_badge_skill'
+        );
+        
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsExport.html.twig',
             array(
-                'workspace'      => $workspace
+                'workspace' => $workspace,
+                'exports'   => $exports
             )
         );
     }

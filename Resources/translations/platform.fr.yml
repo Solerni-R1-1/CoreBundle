@@ -1076,14 +1076,14 @@ mooc_analytics_theme_name: Nom du thème
 mooc_analytics_theme_nb_posts: Nombre de publications dans le thème
 
 mooc_analytics_export: Exportez les données du MOOC
-export_badge_knowledge: Badges de connaissances
-export_badge_skill: Badges de compétences
+export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances
+export_badge_skill: Classement des utilisateurs participant aux badges de compétences
 export_badge_participation_knowledge: Participation aux badges de connaissances
 export_badge_participation_skill: Participation aux badges de compétences
-export_subscriptions_stats: Statistiques d'inscription
+export_subscriptions_stats: Liste des inscrits
 export_active_users: Liste des utilisateurs actifs/inactifs
-export_users_activity: Utilisateurs les plus actifs
-export_forum_stats: Statistiques du forum
+export_users_activity: Classement des utilisateurs par nombre d'activités
+export_forum_stats: Classement des utilisateurs par nombre de publications
 
 subscriptionStats: Suivi des inscriptions
 hourlyAudience: Connexions et activités par heure
@@ -1142,3 +1142,4 @@ SuccessRateBadge: Taux de réussite au badge
 SuccessRateDescription: identifiez les participants les plus talentueux
 ParticipationRateBadge: Evolution de la participation au badge
 ParticipationRateDescription: Mesurez la tendance de la participation au badge
+mooc_analytics_exports: Rapports disponibles en téléchargement (fichier CSV)

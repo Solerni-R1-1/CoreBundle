@@ -27,6 +27,7 @@
 	        	{% for serie in graph_value_set.series %}
                     graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}]{% if not loop.last %},{% endif %}
                 {% endfor %}
+                {% if not loop.last %},{% endif %}
             {% endfor %}
             ],
             {
@@ -58,10 +59,12 @@
                     {% for graph_value_set in graph_datas.graph_values %}
                     {% set yIndex = loop.index %}
                     y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis: {
-                        label: "{{ graph_value_set.y_label }}",
-                        min:0,
+                        label: "{{ graph_value_set.y_label|e('js') }}",
+                        min:{% if graph_value_set.min is defined %}{{graph_value_set.min}}{%else%}0{% endif %},
+                        {% if graph_value_set.max is defined %}max:{{graph_value_set.max}},{% endif %}
+                        {% if graph_value_set.tickInterval is defined %}tickInterval:{{graph_value_set.tickInterval}},{% endif %}
                         showTickMarks: true,
-                        numberTicks: 5
+                        numberTicks: {% if graph_value_set.numberTicks is defined %}{{graph_value_set.numberTicks}}{% else %}5{% endif %}
                     }{% if not loop.last %},{% endif %}
                     {% endfor %}
                 },
@@ -95,8 +98,8 @@
                     {% for graph_value_set in graph_datas.graph_values %}
                     	{% set yIndex = loop.index %}
     	        		{% for label, serie in graph_value_set.series %}
-                    {yaxis:'y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis', label:'{{ label }}'}{% if not loop.last %},{% endif %}
-                    	{% endfor %}
+                            {yaxis:'y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis', label:'{{ label|e('js') }}'}{% if not loop.last %},{% endif %}
+                    	{% endfor %}{% if not loop.last %},{% endif %}
                     {% endfor %}
                 ],
                 legend: {
