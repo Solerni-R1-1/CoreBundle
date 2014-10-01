@@ -300,7 +300,7 @@ class MoocAnalyticsController extends Controller
               if ( $badgeSuccessRates['type'] == 'knowledge' ) {
                   
                 // TODO : DUPLICATED CODE 
-                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'] + $badgeSuccessRates['available'];
+                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'];
                   
                 $tabs[$badgeSuccessRates['name']] = array(
                    'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
@@ -390,7 +390,7 @@ class MoocAnalyticsController extends Controller
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
               if ( $badgeSuccessRates['type'] == 'skill' ) {
 
-                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'] + $badgeSuccessRates['available'];
+                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'];
                 $tabs[$badgeSuccessRates['name']] = array(
                    'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
                         'graph_type' => 'pie-chart',
