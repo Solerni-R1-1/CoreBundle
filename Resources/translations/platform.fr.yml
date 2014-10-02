@@ -996,6 +996,8 @@ session_full: Mooc complet
 mooc_private: mooc privé
 my_moocs: Mes moocs
 display_all_my_moocs: Afficher mes moocs
+recommandations: Recommandations
+display_catalogue: Afficher le catalogue
 running: En cours
 to_come: A venir
 over: Terminé

@@ -208,4 +208,39 @@ class MoocSessionRepository extends EntityRepository
         
         return ( count($result) > 0 ) ? $result[0] : NULL;
     }
+
+    /**
+     * Retrieves the sessions availables for a user wich started less 
+     * than X days or will start in less than X days
+     * 
+     * @param ClarolineCoreBundle\Entity\User $user
+     */
+    public function getAvailableSessionAroundToday($user, $nbDaysAround, $nbMaxResults) {
+        $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+                LEFT JOIN ms.sessionsByUsers us
+                LEFT JOIN  ms.mooc  mo
+                WHERE ( mo.isPublic = true
+                       OR us.user IN (:user)
+                       )
+                AND ms.startDate >= DATE_SUB(CURRENT_DATE(), :nbDaysAround, 'DAY')
+                AND ms.startDate <= DATE_ADD(CURRENT_DATE(), :nbDaysAround, 'DAY')
+                ORDER BY ms.endDate DESC 
+
+                ";
+
+        
+        $qb = $this->_em->createQuery($query)->setParameters(array(
+                "user" => $user,
+                "nbDaysAround" => $nbDaysAround,
+        ));
+        
+        $result = $qb->getResult();
+        
+        if(count($result) > $nbMaxResults) {
+            $result = array_slice($result, 0, $nbMaxResults);
+        }
+
+        return $result;
+        
+    }
 }
