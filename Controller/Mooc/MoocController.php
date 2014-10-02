@@ -313,10 +313,19 @@ class MoocController extends Controller
         	}
         }
 
+        $sessionsAvailable = array();
+        if(count($userSession) == 0){
+           $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(1500000, $user, 4); //15 days before / after
+           //echo "OUI #".count($sessionsAvailable);
+        } 
+
+
+
         return $this->render(
         'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
         array(
             'sessions'                  => $userSession,
+            'sessionsAvailable'         => $sessionsAvailable,
             'user'                      => $user,
             'sessionComponentLayout'    => $sessionComponentLayout,
             'showUserProgression'       => true

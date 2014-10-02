@@ -209,5 +209,17 @@ class MoocService extends Controller
     public function getBackMoocUrl( $workspace, $user ) {
         return $this->getRouteToTheLastChapter( $this->getLessonFromWorkspace( $workspace, $user ), $user );
     }
+
+    /**
+     * Return all available sessions around X days (15 by default)
+     *
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     **/
+    public function getAvailableSessionAroundToday($nbDaysAround = 15, $user, $nbMaxResults){
+
+        return $this->getDoctrine()
+        ->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
+        ->getAvailableSessionAroundToday( $user, $nbDaysAround, $nbMaxResults );
+    }
     
 }

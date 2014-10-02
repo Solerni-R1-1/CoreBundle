@@ -1,8 +1,65 @@
 {# render a list of user sessions using moocSessionComponent #}
 
 {% if sessions|length == 0 %}
-    <p>Vous n'êtes inscrit à aucun mooc pour l'instant</p>
-    <p><a class="pink_link" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}">Consultez le catalogue</a> proposé par Solerni et sélectionnez le mooc de votre choix.</p>
+
+    {% if sessionsAvailable|length == 0 %}
+
+      <p>Vous ne suivez aucun Mooc en ce moment</p>
+      <a class="" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}"><img src='{{ asset('bundles/clarolinecore/images/ban_catalogue.png') }}' alt='Consulter le catalogue' width='695px' height='131px'/></a> 
+    {% else %}
+
+      {% if sessionComponentLayout == 'slider-small' %}
+          <ul class="bxslider">
+      {% endif %}
+              
+
+      {% for session in sessionsAvailable %}
+
+        {% if sessionComponentLayout == 'slider-small' %}
+          <li>
+        {% endif %}
+
+        {% render controller(
+              'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
+              {   'session':                   session,
+                  'showUserProgression':       false,
+                  'sessionComponentLayout':    sessionComponentLayout,
+                  'showUserProgression':       showUserProgression
+              }
+          ) %}
+        {% if sessionComponentLayout == 'slider-small' %}
+          </li>
+        {% endif %}
+
+      {% endfor %}
+
+      {% if sessionComponentLayout == 'slider-small' %}
+        </ul>
+      {% endif %}
+
+      {% if sessionComponentLayout == 'slider-small' %}
+          </ul>
+          <script type="text/javascript">
+          
+          $(document).ready(function(){
+
+
+            $('.bxslider').css('display','block');
+            $('.bxslider').bxSlider({
+           {#   pause: 200,
+                auto: true,  #}
+                mode: 'fade',
+                infiniteLoop: false, 
+                hideControlOnEnd: true
+              });
+
+          });
+
+          </script>
+      {% endif %}
+
+    {% endif %}
+
 {% else %}
 
     {% if sessionComponentLayout == 'slider-small' %}
