@@ -1129,7 +1129,7 @@ subscriptions_connections: Inscriptions et connexions
 forum: Forum
 
 subscriptionStatsDescription: Suivez l'évolution des inscriptions au MOOC
-activeUsersDescription: Un utilisateur actif est un utilisateur qui s'est connecté au moins une fois au cours des X derniers jours
+activeUsersDescription: Un utilisateur actif est un utilisateur qui s'est connecté au moins une fois au cours des 7 derniers jours
 hourlyAudienceDescription: Découvrez quelle est la plage horaire la plus active (nombre d'actions enregistrées en simultané) et quelle est la plage horaire la plus connectée (nombre de connexions enregsitrées en simultané)
 mostActiveUsers: Top des utilisateurs les plus actifs
 mostActiveUsersDescription: Les utilisateurs les plus actifs sont les utilisateurs enregistrant le plus d'activités cumulées sur le MOOC
@@ -1142,7 +1142,11 @@ forumMostActiveSubjectsDescription: Découvrez quels sont les thèmes les plus a
 analytics_no_data: Pas de données sur cet onglet
 SuccessRateBadge: Taux de réussite au badge
 SuccessRateDescription: identifiez les participants les plus talentueux
-ParticipationRateBadge: Evolution de la participation au badge
-ParticipationRateDescription: Mesurez la tendance de la participation au badge
+ParticipationEvolutionRateBadge: Evolution de la participation au badge
+ParticipationEvolutionRateDescription: Mesurez la tendance de la participation au badge
 mooc_analytics_exports: Rapports disponibles en téléchargement (fichier CSV)
 analytics_key_data: En données
+connectionStats: Suivi des connections
+connectionStatsDescription: Suivez l'évolution des connections au MOOC
+ParticipationRateBadge: Taux de participation au badge
+ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge

@@ -342,7 +342,8 @@ class AnalyticsManager
     				"workspace-role-subscribe_user",	
     				"workspace-role-subscribe_group",
     				"workspace-role-unsubscribe_user",
-    				"workspace-role-unsubscribe_group"),
+    				"workspace-role-unsubscribe_group",
+                    "workspace-enter"),
     			$filteredRoles);
     	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
 
@@ -372,6 +373,10 @@ class AnalyticsManager
 	    			$subscriptions[1][$index] = array();
 	    			$subscriptions[1][$index][0] = $lastDateTime->format("Y-m-d");
 	    			$subscriptions[1][$index][1] = 0;
+	    			$subscriptions[2][$index] = array();
+	    			$subscriptions[2][$index][0] = $lastDateTime->format("Y-m-d");
+	    			$subscriptions[2][$index][1] = 0;
+                    
 	    		}
 	    		// End here.
     			// For the log date, we initialize a new array in our array
@@ -381,6 +386,9 @@ class AnalyticsManager
     			$subscriptions[1][$index] = array();
     			$subscriptions[1][$index][0] = $currDate;
     			$subscriptions[1][$index][1] = 0;
+    			$subscriptions[2][$index] = array();
+    			$subscriptions[2][$index][0] = $currDate;
+    			$subscriptions[2][$index][1] = 0;
     		}
     		if ($log->getAction() == "workspace-role-subscribe_user") {
     			$step = 1;
@@ -390,10 +398,14 @@ class AnalyticsManager
     			$step = -1;
     		} else if ($log->getAction() == "workspace-role-unsubscribe_group") {
     			$step = -count($log->getReceiverGroup()->getUsers());
-    		}
-    		$nbSubscriptions+= $step;
-    		$subscriptions[0][$index][1] = $nbSubscriptions;
-    		$subscriptions[1][$index][1]+= $step;
+    		} else if ( $log->getAction() == "workspace-enter" ) {
+                $subscriptions[2][$index][1]++;
+                $step = 0;
+            }
+            $nbSubscriptions+= $step;
+            $subscriptions[0][$index][1] = $nbSubscriptions;
+            $subscriptions[1][$index][1]+= $step;
+                
     		$lastDate = $currDate;
     	}
     	$currDate = $to->format("Y-m-d");
@@ -415,6 +427,9 @@ class AnalyticsManager
     			$subscriptions[1][$index] = array();
     			$subscriptions[1][$index][0] = $lastDateTime->format("Y-m-d");
     			$subscriptions[1][$index][1] = 0;
+    			$subscriptions[2][$index] = array();
+    			$subscriptions[2][$index][0] = $lastDateTime->format("Y-m-d");
+    			$subscriptions[2][$index][1] = 0;
     		}
     	}
     	
@@ -430,13 +445,14 @@ class AnalyticsManager
      * @param number $nbDays
      * @return number
      */
-    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5, $filteredRoles) {
+    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 7, $filteredRoles) {
     	$date = new \DateTime("today midnight");
     	$date->sub(new \DateInterval("P".$nbDays."D"));
+        $session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	
     	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date, $filteredRoles);
     	$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date, $filteredRoles);
-    	$nbTotal = count($workspace->getAllUsers($filteredRoles));
+    	$nbTotal = count($session->getAllUsers($filteredRoles));
     	
     	return [$nbActive , $nbTotal];
     }
@@ -624,6 +640,7 @@ class AnalyticsManager
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	$users = $session->getAllUsers($filteredRoles);
     	$nbUsers = count($users);
+
     	// This array will contains, for each badge, the list of users and associated badge.
     	// $badges[badgeId][0..*]['user'] = UserEntity
     	// $badges[badgeId][0..*]['badge'] = UserBadge (containing the badge, the resource, the status, etc.)
@@ -789,7 +806,8 @@ class AnalyticsManager
      **************************************/
     
     public function getTotalSubscribedUsers(AbstractWorkspace $workspace, $filterRoles) {
-    	return count($workspace->getAllUsers($filterRoles));
+        $session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	return count($session->getAllUsers($filterRoles));
     }
     
     public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace, $filterRoles) {
@@ -945,7 +963,7 @@ class AnalyticsManager
     	
     	$nbActiveUsers = array(
     			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
-    			"value" => $this->getNumberActiveUsers($workspace, 5, $excludeRoles));
+    			"value" => $this->getNumberActiveUsers($workspace, 7, $excludeRoles));
     	
     	$mostConnectedHour = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),

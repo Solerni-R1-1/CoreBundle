@@ -25,12 +25,12 @@
             {% for route, libelle in exports %}
                 <tr class="slrn-analytics-table__tr">
                     <td class="slrn-analytics-table__td">
-                        <a class="" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
+                        <a class="" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':7 }) }}">
                             <i class="icon-download"></i>
                         </a>
                     </td>
                     <td class="slrn-analytics-table__td slrn-bold">
-                        <a class="" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
+                        <a class="" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':7 }) }}">
                             {{ libelle|trans({}, 'platform') }}
                         </a>
                     </td>

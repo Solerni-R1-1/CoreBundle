@@ -235,7 +235,7 @@ class BadgeManager
     						$badgeInProgress['resource']['status'] = $badge->getBadgeResourceStatus($badgeInProgress['resource']['resource']);
     					}
     
-    					$status = $badge->getBadgeStatus($user, $badgeInProgress['resource']['status'], $this->badgeValidator);
+    					$status = $badge->getBadgeStatus($user, $badgeInProgress['resource']['status'], $this->badgeValidator, false);
     					$badgeInProgress['status'] = $status;
     					 
     					if ($status == Badge::BADGE_STATUS_OWNED) {

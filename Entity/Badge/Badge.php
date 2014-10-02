@@ -977,7 +977,7 @@ class Badge extends Rulable
     /** Eval or quizz is available but user hasn't started it. */
     const RES_STATUS_AVAILABLE = 5;
     
-    public function getBadgeStatus(User $user, $resourceStatus, $badgeRuleValidator) {
+    public function getBadgeStatus(User $user, $resourceStatus, $badgeRuleValidator, $countEndedResourceAsOver = true) {
     	$result = Badge::BADGE_STATUS_IN_PROGRESS;
     	foreach ($this->getUserBadges() as $userBadge) {
     		if ($userBadge->getUser()->getId() == $user->getId()) {
@@ -989,7 +989,7 @@ class Badge extends Rulable
     	// if we succeed in the exam but don't have the badge, you failed the badge.
     	// (if the badge needed a 15/20 but you got a 12/20, you succeed the eval but not the badge)
     	if ($resourceStatus == Badge::RES_STATUS_FAILED
-    			|| $resourceStatus == Badge::RES_STATUS_TIME_OVER
+    			|| ( $resourceStatus == Badge::RES_STATUS_TIME_OVER && $countEndedResourceAsOver )
     			|| $resourceStatus == Badge::RES_STATUS_SUCCEED) {
     		$result = Badge::BADGE_STATUS_FAILED;
     	} else {
