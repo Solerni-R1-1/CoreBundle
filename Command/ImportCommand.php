@@ -30,6 +30,9 @@ protected function configure()
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+    	$em = $this->getContainer()->get('doctrine')->getEntityManager();
+    	$em->getConnection()->close();
         $ctx = new \ZMQContext();
         $server = new \ZMQSocket($ctx, \ZMQ::SOCKET_PULL);
         $server->bind("tcp://*:11112");
@@ -37,7 +40,9 @@ protected function configure()
         while (true) {
             $message = $server->recv();
             $messageArray = json_decode($message, true);
-            
+
+            $em = $this->getContainer()->get('doctrine')->getEntityManager();
+            $em->getConnection()->connect();
             // Extract data from message
             $userId = $messageArray['user'];
             $users = $messageArray['users'];
@@ -83,6 +88,7 @@ protected function configure()
             $messageManager->send($message, false);
             
             $output->writeln("Message Sent.");
+            $em->getConnection()->close();
         }
     }
 }
