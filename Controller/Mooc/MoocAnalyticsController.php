@@ -153,6 +153,9 @@ class MoocAnalyticsController extends Controller
         $forumMostActiveSubjectsHeaders = array();
         $forumMostActiveSubjectsHeaders[0] = $this->translator->trans('mooc_analytics_theme_name', array(), 'platform');
         $forumMostActiveSubjectsHeaders[1] = $this->translator->trans('mooc_analytics_theme_nb_posts', array(), 'platform');
+        if (  !$forumMostActiveSubjects ) {
+            $forumMostActiveSubjects = array();
+        }
         array_unshift($forumMostActiveSubjects, $forumMostActiveSubjectsHeaders);
         
         $inactiveUsers = $activeUsers[1] - $activeUsers[0];

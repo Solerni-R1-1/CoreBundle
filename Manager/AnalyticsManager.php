@@ -451,7 +451,7 @@ class AnalyticsManager
         $session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	
     	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date, $filteredRoles);
-    	$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date, $filteredRoles);
+    	//$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date, $filteredRoles);
     	$nbTotal = count($session->getAllUsers($filteredRoles));
     	
     	return [$nbActive , $nbTotal];
