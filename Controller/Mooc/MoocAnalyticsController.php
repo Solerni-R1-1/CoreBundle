@@ -225,7 +225,7 @@ class MoocAnalyticsController extends Controller
                             		"y_label" => "A",
                             		"series" => array(
                             			"Utilisateurs actifs"       => $activeUsers[0],
-                                        "Utilisateurs non actifs"   => $activeUsers[1]
+                                        "Utilisateurs non actifs"   => $inactiveUsers
                             		)
                             	)
                             )
