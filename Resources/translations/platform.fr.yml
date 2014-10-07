@@ -387,6 +387,8 @@ make_public_profile_visible_to_everybody: 'à <strong>tout le monde</strong>'
 make_public_profile_visible_to_nobody: 'à <strong>personne</strong>'
 make_public_profile_visible_to_platform_user: 'aux <strong>utilisateurs de la plateforme</strong>'
 manage_public_profile_preferences: 'Gérer les préférences du profil public'
+public_profile_removed: Compte inexistant
+public_profile_removed_text: Désolé, cet utilisateur n'existe pas ou son compte est supprimé.
 manage_rights: 'Gérer les droits'
 manage_tools: Gérer les outils
 manager: Gestionnaire
