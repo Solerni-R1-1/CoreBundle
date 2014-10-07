@@ -119,6 +119,7 @@ class MoocSession extends AbstractIndexable
      */
     protected $sessionsByUsers;
 
+                
     /**
      * Get id
      *

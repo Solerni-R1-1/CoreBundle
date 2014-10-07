@@ -346,11 +346,14 @@ class AnalyticsManager
     		$dateCurrent = $from->format("Y-m-d");
     		$subscriptions[0][$index][0] = $dateCurrent;
     		$subscriptions[1][$index][0] = $dateCurrent;
+    		$subscriptions[2][$index][0] = $dateCurrent;
     		
     		$nbSub = array_key_exists($dateCurrent, $orderedSubByDay) ? $orderedSubByDay[$dateCurrent] : 0;
     		$subscriptions[0][$index][1] = $nbSub;
     		$totalSubscriptions += $nbSub;
     		$subscriptions[1][$index][1] = $totalSubscriptions;
+			// TODO : daily connections (workspace-enter)
+    		$subscriptions[2][$index][1] = 0;
     		
     		$from->add(new \DateInterval("P1D"));
     		$index++;
@@ -368,7 +371,7 @@ class AnalyticsManager
      * @param number $nbDays
      * @return number
      */
-    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5, $filteredRoles) {
+    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 7, $filteredRoles) {
     	return [$this->getNumberActiveUsers($workspace, $nbDays, $filteredRoles),
     			$this->getTotalSubscribedUsers($workspace, $filteredRoles)];
     }
@@ -483,6 +486,7 @@ class AnalyticsManager
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	$users = $session->getAllUsers($filteredRoles);
     	$nbUsers = count($users);
+
     	// This array will contains, for each badge, the list of users and associated badge.
     	// $badges[badgeId][0..*]['user'] = UserEntity
     	// $badges[badgeId][0..*]['badge'] = UserBadge (containing the badge, the resource, the status, etc.)
@@ -647,7 +651,7 @@ class AnalyticsManager
      * Requests for keynumbers analytics. *
      **************************************/
     
-    public function getTotalSubscribedUsers(AbstractWorkspace $workspace, $filterRoles) {
+    public function getTotalSubscribedUsers(AbstractWorkspace $workspace) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	return $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session);
     }
@@ -783,7 +787,7 @@ class AnalyticsManager
     	
     	$nbActiveUsers = array(
     			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
-    			"value" => $this->getNumberActiveUsers($workspace, 5, $excludeRoles));
+    			"value" => $this->getNumberActiveUsers($workspace, 7, $excludeRoles));
     	
     	$mostConnectedHour = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),

@@ -107,20 +107,31 @@
                     show: true,
                     border: 'none',
                     placement: 'outsideGrid'
-                }{% if graph_datas.graph_values[0].constants is defined and graph_datas.graph_values[0].constants.mean is defined %},
-                canvasOverlay: {
-                    show: true,
-                    objects: [
-                        {dashedHorizontalLine: {
-                            name: 'average',
-                            y: {{ graph_datas.graph_values[0].constants.mean }},
-                            lineWidth: 1,
-                            color: 'red',
-                            shadow: false
-                        }}
+                }
+                {% set hasMean = false %}
+                {% for graph_value_set in graph_datas.graph_values %}
+                    {% if graph_value_set.constants is defined and graph_value_set.constants.mean is defined %}
+                        {% set hasMean = true %}
+                    {% endif %}
+                {% endfor %}    
+                {% if hasMean %}
+                    ,
+                    canvasOverlay: {
+                        show: true,
+                        objects: [
+                    {% for graph_value_set in graph_datas.graph_values %}
+                        {% if graph_value_set.constants is defined and graph_value_set.constants.mean is defined %} 
+                            {dashedHorizontalLine: {
+                                name: 'average',
+                                y: {{ graph_value_set.constants.mean }},
+                                lineWidth: 1,
+                                color: 'rgb(255, 0, 79)',
+                                shadow: true
+                            }}
+                        {% endif %}
+                    {% endfor %}
                     ]
                 }
-                
                 {% endif %}
             }
         );

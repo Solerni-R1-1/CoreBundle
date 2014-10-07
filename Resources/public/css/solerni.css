@@ -52,7 +52,7 @@ body.subnavbar-fixed {
 
 /* COLORS */
 .bg-color-primary { background-color: #4B667C; }        /* blue/grey */
-.bg-color-second { background-color: #FF004F; }         /* rose */
+.bg-color-second { background-color: #FF004F; }        /* rose */
 .bg-color-second-alt { background-color: #D90045; }     /* rose alternatif */
 .bg-color-third { background-color: #C9D200; }          /* Vert */
 .bg-color-grey-1 { background-color: #EEEEEF; }         /* Grey light */
@@ -1915,9 +1915,9 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-profile-button .caret {
-    float:      right;
-    position:   relative;
-    top:        8px;
+    position:   absolute;
+    top:        13px;
+    right:      12px;
 }
 
 .slrn-profile-button + .dropdown-menu {

@@ -17,8 +17,15 @@
         </h2>
 
         <div class="dsk__my_moocs_header">
-            <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>
-            <a class="slrn-link-right pink_link"href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'display_all_my_moocs'|trans({}, 'platform') }}</a>
+            {% if app.user.getMoocSessions()|length > 0 %}
+            
+                <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>
+                <a class="slrn-link-right pink_link"href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'display_all_my_moocs'|trans({}, 'platform') }}</a>
+            
+            {% else %}
+                <h3 class="slrn-content-secondary-title">{{ 'recommandations'|trans({}, 'platform') }}</h3>
+                <a class="slrn-link-right pink_link"href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}">{{ 'display_catalogue'|trans({}, 'platform') }}</a>
+            {% endif %}
         </div>
                 
         {# change display if we have more than one active mooc #}

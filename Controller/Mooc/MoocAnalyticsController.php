@@ -113,7 +113,8 @@ class MoocAnalyticsController extends Controller
     	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace, $excludeRoles);
         $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($currentSession);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
-        $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 5, $excludeRoles);
+        $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 7, $excludeRoles);
+        $connectionMean = $this->analyticsManager->getMeanNumberConnectionsDaily($workspace, $excludeRoles);
         
         // Most active users table
 		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($currentSession);
@@ -141,9 +142,12 @@ class MoocAnalyticsController extends Controller
         $forumMostActiveSubjectsHeaders = array();
         $forumMostActiveSubjectsHeaders[0] = $this->translator->trans('mooc_analytics_theme_name', array(), 'platform');
         $forumMostActiveSubjectsHeaders[1] = $this->translator->trans('mooc_analytics_theme_nb_posts', array(), 'platform');
+        if (  !$forumMostActiveSubjects ) {
+            $forumMostActiveSubjects = array();
+        }
         array_unshift($forumMostActiveSubjects, $forumMostActiveSubjectsHeaders);
-        
-         $totalUsers = $activeUsers[0] + $activeUsers[1];
+       
+        $inactiveUsers = $activeUsers[1] - $activeUsers[0];
         
         // Render
         return $this->render(
@@ -172,11 +176,36 @@ class MoocAnalyticsController extends Controller
                             	)
                            	)
                          ),
+                        'connectionStats' => array(
+                            'graph_type'    => 'line-chart',
+                            'description'   => 'connectionStatsDescription',
+                            'x_data'        => array (
+                                'x_renderer'    => 'date',
+                                'x_label'       => 'Date'
+                            ), 
+                            'graph_values'  => array(
+                            	array(
+                            		"y_label"   => "Nombre d'inscrits",
+                            		"series"    => array(
+		                            	"Nombre d'inscrits"     => $subscriptionStats[0]
+    								)
+                            	),
+                                array (
+                            		"y_label"   => "Nombre de connections",
+                            		"series"    => array(
+		                            	"Connections au MOOC"   => $subscriptionStats[2]
+    								),
+                                    "constants" => array(
+                                        "mean" => $connectionMean
+                                    )
+                                )
+                           	)
+                         ),
                         'activeUsers'       => array(
                             'export'        => array (
                                'solerni_export_active_users_stats' => 'export_active_users'
                             ),
-                            'key_data'      => "$totalUsers inscrits au MOOC.<br>$activeUsers[0] utilisateurs actifs au cours des 5 derniers jours.<br>$activeUsers[1] utilisateurs inactifs au cours des 5 derniers jours.",
+                            'key_data'      => "$activeUsers[1] inscrits au MOOC.<br>$activeUsers[0] utilisateurs actifs au cours des 7 derniers jours.<br>$inactiveUsers utilisateurs inactifs au cours des 7 derniers jours.",
                             'graph_type'    => 'pie-chart',
                             'description'   => 'activeUsersDescription',
                             'x_data'             => array (
@@ -188,7 +217,7 @@ class MoocAnalyticsController extends Controller
                             		"y_label" => "A",
                             		"series" => array(
                             			"Utilisateurs actifs"       => $activeUsers[0],
-                                        "Utilisateurs non actifs"   => $activeUsers[1]
+                                        "Utilisateurs non actifs"   => $inactiveUsers
                             		)
                             	)
                             )
@@ -261,7 +290,7 @@ class MoocAnalyticsController extends Controller
     }
     
     /**
-     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/knowledge", name="claro_mooc_analytics_knowledge_badges")
+     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/{badgeType}", name="claro_mooc_analytics_badges")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -269,7 +298,7 @@ class MoocAnalyticsController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function analyticsMoocKnowledgeBadgesAction( $workspace, $user ) {
+    public function analyticsMoocBadgesAction( $workspace, $user, $badgeType ) {
     	// Init the roles to filter the stats.
     	$excludeRoles = array();
     	$managerRole = $this->roleManager->getManagerRole($workspace);
@@ -277,68 +306,17 @@ class MoocAnalyticsController extends Controller
     	$excludeRoles[] = "ROLE_ADMIN";
     	$excludeRoles[] = "ROLE_WS_CREATOR";
         
-        /*$badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles, false, true);
-        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles, false, true);*/
-    	$badgesRates = $this->analyticsManager->getBadgesRate($workspace, $excludeRoles, false, true);
+        $skillBadges        = ( $badgeType == 'skill' ) ? true : false;
+        $knowledgeBadges    = ( $badgeType == 'knowledge' ) ? true : false;
+
+    	$badgesRates = $this->analyticsManager->getBadgesRate($workspace, $excludeRoles, $skillBadges, $knowledgeBadges);
     	$badgesSuccessRates = $badgesRates["success"];
     	$badgesParticipationRates = $badgesRates["participation"];
-    	
+
         $tabs = array();
         // Extract knowledge badge from arrays
         foreach ($badgesSuccessRates as $badgeSuccessRates ) {
-              if ( $badgeSuccessRates['type'] == 'knowledge' ) {
-                  
-                // TODO : DUPLICATED CODE 
-                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'];
-                  
-                $tabs[$badgeSuccessRates['name']] = array(
-                   'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
-                        'graph_type'    => 'pie-chart',
-                        'key_data'      => "$totalUsers participants au badge.<br> " . $badgeSuccessRates['success'] ." utilisateurs ont réussi.<br>" . $badgeSuccessRates['failure'] . " utilisateurs ont échoués.<br>" . $badgeSuccessRates['inProgress'] . " n'ont pas terminés.",
-                        'description'   => 'SuccessRateDescription',
-                        'x_data' => array(
-                                'x_renderer'    => 'date',
-                                'x_label'       => 'Date' 
-                        ),
-                        'graph_values' => array(
-                            array(
-                                "y_label"   => "",
-                                "series"    => array(
-                                    'Réussite'      => $badgeSuccessRates['success'],
-                                    'Echec'         => $badgeSuccessRates['failure'],
-                                    'En cours'      => $badgeSuccessRates['inProgress'],
-                                    'Disponible'    => $badgeSuccessRates['available']
-                                )
-                            )
-                        )
-                    ),
-                    'ParticipationRateBadge_'.$badgeSuccessRates['id'] => array(
-                        'graph_type' => 'line-chart',
-                        'description' => 'ParticipationRateDescription',
-                        'x_data' => array(
-                                'x_renderer'    => 'date',
-                                'x_label'       => 'Date' 
-                        ),
-                        'graph_values' => array(
-                            array(
-                                "y_label"   => "Nombre de participants",
-                                "series"    => array(
-                                    "Nombre cumulé d'utilisateurs" => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
-                                    "Inscriptions quotidiennes"    => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
-                            )),
-                            array (
-                                "y_label"       => "Pourcentage",
-                                "max"           => "100",
-                                "min"           => "0",
-                                "numberTicks"   => "10",
-                                "tickInterval"  => "10",
-                                "series"        => array(
-                                    "Pourcentage d'utilisateurs du MOOC ayant participé au badge"   => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['percentage']
-                            ))
-                        )  
-                    )
-                ); 
-            }
+            $tabs[$badgeSuccessRates['name']] = $this->badgeTabContent( $badgeSuccessRates, $badgesParticipationRates );
         }
 
         return $this->render(
@@ -349,96 +327,70 @@ class MoocAnalyticsController extends Controller
             )
         );
     }
-
-    /**
-     * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/badges/skill", name="claro_mooc_analytics_skill_badges")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     */
-    public function analyticsMoocSkillBadgesAction( $workspace, $user ) {
-    	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
-        
-        /*$badgesSuccessRates = $this->analyticsManager->getBadgesSuccessRate($workspace, $excludeRoles, true, false);
-        $badgesParticipationRates = $this->analyticsManager->getBadgesParticipationRate($workspace, $excludeRoles, true, false);*/
-
-    	$badgesRates = $this->analyticsManager->getBadgesRate($workspace, $excludeRoles, true, false);
-    	$badgesSuccessRates = $badgesRates["success"];
-    	$badgesParticipationRates = $badgesRates["participation"];
-        
-        $tabs = array();
-        // Extract knopwledge badge from arrays
-        foreach ($badgesSuccessRates as $badgeSuccessRates ) {
-              if ( $badgeSuccessRates['type'] == 'skill' ) {
-
-                $totalUsers = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'];
-                $tabs[$badgeSuccessRates['name']] = array(
-                   'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
-                        'graph_type' => 'pie-chart',
-                        'description' => 'SuccessRateDescription',
-                        'key_data'      => "$totalUsers participants au badge.<br> " . $badgeSuccessRates['success'] ." utilisateurs ont réussi.<br>" . $badgeSuccessRates['failure'] . " utilisateurs ont échoués.<br>" . $badgeSuccessRates['inProgress'] . " n'ont pas terminés.",
-                        'x_data' => array(
-                                'x_renderer'    => 'date',
-                                'x_label'       => 'Date' 
-                        ),
-                        'graph_values' => array(
-                            array(
-                                "y_label"   => "",
-                                "series"    => array(
-                                    'Réussite' => $badgeSuccessRates['success'],
-                                    'Echec' => $badgeSuccessRates['failure'],
-                                    'En cours' => $badgeSuccessRates['inProgress'],
-                                    'Disponible' => $badgeSuccessRates['available']
-                                )
-                            )
-                        )
-                    ),
-                    'ParticipationRateBadge_'.$badgeSuccessRates['id'] => array(
-                        'graph_type' => 'line-chart',
-                        'description' => 'ParticipationRateDescription',
-                        'x_data' => array(
-                                'x_renderer'    => 'date',
-                                'x_label'       => 'Date' 
-                        ),
-                        'graph_values' => array(
-                            array(
-                                "y_label"   => "Nombre de participants",
-                                "series"    => array(
-                                    "Nombre cumulé d'utilisateurs" => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
-                                    "Inscriptions quotidiennes"    => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
-                            )),
-                            array (
-                                "y_label"   => "Pourcentage",
-                                "max"           => "100",
-                                "min"           => "0",
-                                "numberTicks"   => "10",
-                                "tickInterval"  => "10",
-                                "series"    => array(
-                                    "Pourcentage d'utilisateurs du MOOC ayant participé au badge"   => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['percentage']
-                            ))
-                        )  
-                    )
-                ); 
-            }
-        }
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\analytics:moocAnalyticsWithSubTabs.html.twig',
-            array(
-                'workspace' => $workspace,
-                'tabs'      => $tabs
-            )
-        );
-    }
     
+    private function badgeTabContent( $badgeSuccessRates, $badgesParticipationRates ) 
+    {
+
+        $totalBadgeUsers    = $badgeSuccessRates['success'] + $badgeSuccessRates['failure'] + $badgeSuccessRates['inProgress'];
+        $totalNonBadgeUsers =  $badgeSuccessRates['available'];
+        $totalUsers = $totalBadgeUsers + $totalNonBadgeUsers;
+        
+        return array(
+           'SuccessRateBadge_'.$badgeSuccessRates['id'] => array(
+                'graph_type'    => 'pie-chart',
+                'key_data'      => "$totalBadgeUsers participants au badge.<br> " . $badgeSuccessRates['success'] ." utilisateurs ont réussi.<br>" . $badgeSuccessRates['failure'] . " utilisateurs ont échoués.<br>" . $badgeSuccessRates['inProgress'] . " n'ont pas terminés.",
+                'description'   => 'SuccessRateDescription',
+                'x_data' => array(
+                        'x_renderer'    => 'date',
+                        'x_label'       => 'Date' 
+                ),
+                'graph_values' => array(
+                    array(
+                        "y_label"   => "",
+                        "series"    => array(
+                            'Réussite'      => $badgeSuccessRates['success'],
+                            'Echec'         => $badgeSuccessRates['failure'],
+                            'En cours'      => $badgeSuccessRates['inProgress']
+                        )
+                    )
+                )
+            ),
+            'ParticipationEvolutionRateBadge_'.$badgeSuccessRates['id'] => array(
+                'graph_type' => 'line-chart',
+                'description' => 'ParticipationEvolutionRateDescription',
+                'x_data' => array(
+                        'x_renderer'    => 'date',
+                        'x_label'       => 'Date' 
+                ),
+                'graph_values' => array(
+                    array(
+                        "y_label"   => "Nombre de participants",
+                        "series"    => array(
+                            "Nombre cumulé de participants au badge" => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['total'],
+                            "Nombre d'utilisateurs remplissant la première condition pour obtenir le badge"    => $badgesParticipationRates[$badgeSuccessRates['id']]['data']['count']
+                    ))
+                ) 
+            ),
+            'ParticipationRateBadge_'.$badgeSuccessRates['id'] => array(
+                'graph_type'    => 'pie-chart',
+                'key_data'      => "$totalUsers utilisateurs inscrits au MOOC.<br>$totalBadgeUsers participent au badge.<br>$totalNonBadgeUsers ne participent pas.",
+                'description'   => 'ParticipationRateDescription',
+                'x_data' => array(
+                        'x_renderer'    => 'int',
+                        'x_label'       => '' 
+                ),
+                'graph_values' => array(
+                    array(
+                        "y_label"   => "NA",
+                        "series"    => array(
+                            "utilisateurs participant au badge"         => $totalBadgeUsers,
+                            "utilisateurs ne participant pas au badge"  => $badgeSuccessRates['available']
+                    ))
+                )  
+            )
+        ); 
+    }
+
     /**
      * @Route("/workspaces/{workspaceId}/open/tool/analytics/mooc/export", name="claro_mooc_analytics_export")
      * @EXT\ParamConverter(
