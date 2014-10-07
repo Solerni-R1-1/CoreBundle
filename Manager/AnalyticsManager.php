@@ -35,6 +35,7 @@ use Claroline\ForumBundle\Entity\Message;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Repository\Analytics\AnalyticsMoocStatsRepository;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -59,6 +60,11 @@ class AnalyticsManager
     private $badgeRepository;
     /** @var BadgeManager */
     private $badgeManager;
+    /** @var AnalyticsMoocStatsRepo */
+    private $analyticsMoocStatsRepo;
+    /** @var AnalyticsHourlyMoocStatsRepo */
+    private $analyticsHourlyMoocStatsRepo;
+    private $analyticsUserMoocStatsRepo;
     private $translator;
     
     private $roleManager;
@@ -89,6 +95,9 @@ class AnalyticsManager
         $this->logRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
         $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
         $this->badgeRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Badge\Badge');
+        $this->analyticsMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsMoocStats');
+        $this->analyticsHourlyMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsHourlyMoocStats');
+        $this->analyticsUserMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsUserMoocStats');
         $this->translator       = $translator;
         $this->roleManager		= $roleManager;
 
@@ -293,28 +302,12 @@ class AnalyticsManager
     	$audience[] = array();
     	$audience[] = array();
     	
-    	$logs = $this->logRepository->findBy(array(
-    			"workspace" => $workspace
-    	));
+    	$connectionsByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsIncluding($workspace, array("workspace-enter"));
+    	$activityByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsExcluding($workspace, array("workspace-enter", "workspace-role-subscribe_group", "workspace-role-subscribe_user", "workspace-role-unsubscribe_group", "workspace-role-unsubscribe_user"));
+    	
     	for ($i = 0; $i < 24; $i++) {
-    		$audience[0][$i] = 0;
-    		$audience[1][$i] = 0;
-    	}
-    	foreach ($logs as $i => $log) {
-    		$user = $log->getDoer();
-    		if ($user != null) { // If user doesn't exists, it is anonymous. Let anonymous in the stats...
-	    		foreach ($user->getRoles() as $role) {
-	    			if (in_array($role, $filteredRoles)) {
-	    				continue 2;
-	    			}
-	    		}
-    		}
-    		$hour = intval($log->getDateLog()->format('H'));
-    		if ($log->getAction() == "workspace-enter") {
-    			$audience[0][$hour]++;
-    		} else {
-    			$audience[1][$hour]++;
-    		}
+    		$audience[0][$i] = $connectionsByHour["h".$i];
+    		$audience[1][$i] = $activityByHour["h".$i];
     	}
     	
     	return $audience;
@@ -328,98 +321,43 @@ class AnalyticsManager
      * @param \DateTime $from
      * @param \DateTime $to
      */
-    public function getSubscriptionsForPeriod(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $filteredRoles) {
+    public function getSubscriptionsForPeriod(MoocSession $moocSession) {
     	$subscriptions = array();
     	$subscriptions[] = array();
     	$subscriptions[] = array();
-
-    	// Get information from database
-    	$logs = $this->logRepository->findAllBetween(
-    			$workspace,
-    			$from,
-    			$to,
-    			array(
-    				"workspace-role-subscribe_user",	
-    				"workspace-role-subscribe_group",
-    				"workspace-role-unsubscribe_user",
-    				"workspace-role-unsubscribe_group"),
-    			$filteredRoles);
-    	$nbSubscriptions = $this->logRepository->getSubscribeCountUntil($workspace, $from);
-
-    	// Extract data
-    	$index = -1;
-    	// First last date is the beginning date
-    	$lastDate = $from->format("Y-m-d");
-    	// For each log
-    	foreach ($logs as $i => $log) {
-    		$currDate = $log->getDateLog()->format("Y-m-d");
-    		// If we changed date
-    		if ($lastDate != $currDate) {
-    			// We need to put, in the array, the dates which have no logs. Starts here.
-    			$lastDateTime = new \DateTime($lastDate);
-    			$currentDateTime = new \DateTime($currDate);
-	    		// Calculate the number of days between the last and the current log date
-	    		$interval = $currentDateTime->diff($lastDateTime, true);
-	    		$nbDays = $interval->format('%a');
-	    		// For each days between the two, we complete the date which have no logs with default values
-	    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions) 
-	    		for ($j = 0; $j < $nbDays - 1; $j++) {
-	    			$index++;
-	    			$lastDateTime = $lastDateTime->add(new \DateInterval("P1D"));
-	    			$subscriptions[0][$index] = array();
-	    			$subscriptions[0][$index][0] = $lastDateTime->format("Y-m-d");
-	    			$subscriptions[0][$index][1] = $nbSubscriptions;
-	    			$subscriptions[1][$index] = array();
-	    			$subscriptions[1][$index][0] = $lastDateTime->format("Y-m-d");
-	    			$subscriptions[1][$index][1] = 0;
-	    		}
-	    		// End here.
-    			// For the log date, we initialize a new array in our array
-    			$index ++;
-    			$subscriptions[0][$index] = array();
-    			$subscriptions[0][$index][0] = $currDate;
-    			$subscriptions[1][$index] = array();
-    			$subscriptions[1][$index][0] = $currDate;
-    			$subscriptions[1][$index][1] = 0;
-    		}
-    		if ($log->getAction() == "workspace-role-subscribe_user") {
-    			$step = 1;
-    		} else if ($log->getAction() == "workspace-role-subscribe_group") {
-    			$step = count($log->getReceiverGroup()->getUsers());
-    		} else if ($log->getAction() == "workspace-role-unsubscribe_user") { 
-    			$step = -1;
-    		} else if ($log->getAction() == "workspace-role-unsubscribe_group") {
-    			$step = -count($log->getReceiverGroup()->getUsers());
-    		}
-    		$nbSubscriptions+= $step;
-    		$subscriptions[0][$index][1] = $nbSubscriptions;
-    		$subscriptions[1][$index][1]+= $step;
-    		$lastDate = $currDate;
+    	
+    	$from 	= new \DateTime($moocSession->getStartDate()->format("Y-m-d"));
+    	$to 	= new \DateTime($moocSession->getEndDate()	->format("Y-m-d"));
+    	$now 	= new \DateTime("today midnight");
+    	
+    	if ($now < $to) {
+    		$to = $now;
     	}
-    	$currDate = $to->format("Y-m-d");
-    	if ($lastDate != $currDate) {
-    		// We need to put, in the array, the dates which have no logs. Starts here.
-    		$lastDateTime = new \DateTime($lastDate);
-    		$currentDateTime = new \DateTime($currDate);
-    		// Calculate the number of days between the last and the current log date
-    		$interval = $currentDateTime->diff($lastDateTime, true);
-    		$nbDays = $interval->format('%a');
-    		// For each days between the two, we complete the date which have no logs with default values
-    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions)
-    		for ($j = 0; $j < $nbDays; $j++) {
-    			$index++;
-    			$lastDateTime = $lastDateTime->add(new \DateInterval("P1D"));
-    			$subscriptions[0][$index] = array();
-    			$subscriptions[0][$index][0] = $lastDateTime->format("Y-m-d");
-    			$subscriptions[0][$index][1] = $nbSubscriptions;
-    			$subscriptions[1][$index] = array();
-    			$subscriptions[1][$index][0] = $lastDateTime->format("Y-m-d");
-    			$subscriptions[1][$index][1] = 0;
-    		}
+
+    	$subscriptionsByDay = $this->analyticsMoocStatsRepo->getSubscriptionsByDay($moocSession);
+    	$orderedSubByDay = array();
+    	foreach ($subscriptionsByDay as $subscriptionsForDay) {
+    		$orderedSubByDay[$subscriptionsForDay["date"]->format("Y-m-d")] = $subscriptionsForDay["nbSubscriptions"];
     	}
+    	
+    	$totalSubscriptions = 0;
+    	$index = 0;
+    	while ($from != $to) {
+    		$dateCurrent = $from->format("Y-m-d");
+    		$subscriptions[0][$index][0] = $dateCurrent;
+    		$subscriptions[1][$index][0] = $dateCurrent;
+    		
+    		$nbSub = array_key_exists($dateCurrent, $orderedSubByDay) ? $orderedSubByDay[$dateCurrent] : 0;
+    		$subscriptions[0][$index][1] = $nbSub;
+    		$totalSubscriptions += $nbSub;
+    		$subscriptions[1][$index][1] = $totalSubscriptions;
+    		
+    		$from->add(new \DateInterval("P1D"));
+    		$index++;
+    	}
+    	
     	
     	return $subscriptions;
-    	
     } 
     
     /**
@@ -431,100 +369,49 @@ class AnalyticsManager
      * @return number
      */
     public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 5, $filteredRoles) {
-    	$date = new \DateTime("today midnight");
-    	$date->sub(new \DateInterval("P".$nbDays."D"));
-    	
-    	$nbActive = $this->logRepository->countActiveUsersSinceDate($workspace, $date, $filteredRoles);
-    	$nbActive += $this->logRepository->countActiveGroupsUsersSinceDate($workspace, $date, $filteredRoles);
-    	$nbTotal = count($workspace->getAllUsers($filteredRoles));
-    	
-    	return [$nbActive , $nbTotal];
+    	return [$this->getNumberActiveUsers($workspace, $nbDays, $filteredRoles),
+    			$this->getTotalSubscribedUsers($workspace, $filteredRoles)];
     }
     
     /**
      * 
      * @param AbstractWorkspace $workspace
      */
-    public function getForumActivity(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to) {
+    public function getForumActivity(AbstractWorkspace $workspace) {
+    	$contributions = array();
+    	$contributions[0] = array();
+    	$contributions[1] = 0;
+    	
     	if ($workspace->isMooc()) {
-    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    		if ($session != null && $session->getForum() != null) { 
-		    	$forum = $session->getForum();
-		    	$managerRole = $this->roleManager->getManagerRole($workspace);
-		    	$messages = $this->messageRepository->findAllPublicationsBetween(
-		    			$forum,
-		    			$from,
-		    			$to,
-		    			array("ROLE_ADMIN", $managerRole->getName()));
-		    	
-		    	$contributions = array();
-		    	$contributions[0] = array();
-		    	$nbContributions = 0;
-		    	$nbDays = 0;
-		    	
-		    	// Extract data
-		    	$index = -1;
-                $to->add(new \DateInterval("P1D"));
-		    	$lastDate = $to->format("Y-m-d");
-		    	foreach ($messages as $i => $message) {
-		    		/* @var $message Message */
-		    		$currDate = $message->getCreationDate()->format("Y-m-d");
-		    		if ($lastDate != $currDate) {
-			    		// We need to put, in the array, the dates which have no logs. Starts here.
-			    		$lastDateTime = new \DateTime($lastDate);
-			    		$currentDateTime = new \DateTime($currDate);
-			    		// Calculate the number of days between the last and the current log date
-			    		$interval = $lastDateTime->diff($currentDateTime, true);
-			    		$diffDays = $interval->format('%a');
-			    		// For each days between the two, we complete the date which have no logs with default values
-			    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions)
-			    		for ($j = 0; $j < $diffDays - 1; $j++) {
-			    			$index++;
-			    			$nbDays++;
-			    			$lastDateTime = $lastDateTime->sub(new \DateInterval("P1D"));
-			    			$contributions[0][$index] = array();
-			    			$contributions[0][$index][0] = $lastDateTime->format("Y-m-d");
-			    			$contributions[0][$index][1] = 0;
-			    		}
-		    			$index ++;
-		    			$contributions[0][$index] = array();
-		    			$contributions[0][$index][0] = $currDate;
-		    			$contributions[0][$index][1] = 0;
-		    			$nbDays++;
-		    		}
-		    		$nbContributions++;
-		    		$contributions[0][$index][1]++;
-		    		$lastDate = $currDate;
-		    	}
-		    	$currDate = $from->format("Y-m-d");
-		    	if ($lastDate != $currDate) {
-		    		// We need to put, in the array, the dates which have no logs. Starts here.
-		    		$lastDateTime = new \DateTime($lastDate);
-		    		$currentDateTime = new \DateTime($currDate);
-		    		// Calculate the number of days between the last and the current log date
-		    		$interval = $lastDateTime->diff($currentDateTime, true);
-		    		$diffDays = $interval->format('%a');
-		    		// For each days between the two, we complete the date which have no logs with default values
-		    		// (0 for nbSubscriptions, the previous totalSubscriptions for the total Subscriptions)
-		    		for ($j = 0; $j < $diffDays; $j++) {
-		    			$index++;
-		    			$nbDays++;
-		    			$lastDateTime = $lastDateTime->sub(new \DateInterval("P1D"));
-		    			$contributions[0][$index] = array();
-		    			$contributions[0][$index][0] = $lastDateTime->format("Y-m-d");
-		    			$contributions[0][$index][1] = 0;
-		    		}
-		    	}
-		    
-		    	$contributions[1] = $nbDays > 0 ? $nbContributions / $nbDays : 0;
-		    	
-		    	return $contributions;
-    		} else {
-    			return null;
-    		}
-    	} else {
-    		return null;
+			$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+			$messagesPerDay = $this->analyticsUserMoocStatsRepo->countDailyForumMessagesForSession($session);
+			
+			$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
+			$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
+			$now = new \DateTime("today midnight");
+			if ($now < $to) {
+				$to = $now;
+			}
+			$oneDay = new \DateInterval("P1D");
+			
+			while ($from <= $to) {
+				$contrib = array();
+				$contrib[0] = $from->format("Y-m-d");
+				$contrib[1] = 0;
+				foreach ($messagesPerDay as $i => $message) {
+					if ($message["date"] == $from) {
+						$contrib[1] = $message["nbPublicationsForum"];
+						break;						
+					}
+				}
+				
+				$contributions[0][] = $contrib;
+				
+				$from->add($oneDay);
+			}
     	}
+    	
+    	return $contributions;
     }
     
     /**
@@ -577,42 +464,14 @@ class AnalyticsManager
     	return $rates;
     }
     
-    public function getForumStats(AbstractWorkspace $workspace, \DateTime $from, \DateTime $to, $filteredRoles) {
+    public function getForumStats(AbstractWorkspace $workspace) {
     	$result = array();
-    	$userRows = array();
+
     	if ($workspace->isMooc()) {
-    		$workspaceUsers = array();
-    		$mooc = $workspace->getMooc();
-    			
-    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    		if ($session != null && $session->getForum() != null) {
-    			$users = $session->getAllUsers($filteredRoles);
-    			
-    			// Extract data
-    			foreach ($users as $user) {
-    				// Get information from database
-    				$nbPublications = $this->messageRepository->countMessagesForUser($session->getForum(), $user, $from, $to);
-    	
-    				$userRow = array();
-    				$userRow["lastname"] = $user->getLastName();
-    				$userRow["firstname"] = $user->getFirstName();
-    				$userRow["username"] = $user->getUsername();
-    				$userRow["mail"] = $user->getMail();
-    				$userRow["nbPublications"] = $nbPublications;
-    	
-    				if (!isset($userRows[$nbPublications])) {
-    					$userRows[$nbPublications] = array();
-    				}
-    				$userRows[$nbPublications][] = $userRow;
-    			}
-    		}
+	    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+	    	$result = $this->analyticsUserMoocStatsRepo->countForumMessagesForSessionByUsers($session);
     	}
-    	krsort($userRows);
-    	foreach ($userRows as $nbPublication => $userRowSet) {
-    		foreach($userRowSet as $userRow) {
-    			$result[] = $userRow;
-    		}
-    	}
+    	
     	
     	return $result;
     }
@@ -789,7 +648,8 @@ class AnalyticsManager
      **************************************/
     
     public function getTotalSubscribedUsers(AbstractWorkspace $workspace, $filterRoles) {
-    	return count($workspace->getAllUsers($filterRoles));
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	return $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session);
     }
     
     public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace, $filterRoles) {
@@ -808,47 +668,44 @@ class AnalyticsManager
     
     public function getMeanNumberConnectionsDaily(AbstractWorkspace $workspace, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	$from = $session->getStartDate();
-    	$to = $session->getEndDate();
-    	
-    	$connectionsByDays = $this->logRepository->countLogsUsersActionByDate($workspace, "workspace-enter");
-    	$nbDays = $from->diff($to, true)->format("%a");
-    	
-    	$total = 0;
-    	foreach ($connectionsByDays as $connectionByDay) {
-    		$total += $connectionByDay['number'];
-    	}
-    	
-    	return $total / $nbDays;
+    	return $this->analyticsMoocStatsRepo->avgConnectionsForSession($session);
     }
     
     public function getNumberActiveUsers(AbstractWorkspace $workspace, $nbDays, $filterRoles) {
-    	$date = new \DateTime("today midnight");
-    	$date->sub(new \DateInterval("P".$nbDays."D"));
-    	
-    	return $this->logRepository->countActiveUsersSinceDate($workspace, $date, $filterRoles);
+    	return $this->analyticsUserMoocStatsRepo->countActiveUsersSince($workspace, $nbDays);
     }
 
-    public function getHourMostConnection(AbstractWorkspace $workspace, $filterRoles) {
-    	$hourlyAudience = $this->getHourlyAudience($workspace, $filterRoles)[0];
-    	
+    public function getHourMostConnection(AbstractWorkspace $workspace, $filterRoles) {    	
+    	$connectionsByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsIncluding(
+    			$workspace,
+    			array("workspace-enter"));
+    	  	    	
     	$max = 0;
     	$index = 0;
-    	foreach($hourlyAudience as $hour => $audience) {
+    	for ($hour = 0; $hour < 24; $hour++) {
+    		$audience = $connectionsByHour["h".$hour];
     		if ($audience > $max) {
     			$max = $audience;
     			$index = $hour;
     		}
     	}
     	return $index;
+    	return $index;
     }
     
     public function getHourMostActivity(AbstractWorkspace $workspace, $filterRoles) {
-    	$hourlyAudience = $this->getHourlyAudience($workspace, $filterRoles)[1];
+    	$activityByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsExcluding(
+    			$workspace,
+    			array("workspace-enter",
+    					"workspace-role-subscribe_group",
+    					"workspace-role-subscribe_user",
+    					"workspace-role-unsubscribe_group",
+    					"workspace-role-unsubscribe_user"));
     	
     	$max = 0;
     	$index = 0;
-    	foreach($hourlyAudience as $hour => $audience) {
+    	for ($hour = 0; $hour < 24; $hour++) {
+    		$audience = $activityByHour["h".$hour];
     		if ($audience > $max) {
     			$max = $audience;
     			$index = $hour;
@@ -859,27 +716,12 @@ class AnalyticsManager
     
     public function getTotalForumPublications(AbstractWorkspace $workspace, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	if ($session->getForum() != null) {
-	    	$forum = $session->getForum();
-	    	return $this->messageRepository->countNbMessagesInForum($forum, $filterRoles);
-    	} else {
-    		return 0;
-    	}
+    	return $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession($session);
     }
     
     public function getForumPublicationsDailyMean(AbstractWorkspace $workspace, $filterRoles) {
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	if ($session != null && $session->getForum() != null) {
-	    	$from = $session->getStartDate();
-	    	$to = $session->getEndDate();
-	    	
-	    	$nbDays = $from->diff($to, true)->format('%a');
-	    	
-	    	$nbMessages = $this->getTotalForumPublications($workspace, $filterRoles);
-	    	return $nbMessages / $nbDays;
-    	} else {
-    		return 0;
-    	}
+    	return $this->analyticsUserMoocStatsRepo->countAverageForumMessagesForSession($session);
     }
     
     public function getMostActiveSubjects(AbstractWorkspace $workspace, $nbDays, $filterRoles) {
@@ -898,24 +740,20 @@ class AnalyticsManager
     	}
     }
     
-    public function getMostActiveUsers(AbstractWorkspace $workspace, $filterRoles) {
-    	$users = $workspace->getAllUsers($filterRoles);
-    	$mostActiveUsers = $this->logRepository->countAllLogsByUsers($workspace, $filterRoles);
-    	foreach ($users as $user) {
-    		$found = false;
-    		foreach($mostActiveUsers as $activeUser) {
-    			if ($activeUser['user']->getId() == $user->getId()) {
-    				$found = true;
-    				break;
-    			}
-    		}
-    		if (!$found) {
-    			$notActiveUser = array();
-    			$notActiveUser['user'] = $user;
-    			$notActiveUser['nbLogs'] = 0;
-    			$mostActiveUsers[] = $notActiveUser;
-    		}
+    public function getMostActiveUsers(MoocSession $moocSession) {    	
+    	$users = $this->analyticsUserMoocStatsRepo->getUsersActivity($moocSession);
+    	$mostActiveUsers = array();
+    	foreach ($users as $i => $user) {
+    		$mostActiveUser = array();
+    		$mostActiveUser['firstname'] = $user["firstname"];
+    		$mostActiveUser['lastname'] = $user["lastname"];
+    		$mostActiveUser['username'] = $user["username"];
+    		$mostActiveUser['mail'] = $user["mail"];
+    		
+    		$mostActiveUser['nbLogs'] = $user["nbActivity"];
+    		$mostActiveUsers[] = $mostActiveUser;
     	}
+    	
     	return $mostActiveUsers;
     }
     

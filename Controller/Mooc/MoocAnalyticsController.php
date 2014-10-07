@@ -111,34 +111,23 @@ class MoocAnalyticsController extends Controller
         
         // Fetch all the necessary data
     	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace, $excludeRoles);
-        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($workspace, $from, $to, $excludeRoles);
+        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($currentSession);
         $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
         $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 5, $excludeRoles);
         
         // Most active users table
-        $mostActiveUsers = $this->analyticsManager->getMostActiveUsers($workspace, $excludeRoles);
-        $mostActiveUsersWithHeader = array();
+		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($currentSession);
+        $mostActiveUsersWithHeader = $mostActiveUsers;
         $row = array();
-		$row[] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-		$row[] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-		$row[] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-		$row[] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
-		$row[] = $this->translator->trans('mooc_analytics_users_nb_logs', array(), 'platform');
-        $mostActiveUsersWithHeader[] = $row;
-		foreach ($mostActiveUsers as $userActivity) {
-			/* @var $user User */
-			$user = $userActivity['user'];
-			$row = array();
-			$row[] = $user->getLastName();
-			$row[] = $user->getFirstName();
-			$row[] = $user->getUsername();
-			$row[] = $user->getMail();
-			$row[] = $userActivity['nbLogs'];
-			$mostActiveUsersWithHeader[] = $row;
-		}
+ 		$row[] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+ 		$row[] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+ 		$row[] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+ 		$row[] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+ 		$row[] = $this->translator->trans('mooc_analytics_users_nb_logs', array(), 'platform');
+ 		array_unshift($mostActiveUsersWithHeader, $row);
         
         // Most active forum publishers table
-        $forumPublishers = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
+        $forumPublishers = $this->analyticsManager->getForumStats($workspace);
         $forumPublishersHeaders = array();
 		$forumPublishersHeaders[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
 		$forumPublishersHeaders[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
@@ -154,7 +143,7 @@ class MoocAnalyticsController extends Controller
         $forumMostActiveSubjectsHeaders[1] = $this->translator->trans('mooc_analytics_theme_nb_posts', array(), 'platform');
         array_unshift($forumMostActiveSubjects, $forumMostActiveSubjectsHeaders);
         
-        $totalUsers = $activeUsers[0] + $activeUsers[1];
+         $totalUsers = $activeUsers[0] + $activeUsers[1];
         
         // Render
         return $this->render(

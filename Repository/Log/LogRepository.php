@@ -756,4 +756,90 @@ class LogRepository extends EntityRepository
     		return null;
     	}
     }
+    
+    public function countLogsByDay(
+    		AbstractWorkspace $workspace, $from, $to, $excludeRoles = array()) {
+    	$parameters = array(
+    		"from" => $from,
+    		"to" => $to,
+    		"workspace" => $workspace
+    	);
+    	$dql = "SELECT l.action AS action,
+    				l.shortDateLog AS shortDate,
+    				COUNT(l.doer) AS nbDoers,
+    				COUNT(l.receiver) AS nbReceivers,
+    				COUNT(u) AS nbGroupReceivers,
+    				SUBSTRING(l.dateLog, 12, 2) AS hour
+    			FROM Claroline\CoreBundle\Entity\Log\Log l
+    			LEFT JOIN l.receiverGroup g
+    			LEFT JOIN g.users u
+    			WHERE l.dateLog >= :from
+    			AND l.dateLog <= :to
+    			AND l.workspace = :workspace
+    			AND (
+	    				(l.receiverGroup IS NOT NULL
+	    				AND u NOT IN ( 
+	    					SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+	    					JOIN u2.roles as r
+	    					WHERE r.name IN (:roles)))
+    				OR 
+    					(l.receiver IS NOT NULL
+    					AND l.receiver NOT IN (
+		   					SELECT u3 FROM Claroline\CoreBundle\Entity\User u3
+		   					JOIN u3.roles as r2
+		   					WHERE r2.name IN (:roles)))
+    				OR 
+    					(l.receiver IS NULL AND l.receiverGroup IS NULL
+    					AND l.doer NOT IN(
+		   					SELECT u4 FROM Claroline\CoreBundle\Entity\User u4
+		   					JOIN u4.roles as r3
+		   					WHERE r3.name IN (:roles)))
+    				)
+    				
+    			GROUP BY l.shortDateLog, l.action, hour
+    			ORDER BY l.shortDateLog";
+    	$parameters['roles'] = $excludeRoles;
+
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters($parameters);
+    	
+    	return $query->getResult();
+    }
+    
+    public function getAllActions() {
+    	$dql = "SELECT DISTINCT l.action FROM Claroline\CoreBundle\Entity\Log\Log l";
+    	$query = $this->_em->createQuery($dql);
+    	return $query->getResult();
+    }
+    
+    public function getPreparationForUserAnalytics(AbstractWorkspace $workspace, $from, $to, $action, $excludeRoles = array()) {
+    	$dql = "SELECT u AS doer,
+    				l.shortDateLog AS date,
+    				COUNT(l.id) AS nbActivity
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+    				WITH l.doer = u
+    			WHERE l.workspace = :workspace
+    			AND l.dateLog >= :from
+    			AND l.dateLog <= :to
+    			AND (l.doer IS NOT NULL
+    					AND l.doer NOT IN (
+		   					SELECT u3 FROM Claroline\CoreBundle\Entity\User u3
+		   					JOIN u3.roles as r2
+		   					WHERE r2.name IN (:roles)))
+    			AND l.action NOT IN (:action)
+    			GROUP BY l.doer, l.shortDateLog";
+    	$parameters = array(
+    		"from" 		=> $from,
+    		"to" 		=> $to,
+    		"workspace" => $workspace,
+    		"roles"		=> $excludeRoles,
+    		"action"	=> $action
+    	);
+
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters($parameters);
+    	
+    	return $query->getResult();
+    }
 }
