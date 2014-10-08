@@ -367,7 +367,7 @@ class UserManager
         $this->translator->setLocale($locale);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $config->setWorkspaceName($personalWorkspaceName);
-        $config->setWorkspaceCode($user->getUsername());
+        $config->setWorkspaceCode($user->getUsername() . '-' . uniqid() );
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);
