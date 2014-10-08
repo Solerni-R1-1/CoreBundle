@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 class BadgeRepository extends EntityRepository
 {
@@ -275,5 +276,155 @@ class BadgeRepository extends EntityRepository
     	->setParameter('workspaceId', $workspace->getId());
     	
     	return $executeQuery ? $query->getResult(): $query;
+    }
+    
+    public function getSkillBadgesParticipationRates(MoocSession $session, array $excludedRoles) {
+    	$from = $session->getStartDate();
+    	$to = $session->getEndDate();
+    	$workspace = $session->getMooc()->getWorkspace();
+    	$dql = "
+    		SELECT 
+    			b AS badge,
+    			SUBSTRING(d.dropDate, 1, 10) AS date,
+    			COUNT(DISTINCT u.id) AS nbParticipations,
+    			'skill' AS type
+    		FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    		JOIN b.badgeRules br
+    		JOIN br.resource res
+    		JOIN Icap\DropzoneBundle\Entity\Dropzone dz
+    			WITH res = dz.resourceNode
+    		JOIN dz.drops d
+    		JOIN d.user u
+    		JOIN res.resourceType res_type
+    		WHERE b.workspace = :workspace
+    		AND res_type.name = 'icap_dropzone'
+    		AND b.deletedAt IS NULL
+    		AND br.action LIKE 'resource-icap_dropzone%'
+    		AND u NOT IN (SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+    			JOIN u2.roles AS role
+    			WHERE role.name IN (:roles))
+    		AND d.dropDate >= :from
+    		AND d.dropDate <= :to
+    		GROUP BY
+    			date,
+    			badge";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("roles", $excludedRoles);
+    	$query->setParameter("from", $from);
+    	$query->setParameter("to", $to);
+    	
+    	return $query->getResult();
+    }
+    
+    public function getKnowledgeBadgesParticipationRates(MoocSession $session, array $excludedRoles) {
+    	$from = $session->getStartDate();
+    	$to = $session->getEndDate();
+    	$workspace = $session->getMooc()->getWorkspace();
+    	$dql = "
+    		SELECT
+    			b AS badge,
+    			SUBSTRING(p.start, 1, 10) AS date,
+    			COUNT(DISTINCT u.id) AS nbParticipations,
+    			'knowledge' AS type
+    		FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    		JOIN b.badgeRules br
+    		JOIN br.resource res
+    		JOIN UJM\ExoBundle\Entity\Exercise e
+    			WITH res = e.resourceNode
+    		JOIN UJM\ExoBundle\Entity\Paper p
+    			WITH p.exercise = e
+    		JOIN p.user u
+    		JOIN res.resourceType res_type
+    		WHERE b.workspace = :workspace
+    		AND res_type.name = 'ujm_exercise'
+    		AND b.deletedAt IS NULL
+    		AND br.action LIKE 'resource-ujm_exercise-exercise%'
+    		AND u NOT IN (SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+    			JOIN u2.roles AS role
+    			WHERE role.name IN (:roles))
+    		AND p.start >= :from
+    		AND p.start <= :to
+    		GROUP BY
+    			date,
+    			badge";
+    	 
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("roles", $excludedRoles);
+    	$query->setParameter("from", $from);
+    	$query->setParameter("to", $to);
+    	 
+    	return $query->getResult();
+    }
+    
+    public function getBadgesSuccess(MoocSession $session, array $excludedRoles) {
+    	$workspace = $session->getMooc()->getWorkspace();
+    	$dql = "SELECT
+    				SUBSTRING(ub.issuedAt, 1, 10) AS date,
+    				COUNT(DISTINCT u) AS nbSuccess,
+    				b AS badge,
+    				(CASE WHEN (br.action LIKE 'resource-ujm_exercise-exercise%') THEN 'knowledge'
+    				ELSE 'skill' END) type
+    			
+    			FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    			JOIN b.userBadges ub
+    			JOIN ub.user u
+    			JOIN b.badgeRules br
+    			
+    			WHERE b.workspace = :workspace
+    			AND u NOT IN (SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+	    			JOIN u2.roles AS role
+	    			WHERE role.name IN (:roles))
+    			AND (br.action LIKE 'resource-ujm_exercise-exercise%'
+    				OR
+    				br.action LIKE 'resource-icap_dropzone%')
+    			
+    			GROUP BY date, badge";
+
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("roles", $excludedRoles);
+    	
+    	return $query->getResult();
+    }
+
+    public function getSkillBadgesFailures(MoocSession $session, array $excludedRoles) {
+    	$workspace = $session->getMooc()->getWorkspace();
+    	$dql = "
+    		SELECT 
+    			b AS badge,
+    			SUBSTRING(d.dropDate, 1, 10) AS date,
+    			COUNT(DISTINCT u.id) AS nbFailures,
+    			'skill' AS type
+    			
+    		FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    		JOIN b.badgeRules br
+    		JOIN br.resource res
+    		JOIN Icap\DropzoneBundle\Entity\Dropzone dz
+    			WITH res = dz.resourceNode
+    		JOIN dz.drops d
+    		JOIN d.user u
+    		JOIN res.resourceType res_type
+    		WHERE b.workspace = :workspace
+    		AND res_type.name = 'icap_dropzone'
+    		AND b.deletedAt IS NULL
+    		AND br.action LIKE 'resource-icap_dropzone%'
+    		AND d.finished = 1
+    		AND (SELECT AVG(c.totalGrade) FROM Icap\DropzoneBundle\Entity\Correction c WHERE c.drop = d) 
+    			< (SELECT AVG(rule.result) FROM Claroline\CoreBundle\Entity\Badge\BadgeRule AS rule WHERE rule.action = 'resource-icap_dropzone-drop_evaluate' AND rule.associatedBadge = b) 
+    		AND u NOT IN (SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+    			JOIN u2.roles AS role
+    			WHERE role.name IN (:roles))
+    		GROUP BY
+    			date,
+    			badge";
+    
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("roles", $excludedRoles);
+    	 
+    	return $query->getResult();
     }
 }

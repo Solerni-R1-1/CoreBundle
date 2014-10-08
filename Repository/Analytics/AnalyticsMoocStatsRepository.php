@@ -74,12 +74,14 @@ class AnalyticsMoocStatsRepository extends EntityRepository {
 		return $query->getSingleScalarResult();
 	}
 	
-	public function getSubscriptionsByDay(MoocSession $moocSession) {
+	public function getSubscriptionsAndConnectionsByDay(MoocSession $moocSession) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
 		$from = $moocSession->getStartDate();
 		$to = $moocSession->getEndDate();
 		
-		$dql = "SELECT ams.date AS date, ams.nbSubscriptions AS nbSubscriptions
+		$dql = "SELECT ams.date AS date,
+					ams.nbSubscriptions AS nbSubscriptions,
+					ams.nbConnections AS nbConnections
 				FROM Claroline\CoreBundle\Entity\Analytics\AnalyticsMoocStats ams
 				WHERE ams.workspace = :workspace
 				AND ams.date >= :from

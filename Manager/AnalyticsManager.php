@@ -36,6 +36,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Repository\Analytics\AnalyticsMoocStatsRepository;
+use Claroline\CoreBundle\Entity\Analytics\AnalyticsBadgeMoocStats;
+use Claroline\CoreBundle\Repository\Analytics\AnalyticsBadgeMoocStatsRepository;
+use Claroline\CoreBundle\Repository\Analytics\AnalyticsUserMoocStatsRepository;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -60,11 +63,14 @@ class AnalyticsManager
     private $badgeRepository;
     /** @var BadgeManager */
     private $badgeManager;
-    /** @var AnalyticsMoocStatsRepo */
+    /** @var AnalyticsMoocStatsRepository */
     private $analyticsMoocStatsRepo;
-    /** @var AnalyticsHourlyMoocStatsRepo */
+    /** @var AnalyticsHourlyMoocStatsRepository */
     private $analyticsHourlyMoocStatsRepo;
+    /** @var AnalyticsUserMoocStatsRepository */
     private $analyticsUserMoocStatsRepo;
+    /** @var AnalyticsBadgeMoocStatsRepository */
+    private $analyticsBadgeMoocStatsRepo;
     private $translator;
     
     private $roleManager;
@@ -98,6 +104,7 @@ class AnalyticsManager
         $this->analyticsMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsMoocStats');
         $this->analyticsHourlyMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsHourlyMoocStats');
         $this->analyticsUserMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsUserMoocStats');
+        $this->analyticsBadgeMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsBadgeMoocStats');
         $this->translator       = $translator;
         $this->roleManager		= $roleManager;
 
@@ -334,10 +341,14 @@ class AnalyticsManager
     		$to = $now;
     	}
 
-    	$subscriptionsByDay = $this->analyticsMoocStatsRepo->getSubscriptionsByDay($moocSession);
+    	$subscriptionsByDay = $this->analyticsMoocStatsRepo->getSubscriptionsAndConnectionsByDay($moocSession);
     	$orderedSubByDay = array();
     	foreach ($subscriptionsByDay as $subscriptionsForDay) {
-    		$orderedSubByDay[$subscriptionsForDay["date"]->format("Y-m-d")] = $subscriptionsForDay["nbSubscriptions"];
+    		if (!array_key_exists($subscriptionsForDay["date"]->format("Y-m-d"), $orderedSubByDay)) {
+    			$orderedSubByDay[$subscriptionsForDay["date"]->format("Y-m-d")] = array();
+    		}
+    		$orderedSubByDay[$subscriptionsForDay["date"]->format("Y-m-d")]["nbSubscriptions"] = $subscriptionsForDay["nbSubscriptions"];
+    		$orderedSubByDay[$subscriptionsForDay["date"]->format("Y-m-d")]["nbConnections"] = $subscriptionsForDay["nbConnections"];
     	}
     	
     	$totalSubscriptions = 0;
@@ -348,12 +359,18 @@ class AnalyticsManager
     		$subscriptions[1][$index][0] = $dateCurrent;
     		$subscriptions[2][$index][0] = $dateCurrent;
     		
-    		$nbSub = array_key_exists($dateCurrent, $orderedSubByDay) ? $orderedSubByDay[$dateCurrent] : 0;
-    		$subscriptions[0][$index][1] = $nbSub;
+    		if (array_key_exists($dateCurrent, $orderedSubByDay)) {
+    			$nbSub = $orderedSubByDay[$dateCurrent]["nbSubscriptions"];
+    			$nbConn = $orderedSubByDay[$dateCurrent]["nbConnections"];
+    		} else {
+    			$nbSub = 0;
+    			$nbConn = 0;
+    		}
+
     		$totalSubscriptions += $nbSub;
-    		$subscriptions[1][$index][1] = $totalSubscriptions;
-			// TODO : daily connections (workspace-enter)
-    		$subscriptions[2][$index][1] = 0;
+    		$subscriptions[0][$index][1] = $totalSubscriptions;
+    		$subscriptions[1][$index][1] = $nbSub;
+    		$subscriptions[2][$index][1] = $nbConn;
     		
     		$from->add(new \DateInterval("P1D"));
     		$index++;
@@ -479,172 +496,92 @@ class AnalyticsManager
     	return $result;
     }
     
-    public function getBadgesRate(AbstractWorkspace $workspace, $filteredRoles, $skillBadges, $knowledgeBadges) {
-    	$result = array();
-    	$rates = array();
-    	
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	$users = $session->getAllUsers($filteredRoles);
-    	$nbUsers = count($users);
-
-    	// This array will contains, for each badge, the list of users and associated badge.
-    	// $badges[badgeId][0..*]['user'] = UserEntity
-    	// $badges[badgeId][0..*]['badge'] = UserBadge (containing the badge, the resource, the status, etc.)
-    	$badges = array();
-    	
-    	foreach ($users as $user) {
-    		$userBadges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, $skillBadges, $knowledgeBadges);
-    		
-    		foreach ($userBadges as $userBadge) {
-    			$badgeId = $userBadge['badge']->getId();
-    			if (!isset($badges[$badgeId])) {
-    				$badges[$badgeId] = array();
-    				$resultArray = array();
-    				$resultArray['badge'] = $userBadge['badge']->getName();
-    				$resultArray['data'] = array();
-    				$result[$badgeId] = $resultArray;
-    			}
-    			
-    			$badgeAndUser = array();
-    			$badgeAndUser['badge'] = $userBadge;
-    			$badgeAndUser['user'] = $user;
-    			
-    			$badges[$badgeId][] = $badgeAndUser;
-    			
-    			// Add badge success rates temporary here. TODO : Clean up !!!
-
-    			/* @var $badgeEntity Badge */
-    			$badgeEntity = $userBadge['badge'];
-    			$badgeName = $badgeEntity->getName();
-    			
-    			if (!array_key_exists($badgeName, $rates)) {
-    				$rateBadge = array();
-    				$rateBadge['success'] = 0;
-    				$rateBadge['failure'] = 0;
-    				$rateBadge['inProgress'] = 0;
-    				$rateBadge['available'] = 0;
-    				$rateBadge['name'] = $badgeName;
-    				$rateBadge['id'] = $badgeEntity->getId();
-    				$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
-    				$rates[$badgeName] = $rateBadge;
-    			}
-    			
-    			if ($userBadge['status'] == Badge::BADGE_STATUS_OWNED) {
-    				$rates[$badgeName]['success']++;
-    			} else if ($userBadge['status'] == Badge::BADGE_STATUS_FAILED) {
-    				$rates[$badgeName]['failure']++;
-    			} else if ($userBadge['status'] == Badge::BADGE_STATUS_IN_PROGRESS) {
-    				$rates[$badgeName]['inProgress']++;
-    			} else if ($userBadge['status'] == Badge::BADGE_STATUS_AVAILABLE) {
-    				$rates[$badgeName]['available']	++;
-    			}
-    			
-    		}
-    	}
-    	
-    	// We then start putting data in result array.
-    	// The result array will look like :
-    	// $result[badgeId]
-    	//		=> ['badge'] : The badge entity
-    	//		=> ['data']
-    	//				=> ['percentage'][DateString (Y-m-d)]
-    	//						=> [0] = DateString (Y-m-d)
-    	//						=> [1] = value
-    	//				=> ['total'][DateString (Y-m-d)]
-    	//						=> [0] = DateString (Y-m-d)
-    	//						=> [1] = value
-    	//				=> ['count'][DateString (Y-m-d)]
-    	//						=> [0] = DateString (Y-m-d)
-    	//						=> [1] = value
-    	foreach ($badges as $badgeId => $badgeUsers) {
-    		$data = &$result[$badgeId]['data'];
-    		$totalData = array();
-    		$percentageData = array();
-    		$countData = array();
-    		foreach ($badgeUsers as $badgeUser) {
-    			$user = $badgeUser['user'];
-    			$userBadge = $badgeUser['badge'];
-    			
-    			if ($userBadge['badge']->isSkillBadge()) {
-	    			if (isset($userBadge['resource']['resource']['drop']) 
-	    					&& $userBadge['resource']['resource']['drop'] != null) {
-	    				$startDate = $userBadge['resource']['resource']['drop']->getDropDate()->format('Y-m-d');
-	    			
-		    			if (!isset($countData[$startDate])) {
-		    				$countData[$startDate] = array();
-		    				$countData[$startDate][0] = $startDate;
-		    				$countData[$startDate][1] = 0;
-		    			}
-		    			$countData[$startDate][1]++;
-	    			}
-    			} else {
-    				if (isset($userBadge['resource']['resource']['firstAttempt'])
-	    					&& $userBadge['resource']['resource']['firstAttempt'] != null) {
-    					$startDate = $userBadge['resource']['resource']['firstAttempt']->getStart()->format('Y-m-d');
-    					if (!isset($countData[$startDate])) {
-    						$countData[$startDate] = array();
-    						$countData[$startDate][0] = $startDate;
-    						$countData[$startDate][1] = 0;
-    					}
-    					$countData[$startDate][1]++;
-	    			}
-    			}
-    		}
-    		$data['percentage'] = $percentageData;
-    		$data['total'] = $totalData;
-    		$data['count'] = $countData;
-    	}
-    	
-    	// We now need to complete the data with the missing dates
-    	$from = $session->getStartDate();
-    	$to = $session->getEndDate();
-    	$previousDateString = null;
-    	
-    	$now = new \DateTime();
-    	if ($now < $to) {
-    		$to = $now;
-    	}
-    	
-    	$nbDays = $from->diff($to, true)->format('%a');
-    	
-    	for ($i = 0; $i < $nbDays; $i++) {
-    		$currDateString = $from->format('Y-m-d');
-	    	foreach ($result as &$badgeResult) {
-	    		$data = &$badgeResult['data'];
-	    		$totalData = &$data['total'];
-	    		$percentageData = &$data['percentage'];
-	    		$countData = &$data['count'];
-	    		
-	    		if (!isset($countData[$currDateString])) {
-	    			$countData[$currDateString] = array();
-	    			$countData[$currDateString][0] = $currDateString;
-	    			$countData[$currDateString][1] = 0;
-	    		}
-	    		$percentageData[$currDateString] = array();
-	    		$percentageData[$currDateString][0] = $currDateString;
-	    		$totalData[$currDateString] = array();
-	    		$totalData[$currDateString][0] = $currDateString;
-	    		
-	    		if ($previousDateString == null) {
-	    			$totalData[$currDateString][1] = 0;
-	    			$percentageData[$currDateString][1] = 0;
-	    		} else {
-	    			$totalData[$currDateString][1] = $countData[$currDateString][1] + $totalData[$previousDateString][1];
-	    			$percentageData[$currDateString][1] = floatval($totalData[$currDateString][1] * 100) / $nbUsers;
-	    		}
-	    	}
-	    	$from = $from->add(new \DateInterval('P1D'));
-	    	$previousDateString = $currDateString;
-    	}
-		
-    	// Order the arrays...
-    	foreach ($result as &$badgeResult) {
-    		ksort($badgeResult['data']['count']);
-    		ksort($badgeResult['data']['total']);
-    		ksort($badgeResult['data']['percentage']);
-    	}
-    		
-    	return array("participation" => $result, "success" => $rates);
+   public function getBadgesRate(AbstractWorkspace $workspace, $filteredRoles, $skillBadges, $knowledgeBadges) {
+	   	if ($workspace->isMooc()) {
+	   		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+	   		$badgeStats = $this->analyticsBadgeMoocStatsRepo->findBy(array(
+	   			"workspace" => $workspace,
+	   			"badgeType" => $skillBadges ? "skill" : "knowledge"));
+	   		$badgesSuccessRates = $this->analyticsBadgeMoocStatsRepo->countBadgesSuccessRateForSession($session);
+	   		$participationRates = array();
+	   		$successRates = array();   		
+	   		
+	   		$orderedBadgeStats = array();
+	   		$badges = array();
+	   		foreach ($badgeStats as $badgeStat) {
+	   			$badgeId = $badgeStat->getBadge()->getId();
+	   			$participationRates[$badgeId] = array();
+	   			$participationRates[$badgeId]["badge"] = $badgeStat->getBadge();
+	   			$participationRates[$badgeId]["data"] = array();
+	   			$participationRates[$badgeId]["data"]["count"] = array();
+	   			$participationRates[$badgeId]["data"]["total"] = array();
+	   			
+	   			$date = $badgeStat->getDate()->format("Y-m-d");
+	   			if (!array_key_exists($badgeId, $orderedBadgeStats)) {
+	   				$orderedBadgeStats[$badgeId] = array();
+	   			}
+	   			
+	   			if (!array_key_exists($date, $orderedBadgeStats[$badgeId])) {
+	   				$orderedBadgeStats[$badgeId][$date] = array();
+	   			}
+	   			
+	   			$orderedBadgeStats[$badgeId][$date] = $badgeStat->getNbParticipations();
+	   		}
+	   		
+	     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+	     	$oneDay = new \DateInterval("P1D");
+	     	$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
+	     	$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
+	     	$now = new \DateTime("today midnight");
+	     	if ($now < $to) {
+	     		$to = $now;
+	     	}
+	     	
+	     	foreach ($badgesSuccessRates as $badgeSuccessRates) {
+	     		$rateBadge = array();
+	     		$rateBadge['success'] = $badgeSuccessRates['totalSuccess'];
+	     		$rateBadge['failure'] = $badgeSuccessRates['totalFail'];
+	     		$rateBadge['inProgress'] = $badgeSuccessRates['totalParticipations'];
+	     		$rateBadge['available'] = $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session)
+	     			- ($badgeSuccessRates['totalParticipations']
+	     					+ $badgeSuccessRates['totalSuccess']
+	     					+ $badgeSuccessRates['totalFail']);
+	     		$rateBadge['name'] = $badgeSuccessRates["badge"]->getName();
+	     		$rateBadge['id'] = $badgeSuccessRates["badge"]->getId();
+	     		$rateBadge['type'] = $badgeSuccessRates["type"];
+	     		
+	     		if ($rateBadge['type'] == "skill" && $skillBadges
+	     			|| $rateBadge['type'] == "knowledge" && $knowledgeBadges) {
+	     			$successRates[$badgeSuccessRates["badge"]->getName()] = $rateBadge;
+	     		}
+	     	}
+	     	
+	     	$totals = array();
+	     	while ($from < $to) {
+	     		foreach ($participationRates as &$participationBadgeRate) {
+	     			$badgeId = $participationBadgeRate["badge"]->getId();
+	     			$date = $from->format("Y-m-d");
+	     			
+	     			$count = 0;
+	     			if (array_key_exists($date, $orderedBadgeStats[$badgeId])) {
+	     				$count = $orderedBadgeStats[$badgeId][$date]; 
+	     			}
+	     			
+	     			if (!array_key_exists($badgeId, $totals)) {
+	     				$totals[$badgeId] = 0; 
+	     			}
+	     			$totals[$badgeId] = $totals[$badgeId] + $count;
+	     			
+	     			$participationBadgeRate["data"]["count"][$date] = array($date, $count);
+	     			$participationBadgeRate["data"]["total"][$date] = array($date, $totals[$badgeId]);
+	     		}
+	     		$from->add($oneDay);
+	     	}
+	   		
+	    	return array("participation" => $participationRates, "success" => $successRates);
+	   	} else {
+	   		return null;
+	   	}
     }
 
     /**************************************

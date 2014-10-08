@@ -47,16 +47,18 @@ protected function configure() {
 				$excludeRoles[] = "ROLE_WS_CREATOR";
 
 				foreach ($ws->getMooc()->getMoocSessions() as $moocSession) {
-					//$output->writeln("Starting preparation of session ".$moocSession->getId()." with name ".$moocSession->getTitle());
-					//$prepManager->prepareConnectionsAndSubscriptionsByDay($moocSession, $excludeRoles);
+					$output->writeln("Starting preparation of session ".$moocSession->getId()." with name ".$moocSession->getTitle());
+					$prepManager->prepareConnectionsAndSubscriptionsByDay($moocSession, $excludeRoles);
 					$output->writeln("Starting preparation of the users of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
 					$prepManager->prepareUserAnalytics($moocSession, $excludeRoles);
+					$output->writeln("Starting preparation of the badges of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
+					$prepManager->prepareBadgeAnalytics($moocSession, $excludeRoles);
 				}
 				
 				unset($excludeRoles);
 				$output->writeln("Workspace ".$ws->getId()." with name ".$ws->getName()." done !");
 			} else {
-				$output->writeln("Workspace ".$ws->getId()." with name ".$ws->getName()." doesn't have a mooc. Ignoring...");
+				//$output->writeln("Workspace ".$ws->getId()." with name ".$ws->getName()." doesn't have a mooc. Ignoring...");
 			}
 		}
 		
