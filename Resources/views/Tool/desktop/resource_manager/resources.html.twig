@@ -20,6 +20,9 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <!--[if IE]>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery.form.js') }}"></script>
+    <![endif]-->
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({

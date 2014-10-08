@@ -67,8 +67,8 @@
     });
 
     $(document).ajaxError(function (event, jqXHR) {
-        console.debug(jqXHR.getResponseHeader('XXX-Claroline'));
-        console.debug(jqXHR);
+        //console.log(jqXHR.getResponseHeader('XXX-Claroline'));
+        //console.log(jqXHR);
         if (jqXHR.status === 403 && jqXHR.getResponseHeader('XXX-Claroline') !== 'insufficient-permissions') {
             ajaxAuthenticationErrorHandler(jqXHR.responseText);
         } else if (jqXHR.status === 500 || jqXHR.status === 422 || jqXHR.status === 403) {

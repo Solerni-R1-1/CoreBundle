@@ -177,8 +177,14 @@ class ResourcePropertiesController extends Controller
 
             $this->resourceManager->rename($node, $name);
             $nodesArray[] = $this->resourceManager->toArray($node, $this->sc->getToken());
+            
+            $return = new JsonResponse($nodesArray);
+            
+            if ( preg_match( "/(Trident\/5)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ) {
+                $return->headers->set('Content-Type', 'text/html');
+            }
 
-            return new JsonResponse($nodesArray);
+            return $return;
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());

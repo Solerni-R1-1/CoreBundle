@@ -176,7 +176,7 @@ class ProfileController extends Controller
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
         if (null === $user) {
-            throw $this->createNotFoundException("Unknown user.");
+            return new Response( $this->renderView('ClarolineCoreBundle:Profile:publicProfile.204.html.twig', array(), 204 ) );
         }
 
         $userPublicProfilePreferences = $user->getPublicProfilePreferences();

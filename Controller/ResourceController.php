@@ -161,8 +161,14 @@ class ResourceController extends Controller
                     $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
                 }
             }
+            
+            $return = new JsonResponse($nodesArray);
+            
+            if ( preg_match( "/(Trident\/5)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ) {
+                $return->headers->set('Content-Type', 'text/html');
+            }
 
-            return new JsonResponse($nodesArray);
+            return $return;
         }
 
         return new Response($event->getErrorFormContent());
