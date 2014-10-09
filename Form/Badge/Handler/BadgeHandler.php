@@ -83,16 +83,17 @@ class BadgeHandler
 
                 if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
                     /** @var \Doctrine\ORM\UnitOfWork $unitOfWork */
-                    $unitOfWork = $this->entityManager->getUnitOfWork();
+                   // $unitOfWork = $this->entityManager->getUnitOfWork();
 
-                    $newBadge = clone $badge;
-                    $newBadge->setVersion($badge->getVersion() + 1);
+                    //$newBadge = clone $badge;
+                    //$newBadge->setVersion($badge->getVersion() + 1);
+                    $badge->setVersion($badge->getVersion() + 1);
 
-                    $unitOfWork->refresh($badge);
+                    //$unitOfWork->refresh($badge);
 
-                    $badge->setDeletedAt(new \DateTime());
+                    //$badge->setDeletedAt(new \DateTime());
 
-                    $this->entityManager->persist($newBadge);
+                    //$this->entityManager->persist($badge);
                 }
                 else {
                     // Compute which rules was deleted
