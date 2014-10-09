@@ -208,10 +208,12 @@ class SolerniController extends Controller
                     $iconClass = $iconClass . '_actif';
                     $statusText = $translator->trans( 'last_message', array(), 'platform');
                     $messageTitle = $message->getObject();
+                    // Message title is a UTF8 field (in SQL we have & é à ù etc....)
                     $subTitle = ( mb_strlen ( $messageTitle, "UTF-8" ) > 15 ) ? mb_substr( $messageTitle, 0, 15 , "UTF-8") . '...' : $messageTitle;
                     $subTitle .= ' ' . $translator->trans( '@at', array(), 'platform') . ' ' .  $message->getDate()->format('H\hi');
+                    // Message content is html encoded field (in SQL we have &eacute; &egrave; &ecirc; &euml; etc....)
                     $messageContent = strip_tags( $message->getContent() );
-                    $subText = ( mb_strlen ( $messageContent, "UTF-8" ) > 30 ) ? mb_substr( $messageContent, 0, 30, "UTF-8" ) . '...' : $messageContent;
+                    $subText = ( mb_strlen ( $messageContent, "HTML-ENTITIES" ) > 30 ) ? mb_substr( $messageContent, 0, 30, "HTML-ENTITIES" ) . '...' : $messageContent;
                     $subUrl = $router->generate('claro_message_show', array('message' => $message->getId()));
                 }
                 break;
@@ -235,7 +237,7 @@ class SolerniController extends Controller
                     $iconImageSubstitute = $lastBadge->getWebPath();
                     $statusText = $translator->trans( 'last_badge', array(), 'platform');
                     $badgeTitle = $lastBadge->getName();
-                    $subTitle = ( mb_strlen ( $badgeTitle, "HTML-ENTITIES" ) > 20 ) ? mb_substr( $badgeTitle, 0, 15, "HTML-ENTITIES"  ) . '...' : $badgeTitle;
+                    $subTitle = ( mb_strlen ( $badgeTitle, "UTF-8" ) > 20 ) ? mb_substr( $badgeTitle, 0, 15, "UTF-8"  ) . '...' : $badgeTitle;
                     if ( $lastBadge->getWorkspace()->getMooc() ) {
                         $subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
                     } else {
@@ -300,7 +302,8 @@ class SolerniController extends Controller
 	            	$containerClass = 'footer__block__withImage';
 	            	$iconClass .= '_actif';
 	            	$iconImageSubstitute = $lastBadge['badge']->getWebPath();
-	            	$subTitle = $lastBadge['badge']->getName();
+	            	$badgeTitle = $lastBadge['badge']->getName();
+	            	$subTitle = ( mb_strlen ( $badgeTitle, "UTF-8" ) > 20 ) ? mb_substr( $badgeTitle, 0, 15, "UTF-8"  ) . '...' : $badgeTitle;
 	            	$subText = $lastBadge['badge']->getWorkspace()->getMooc()->getTitle();
 	            	$subUrl = $lastBadge['resource']['url'];
 	            	$footerText = $translator->trans( 'show_my_evals', array(), 'platform');
