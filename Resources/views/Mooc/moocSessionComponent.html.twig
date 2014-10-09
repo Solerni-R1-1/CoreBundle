@@ -34,13 +34,13 @@
 {# define image size and number of words in description #}
 {% if sessionComponentLayout == '3-column' %}
     {% set imageSize = { 'width': 324, 'height': 232 } %}
-    {% set descriptionWords = 25 %}
+    {% set descriptionWords = 225 %}
 {% elseif sessionComponentLayout == 'slider-small'  %}
     {% set imageSize = { 'width': 335, 'height': 239 } %}
-    {% set descriptionWords = 15 %}
+    {% set descriptionWords = 95 %}
 {% else %}
     {% set imageSize = { 'width': 301, 'height': 216 } %}
-    {% set descriptionWords = 15 %}
+    {% set descriptionWords = 70 %}
 {% endif %}
 
 <div class="presentation__mooc presentation__mooc--{{ sessionComponentLayout }}" data-mooc-status="{{ moocStatus }}">
@@ -53,7 +53,9 @@
                  height="{{ imageSize.height }}"
         >
         {# owner logo #}
-        <img class="presentation__mooc__block__logo" src="{{ image( mooc.getOwner().getLogoWebPath() ).scaleResize( null, 35 ) }}" height=35>
+        <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">
+            <img class="presentation__mooc__block__logo" src="{{ image( mooc.getOwner().getLogoWebPath() ).scaleResize( null, 35 ) }}" height=35>
+        </a>
         {% if progression is defined and progression is not null and isRegistered %}
             <span class='presentation__mooc__progression__wrapper'>
                 <span class='presentation__mooc__progression__text londrina-solid'>{{ progression }}%</span>
@@ -75,7 +77,7 @@
                 </a>
         </span>
         <div class="presentation__mooc__text__desc">
-            {{ mooc.getDescription|textTruncate( descriptionWords )|raw }}
+            {{ mooc.getDescription|truncate( descriptionWords )|raw }}
             <a class="pink_link" href="{{ path( 'mooc_view', { 'moocId': mooc.getId(), 'moocName': mooc.getTitle()|slugify()|raw }) }}">
                 {{ 'know_more'|trans({}, 'platform') }}
             </a>
