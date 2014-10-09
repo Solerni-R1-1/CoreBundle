@@ -702,7 +702,7 @@
                     }
                     
                     this.dispatcher.trigger(this.eventOnSubmit, {
-                        action: form.getAttribute('action'),
+                        action: form[0].getAttribute('action'),
                         data: new FormData(form[0]),
                         nodeId: this.targetNodeId
                     });
@@ -778,7 +778,7 @@
 
                     var data = new FormData(form[1]);
                     $.ajax({
-                        url: form.getAttribute('action'),
+                        url: form[1].getAttribute('action'),
                         context: this,
                         data: data,
                         type: 'POST',
