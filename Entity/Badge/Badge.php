@@ -1014,6 +1014,10 @@ class Badge extends Rulable
 	    	$now = new \DateTime();
 	    	$dropzone = $resource['dropzone'];
 	    	$drop = $resource['drop'];
+            
+            if ( ! $dropzone ) {
+                return Badge::RES_STATUS_NO_RESOURCE;
+            }
 	    
 	    	if ($dropzone->isNotStarted()) {
 	    		$result = Badge::RES_STATUS_NOT_STARTED;
