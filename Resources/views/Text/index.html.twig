@@ -29,7 +29,8 @@
     {{ parent()}}
     <script type="text/javascript">
         jQuery(document).ready(function(jQuery) {
-            jQuery('#text_content a').attr('target', '_blank');
+        	var host = window.location.hostname;
+            jQuery('#text_content a:not([href^="/"],[href*="'+host+'"])').attr('target', '_blank');
         });
     </script>
 {% endblock %} 
