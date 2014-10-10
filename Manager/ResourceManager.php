@@ -199,9 +199,10 @@ class ResourceManager
     {
         $candidateName = $node->getName();
         $parent = $parent ?: $node->getParent();
-        $sameLevelNodes = $parent ?
+        /*$sameLevelNodes = $parent ?
             $parent->getChildren() :
-            $this->resourceNodeRepo->findBy(array('parent' => null));
+            $this->resourceNodeRepo->findBy(array('parent' => null, 'name' => $candidateName)); // CRASH ON THIS QUERY IF TOO MANY USERS*/
+        $sameLevelNodes = $this->resourceNodeRepo->findSimilarResources($node, $parent);
         $siblingNames = array();
 
         foreach ($sameLevelNodes as $levelNode) {

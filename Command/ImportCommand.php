@@ -41,6 +41,9 @@ protected function configure()
             $message = $server->recv();
             $messageArray = json_decode($message, true);
 
+            $before = new \DateTime();
+            echo "Starting at : ".$before->format("Y-m-d  H:i:s")."\n";
+
             $em = $this->getContainer()->get('doctrine')->getEntityManager();
             $em->getConnection()->connect();
             // Extract data from message
@@ -64,11 +67,13 @@ protected function configure()
             
             // Log console
             if (isset($groupId)) {
-            	$output->writeln("Import done. Adding users to group");
+            	$output->writeln("\nImport done. Adding users to group");
             } else {
-            	$output->writeln("Import done. Sending Message.");
+            	$output->writeln("\nImport done. Sending Message.");
             }
-
+            
+            $middle = new \DateTime();
+            echo "Finished import at : ".$middle->format("Y-m-d  H:i:s").". Continuing...\n";
 
             // Get entities
             $user = $userManager->getUserById($userId);
@@ -84,11 +89,24 @@ protected function configure()
             }
             
             // Send message to account who started the import
+            unset($message);
             $message = $messageManager->create("L'import des $nbUsers utilisateurs s'est bien déroulé.", "Résultat de votre import d'utilisateurs", array($user));
             $messageManager->send($message, false);
             
             $output->writeln("Message Sent.");
             $em->getConnection()->close();
+
+            $after = new \DateTime();
+            echo "Finished at : ".$after->format("Y-m-d  H:i:s")."\n";
+            echo "Took ".($after->getTimestamp() - $before->getTimestamp())." seconds \n";
+            
+            unset($before);
+            unset($middle);
+            unset($after);
+            unset($message);
+            unset($messageArray);
+            unset($users);
+            
         }
     }
 }
