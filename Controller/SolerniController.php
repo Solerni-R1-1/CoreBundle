@@ -212,7 +212,7 @@ class SolerniController extends Controller
                     $subTitle = ( mb_strlen ( $messageTitle, "UTF-8" ) > 15 ) ? mb_substr( $messageTitle, 0, 15 , "UTF-8") . '...' : $messageTitle;
                     $subTitle .= ' ' . $translator->trans( '@at', array(), 'platform') . ' ' .  $message->getDate()->format('H\hi');
                     // Message content is html encoded field (in SQL we have &eacute; &egrave; &ecirc; &euml; etc....)
-                    $messageContent = strip_tags( $message->getContent() );
+                    $messageContent = mb_convert_encoding(strip_tags( $message->getContent() ), "HTML-ENTITIES", "UTF-8");
                     $subText = ( mb_strlen ( $messageContent, "HTML-ENTITIES" ) > 30 ) ? mb_substr( $messageContent, 0, 30, "HTML-ENTITIES" ) . '...' : $messageContent;
                     $subUrl = $router->generate('claro_message_show', array('message' => $message->getId()));
                 }
