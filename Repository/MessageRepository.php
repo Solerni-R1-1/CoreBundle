@@ -52,17 +52,17 @@ class MessageRepository extends NestedTreeRepository
             SELECT COUNT(m) FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
             JOIN um.user u
-            JOIN m.user creator
             WHERE u.id = {$user->getId()}
             AND um.isRead = false
             AND um.isRemoved = false
-            AND creator.id != {$user->getId()}
+            AND (m.user IS NULL OR m.user != :user)
         ";
 
         $query = $this->_em->createQuery($dql);
-        $result = $query->getArrayResult();
+        $query->setParameter("user", $user);
+        $result = $query->getSingleScalarResult();
 
         //?? getFirstResult and aliases do not work. Why ?
-        return $result[0][1];
+        return $result;
     }
 }
