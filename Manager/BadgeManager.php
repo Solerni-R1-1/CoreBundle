@@ -256,10 +256,7 @@ class BadgeManager
     							}
     						}
     					}
-    
-    					//if ($status == Badge::BADGE_STATUS_IN_PROGRESS) {
-    					$badgesInProgress[] = $badgeInProgress;
-    					//}
+      					$badgesInProgress[] = $badgeInProgress;
     				}
     	}
     	 
@@ -287,7 +284,11 @@ class BadgeManager
     				$badgeInProgress['resource'] = array();
     				$badgeInProgress['resource']['url'] = $this->getResourceUrlAssociatedWithRule( $badge, $evalNode[0]->getResourceType()->getName() );
     				$badgeInProgress['resource']['resource'] = $this->getResourceAssociatedWithBadge( $badge, $evalNode[0]->getResourceType()->getName(), $user );
-    				$badgeInProgress['resource']['status'] = $badge->getBadgeResourceStatus($badgeInProgress['resource']['resource']);
+                    
+                    // Dropzone needs nbCorrections and wee need repository to have it
+                    $nbCorrections = $this->entityManager->getRepository('IcapDropzoneBundle:Correction')->countFinished($badgeInProgress['resource']['resource']['dropzone'], $user);
+                            
+    				$badgeInProgress['resource']['status'] = $badge->getBadgeResourceStatus($badgeInProgress['resource']['resource'], $nbCorrections);
     					
     				$status = $badge->getBadgeStatus($user, $badgeInProgress['resource']['status'], $this->badgeValidator);
     				$badgeInProgress['status'] = $status;
