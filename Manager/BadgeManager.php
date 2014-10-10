@@ -208,12 +208,14 @@ class BadgeManager
     
     public function getAllBadgesForWorkspace(User $user, AbstractWorkspace $workspace, $skillBadges = true, $knowledgeBadges = false, $allBadges = false) {
     	$badgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge');
-    
+        $correctionRepository = $this->entityManager->getRepository('IcapDropzoneBundle:Correction');
+        
     	$badgesInProgress = array();
     	$workspaceBadges = $badgeRepository->findByWorkspace($workspace);
     	foreach($workspaceBadges as $badge) {
     		$knowledgeBadge = $badge->isKnowledgeBadge();
     		$skillBadge = $badge->isSkillBadge();
+                        
     		if ($allBadges
     				|| ($knowledgeBadges && $knowledgeBadge)
     				|| ($skillBadges && $skillBadge)) {
@@ -228,11 +230,20 @@ class BadgeManager
     					}
     					$badgeInProgress = array();
     					$badgeInProgress['badge'] = $badge;
+                        
     					if ($resNode != null) {
     						$badgeInProgress['resource'] = array();
     						$badgeInProgress['resource']['url'] = $this->getResourceUrlAssociatedWithRule( $badge, $resNode[0]->getResourceType()->getName() );
     						$badgeInProgress['resource']['resource'] = $this->getResourceAssociatedWithBadge( $badge, $resNode[0]->getResourceType()->getName(), $user );
-    						$badgeInProgress['resource']['status'] = $badge->getBadgeResourceStatus($badgeInProgress['resource']['resource']);
+                            
+                            // Dropzone needs nbCorrections and wee need repository to have it
+                            if ( $skillBadge ) {
+                                $nbCorrections = $correctionRepository->countFinished($badgeInProgress['resource']['resource']['dropzone'], $user);
+                            } else {
+                                $nbCorrections = null;
+                            }
+                            
+    						$badgeInProgress['resource']['status'] = $badge->getBadgeResourceStatus($badgeInProgress['resource']['resource'], $nbCorrections );
     					}
     
     					$status = $badge->getBadgeStatus($user, $badgeInProgress['resource']['status'], $this->badgeValidator, false);
