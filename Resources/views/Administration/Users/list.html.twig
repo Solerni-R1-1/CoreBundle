@@ -135,7 +135,9 @@
                                 </td>
                             {% endif %}
                             <td>
-                                <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                {% if user.getPublicUrl()|default %}
+                                    <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                {% endif %}
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>

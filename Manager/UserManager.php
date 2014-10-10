@@ -193,12 +193,17 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+        
+        $unique = md5( uniqid() );
+        $identifier = 'invite-'. substr($unique, 0, 8);
         //soft delete~
-        //$user->setMail('mail#' . $user->getId());
-        //$user->setFirstName('firstname#' . $user->getId());
-        //$user->setLastName('lastname#' . $user->getId());
-        $user->setPlainPassword(uniqid());
-        //$user->setUsername('username#' . $user->getId());
+        $user->setMail($identifier . '@solerni.org');
+        $user->setFirstName('Invité');
+        $user->setLastName('Invite');
+        $user->setPlainPassword($unique);
+        $user->setUsername($identifier);
+        $user->setUsername($identifier);
+        $user->setPublicUrl($identifier);
         $user->setIsEnabled(false);
 
         // keeping the user's workspace with its original code
@@ -362,7 +367,7 @@ class UserManager
         $this->translator->setLocale($locale);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $config->setWorkspaceName($personalWorkspaceName);
-        $config->setWorkspaceCode($user->getUsername());
+        $config->setWorkspaceCode($user->getUsername() . '-' . uniqid() );
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);

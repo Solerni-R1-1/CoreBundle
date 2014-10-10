@@ -39,7 +39,7 @@
     {% else %}
         {# if the mooc is redoable, ask for notification #}
         {% if session.getMooc().getPostEndAction() == 1 %}
-            <a href="#" title="Non fonctionnel" class="btn btn-primary">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
+            <a href="#" title="Non fonctionnel" class="btn btn-primary longText">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
         {% else %}
             {# otherwise just display invisible button for spacing #}
             <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}

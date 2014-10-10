@@ -23,14 +23,14 @@ class BadgeConstraint extends AbstractConstraint
     {
         $isValid = true;
 
-        if (0 === count($this->getAssociatedLogs())) {
+        if (0 === count($this->getAssociatedLogs())) {//
             $isValid = false;
         } else {
             foreach ($this->getAssociatedLogs() as $associatedLog) {
                 $associatedLogDetails = $associatedLog->getDetails();
 
                 if (isset($associatedLogDetails['badge'])) {
-                    $isValid = $isValid && ($this->getRule()->getBadge()->getId() === $associatedLogDetails['badge']['id']);
+                    $isValid = $isValid || ($this->getRule()->getBadge()->getId() === $associatedLogDetails['badge']['id']);
                 } else {
                     $isValid = false;
                 }

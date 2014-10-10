@@ -322,16 +322,7 @@ class RegistrationController extends Controller
         $localeManager = $this->get('claroline.common.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
-        
-        /*// START Pregenerate the username
-        $request = $this->get('request');
-        $profile_form = $request->request->get('profile_form');
-        $search = array('@', '-', '+');
-        $replace = array('__AT__', '_', '_');
-        $profile_form['username'] = str_replace($search, $replace, $profile_form['mail']);
-        $request->request->set('profile_form', $profile_form);
-        // END Pregenerate the username*/
-        
+       
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {

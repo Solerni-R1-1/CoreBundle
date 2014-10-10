@@ -12,7 +12,7 @@
 
 {% block section_body %}
     {% if WorkspacesBadgeList|length == 0 %}
-        {{ 'no_evals_yet'|trans({'%url%': path( 'solerni_static_page', { 'name': 'static_eval' } ) }, 'platform')|raw }}
+        {{ 'no_evals_yet'|trans({'%url%': path( 'solerni_static_page', { 'name': 'static_faq' } ) }, 'platform')|raw }}
     {% else %}
         {# for each badgePager render all badges #}
         {% for BadgeList in WorkspacesBadgeList %}

@@ -559,13 +559,18 @@ class GroupsController extends Controller
 	            $sender = new \ZMQSocket($ctx, \ZMQ::SOCKET_PUSH);
 	            $sender->connect("tcp://localhost:11112");
 	            
-	            $message = array(
-	            		'class_name'	=> "ClarolineCoreBundle:User",
-	            		'group'			=> $group->getId(),
-	            		'users' 		=> $parsedFile['valid'],
-	            		'user'			=> $this->getUser()->getId()
-	            );
-	            $sender->send(json_encode($message));
+	            
+	            $fileChunks = array_chunk($parsedFile['valid'], 500, true);
+	            
+	            foreach ($fileChunks as $fileChunk) {
+		            $message = array(
+		            		'class_name'	=> "ClarolineCoreBundle:User",
+		            		'group'			=> $group->getId(),
+		            		'users' 		=> $fileChunk,
+		            		'user'			=> $this->getUser()->getId()
+		            );
+		            $sender->send(json_encode($message));
+	            }
             }
             
             $shouldWriteRejectFile = array();

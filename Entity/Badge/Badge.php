@@ -1007,13 +1007,17 @@ class Badge extends Rulable
     }
     
     
-    public function getBadgeResourceStatus($resource) {
+    public function getBadgeResourceStatus($resource, $nbCorrections = null) {
     	$result = Badge::RES_STATUS_IN_PROGRESS;
     	 
     	if ($this->isSkillBadge()) {
 	    	$now = new \DateTime();
 	    	$dropzone = $resource['dropzone'];
 	    	$drop = $resource['drop'];
+            
+            if ( ! $dropzone ) {
+                return Badge::RES_STATUS_NO_RESOURCE;
+            }
 	    
 	    	if ($dropzone->isNotStarted()) {
 	    		$result = Badge::RES_STATUS_NOT_STARTED;
@@ -1023,7 +1027,10 @@ class Badge extends Rulable
 	    	} else if ($drop != null) {
 	    		$grade = $drop->getCalculatedGrade();
 	    		$expectedGrade = $dropzone->getMinimumScoreToPass();
-	    		if ($grade != -1 && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection()) {
+	    		if (    $grade != -1 && 
+                        $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
+                        $nbCorrections >= $dropzone->getExpectedTotalCorrection()
+                    ) {
 	    			if ($grade >= $expectedGrade) {
 	    				$result = Badge::RES_STATUS_SUCCEED;
 	    			} else {

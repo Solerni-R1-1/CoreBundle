@@ -58,6 +58,10 @@
 .essentiels__video { background-position: -210px -214px; }
 .essentiels__subscription { background-position: -210px -239px; }
 
+.sider__content .longText{
+	font-size: 0.95em;
+}
+
 .content_center{
 	text-align: center;
 }

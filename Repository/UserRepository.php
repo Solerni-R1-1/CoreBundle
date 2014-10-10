@@ -1170,7 +1170,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('id', $data);
         $query->setParameter('publicUrl', $data);
 
-        return $query->getSingleResult();
+        return $query->getOneOrNullResult();
     }
     
     public function findByUsernameIn(array $usernames) {

@@ -25,6 +25,56 @@
     var simpleRights = window.Claroline.SimpleRights;
     var routing = window.Routing;
     var translator = window.Translator;
+    
+    
+    function ieResourceManagerFallback(form, eventName, nodeId) {
+        
+        if ( 'create' == eventName ) {
+
+            var onSuccessAction = function (data, textStatus, jqXHR) {
+                this.views.main.subViews.nodes.addThumbnails(data, this.views.form.close());
+            }
+        } else if ( 'rename' == eventName ) {
+            
+            var onSuccessAction = function (data, textStatus, jqXHR) {
+                this.views.main.subViews.nodes.renameThumbnail(
+                    nodeId,
+                    data[0],
+                    this.views.form.close()
+                );
+            }
+        } else if ( 'edit-rights' == eventName ) {
+            var onSuccessAction = function () {
+                    this.views.form.close();
+                }
+        } else if ( 'edit-properties' == eventName ) {
+            var onSuccessAction = function (data, textStatus, jqXHR) {
+                if (data[0].name) {
+                    this.views.main.subViews.nodes.renameThumbnail(
+                        nodeId,
+                        data[0].name,
+                        this.views.form.close()
+                    );
+                }
+
+                if (data[0].large_icon) {
+                    this.views.main.subViews.nodes.changeThumbnailIcon(
+                        nodeId,
+                        data[0].large_icon,
+                        this.views.form.close()
+                    );
+                }
+            }
+        }
+
+        form.ajaxSubmit({
+            success: onSuccessAction,
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            dataType: 'json'
+        });
+        return false;
+    }
+    
 
     manager.Views = {
         Master: Backbone.View.extend({
@@ -644,10 +694,16 @@
                 },
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
-                    var form = $(this.el).find('form')[0];
+                    var form = $(this.el).find('form');
+                    
+                    /* Damn you IE9 */
+                    if ( ! ("FormData" in window) ) {
+                       return ieResourceManagerFallback(form, this.eventOnSubmit, this.targetNodeId);
+                    }
+                    
                     this.dispatcher.trigger(this.eventOnSubmit, {
-                        action: form.getAttribute('action'),
-                        data: new FormData(form),
+                        action: form[0].getAttribute('action'),
+                        data: new FormData(form[0]),
                         nodeId: this.targetNodeId
                     });
                 },
@@ -713,10 +769,16 @@
                 },
                 'click #submit-right-form-button': function (event) {
                     event.preventDefault();
-                    var form = $(this.el).find('form')[1];
-                    var data = new FormData(form);
+                    var form = $(this.el).find('form');
+                     
+                    /* Damn you IE9 */
+                    if ( ! ("FormData" in window) ) {
+                       return ieResourceManagerFallback(form, this.eventOnSubmit, null);
+                    }
+
+                    var data = new FormData(form[1]);
                     $.ajax({
-                        url: form.getAttribute('action'),
+                        url: form[1].getAttribute('action'),
                         context: this,
                         data: data,
                         type: 'POST',
@@ -735,6 +797,12 @@
                 'submit form': function (event) {
                     event.preventDefault();
                     var form = this.$el.find('form');
+                    
+                    /* Damn you IE9 */
+                    if ( ! ("FormData" in window) ) {
+                       return ieResourceManagerFallback(form, this.eventOnSubmit, this.targetNodeId);
+                    }
+                    
                     this.dispatcher.trigger(this.eventOnSubmit, {
                         action: form.attr('action'),
                         data: new FormData(form[0]),

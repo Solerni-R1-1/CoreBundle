@@ -14,6 +14,10 @@
         </div>
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
+        {% set firstNameInvalidMsg %}{{ 'user_form_firstName_invalid'|trans({}, 'platform') }}{% endset %}
+        {% set lastNameInvalidMsg %}{{ 'user_form_lastName_invalid'|trans({}, 'platform') }}{% endset %}
+        {% set usernameInvalidMsg %}{{ 'user_form_username_invalid'|trans({}, 'platform') }}{% endset %}
+        {% set mailInvalidMsg %}{{ 'mail_invalid'|trans({}, 'platform') }}{% endset %}
         {{ macros.flashBox() }}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body slrn-profile-form">
@@ -21,7 +25,12 @@
                 <div class="form-group row">
                     {{ form_label(form.firstName) }}
                     <div class="col-md-9 col-xs-9">
-                        {{ form_widget(form.firstName) }}
+                        {{ form_widget(form.firstName, {'attr': { 
+								'data-validation': 'alphanumeric required', 
+								'data-validation-allowing': '-éèöàñïîêôâ ',
+								'data-validation-error-msg' : firstNameInvalidMsg}
+														 })
+						}}
                         {{ form_errors(form.firstName) }} 
                     </div>
                 </div>
@@ -29,7 +38,12 @@
                 <div class="form-group row">
                     {{ form_label(form.lastName) }}
                     <div class="col-md-9 col-xs-9">
-                        {{ form_widget(form.lastName) }}
+                        {{ form_widget(form.lastName, {'attr': { 
+								'data-validation': 'alphanumeric required', 
+								'data-validation-allowing': '-éèöàñïîêôâ ',
+								'data-validation-error-msg' : lastNameInvalidMsg}
+														 })
+						}}
                         {{ form_errors(form.lastName) }} 
                     </div>
                 </div>
@@ -37,7 +51,12 @@
                 <div class="form-group row">
                     {{ form_label(form.username) }}
                     <div class="col-md-9 col-xs-9">
-                        {{ form_widget(form.username) }}
+                        {{ form_widget(form.username, {'attr': {
+								'data-validation': 'alphanumeric length',
+								'data-validation-length': 'min3',
+								'data-validation-error-msg' : usernameInvalidMsg}
+														 })
+						 }}
                         {{ form_errors(form.username) }} 
                     </div>
                 </div>
@@ -45,7 +64,11 @@
                 <div class="form-group row">
                     {{ form_label(form.mail) }}
                     <div class="col-md-9 col-xs-9">
-                        {{ form_widget(form.mail) }}
+                        {{ form_widget(form.mail, {'attr': {
+								'data-validation': 'email', 
+								'data-validation-error-msg' : mailInvalidMsg}
+														 })
+						 }}
                         {{ form_errors(form.mail) }} 
                     </div>
                 </div>
@@ -180,4 +203,19 @@
             {{ 'unsubscribe_self'|trans({}, 'platform' )}}
         </a>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator/jquery.form-validator.js') }}"></script>
+    <script type="text/javascript">
+
+	    jQuery.validate({
+	        borderColorOnError: '#FF004F',
+	        modules: 'security.dev',
+	        showHelpOnFocus: false,
+	        addSuggestions: false,
+	        validateOnBlur: true
+	    });
+    </script>
 {% endblock %}

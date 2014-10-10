@@ -161,8 +161,14 @@ class ResourceController extends Controller
                     $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
                 }
             }
+            
+            $return = new JsonResponse($nodesArray);
+            
+            if ( preg_match( "/(Trident\/5)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ) {
+                $return->headers->set('Content-Type', 'text/html');
+            }
 
-            return new JsonResponse($nodesArray);
+            return $return;
         }
 
         return new Response($event->getErrorFormContent());
@@ -488,17 +494,28 @@ class ResourceController extends Controller
                         ->trans($resourceType->getName(), array(), 'resource');
                 }
             } else {
-            	$session = $this->entityManager
-            			->getRepository('ClarolineCoreBundle:Mooc\MoocSession')
-            			->guessMoocSession($node->getWorkspace(), $user);
-                if ( $session && $session->getForum() ) {
-                    foreach ($nodes as $i => $item) {
-                        if ($item['type'] == 'claroline_forum'
-                                && $item['id'] != $session->getForum()->getId()) {
-                            unset ($nodes[$i]);
-                        }
-                    }
-                }
+            	$workspace = $node->getWorkspace();
+            	$sessions = null;
+            	if ($workspace->isMooc()) {
+            		$sessions = $workspace->getMooc()->getMoocSessions();
+            	}
+            	
+            	if ($sessions) {
+            		$currentSession = $this->entityManager
+	            		->getRepository('ClarolineCoreBundle:Mooc\MoocSession')
+	            		->guessMoocSession($node->getWorkspace(), $user);
+		            foreach ($nodes as $i => $item) {
+		            	if ($item['type'] == 'claroline_forum') {
+            				foreach ($sessions as $session) {
+		                		if ( $session && $session->getForum() && $session->getId() != $currentSession->getId() ) {
+		                        	if ($item['id'] == $session->getForum()->getId()) {
+		                            	unset ($nodes[$i]);
+		                        	}
+		                        }
+		                    }
+		                }
+            		}
+            	}
             }
 
             foreach ($nodes as $item) {
