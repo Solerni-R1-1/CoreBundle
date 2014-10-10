@@ -302,16 +302,12 @@ class UserManager
             	$newUser->setPhone($user[6]);
             }
             $this->createUserForImport($newUser, $config);
-            if ($i % 1000 == 999) {
-            	$this->objectManager->endFlushSuite();
-            	$this->objectManager->clear();
-            	$this->objectManager->startFlushSuite();
-            }
-            $this->logger->log(Logger::DEBUG, "User nb. ".$i);
+            echo "\rUser nb. ".$i;
         }
 
         $this->objectManager->endFlushSuite();
         $this->objectManager->commit();
+        $this->objectManager->clear();
     }
     
     /**

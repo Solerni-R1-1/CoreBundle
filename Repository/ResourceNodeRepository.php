@@ -468,6 +468,28 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         return $builder;
     }
+    
+    public function findSimilarResources(ResourceNode $resourceNode, $parent = null) {
+    	$dql = "SELECT rn
+    			FROM Claroline\CoreBundle\Entity\Resource\ResourceNode rn
+    			WHERE rn.name LIKE :name";
+
+    	if ($parent != null) {
+    		$dql .= " AND rn.parent = :parent";
+    	} else {
+    		$dql .= " AND rn.parent IS NULL";
+    	}
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("name", $resourceNode->getName().'%');
+    	
+    	if ($parent != null) {
+    		$query->setParameter("parent", $parent);
+    	}
+    	
+    	return $query->getResult();
+    	
+    }
 
     /**
      * Executes a DQL query and returns resources as entities or arrays.
