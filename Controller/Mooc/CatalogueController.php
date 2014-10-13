@@ -103,14 +103,16 @@ class CatalogueController extends Controller
                 {
                     $autorizedSessions[] = $session;
                 } else {
-                	$groups = $user->getGroups();
-                	foreach ($groups as $group) {
-                		foreach ($group->getMoocSessions() as $groupSession) {
-                			if ($groupSession->getId() == $session->getId()) {
-                				$autorizedSessions[] = $session;
-                				break;
-                			}
-                		}
+                	if ($user instanceof \Claroline\CoreBundle\Entity\User) {
+	                	$groups = $user->getGroups();
+	                	foreach ($groups as $group) {
+	                		foreach ($group->getMoocSessions() as $groupSession) {
+	                			if ($groupSession->getId() == $session->getId()) {
+	                				$autorizedSessions[] = $session;
+	                				break;
+	                			}
+	                		}
+	                	}
                 	}
                 }
             }
