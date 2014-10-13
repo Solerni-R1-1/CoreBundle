@@ -195,29 +195,40 @@ class ResourceController extends Controller
     {
         // redirect user to inscription if he's not registered to a session and is not ADMIN
         $workspace = $node->getWorkspace();
-        if (    $workspace->isMooc() && 
-                ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
-                ! $this->sc->isGranted('ROLE_WS_CREATOR')
-            ) {
-                return $this->redirect( $this->get('router')
-                            ->generate('mooc_view', array( 
-                                'moocId' => $workspace->getMooc()->getId(), 
-                                'moocName' => $workspace->getMooc()->getTitle()))
-                );
-        }
+        $user = $this->sc->getToken()->getUser();
+//         if (    $workspace->isMooc() && 
+//                 ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
+//                 ! $this->sc->isGranted('ROLE_WS_CREATOR')
+//             ) {
+//                 return $this->redirect( $this->get('router')
+//                             ->generate('mooc_view', array( 
+//                                 'moocId' => $workspace->getMooc()->getId(), 
+//                                 'moocName' => $workspace->getMooc()->getTitle()))
+//                 );
+//         }
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
-        $this->checkAccess('OPEN', $collection);
-        $resourceArray = array($this->resourceManager->getResourceFromNode($node));
-        $event = $this->dispatcher->dispatch(
-            'open_'.$resourceType,
-            'OpenResource',
-            $resourceArray
-        );
-        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
-
-        return $event->getResponse();
+        $hasAccess = $this->checkAccess('OPEN', $collection, !($user instanceof User));
+        
+        if ($hasAccess) {
+	        $resourceArray = array($this->resourceManager->getResourceFromNode($node));
+	        $event = $this->dispatcher->dispatch(
+	            'open_'.$resourceType,
+	            'OpenResource',
+	            $resourceArray
+	        );
+	        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
+	
+	        return $event->getResponse();
+        } else {
+        	return $this->redirect( $this->get('router')->generate('mooc_view',
+        		array(
+					'moocId' => $workspace->getMooc()->getId(),
+					'moocName' => $workspace->getMooc()->getTitle())
+        		)
+			);
+        }
     }
 
     /**
@@ -812,11 +823,16 @@ class ResourceController extends Controller
      *
      * @throws AccessDeniedException
      */
-    public function checkAccess($permission, ResourceCollection $collection)
+    public function checkAccess($permission, ResourceCollection $collection, $throwException = true)
     {
         if (!$this->sc->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        	if ($throwException) {
+            	throw new AccessDeniedException($collection->getErrorsForDisplay());
+        	} else {
+        		return false;
+        	}
         }
+        return true;
     }
 
     /**
