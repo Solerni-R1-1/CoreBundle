@@ -91,6 +91,7 @@ class MoocType extends AbstractType
             ->add('teamDescription','tinymce',array('required' => false))
             ->add('badgesUrl','text',array('required' => false))
             ->add('badgesText','tinymce',array('required' => false))
+            ->add('knowledgeBadgesUrl','text',array('required' => false))
             ->add('googleAnalyticsToken','text',array('required' => false, 'disabled' => true))
             ->add('hasFacebookShare', 'checkbox', array('required' => false, 'read_only' => true, 'disabled' => true))
             ->add('hasTweeterShare', 'checkbox', array('required' => false, 'read_only' => true, 'disabled' => true))

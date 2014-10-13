@@ -214,7 +214,7 @@ class Mooc
      * @ORM\Column(name="badgesText", type="text", nullable=true)
      */
     private $badgesText;
-    
+
 
     /**
      * @var string
@@ -222,6 +222,14 @@ class Mooc
      * @ORM\Column(name="badgesUrl", type="text", nullable=true)
      */
     private $badgesUrl;
+    
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="knowledgeBadgesUrl", type="text", nullable=true)
+     */
+    private $knowledgeBadgesUrl;
     
 
     /**
@@ -968,6 +976,10 @@ class Mooc
     	return $this->badgesUrl;
     }
 
+    public function getKnowledgeBadgesUrl() {
+    	return $this->knowledgeBadgesUrl;
+    }
+
     /**
      * Returns a HREF version of the badges url.
      * @return string
@@ -986,5 +998,9 @@ class Mooc
     
     public function setBadgesUrl($badgesUrl) {
     	$this->badgesUrl = $badgesUrl;
+    }
+    
+    public function setKnowledgeBadgesUrl($knowledgeBadgesUrl) {
+    	$this->knowledgeBadgesUrl = $knowledgeBadgesUrl;
     }
 }
