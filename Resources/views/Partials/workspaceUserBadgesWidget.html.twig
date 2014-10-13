@@ -9,6 +9,11 @@
          <a href="{{ path( 'claro_view_badge', {'slug': itemBadge.slug } ) }}" class="lesson_tooltip badge-item{{ acquiredBadge }}" data-original-title="{{ itemBadge.name }}"></a>
      {% endfor %}
 {% endmacro %}
+{% if workspace and workspace.getMooc() and workspace.getMooc().getKnowledgeBadgesUrl() %}
+	{% set knowledgeBadgesUrl = workspace.getMooc().getKnowledgeBadgesUrl() %}
+{% else %}
+	{% set knowledgeBadgesUrl = "#" %}
+{% endif %}
 
 <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--badges">
     <div class="row slrn-widget__title bg-color-primary slrn-widget_row">
@@ -33,7 +38,7 @@
         <div class="slrn-badges-title slrn-widget_row">
             {{ 'badge_knowledge_short'|trans({}, 'platform') }}
             <div class="slrn-badges-count">
-                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ path( 'solerni_static_page', { 'name': 'static_badges' } ) }}">{{ BadgesKnowledge.UserBadgesCollection|length }}/{{ BadgesKnowledge.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
+                <a href="{{ knowledgeBadgesUrl }}" title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link">{{ BadgesKnowledge.UserBadgesCollection|length }}/{{ BadgesKnowledge.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
             </div>
             <div class="slrn-badges-list">
                 {% import _self as badgeList %}
