@@ -860,11 +860,11 @@ class WorkspaceManager
 
         if (count($userRoles) === 0) {
             $this->roleManager->associateRole($user, $role);
-            $this->dispatcher->dispatch(
+            /*$this->dispatcher->dispatch(
                 'log',
                 'Log\LogRoleSubscribe',
                 array($role, $user)
-            );
+            );*/
         }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
