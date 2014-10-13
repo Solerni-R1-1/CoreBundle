@@ -23,7 +23,7 @@ class BadgeConstraint extends AbstractConstraint
     {
         $isValid = true;
 
-        if (0 === count($this->getAssociatedLogs())) {//
+        if (0 === count($this->getAssociatedLogs())) {
             $isValid = false;
         } else {
             foreach ($this->getAssociatedLogs() as $associatedLog) {
@@ -57,6 +57,10 @@ class BadgeConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
+    	$badgeId = $this->getRule()->getBadge()->getId();
+    	$likeString = '%"badge":{"id":'.$badgeId.'}%';
+        $queryBuilder->andWhere("l.details LIKE :likeString");
+        $queryBuilder->setParameter('likeString', $likeString);
         return $queryBuilder;
     }
 }
