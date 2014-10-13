@@ -59,7 +59,7 @@ class MoocSessionRepository extends EntityRepository
 	 */
 	public function guessMoocSession($workspace, $user) {
 		$session = new Session();
-		if ($workspace->isMooc()) {
+		if ($user instanceof User && $workspace->isMooc()) {
 			$mooc = $workspace->getMooc();
 			$moocSessions = $mooc->getMoocSessions();
 			if ($session->has($mooc->getId().'moocSession')) {
