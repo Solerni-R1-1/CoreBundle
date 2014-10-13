@@ -27,14 +27,14 @@ class ResourcePropertiesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
-        $builder->add(
+        /*$builder->add(
             'newIcon',
             'file',
             array(
                 'required' => false,
                 'mapped' => false
             )
-        );
+        );*/
         $builder->add(
             'creationDate',
             'date',
