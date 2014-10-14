@@ -660,16 +660,16 @@ class GroupsController extends Controller
     		$code = isset($user[5])? $user[5] : null;
     		$phone = isset($user[6])? $user[6] : null;
     	
-    		if (!array_key_exists($email, $mails)) {
-	    		$mails[$email] = array($i);
+    		if (!array_key_exists(strtolower($email), $mails)) {
+	    		$mails[strtolower($email)] = array($i);
     		} else {
-	    		$mails[$email][] = $i;
+	    		$mails[strtolower($email)][] = $i;
     		}
     		
-    		if (!array_key_exists($username, $usernames)) {
-	    		$usernames[$username] = array($i);
+    		if (!array_key_exists(strtolower($username), $usernames)) {
+	    		$usernames[strtolower($username)] = array($i);
     		} else {
-	    		$usernames[$username][] = $i;
+	    		$usernames[strtolower($username)][] = $i;
     		}
     	
     		$newUser = new User();
