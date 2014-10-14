@@ -478,7 +478,7 @@ class RolesController extends Controller
      */
     public function addGroupsToRolesAction(array $groups, array $sessions, array $roles, AbstractWorkspace $workspace) {
         $this->checkAccess($workspace);
-        $this->roleManager->associateRolesToSubjects($groups, $roles, true);
+        $this->roleManager->associateRolesToSubjects($groups, $roles, false);
         
         if (!empty($sessions)) {
         	$this->moocSessionManager->addGroupsToSession($groups, $sessions);
