@@ -660,16 +660,16 @@ class GroupsController extends Controller
     		$code = isset($user[5])? $user[5] : null;
     		$phone = isset($user[6])? $user[6] : null;
     	
-    		if (!array_key_exists($email, $mails)) {
-	    		$mails[$email] = array($i);
+    		if (!array_key_exists(strtolower($email), $mails)) {
+	    		$mails[strtolower($email)] = array($i);
     		} else {
-	    		$mails[$email][] = $i;
+	    		$mails[strtolower($email)][] = $i;
     		}
     		
-    		if (!array_key_exists($username, $usernames)) {
-	    		$usernames[$username] = array($i);
+    		if (!array_key_exists(strtolower($username), $usernames)) {
+	    		$usernames[strtolower($username)] = array($i);
     		} else {
-	    		$usernames[$username][] = $i;
+	    		$usernames[strtolower($username)][] = $i;
     		}
     	
     		$newUser = new User();
@@ -725,7 +725,7 @@ class GroupsController extends Controller
     	$rejects = &$result['rejected']['db_username'];
     	foreach ($alreadyExistingUsernames as $alreadyExistingUser) {
     		foreach ($users as $lineIndex => $user) {
-    			if ($user->getUsername() == $alreadyExistingUser->getUsername()) {
+    			if (strtolower($user->getUsername()) == strtolower($alreadyExistingUser->getUsername())) {
     				$rejects[$lineIndex] = $lines[$lineIndex];    
     				unset($result['valid'][$lineIndex]);
     			}
@@ -741,7 +741,7 @@ class GroupsController extends Controller
     	$rejects = &$result['rejected']['db_mail'];
     	foreach ($alreadyExistingMails as $alreadyExistingUser) {
     		foreach ($users as $lineIndex => $user) {
-    			if ($user->getMail() == $alreadyExistingUser->getMail()) {
+    			if (strtolower($user->getMail()) == strtolower($alreadyExistingUser->getMail())) {
     				$rejects[$lineIndex] = $lines[$lineIndex];
     				unset($result['valid'][$lineIndex]);
     			}
@@ -753,7 +753,6 @@ class GroupsController extends Controller
     		) . ' ';*/
     	}
     	ksort($rejects);
-    	
     	return $result;
     }
     
