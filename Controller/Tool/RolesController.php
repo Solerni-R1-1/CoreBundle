@@ -411,7 +411,7 @@ class RolesController extends Controller
     public function addUsersToRolesAction(array $users, array $sessions, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->associateRolesToSubjects($users, $roles, true);
+        $this->roleManager->associateRolesToSubjects($users, $roles, false);
         
         if (!empty($sessions)) {
         	$this->moocSessionManager->addUsersToSession($users, $sessions);
