@@ -1,4 +1,4 @@
-<div class="presentation__mooc presentation__mooc--2-column">
+<div class="presentation__mooc presentation__mooc--2-column" ng-class="{'presentation__mooc--private': false == document.mooc_is_public_b }" >
 	<div class="presentation__mooc__block presentation__mooc__pic">
         <img class="presentation__mooc__block__image" 
                  src="{{ './' + document.mooc_illustration_path | tranfo:'zcrop_301_216' }}" 
