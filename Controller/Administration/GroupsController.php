@@ -725,7 +725,7 @@ class GroupsController extends Controller
     	$rejects = &$result['rejected']['db_username'];
     	foreach ($alreadyExistingUsernames as $alreadyExistingUser) {
     		foreach ($users as $lineIndex => $user) {
-    			if ($user->getUsername() == $alreadyExistingUser->getUsername()) {
+    			if (strtolower($user->getUsername()) == strtolower($alreadyExistingUser->getUsername())) {
     				$rejects[$lineIndex] = $lines[$lineIndex];    
     				unset($result['valid'][$lineIndex]);
     			}
@@ -741,7 +741,7 @@ class GroupsController extends Controller
     	$rejects = &$result['rejected']['db_mail'];
     	foreach ($alreadyExistingMails as $alreadyExistingUser) {
     		foreach ($users as $lineIndex => $user) {
-    			if ($user->getMail() == $alreadyExistingUser->getMail()) {
+    			if (strtolower($user->getMail()) == strtolower($alreadyExistingUser->getMail())) {
     				$rejects[$lineIndex] = $lines[$lineIndex];
     				unset($result['valid'][$lineIndex]);
     			}
@@ -753,7 +753,6 @@ class GroupsController extends Controller
     		) . ' ';*/
     	}
     	ksort($rejects);
-    	
     	return $result;
     }
     
