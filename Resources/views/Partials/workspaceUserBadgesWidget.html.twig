@@ -14,6 +14,11 @@
 {% else %}
 	{% set knowledgeBadgesUrl = "#" %}
 {% endif %}
+{% if BadgesSkills.BadgesCollection|length > 0 %}
+	{% set skillBadgesUrl = path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) %}
+{% else %}
+	{% set skillBadgesUrl = "#" %}
+{% endif %}
 
 <div class="col-xs-12 col-md-12 slrn-widget slrn-widget--badges">
     <div class="row slrn-widget__title bg-color-primary slrn-widget_row">
@@ -48,7 +53,7 @@
         <div class="slrn-badges-title slrn-widget_row">
             {{ 'badge_skill_short'|trans({}, 'platform') }}
             <div class="slrn-badges-count">
-                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ path( 'claro_workspace_open_tool', { 'workspaceId': workspace.getId(), 'toolName': 'my_badges' } ) }}">{{ BadgesSkills.UserBadgesCollection|length }}/{{ BadgesSkills.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
+                <a title="{{ 'page_my_badges'|trans({}, 'platform') }}" class="slrn-badges-count--link" href="{{ skillBadgesUrl }}">{{ BadgesSkills.UserBadgesCollection|length }}/{{ BadgesSkills.BadgesCollection|length }}</a> <i class="icon-angle-right"></i>
             </div>
             <div class="slrn-badges-list">
                 {% import _self as badgeList %}
