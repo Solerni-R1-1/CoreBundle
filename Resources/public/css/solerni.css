@@ -962,6 +962,14 @@ body.dsk .alert { display: none; }
     margin: 0;
 }
 
+.presentation__mooc--private {
+    background-color: #D3D3D3;
+}
+
+.presentation__mooc--private .presentation__mooc__text__title {
+    color: #FF004F;
+}
+
 .presentation__mooc__block {
     float:          left;
     height:         100%;
