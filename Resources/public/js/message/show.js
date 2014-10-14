@@ -53,6 +53,12 @@ $( document ).ready(function() {
         'workspace': []
     };
 
+    var typeMapLabel = {
+        'user': [],
+        'group': [],
+        'workspace': []
+    };
+
     function getPage(tab)
     {
         var page = 1;
@@ -99,8 +105,11 @@ $( document ).ready(function() {
 
             if (typeMap[currentType].indexOf(contactId) >= 0) {
                 $(this).attr('checked', 'checked');
+                $(this).parent().parent().addClass('selected');
             }
         });
+        listSelected();
+        checkboxWatcher();
     }
 
     function cleanToList(toList){
@@ -278,29 +287,22 @@ $( document ).ready(function() {
         var checked = $(this).prop('checked');
         var index = typeMap[currentType].indexOf(contactId);
 
+        var label = $(this).parent().children(".contact-label").val();
+
         if (checked && index < 0) {
             typeMap[currentType].push(contactId);
+            typeMapLabel[currentType].push([contactId, label]);
+            $( this ).parent().parent().addClass('selected');
         }
         else {
             typeMap[currentType].splice(index, 1);
+            typeMapLabel[currentType].splice(index, 1);
+            $( this ).parent().parent().removeClass('selected');
         }
 
-        $pseudo = $( this ).parent().children(".contact-pseudo").val();
-        $cleanpseudo = $pseudo.replace('.', '__DOT__');
-
-        checkboxTester($( this ));
-
-        $('.contact_selected_delete').on('click', function (e) {
-            $pseudo = $( this ).parent().attr('contact-pseudo');
-            $( "input[value='"+ $pseudo +"']" ).parent().parent().removeClass('selected');
-            $( "input[value='"+ $pseudo +"']" ).parent().children('.contact-chk').removeAttr('checked');
-            removeContact($pseudo);
-            recalcul();
-        });
-
         recalcul();
-
-        console.log(typeMap);
+        listSelected();
+        checkboxWatcher();
     });
 
     $('#add-contacts-confirm-ok').click(function () {
@@ -311,24 +313,11 @@ $( document ).ready(function() {
         $('#contacts-box').modal('hide');
     });
 
-
-        
-    function removeContact($contact){
-        $cleanpseudo = $contact.replace('.', '__DOT__');
-        $( "#ctct_"+$cleanpseudo ).remove();
-        /*$newList = $( "#contacts_selected_csv").val().replace($pseudo, '').replace(';;',';');
-        if($newList.charAt(0) == ';'){
-            $newList = $newList.substring(1);
-        }
-        if($newList.charAt($newList.length - 1) == ';'){
-            $newList = $newList.substring(0, $newList.length - 1);
-        }
-        $( "#contacts_selected_csv").val($newList);*/
-    }
-
     function recalcul(){
-
-        cpt = typeMap['user'].length;
+        cpt = 0;
+        for (var type in typeMap){
+            cpt += typeMap[type].length;
+        }
 
         //hide all
         $( '.counter_b' ).addClass('hide');
@@ -339,24 +328,37 @@ $( document ).ready(function() {
         if(cpt > 1){$( '.counterX' ).removeClass('hide'); $( '.counterValue' ).text(cpt); $('#add-contacts-confirm-ok').removeAttr("disabled");}
     }
 
-    function checkboxTester($checkbox){
+    function checkboxWatcher(){
+        $('.contact_selected_delete').on('click', function (e) {
+            label = $( this ).parent().attr('data-contact-label');
+            type = $( this ).parent().attr('data-contact-type');
 
-        $pseudo = $checkbox.parent().children(".contact-pseudo").val();
-        $cleanpseudo = $pseudo.replace('.', '__DOT__');
+            $( "input[value='"+ label +"']" ).parent().parent().removeClass('selected');
+            $( "input[value='"+ label +"']" ).parent().children('.contact-chk').removeAttr('checked');
 
-        if ( $checkbox[0].checked) {
+            var contactId = $(this).parent().attr('contact-id');
+            var index = typeMap[type].indexOf(contactId);
 
-            $checkbox.parent().parent().addClass('selected');
-            $( "#contacts_selected" ).append( "<li id='ctct_"+$cleanpseudo+"' class='contact_selected' contact-pseudo="+$pseudo+" >" + $pseudo + "<span class='contact_selected_delete'>X</span></li>" );
-            
-            if($( "#contacts_selected_csv").val() == ''){
-                $( "#contacts_selected_csv").val($( "#contacts_selected_csv").val() + $pseudo);
-            } else {
-                $( "#contacts_selected_csv").val($( "#contacts_selected_csv").val() + ';' + $pseudo);
+            typeMap[type].splice(index, 1);
+            typeMapLabel[type].splice(index, 1);
+
+            recalcul();
+            listSelected();
+            checkboxWatcher();
+        });
+    }
+
+    function listSelected(){
+
+        $('.contact_selected').remove();
+
+        for (var type in typeMapLabel){
+            for (var key in typeMapLabel[type]){
+                key = typeMapLabel[type][key];
+
+                var cleanedKey = key[1].replace('.', '__DOT__');
+
+                $( "#contacts_selected_wrapper" ).append( "<span id='ctct_"+cleanedKey+"' class='tag label label-info contact_selected contact_selected_"+type+"' contact-id='"+key[0]+"' data-contact-label='"+key[1]+"' data-contact-type='"+type+"' >" + key[1] + "<span class='contact_selected_delete' data-role='remove'></span></span>" );
             }
-            
-        } else {
-            $checkbox.parent().parent().removeClass('selected');      
-            removeContact($pseudo);
         }
     }
