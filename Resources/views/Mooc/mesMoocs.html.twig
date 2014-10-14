@@ -32,7 +32,7 @@
         <div class="slrn-moocs-list">
             {% render controller(
                 'ClarolineCoreBundle:Mooc\\Mooc:getUserSessionsList',
-                {}
+                {'returnAvailable': false}
             ) %}
         </div>
     </div>

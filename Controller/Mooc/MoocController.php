@@ -306,7 +306,7 @@ class MoocController extends Controller
     * 
     * @ParamConverter("user", options={"authenticatedUser" = true })
     */
-    public function getUserSessionsListAction( $user, $sessionComponentLayout = '2-column', $showUserProgression = false )
+    public function getUserSessionsListAction( $user, $sessionComponentLayout = '2-column', $showUserProgression = false, $returnAvailable = true )
     {
         $userSession = $user->getMoocSessions();
         $groups = $user->getGroups();
@@ -317,11 +317,10 @@ class MoocController extends Controller
         }
 
         $sessionsAvailable = array();
-        if(count($userSession) == 0){
+        if(count($userSession) == 0 && $returnAvailable){
            $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(1500000, $user, 4); //15 days before / after
            //echo "OUI #".count($sessionsAvailable);
         } 
-
 
 
         return $this->render(
