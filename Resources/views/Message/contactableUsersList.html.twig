@@ -35,9 +35,6 @@
     {% set nbPages = users.getNbPages() %}
     <div id="contacts-list-page" class="contacts-list-page">
 
-        {#{% if nbPages > 1 %}
-            {{ renderPager(search, users) }}
-        {% endif %} #}
         <div class="table-responsive">
             <table class="table table-condensed table-solerni scrollable">
                 <thead>
@@ -51,7 +48,10 @@
                 <tbody>
                     {% for user in users %}
                         <tr>
-                            <td style='width:20px'><input type="checkbox" class="contact-chk" contact-id="{{ user.getId() }}"></td>
+                            <td style='width:20px'>
+                                <input type="checkbox" class="contact-chk" contact-id="{{ user.getId() }}">
+                                <input type="hidden" class="contact-pseudo" value="{{ user.getUserName() }}">
+                            </td>
                             <td style='width:160px'>{{ user.getFirstName() }}</td>
                             <td style='width:160px'>{{ user.getLastName() }}</td>
                             <td style='width:180px'>{{ user.getUserName() }}</td>
@@ -59,40 +59,26 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <div class='counter_b counter0'>0 sélectionné</div>
-            <div class='counter_b counter1 hide'>1 sélectionné</div>
-            <div class='counter_b counterX hide'><span class='counterValue'></span> sélectionnés</div>
-        </div>
+    
         {% if nbPages > 1 %}
             {{ renderPager(search, users) }}
         {% endif %}
+
+            <div class='counter_b counter0'>0 sélectionné</div>
+            <div class='counter_b counter1 hide'>1 sélectionné</div>
+            <div class='counter_b counterX hide'><span class='counterValue'></span> sélectionnés</div>
+            <div id='contacts_selected_wrapper'>
+                <ul id='contacts_selected'>
+                  
+                </ul>
+            </div>
+            <input type='text' name="contacts_selected_csv" id="contacts_selected_csv" />
+        </div>
     </div>
     <script>
     
-        $('.contact-chk').on('click', function (e) {
 
-            if ( $( this )[0].checked) {
-                $( this ).parent().parent().addClass('selected');
-            } else {
-                $( this ).parent().parent().removeClass('selected');                
-            }
 
-            cpt = 0;
-            $('.contact-chk').each(function( index ) {
-              if($( this )[0].checked){
-                cpt++;
-              }
-            });
-
-            //hide all
-            $( '.counter_b' ).addClass('hide');
-
-            //display one
-            if(cpt == 0){$( '.counter0' ).removeClass('hide'); $('#add-contacts-confirm-ok').attr("disabled", "disabled"); }
-            if(cpt == 1){$( '.counter1' ).removeClass('hide'); $('#add-contacts-confirm-ok').removeAttr("disabled");}
-            if(cpt > 1){$( '.counterX' ).removeClass('hide'); $( '.counterValue' ).text(cpt); $('#add-contacts-confirm-ok').removeAttr("disabled");}
-
-        });
         $( document ).ready(function() {
             max_height = ($(window).height() - 520);
             if(max_height < 200){
@@ -101,8 +87,9 @@
             max_height = max_height + 'px';
 
             $( '.scrollable tbody' ).css('max-height', max_height);
+
+            recalcul();
         });
-        
-        
+
     </script>
 {% endif %}

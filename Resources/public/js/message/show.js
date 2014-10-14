@@ -7,8 +7,7 @@
  * file that was distributed with this source code.
  */
 
-(function () {
-    'use strict';
+$( document ).ready(function() {
 
     //If errors
     if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
@@ -40,7 +39,7 @@
     );
     
 
-    
+});    
 
     var currentType = 'user';
 
@@ -52,7 +51,7 @@
         'user': [],
         'group': [],
         'workspace': []
-    }
+    };
 
     function getPage(tab)
     {
@@ -181,8 +180,14 @@
         getUsersFromInput('claro_names_from_workspaces', workspaces, 'workspaceIds');
     }
 
+$( document ).ready(function() {
+    /**
+     *
+     * Click on user button to open Modal windows 
+     *
+     **/
     $('#contacts-button').click(function () {
-        initTempTab();
+        initTempTab($(this).val());
         displayPager(
             'user',
             'claro_message_contactable_users',
@@ -224,6 +229,7 @@
         );
     });
 
+});
 
     $('body').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
@@ -278,6 +284,23 @@
         else {
             typeMap[currentType].splice(index, 1);
         }
+
+        $pseudo = $( this ).parent().children(".contact-pseudo").val();
+        $cleanpseudo = $pseudo.replace('.', '__DOT__');
+
+        checkboxTester($( this ));
+
+        $('.contact_selected_delete').on('click', function (e) {
+            $pseudo = $( this ).parent().attr('contact-pseudo');
+            $( "input[value='"+ $pseudo +"']" ).parent().parent().removeClass('selected');
+            $( "input[value='"+ $pseudo +"']" ).parent().children('.contact-chk').removeAttr('checked');
+            removeContact($pseudo);
+            recalcul();
+        });
+
+        recalcul();
+
+        console.log(typeMap);
     });
 
     $('#add-contacts-confirm-ok').click(function () {
@@ -287,4 +310,53 @@
         updateContactInput();
         $('#contacts-box').modal('hide');
     });
-})();
+
+
+        
+    function removeContact($contact){
+        $cleanpseudo = $contact.replace('.', '__DOT__');
+        $( "#ctct_"+$cleanpseudo ).remove();
+        /*$newList = $( "#contacts_selected_csv").val().replace($pseudo, '').replace(';;',';');
+        if($newList.charAt(0) == ';'){
+            $newList = $newList.substring(1);
+        }
+        if($newList.charAt($newList.length - 1) == ';'){
+            $newList = $newList.substring(0, $newList.length - 1);
+        }
+        $( "#contacts_selected_csv").val($newList);*/
+    }
+
+    function recalcul(){
+
+        cpt = typeMap['user'].length;
+
+        //hide all
+        $( '.counter_b' ).addClass('hide');
+
+        //display one
+        if(cpt == 0){$( '.counter0' ).removeClass('hide'); $('#add-contacts-confirm-ok').attr("disabled", "disabled"); }
+        if(cpt == 1){$( '.counter1' ).removeClass('hide'); $('#add-contacts-confirm-ok').removeAttr("disabled");}
+        if(cpt > 1){$( '.counterX' ).removeClass('hide'); $( '.counterValue' ).text(cpt); $('#add-contacts-confirm-ok').removeAttr("disabled");}
+    }
+
+    function checkboxTester($checkbox){
+
+        $pseudo = $checkbox.parent().children(".contact-pseudo").val();
+        $cleanpseudo = $pseudo.replace('.', '__DOT__');
+
+        if ( $checkbox[0].checked) {
+
+            $checkbox.parent().parent().addClass('selected');
+            $( "#contacts_selected" ).append( "<li id='ctct_"+$cleanpseudo+"' class='contact_selected' contact-pseudo="+$pseudo+" >" + $pseudo + "<span class='contact_selected_delete'>X</span></li>" );
+            
+            if($( "#contacts_selected_csv").val() == ''){
+                $( "#contacts_selected_csv").val($( "#contacts_selected_csv").val() + $pseudo);
+            } else {
+                $( "#contacts_selected_csv").val($( "#contacts_selected_csv").val() + ';' + $pseudo);
+            }
+            
+        } else {
+            $checkbox.parent().parent().removeClass('selected');      
+            removeContact($pseudo);
+        }
+    }
