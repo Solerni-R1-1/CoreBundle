@@ -49,7 +49,10 @@
                 <tbody>
                     {% for group in groups %}
                         <tr>
-                            <td style='width:20px'><input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}"></td>
+                            <td style='width:20px'>
+                                <input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}">
+                                <input type="hidden" class="contact-label" value="{{ group.getName() }}">
+                            </td>
                             <td style='width:500px'>{{ group.getName() }}</td>
                         </tr>
                     {% endfor %}
@@ -58,6 +61,8 @@
             <div class='counter_b counter0'>0 sélectionné</div>
             <div class='counter_b counter1 hide'>1 sélectionné</div>
             <div class='counter_b counterX hide'><span class='counterValue'></span> sélectionnés</div>
+            <div id='contacts_selected_wrapper'>
+            </div>
         </div>
         {% if nbPages > 1 %}
             {{ renderPager(search, groups) }}
@@ -65,28 +70,16 @@
     </div>
     <script>
     
-        $('.contact-chk').on('click', function (e) {
-
-            if ( $( this )[0].checked) {
-                $( this ).parent().parent().addClass('selected');
-            } else {
-                $( this ).parent().parent().removeClass('selected');                
+        $( document ).ready(function() {
+            max_height = ($(window).height() - 520);
+            if(max_height < 200){
+                max_height = 200;
             }
+            max_height = max_height + 'px';
 
-            cpt = 0;
-            $('.contact-chk').each(function( index ) {
-              if($( this )[0].checked){
-                cpt++;
-              }
-            });
+            $( '.scrollable tbody' ).css('max-height', max_height);
 
-            //hide all
-            $( '.counter_b' ).addClass('hide');
-
-            //display one
-            if(cpt == 0){$( '.counter0' ).removeClass('hide'); $('#add-contacts-confirm-ok').attr("disabled", "disabled"); }
-            if(cpt == 1){$( '.counter1' ).removeClass('hide'); $('#add-contacts-confirm-ok').removeAttr("disabled");}
-            if(cpt > 1){$( '.counterX' ).removeClass('hide'); $( '.counterValue' ).text(cpt); $('#add-contacts-confirm-ok').removeAttr("disabled");}
+            recalcul();
 
         });
         

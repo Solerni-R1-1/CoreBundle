@@ -144,3 +144,34 @@ table.scrollable thead th {
 .slrn-message-new {
     padding: 7px 15px 0 0;
 }
+
+#contacts_selected_wrapper{
+
+}
+
+.contact_selected{
+	margin-right: 2px;
+	color: white;
+	background-color: #5bc0de;
+	display: inline-block;
+}
+
+.contact_selected_user{
+	background-color: #5bc0de;
+}
+.contact_selected_group{
+	background-color: #5cb85c;	
+}
+.contact_selected_workspace{
+	background-color: #777;
+}
+
+.contact_selected_delete{
+	margin-left: 8px;
+	cursor: pointer;
+}
+
+.contact_selected_delete:after{
+	content: "x";
+	padding: 0px 2px;
+}

@@ -50,7 +50,7 @@
                         <tr>
                             <td style='width:20px'>
                                 <input type="checkbox" class="contact-chk" contact-id="{{ user.getId() }}">
-                                <input type="hidden" class="contact-pseudo" value="{{ user.getUserName() }}">
+                                <input type="hidden" class="contact-label" value="{{ user.getUserName() }}">
                             </td>
                             <td style='width:160px'>{{ user.getFirstName() }}</td>
                             <td style='width:160px'>{{ user.getLastName() }}</td>
@@ -72,7 +72,6 @@
                   
                 </ul>
             </div>
-            <input type='text' name="contacts_selected_csv" id="contacts_selected_csv" />
         </div>
     </div>
     <script>
@@ -89,6 +88,7 @@
             $( '.scrollable tbody' ).css('max-height', max_height);
 
             recalcul();
+
         });
 
     </script>
