@@ -53,6 +53,16 @@ protected function configure()
             if (isset($messageArray['group'])) {
             	$groupId = $messageArray['group'];
             }
+            if (isset($messageArray['total'])) {
+            	$total = $messageArray['total'];
+            } else {
+            	$total = $nbUsers;
+            }
+            if (isset($messageArray['count'])) {
+            	$count = $messageArray['count'];
+            } else {
+            	$count = $nbUsers;
+            }
             
             // Get manager
             $userManager = $this->getContainer()->get('claroline.manager.user_manager');
@@ -90,7 +100,7 @@ protected function configure()
             
             // Send message to account who started the import
             unset($message);
-            $message = $messageManager->create("L'import des $nbUsers utilisateurs s'est bien déroulé.", "Résultat de votre import d'utilisateurs", array($user));
+            $message = $messageManager->create("L'import des $count/$total utilisateurs s'est bien déroulé.", "Résultat de votre import d'utilisateurs", array($user));
             $messageManager->send($message, false);
             
             $output->writeln("Message Sent.");

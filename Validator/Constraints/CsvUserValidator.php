@@ -44,9 +44,9 @@ class CsvUserValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint)
     {
-        $lines = str_getcsv(file_get_contents($value), PHP_EOL);
+       // $lines = str_getcsv(file_get_contents($value), PHP_EOL);
 
-        foreach ($lines as $line) {
+        /*foreach ($lines as $line) {
             $linesTab = explode(';', $line);
             $nbElements = count($linesTab);
 
@@ -55,7 +55,7 @@ class CsvUserValidator extends ConstraintValidator
 
                 return;
             }
-        }
+        }*/
 
 //         $usernames = array();
 //         $mails = array();

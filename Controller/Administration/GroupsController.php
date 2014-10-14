@@ -561,13 +561,17 @@ class GroupsController extends Controller
 	            
 	            
 	            $fileChunks = array_chunk($parsedFile['valid'], 500, true);
-	            
+	            $countTotal = count($parsedFile['valid']);
+	            $count = 0;
 	            foreach ($fileChunks as $fileChunk) {
+	            	$count += count($fileChunk);
 		            $message = array(
 		            		'class_name'	=> "ClarolineCoreBundle:User",
 		            		'group'			=> $group->getId(),
 		            		'users' 		=> $fileChunk,
-		            		'user'			=> $this->getUser()->getId()
+		            		'user'			=> $this->getUser()->getId(),
+		            		'total'			=> $countTotal,
+		            		'count'			=> $count
 		            );
 		            $sender->send(json_encode($message));
 	            }
@@ -600,6 +604,10 @@ class GroupsController extends Controller
 
             			case "db_username":
             				$errorString = "Username already exists in database";
+            				break;
+
+            			case "wrong_argument_number":
+            				$errorString = "Wrong number of argument (need at least 5)";
             				break;
             				
             			default:
@@ -638,6 +646,7 @@ class GroupsController extends Controller
     public function filterImportUsers($file) {
     	$result = array();
     	$result['rejected'] = array();
+    	$result['rejected']['wrong_argument_number'] = array();
     	$result['rejected']['file_mail'] = array();
     	$result['rejected']['file_username'] = array();
     	$result['rejected']['db_mail'] = array();
@@ -650,37 +659,42 @@ class GroupsController extends Controller
     	$mails = array();
     	
     	foreach ($lines as $i => $line) {
-    		$result['valid'][$i] = str_getcsv($line, ";");
-    		$user = explode(';', $line);
-    		$firstName = $user[0];
-    		$lastName = $user[1];
-    		$username = $user[2];
-    		$pwd = $user[3];
-    		$email = $user[4];
-    		$code = isset($user[5])? $user[5] : null;
-    		$phone = isset($user[6])? $user[6] : null;
-    	
-    		if (!array_key_exists(strtolower($email), $mails)) {
-	    		$mails[strtolower($email)] = array($i);
+    		$user = str_getcsv($line, ";", "\"");
+    		if (count($user) >= 5) {
+    			$result['valid'][$i] = $user;
+    			
+	    		$firstName = $user[0];
+	    		$lastName = $user[1];
+	    		$username = $user[2];
+	    		$pwd = $user[3];
+	    		$email = $user[4];
+	    		$code = isset($user[5])? $user[5] : null;
+	    		$phone = isset($user[6])? $user[6] : null;
+	    	
+	    		if (!array_key_exists(strtolower($email), $mails)) {
+		    		$mails[strtolower($email)] = array($i);
+	    		} else {
+		    		$mails[strtolower($email)][] = $i;
+	    		}
+	    		
+	    		if (!array_key_exists(strtolower($username), $usernames)) {
+		    		$usernames[strtolower($username)] = array($i);
+	    		} else {
+		    		$usernames[strtolower($username)][] = $i;
+	    		}
+	    	
+	    		$newUser = new User();
+	    		$newUser->setFirstName($firstName);
+	    		$newUser->setLastName($lastName);
+	    		$newUser->setUsername($username);
+	    		$newUser->setPlainPassword($pwd);
+	    		$newUser->setMail($email);
+	    		$newUser->setAdministrativeCode($code);
+	    		$newUser->setPhone($phone);
+    			$users[$i] = $newUser;
     		} else {
-	    		$mails[strtolower($email)][] = $i;
+    			$result['rejected']['wrong_argument_number'][$i] = $line;
     		}
-    		
-    		if (!array_key_exists(strtolower($username), $usernames)) {
-	    		$usernames[strtolower($username)] = array($i);
-    		} else {
-	    		$usernames[strtolower($username)][] = $i;
-    		}
-    	
-    		$newUser = new User();
-    		$newUser->setFirstName($firstName);
-    		$newUser->setLastName($lastName);
-    		$newUser->setUsername($username);
-    		$newUser->setPlainPassword($pwd);
-    		$newUser->setMail($email);
-    		$newUser->setAdministrativeCode($code);
-    		$newUser->setPhone($phone);
-    		$users[$i] = $newUser;
     	}
     	
     	foreach ($usernames as $username => $linesIndexes) {
