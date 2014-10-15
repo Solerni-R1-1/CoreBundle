@@ -284,7 +284,7 @@ class BadgeRepository extends EntityRepository
     	$workspace = $session->getMooc()->getWorkspace();
     	$dql = "
     		SELECT 
-    			b AS badge,
+    			b.id AS b_id,
     			SUBSTRING(d.dropDate, 1, 10) AS date,
     			COUNT(DISTINCT u.id) AS nbParticipations,
     			'skill' AS type
@@ -307,7 +307,7 @@ class BadgeRepository extends EntityRepository
     		AND d.dropDate <= :to
     		GROUP BY
     			date,
-    			badge";
+    			b_id";
     	
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
@@ -324,7 +324,7 @@ class BadgeRepository extends EntityRepository
     	$workspace = $session->getMooc()->getWorkspace();
     	$dql = "
     		SELECT
-    			b AS badge,
+    			b.id AS b_id,
     			SUBSTRING(p.start, 1, 10) AS date,
     			COUNT(DISTINCT u.id) AS nbParticipations,
     			'knowledge' AS type
@@ -348,14 +348,14 @@ class BadgeRepository extends EntityRepository
     		AND p.start <= :to
     		GROUP BY
     			date,
-    			badge";
+    			b_id";
     	 
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
     	$query->setParameter("roles", $excludedRoles);
-    	$query->setParameter("from", $from);
-    	$query->setParameter("to", $to);
-    	 
+    	$query->setParameter("from", $from->format("Y-m-d H:i"));
+    	$query->setParameter("to", $to->format("Y-m-d H:i"));
+    	
     	return $query->getResult();
     }
     
@@ -364,7 +364,7 @@ class BadgeRepository extends EntityRepository
     	$dql = "SELECT
     				SUBSTRING(ub.issuedAt, 1, 10) AS date,
     				COUNT(DISTINCT u) AS nbSuccess,
-    				b AS badge,
+    				b.id AS b_id,
     				(CASE WHEN (br.action LIKE 'resource-ujm_exercise-exercise%') THEN 'knowledge'
     				ELSE 'skill' END) type
     			
@@ -381,7 +381,7 @@ class BadgeRepository extends EntityRepository
     				OR
     				br.action LIKE 'resource-icap_dropzone%')
     			
-    			GROUP BY date, badge";
+    			GROUP BY date, b_id";
 
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
@@ -394,7 +394,7 @@ class BadgeRepository extends EntityRepository
     	$workspace = $session->getMooc()->getWorkspace();
     	$dql = "
     		SELECT 
-    			b AS badge,
+    			b.id AS b_id,
     			SUBSTRING(d.dropDate, 1, 10) AS date,
     			COUNT(DISTINCT u.id) AS nbFailures,
     			'skill' AS type
@@ -419,7 +419,7 @@ class BadgeRepository extends EntityRepository
     			WHERE role.name IN (:roles))
     		GROUP BY
     			date,
-    			badge";
+    			b_id";
     
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
