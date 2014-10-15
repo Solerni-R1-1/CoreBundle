@@ -7,42 +7,6 @@
  * file that was distributed with this source code.
  */
 
-$( document ).ready(function() {
-
-    //If errors
-    if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
-
-        var css = '';
-        if($('#message_form_to').offsetParent().hasClass( "col-md-9" )){
-            css = "col-md-9";
-        } else {
-            css = "col-md-6";
-        }
-        $('#message_form_to').offsetParent().after('<div id="message_form_to_error" class="' + css + '">' + 
-            '<div class="help-block field-error">' + 
-            $('#message_form_to').next().html()
-            + '</div></div>');
-        ;
-
-        $('#message_form_to').next().remove();
-    }
-
-    $('#message_form_to').offsetParent().html(
-        '<div class="input-group">' +
-            $('#message_form_to').offsetParent().html() +
-            '<span class="input-group-btn">' +
-                '<button id="contacts-button-search" class="btn btn-primary contacts-button" type="button">' +
-                    '<i class="icon-search"></i>' +
-                '</button>' +
-                '<button id="contacts-button-add" class="btn btn-primary contacts-button" type="button">' +
-                    '<i class="icon-plus"></i>' +
-                '</button>' +
-            '</span>' +
-        '</div>'
-    );
-    
-
-});    
 
 var currentType = 'user';
 
@@ -258,15 +222,62 @@ function updateContactInput()
     getUsersFromInput('claro_usernames_from_users', users, 'userIds');
     getUsersFromInput('claro_names_from_groups', groups, 'groupIds');
     getUsersFromInput('claro_names_from_workspaces', workspaces, 'workspaceIds');
+
+    //Delete doublon
+    currentValue = $('#message_form_to').val();
+    labels = currentValue.split(';');
+    uniqArray = new Array();
+    $.each(labels, function(i, el){
+    if($.inArray(el, uniqArray) === -1) 
+        uniqArray.push(el);
+    });
+    $('#message_form_to').val(uniqArray.join(";"));
 }
 
 $( document ).ready(function() {
+
+    //If errors
+    if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
+
+        var css = '';
+        if($('#message_form_to').offsetParent().hasClass( "col-md-9" )){
+            css = "col-md-9";
+        } else {
+            css = "col-md-6";
+        }
+        $('#message_form_to').offsetParent().after('<div id="message_form_to_error" class="' + css + '">' + 
+            '<div class="help-block field-error">' + 
+            $('#message_form_to').next().html()
+            + '</div></div>');
+        ;
+
+        $('#message_form_to').next().remove();
+    }
+
+    $('#message_form_to').offsetParent().html(
+        '<div class="input-group">' +
+            $('#message_form_to').offsetParent().html() +
+            '<span class="input-group-btn">' +
+                '<button id="contacts-button-search" class="btn btn-primary contacts-button" type="button">' +
+                    '<i class="icon-search"></i>' +
+                '</button>' +
+                '<button id="contacts-button-add" class="btn btn-primary contacts-button" type="button">' +
+                    '<i class="icon-plus"></i>' +
+                '</button>' +
+            '</span>' +
+        '</div>'
+    );
+
+    $('#message_form_to').on('propertychange keyup input paste change click', function () {
+        statusSearch();
+    });
+
     /**
      *
      * Click on user button to open Modal windows 
      *
      **/
-    $('.contacts-button').click(function () {
+    $('.contacts-button').on('click', function () {
         if( $( this ).attr("id") == 'contacts-button-search') {
             isSearch = true;
             initialData = $("#message_form_to").val();
@@ -320,6 +331,8 @@ $( document ).ready(function() {
             'claro_message_contactable_workspaces_search'
         );
     });
+
+
 
 });
 
@@ -393,6 +406,7 @@ $('#add-contacts-confirm-ok').click(function () {
     groups = typeMap['group'].slice();
     workspaces = typeMap['workspace'].slice();
     updateContactInput();
+    statusSearch();
     $('#contacts-box').modal('hide');
 });
 
@@ -443,5 +457,14 @@ function listSelected(){
 
             $( "#contacts_selected_wrapper" ).append( "<span id='ctct_"+cleanedKey+"' class='tag label label-info contact_selected contact_selected_"+type+"' contact-id='"+key[0]+"' data-contact-label='"+key[1]+"' data-contact-type='"+type+"' >" + key[1] + "<span class='contact_selected_delete' data-role='remove'></span></span>" );
         }
+    }
+}
+
+function statusSearch(){
+    currentValue = $('#message_form_to').val();
+    if(currentValue.charAt(currentValue.length - 1) != ';') {
+        $('#contacts-button-search').removeAttr('disabled');
+    } else {
+        $('#contacts-button-search').attr('disabled','disabled');
     }
 }
