@@ -238,10 +238,12 @@ class SolerniController extends Controller
                     $statusText = $translator->trans( 'last_badge', array(), 'platform');
                     $badgeTitle = $lastBadge->getName();
                     $subTitle = ( mb_strlen ( $badgeTitle, "UTF-8" ) > 20 ) ? mb_substr( $badgeTitle, 0, 15, "UTF-8"  ) . '...' : $badgeTitle;
-                    if ( $lastBadge->getWorkspace()->getMooc() ) {
+                    if ( $lastBadge->getWorkspace() && $lastBadge->getWorkspace()->getMooc() ) {
                         $subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
-                    } else {
+                    } elseif ( $lastBadge->getWorkspace() ) {
                         $subText = $lastBadge->getWorkspace()->getName();
+                    } else {
+                        $subText = '';
                     }
                     $subUrl = $router->generate('claro_view_badge', array('slug' => $lastBadge->getSlug()));
                     // Renable Soft Deletable Filter
