@@ -536,6 +536,7 @@ class AnalyticsManager
 	     	if ($now < $to) {
 	     		$to = $now;
 	     	}
+	     	$to->add($oneDay);
 	     	
 	     	foreach ($badgesSuccessRates as $badgeSuccessRates) {
 	     		$rateBadge = array();

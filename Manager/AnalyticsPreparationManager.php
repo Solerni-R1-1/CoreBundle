@@ -337,6 +337,11 @@ class AnalyticsPreparationManager
     	
     	// Get existing badgeStats
     	$badgeStats = $this->badgeMoocStatsRepo->findByWorkspace($workspace);
+    	$badges = $this->badgeRepository->findByWorkspace($workspace);
+    	$badgesMap = array();
+    	foreach ($badges as $badge) {
+    		$badgesMap[$badge->getId()] = $badge;
+    	}
     	
     	// Order them in the badgeStatsArray to access them faster
     	$badgeStatsArray = array();
@@ -353,14 +358,15 @@ class AnalyticsPreparationManager
     		$this->om->persist($badgeStat);
     	}
     	
+    	echo "0%";
     	// Get participations data
     	$skillData = $badgeRepo->getSkillBadgesParticipationRates($moocSession, $excludeRoles);
     	$knowledgeData = $badgeRepo->getKnowledgeBadgesParticipationRates($moocSession, $excludeRoles);
-
     	$data = array_merge($skillData, $knowledgeData);
-    	
     	foreach ($data as $badgeDay) {
-    		$badge = $badgeDay["badge"];
+    		/*$badge = new Badge();//$badgeDay["badge"];
+    		$badge->setId($badgeDay["b_id"]);*/
+    		$badge = $badgesMap[$badgeDay["b_id"]];
     		$date = new \DateTime($badgeDay["date"]);
     		$nbParticipations = $badgeDay["nbParticipations"];
     		
@@ -378,19 +384,17 @@ class AnalyticsPreparationManager
     			$badgeStat = $badgeStatsArray[$badgeDay["date"]][$badge->getId()];
     		}
     		
-    		if (gettype($badgeStat) != "object") {
-    			die(gettype($badgeStat)." : ".$badgeStat);
-    		}
     		$badgeStat->setNbParticipations($nbParticipations);
     		
     		$this->om->persist($badgeStat);
     	}
     	
+    	echo "\r30%";
     	// Get success data
     	$badgesSuccess = $badgeRepo->getBadgesSuccess($moocSession, $excludeRoles);
     	foreach ($badgesSuccess as $badgeSuccess) {
     		$date = $badgeSuccess["date"];
-    		$badge = $badgeSuccess["badge"];
+    		$badge = $badgesMap[$badgeSuccess["b_id"]];
     		$nbSuccess = $badgeSuccess["nbSuccess"];
     		
     		if (!array_key_exists($date, $badgeStatsArray)) {
@@ -410,13 +414,13 @@ class AnalyticsPreparationManager
     		$badgeStat->setNbSuccess($nbSuccess);
     		$this->om->persist($badgeStat);
     	}
-
+    	echo "\r60%";
     	// Get failure data
     	$badgesFailures = $badgeRepo->getSkillBadgesFailures($moocSession, $excludeRoles);
     	// TODO : Add knowledge badge failures by day. Not necessary now, failures on quizzes are TotalParticpants - TotalSuccess...
     	foreach ($badgesFailures as $badgeFailures) {
     		$date = $badgeFailures["date"];
-    		$badge = $badgeFailures["badge"];
+    		$badge = $badgesMap[$badgeFailures["b_id"]];
     		$nbFailures = $badgeFailures["nbFailures"];
     		 
     		if (!array_key_exists($date, $badgeStatsArray)) {
@@ -436,8 +440,9 @@ class AnalyticsPreparationManager
     		$badgeStat->setNbFail($nbFailures);
     		$this->om->persist($badgeStat);
     	}
-    	
+    	echo "\r90%";
     	$this->om->flush();
+    	echo "\r100%\n";
     }
     
     private function createDateRangeArray($from, $to) {
