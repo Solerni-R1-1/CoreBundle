@@ -22,7 +22,25 @@ class MoocSessionRepository extends EntityRepository
 	 * @param ClarolineCoreBundle\Entity\User $user
 	 */
 	public function getLastMoocSessionForUser(User $user, Mooc $mooc) {
-		$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+        
+        // Get user and define Mooc Admin Roles
+        $userRoles = $user->getRoles();
+        $workspaceAdminRole = array(
+           'ROLE_ADMIN',
+           'ROLE_WS_CREATOR',
+           'ROLE_WS_MANAGER_' . $mooc->getWorkspace()->getGuid(),
+        );
+        
+        $hasAdminRole = false;
+        foreach ( $userRoles as $userRole ) {
+            if ( in_array( $userRole, $workspaceAdminRole ) ) {
+                $hasAdminRole = true;
+            }
+        }
+        
+        // Different query for Mooc Admin Roles
+        if ( $hasAdminRole ) {
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
             	WHERE (:user MEMBER OF ms.users 
                 		OR EXISTS (
                 			SELECT g FROM Claroline\CoreBundle\Entity\Group g
@@ -30,8 +48,20 @@ class MoocSessionRepository extends EntityRepository
 							WHERE ms = gms
 							AND g IN (:groups)))
 				AND ms.mooc = :mooc 
-				AND ms.startDate < CURRENT_TIMESTAMP()
 				ORDER BY ms.endDate DESC ";
+        } else {
+            $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
+                    WHERE (:user MEMBER OF ms.users 
+                            OR EXISTS (
+                                SELECT g FROM Claroline\CoreBundle\Entity\Group g
+                                JOIN g.moocSessions gms
+                                WHERE ms = gms
+                                AND g IN (:groups)))
+                    AND ms.mooc = :mooc 
+                    AND ms.startDate < CURRENT_TIMESTAMP()
+                    ORDER BY ms.endDate DESC ";
+        }
+        
 		$groups = array();
         if ( $user instanceof User ) {
             foreach ($user->getGroups() as $group) {
