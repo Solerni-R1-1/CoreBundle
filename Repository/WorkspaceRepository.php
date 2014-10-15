@@ -581,4 +581,14 @@ class WorkspaceRepository extends EntityRepository
         
         return $query->getResult();
     }
+    
+    public function findAllMoocWorkspaces() {
+    	$dql = '
+    		SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+    		JOIN w.mooc m';
+    	
+    	$query = $this->_em->createQuery($dql);
+    	
+    	return $query->getResult();
+    }
 }

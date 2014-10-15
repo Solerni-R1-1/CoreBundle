@@ -177,7 +177,7 @@ class RoleManager
             $this->om->startFlushSuite();
 
             if ($createLog) {
-	            $this->dispatcher->dispatch(
+	           $this->dispatcher->dispatch(
 	                'log',
 	                'Log\LogRoleSubscribe',
 	                array($role, $ars)

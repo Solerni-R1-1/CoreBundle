@@ -260,10 +260,10 @@ class LogListener
             $this->createLog($event);
         }
 
-        if ($event instanceof NotifiableInterface) {
-            if ($event->isAllowedToNotify()) {
-                $this->notificationManager->createNotificationAndNotify($event);
-            }
-        }
+//         if ($event instanceof NotifiableInterface) {
+//             if ($event->isAllowedToNotify()) {
+//                 $this->notificationManager->createNotificationAndNotify($event);
+//             }
+//         }
     }
 }
