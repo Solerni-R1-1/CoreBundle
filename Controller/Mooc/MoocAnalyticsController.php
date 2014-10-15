@@ -94,9 +94,9 @@ class MoocAnalyticsController extends Controller
      */
     public function analyticsMoocDetailsAction( $workspace, $user ) {
     	// Base parameters
-    	$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-        $from = $currentSession->getStartDate();
-        $to = $currentSession->getEndDate();
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        $from = $session->getStartDate();
+        $to = $session->getEndDate();
         $now = new \DateTime();
         if ($now < $to) {
         	$to = $now;
@@ -110,14 +110,14 @@ class MoocAnalyticsController extends Controller
         $excludeRoles[] = "ROLE_WS_CREATOR";
         
         // Fetch all the necessary data
-    	$hourlyAudience = $this->analyticsManager->getHourlyAudience($workspace, $excludeRoles);
-        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($currentSession);
-        $forumContributions = $this->analyticsManager->getForumActivity($workspace, $from, $to, $excludeRoles);
-        $activeUsers = $this->analyticsManager->getPercentageActiveMembers($workspace, 7, $excludeRoles);
-        $connectionMean = $this->analyticsManager->getMeanNumberConnectionsDaily($workspace, $excludeRoles);
+    	$hourlyAudience = $this->analyticsManager->getHourlyAudience($session, $excludeRoles);
+        $subscriptionStats = $this->analyticsManager->getSubscriptionsForPeriod($session);
+        $forumContributions = $this->analyticsManager->getForumActivity($session, $from, $to, $excludeRoles);
+        $activeUsers = $this->analyticsManager->getPercentageActiveMembers($session, 7, $excludeRoles);
+        $connectionMean = $this->analyticsManager->getMeanNumberConnectionsDaily($session, $excludeRoles);
         
         // Most active users table
-		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($currentSession);
+		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($session);
         $mostActiveUsersWithHeader = $mostActiveUsers;
         $row = array();
  		$row[] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
@@ -128,7 +128,7 @@ class MoocAnalyticsController extends Controller
  		array_unshift($mostActiveUsersWithHeader, $row);
         
         // Most active forum publishers table
-        $forumPublishers = $this->analyticsManager->getForumStats($workspace);
+        $forumPublishers = $this->analyticsManager->getForumStats($session);
         $forumPublishersHeaders = array();
 		$forumPublishersHeaders[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
 		$forumPublishersHeaders[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
@@ -138,7 +138,7 @@ class MoocAnalyticsController extends Controller
         array_unshift( $forumPublishers, $forumPublishersHeaders );
         
         // Most active forum themes table
-        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($workspace, 365, $excludeRoles);
+        $forumMostActiveSubjects = $this->analyticsManager->getMostActiveSubjects($session, 365, $excludeRoles);
         $forumMostActiveSubjectsHeaders = array();
         $forumMostActiveSubjectsHeaders[0] = $this->translator->trans('mooc_analytics_theme_name', array(), 'platform');
         $forumMostActiveSubjectsHeaders[1] = $this->translator->trans('mooc_analytics_theme_nb_posts', array(), 'platform');
@@ -299,6 +299,8 @@ class MoocAnalyticsController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function analyticsMoocBadgesAction( $workspace, $user, $badgeType ) {
+    	// Get session
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
     	// Init the roles to filter the stats.
     	$excludeRoles = array();
     	$managerRole = $this->roleManager->getManagerRole($workspace);
@@ -309,7 +311,7 @@ class MoocAnalyticsController extends Controller
         $skillBadges        = ( $badgeType == 'skill' ) ? true : false;
         $knowledgeBadges    = ( $badgeType == 'knowledge' ) ? true : false;
 
-    	$badgesRates = $this->analyticsManager->getBadgesRate($workspace, $excludeRoles, $skillBadges, $knowledgeBadges);
+    	$badgesRates = $this->analyticsManager->getBadgesRate($session, $excludeRoles, $skillBadges, $knowledgeBadges);
     	$badgesSuccessRates = $badgesRates["success"];
     	$badgesParticipationRates = $badgesRates["participation"];
 

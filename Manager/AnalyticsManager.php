@@ -304,13 +304,13 @@ class AnalyticsManager
      *    - The first is the workspace connections for every hour of the day
      *    - The second is the workspace associated logs (which are not connections) for every hour of the day
      */
-    public function getHourlyAudience(AbstractWorkspace $workspace, $filteredRoles) {
+    public function getHourlyAudience(MoocSession $session, $filteredRoles) {
     	$audience = array();
     	$audience[] = array();
     	$audience[] = array();
     	
-    	$connectionsByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsIncluding($workspace, array("workspace-enter"));
-    	$activityByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsExcluding($workspace, array("workspace-enter", "workspace-role-subscribe_group", "workspace-role-subscribe_user", "workspace-role-unsubscribe_group", "workspace-role-unsubscribe_user"));
+    	$connectionsByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsIncluding($session, array("workspace-enter"));
+    	$activityByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsExcluding($session, array("workspace-enter", "workspace-role-subscribe_group", "workspace-role-subscribe_user", "workspace-role-unsubscribe_group", "workspace-role-unsubscribe_user"));
     	
     	for ($i = 0; $i < 24; $i++) {
     		$audience[0][$i] = $connectionsByHour["h".$i];
@@ -388,238 +388,173 @@ class AnalyticsManager
      * @param number $nbDays
      * @return number
      */
-    public function getPercentageActiveMembers(AbstractWorkspace $workspace, $nbDays = 7, $filteredRoles) {
-    	return [$this->getNumberActiveUsers($workspace, $nbDays, $filteredRoles),
-    			$this->getTotalSubscribedUsers($workspace, $filteredRoles)];
+    public function getPercentageActiveMembers(MoocSession $session, $nbDays = 7, $filteredRoles) {
+    	return [$this->getNumberActiveUsers($session, $nbDays, $filteredRoles),
+    			$this->getTotalSubscribedUsers($session, $filteredRoles)];
     }
     
     /**
      * 
      * @param AbstractWorkspace $workspace
      */
-    public function getForumActivity(AbstractWorkspace $workspace) {
+    public function getForumActivity(MoocSession $session) {
     	$contributions = array();
     	$contributions[0] = array();
     	$contributions[1] = 0;
     	
-    	if ($workspace->isMooc()) {
-			$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			$messagesPerDay = $this->analyticsUserMoocStatsRepo->countDailyForumMessagesForSession($session);
-			
-			$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
-			$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
-			$now = new \DateTime("today midnight");
-			if ($now < $to) {
-				$to = $now;
-			}
-			$oneDay = new \DateInterval("P1D");
-			
-			while ($from <= $to) {
-				$contrib = array();
-				$contrib[0] = $from->format("Y-m-d");
-				$contrib[1] = 0;
-				foreach ($messagesPerDay as $i => $message) {
-					if ($message["date"] == $from) {
-						$contrib[1] = $message["nbPublicationsForum"];
-						break;						
-					}
+		$messagesPerDay = $this->analyticsUserMoocStatsRepo->countDailyForumMessagesForSession($session);
+		
+		$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
+		$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
+		$now = new \DateTime("today midnight");
+		if ($now < $to) {
+			$to = $now;
+		}
+		$oneDay = new \DateInterval("P1D");
+		
+		while ($from <= $to) {
+			$contrib = array();
+			$contrib[0] = $from->format("Y-m-d");
+			$contrib[1] = 0;
+			foreach ($messagesPerDay as $i => $message) {
+				if ($message["date"] == $from) {
+					$contrib[1] = $message["nbPublicationsForum"];
+					break;						
 				}
-				
-				$contributions[0][] = $contrib;
-				
-				$from->add($oneDay);
 			}
-    	}
+			
+			$contributions[0][] = $contrib;
+			
+			$from->add($oneDay);
+		}
     	
     	return $contributions;
     }
     
-    /**
-     * Gives back the success rates of the various knowledge/skill badges (associated with quizzes)
-     * @param AbstractWorkspace $workspace
-     * @return Array of badges success rates [[badge1success, badge1failure],[badge2success][badge2failure],...]
-     */
-    public function getBadgesSuccessRate(AbstractWorkspace $workspace, $filteredRoles, $skillBadges, $knowledgeBadges) {
-    	$rates = array();
-    	
-    	if ($workspace->isMooc()) {
-    		$workspaceUsers = array();
-    		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    		
-    		$users = $session->getAllUsers($filteredRoles);
-    		
-    		foreach ($users as $user) {
-    			/* @var $user User */
-    			$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, $skillBadges, $knowledgeBadges);
-    			foreach ($badges as $badge) {
-    				/* @var $badgeEntity Badge */
-    				$badgeEntity = $badge['badge'];
-    				$badgeName = $badgeEntity->getName();
-    				
-    				if (!array_key_exists($badgeName, $rates)) {
-    					$rateBadge = array();
-    					$rateBadge['success'] = 0;
-    					$rateBadge['failure'] = 0;
-    					$rateBadge['inProgress'] = 0;
-    					$rateBadge['available'] = 0;
-    					$rateBadge['name'] = $badgeName;
-    					$rateBadge['id'] = $badgeEntity->getId();
-    					$rateBadge['type'] = ($badgeEntity->isKnowledgeBadge() ? "knowledge" : "skill");
-    					$rates[$badgeName] = $rateBadge;
-    				}
-    				
-    				if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
-    					$rates[$badgeName]['success']++;
-    				} else if ($badge['status'] == Badge::BADGE_STATUS_FAILED) {
-    					$rates[$badgeName]['failure']++;
-    				} else if ($badge['status'] == Badge::BADGE_STATUS_IN_PROGRESS) {
-    					$rates[$badgeName]['inProgress']++;
-    				} else if ($badge['status'] == Badge::BADGE_STATUS_AVAILABLE) {
-    					$rates[$badgeName]['available']	++;
-    				}
-    			}
-    		}
-    	}
-    	
-    	return $rates;
+    public function getForumStats(MoocSession $session) {
+    	return $this->analyticsUserMoocStatsRepo->countForumMessagesForSessionByUsers($session);
     }
     
-    public function getForumStats(AbstractWorkspace $workspace) {
-    	$result = array();
-
-    	if ($workspace->isMooc()) {
-	    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-	    	$result = $this->analyticsUserMoocStatsRepo->countForumMessagesForSessionByUsers($session);
-    	}
-    	
-    	
-    	return $result;
-    }
-    
-   public function getBadgesRate(AbstractWorkspace $workspace, $filteredRoles, $skillBadges, $knowledgeBadges) {
-	   	if ($workspace->isMooc()) {
-	   		$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-	   		$badgeStats = $this->analyticsBadgeMoocStatsRepo->findBy(array(
-	   			"workspace" => $workspace,
-	   			"badgeType" => $skillBadges ? "skill" : "knowledge"));
-	   		$badgesSuccessRates = $this->analyticsBadgeMoocStatsRepo->countBadgesSuccessRateForSession($session);
-	   		$participationRates = array();
-	   		$successRates = array();   		
+   public function getBadgesRate(MoocSession $session, $filteredRoles, $skillBadges, $knowledgeBadges) {
+	   	$badgeStats = $this->analyticsBadgeMoocStatsRepo->findBy(array(
+	   		"workspace" => $session->getMooc()->getWorkspace(),
+	   		"badgeType" => $skillBadges ? "skill" : "knowledge"));
+	   	$badgesSuccessRates = $this->analyticsBadgeMoocStatsRepo->countBadgesSuccessRateForSession($session);
+	   	$participationRates = array();
+	   	$successRates = array();   		
+	   	
+	   	$orderedBadgeStats = array();
+	   	$badges = array();
+	   	foreach ($badgeStats as $badgeStat) {
+	   		$badgeId = $badgeStat->getBadge()->getId();
+	   		$participationRates[$badgeId] = array();
+	   		$participationRates[$badgeId]["badge"] = $badgeStat->getBadge();
+	   		$participationRates[$badgeId]["data"] = array();
+	   		$participationRates[$badgeId]["data"]["count"] = array();
+	   		$participationRates[$badgeId]["data"]["total"] = array();
 	   		
-	   		$orderedBadgeStats = array();
-	   		$badges = array();
-	   		foreach ($badgeStats as $badgeStat) {
-	   			$badgeId = $badgeStat->getBadge()->getId();
-	   			$participationRates[$badgeId] = array();
-	   			$participationRates[$badgeId]["badge"] = $badgeStat->getBadge();
-	   			$participationRates[$badgeId]["data"] = array();
-	   			$participationRates[$badgeId]["data"]["count"] = array();
-	   			$participationRates[$badgeId]["data"]["total"] = array();
-	   			
-	   			$date = $badgeStat->getDate()->format("Y-m-d");
-	   			if (!array_key_exists($badgeId, $orderedBadgeStats)) {
-	   				$orderedBadgeStats[$badgeId] = array();
-	   			}
-	   			
-	   			if (!array_key_exists($date, $orderedBadgeStats[$badgeId])) {
-	   				$orderedBadgeStats[$badgeId][$date] = array();
-	   			}
-	   			
-	   			$orderedBadgeStats[$badgeId][$date] = $badgeStat->getNbParticipations();
+	   		$date = $badgeStat->getDate()->format("Y-m-d");
+	   		if (!array_key_exists($badgeId, $orderedBadgeStats)) {
+	   			$orderedBadgeStats[$badgeId] = array();
 	   		}
 	   		
-	     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-	     	$oneDay = new \DateInterval("P1D");
-	     	$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
-	     	$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
-	     	$now = new \DateTime("today midnight");
-	     	if ($now < $to) {
-	     		$to = $now;
-	     	}
-	     	$to->add($oneDay);
-	     	
-	     	foreach ($badgesSuccessRates as $badgeSuccessRates) {
-	     		$rateBadge = array();
-	     		$rateBadge['success'] = $badgeSuccessRates['totalSuccess'];
-	     		$rateBadge['failure'] = $badgeSuccessRates['totalFail'];
-	     		$rateBadge['inProgress'] = $badgeSuccessRates['totalParticipations'];
-	     		$rateBadge['available'] = $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session)
-	     			- ($badgeSuccessRates['totalParticipations']
-	     					+ $badgeSuccessRates['totalSuccess']
-	     					+ $badgeSuccessRates['totalFail']);
-	     		$rateBadge['name'] = $badgeSuccessRates["badge"]->getName();
-	     		$rateBadge['id'] = $badgeSuccessRates["badge"]->getId();
-	     		$rateBadge['type'] = $badgeSuccessRates["type"];
-	     		
-	     		if ($rateBadge['type'] == "skill" && $skillBadges
-	     			|| $rateBadge['type'] == "knowledge" && $knowledgeBadges) {
-	     			$successRates[$badgeSuccessRates["badge"]->getName()] = $rateBadge;
-	     		}
-	     	}
-	     	
-	     	$totals = array();
-	     	while ($from < $to) {
-	     		foreach ($participationRates as &$participationBadgeRate) {
-	     			$badgeId = $participationBadgeRate["badge"]->getId();
-	     			$date = $from->format("Y-m-d");
-	     			
-	     			$count = 0;
-	     			if (array_key_exists($date, $orderedBadgeStats[$badgeId])) {
-	     				$count = $orderedBadgeStats[$badgeId][$date]; 
-	     			}
-	     			
-	     			if (!array_key_exists($badgeId, $totals)) {
-	     				$totals[$badgeId] = 0; 
-	     			}
-	     			$totals[$badgeId] = $totals[$badgeId] + $count;
-	     			
-	     			$participationBadgeRate["data"]["count"][$date] = array($date, $count);
-	     			$participationBadgeRate["data"]["total"][$date] = array($date, $totals[$badgeId]);
-	     		}
-	     		$from->add($oneDay);
-	     	}
+	   		if (!array_key_exists($date, $orderedBadgeStats[$badgeId])) {
+	   			$orderedBadgeStats[$badgeId][$date] = array();
+	   		}
 	   		
-	    	return array("participation" => $participationRates, "success" => $successRates);
-	   	} else {
-	   		return null;
+	   		$orderedBadgeStats[$badgeId][$date] = $badgeStat->getNbParticipations();
 	   	}
+	   	
+	    $oneDay = new \DateInterval("P1D");
+	    $from = new \DateTime($session->getStartDate()->format("Y-m-d"));
+	    $to = new \DateTime($session->getEndDate()->format("Y-m-d"));
+	    $now = new \DateTime("today midnight");
+	    if ($now < $to) {
+	    	$to = $now;
+	    }
+	    $to->add($oneDay);
+	    
+	    foreach ($badgesSuccessRates as $badgeSuccessRates) {
+	    	$rateBadge = array();
+	    	$rateBadge['success'] = $badgeSuccessRates['totalSuccess'];
+	    	$rateBadge['failure'] = $badgeSuccessRates['totalFail'];
+	    	$rateBadge['inProgress'] = $badgeSuccessRates['totalParticipations'];
+	    	$rateBadge['available'] = $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session)
+	    		- ($badgeSuccessRates['totalParticipations']
+	    				+ $badgeSuccessRates['totalSuccess']
+	    				+ $badgeSuccessRates['totalFail']);
+	    	$rateBadge['name'] = $badgeSuccessRates["badge"]->getName();
+	    	$rateBadge['id'] = $badgeSuccessRates["badge"]->getId();
+	    	$rateBadge['type'] = $badgeSuccessRates["type"];
+	    	
+	    	if ($rateBadge['type'] == "skill" && $skillBadges
+	    		|| $rateBadge['type'] == "knowledge" && $knowledgeBadges) {
+	    		$successRates[$badgeSuccessRates["badge"]->getName()] = $rateBadge;
+	    	}
+	    }
+	    
+	    $totals = array();
+	    while ($from < $to) {
+	    	foreach ($participationRates as &$participationBadgeRate) {
+	    		$badgeId = $participationBadgeRate["badge"]->getId();
+	    		$date = $from->format("Y-m-d");
+	    		
+	    		$count = 0;
+	    		if (array_key_exists($date, $orderedBadgeStats[$badgeId])) {
+	    			$count = $orderedBadgeStats[$badgeId][$date]; 
+	    		}
+	    		
+	    		if (!array_key_exists($badgeId, $totals)) {
+	    			$totals[$badgeId] = 0; 
+	    		}
+	    		$totals[$badgeId] = $totals[$badgeId] + $count;
+	    		
+	    		$participationBadgeRate["data"]["count"][$date] = array($date, $count);
+	     		$participationBadgeRate["data"]["total"][$date] = array($date, $totals[$badgeId]);
+	     	}
+	     	$from->add($oneDay);
+	     }
+	   	
+	    return array("participation" => $participationRates, "success" => $successRates);
     }
 
     /**************************************
      * Requests for keynumbers analytics. *
      **************************************/
     
-    public function getTotalSubscribedUsers(AbstractWorkspace $workspace) {
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	return $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session);
+    public function getTotalSubscribedUsers(MoocSession $session) {
+    	return $this->analyticsMoocStatsRepo->countSubscriptionsForSession(
+    			$session);
     }
     
-    public function getTotalSubscribedUsersToday(AbstractWorkspace $workspace, $filterRoles) {
+    public function getTotalSubscribedUsersToday(MoocSession $session, $filterRoles) {
     	return $this->logRepository->countLogsUsersTodayByAction(
-    			$workspace,
+    			$session->getMooc()->getWorkspace(),
     			"workspace-role-subscribe_user",
     			$filterRoles);
     }
     
-    public function getNumberConnectionsToday(AbstractWorkspace $workspace, $filterRoles) {
+    public function getNumberConnectionsToday(MoocSession $session, $filterRoles) {
     	return $this->logRepository->countLogsUsersTodayByAction(
-    			$workspace,
+    			$session->getMooc()->getWorkspace(),
     			"workspace-enter",
     			$filterRoles);
     }
     
-    public function getMeanNumberConnectionsDaily(AbstractWorkspace $workspace, $filterRoles) {
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-    	return $this->analyticsMoocStatsRepo->avgConnectionsForSession($session);
+    public function getMeanNumberConnectionsDaily(MoocSession $session, $filterRoles) {
+    	return $this->analyticsMoocStatsRepo->avgConnectionsForSession(
+    			$session);
     }
     
-    public function getNumberActiveUsers(AbstractWorkspace $workspace, $nbDays, $filterRoles) {
-    	return $this->analyticsUserMoocStatsRepo->countActiveUsersSince($workspace, $nbDays);
+    public function getNumberActiveUsers(MoocSession $session, $nbDays, $filterRoles) {
+    	return $this->analyticsUserMoocStatsRepo->countActiveUsersSince(
+    			$session,
+    			$nbDays);
     }
 
-    public function getHourMostConnection(AbstractWorkspace $workspace, $filterRoles) {    	
+    public function getHourMostConnection(MoocSession $session, $filterRoles) {    	
     	$connectionsByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsIncluding(
-    			$workspace,
+    			$session,
     			array("workspace-enter"));
     	  	    	
     	$max = 0;
@@ -635,9 +570,9 @@ class AnalyticsManager
     	return $index;
     }
     
-    public function getHourMostActivity(AbstractWorkspace $workspace, $filterRoles) {
+    public function getHourMostActivity(MoocSession $session, $filterRoles) {
     	$activityByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsExcluding(
-    			$workspace,
+    			$session,
     			array("workspace-enter",
     					"workspace-role-subscribe_group",
     					"workspace-role-subscribe_user",
@@ -656,23 +591,19 @@ class AnalyticsManager
     	return $index;
     }
     
-    public function getTotalForumPublications(AbstractWorkspace $workspace, $filterRoles) {
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    public function getTotalForumPublications(MoocSession $session, $filterRoles) {
     	return $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession($session);
     }
     
-    public function getForumPublicationsDailyMean(AbstractWorkspace $workspace, $filterRoles) {
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    public function getForumPublicationsDailyMean(MoocSession $session, $filterRoles) {
     	return $this->analyticsUserMoocStatsRepo->countAverageForumMessagesForSession($session);
     }
     
-    public function getMostActiveSubjects(AbstractWorkspace $workspace, $nbDays, $filterRoles) {
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    public function getMostActiveSubjects(MoocSession $session, $nbDays, $filterRoles) {
     	if ($session != null && $session->getForum() != null) {
     		$since = new \DateTime("today midnight");
     		$since = $since->sub(new \DateInterval('P'.$nbDays.'D'));
 	    	$forum = $session->getForum();
-		    $managerRole = $this->roleManager->getManagerRole($workspace);
 	    	return $this->messageRepository->countNbMessagesInForumGroupBySubjectSince(
 	    			$forum,
 	    			$since,
@@ -686,52 +617,52 @@ class AnalyticsManager
     	return $this->analyticsUserMoocStatsRepo->getUsersActivity($moocSession);
     }
     
-    public function getAnalyticsMoocKeyNumbers(AbstractWorkspace $workspace, User $user) {
+    public function getAnalyticsMoocKeyNumbers(MoocSession $session, User $user) {
     	// Init the roles to filter the stats.
     	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$managerRole = $this->roleManager->getManagerRole($session->getMooc()->getWorkspace());
     	$excludeRoles[] = $managerRole->getName();
     	$excludeRoles[] = "ROLE_ADMIN";
     	$excludeRoles[] = "ROLE_WS_CREATOR";
     	
    		$nbConnectionsToday = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connections_today'),
-    			"value" => $this->getNumberConnectionsToday($workspace, $excludeRoles));
+    			"value" => $this->getNumberConnectionsToday($session, $excludeRoles));
     	
     	$meanConnectionsDaily = array(
     			"key" => $this->getTranslationKeyForKeynumbers('mean_connections_daily'),
-    			"value" => $this->getMeanNumberConnectionsDaily($workspace, $excludeRoles));
+    			"value" => $this->getMeanNumberConnectionsDaily($session, $excludeRoles));
     	
     	$nbSubscriptionsToday = array(
     			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_today'),
-    			"value" => $this->getTotalSubscribedUsersToday($workspace, $excludeRoles));
+    			"value" => $this->getTotalSubscribedUsersToday($session, $excludeRoles));
     	
     	$nbSubscriptions = array(
     			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_total'),
-    			"value" => $this->getTotalSubscribedUsers($workspace, $excludeRoles));
+    			"value" => $this->getTotalSubscribedUsers($session, $excludeRoles));
     	
     	$nbActiveUsers = array(
     			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
-    			"value" => $this->getNumberActiveUsers($workspace, 7, $excludeRoles));
+    			"value" => $this->getNumberActiveUsers($session, 7, $excludeRoles));
     	
     	$mostConnectedHour = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connection_hour'),
-    			"value" => $this->getHourMostConnection($workspace, $excludeRoles));
+    			"value" => $this->getHourMostConnection($session, $excludeRoles));
     	
     	$mostActiveHour = array(
     			"key" => $this->getTranslationKeyForKeynumbers('activity_hour'),
-    			"value" => $this->getHourMostActivity($workspace, $excludeRoles));
+    			"value" => $this->getHourMostActivity($session, $excludeRoles));
     	
     	$nbForumPublications = array(
     			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_total'),
-    			"value" => $this->getTotalForumPublications($workspace, $excludeRoles));
+    			"value" => $this->getTotalForumPublications($session, $excludeRoles));
     	
     	$meanForumPublicationsDaily = array(
     			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_daily_mean'),
-    			"value" => $this->getForumPublicationsDailyMean($workspace, $excludeRoles));
+    			"value" => $this->getForumPublicationsDailyMean($session, $excludeRoles));
         
         return array(
-            'workspace' => $workspace,
+            'workspace' => $session->getMooc()->getWorkspace(),
             'keynumbers' => array(
                 $nbConnectionsToday,
                 $meanConnectionsDaily,

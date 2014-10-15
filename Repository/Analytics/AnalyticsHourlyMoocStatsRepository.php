@@ -17,7 +17,14 @@ use Claroline\CoreBundle\Entity\Mooc\MoocSession;
  */
 class AnalyticsHourlyMoocStatsRepository extends EntityRepository {
 	
-	public function sumHourlyActionsExcluding(AbstractWorkspace $workspace, $exclude = array()) {
+	public function sumHourlyActionsExcluding(MoocSession $session, $exclude = array()) {
+		$from = $session->getStartDate();
+		$to = $session->getEndDate();
+		$now = new \DateTime();
+		if ($to > $now) {
+			$to = $now;
+		}
+		
 		$dql = "SELECT SUM(ahms.h0) AS h0,
 					SUM(ahms.h1) AS h1,
 					SUM(ahms.h2) AS h2,
@@ -44,16 +51,27 @@ class AnalyticsHourlyMoocStatsRepository extends EntityRepository {
 					SUM(ahms.h23) AS h23
 				FROM Claroline\CoreBundle\Entity\Analytics\AnalyticsHourlyMoocStats ahms
 				WHERE ahms.workspace = :workspace
-				AND ahms.action NOT IN (:actions)";
+				AND ahms.action NOT IN (:actions)
+				AND ahms.date >= :from
+				AND ahms.date <= :to";
 
 		$query = $this->_em->createQuery($dql);
-		$query->setParameter("workspace", $workspace);
+		$query->setParameter("workspace", $session->getMooc()->getWorkspace());
 		$query->setParameter("actions", $exclude);
+		$query->setParameter("from", $from);
+		$query->setParameter("to", $to);
 		
 		return $query->getSingleResult();
 	}
 	
-	public function sumHourlyActionsIncluding(AbstractWorkspace $workspace, $include = array()) {
+	public function sumHourlyActionsIncluding(MoocSession $session, $include = array()) {
+		$from = $session->getStartDate();
+		$to = $session->getEndDate();
+		$now = new \DateTime();
+		if ($to > $now) {
+			$to = $now;
+		}
+		
 		$dql = "SELECT SUM(ahms.h0) AS h0,
 					SUM(ahms.h1) AS h1,
 					SUM(ahms.h2) AS h2,
@@ -80,11 +98,15 @@ class AnalyticsHourlyMoocStatsRepository extends EntityRepository {
 					SUM(ahms.h23) AS h23
 				FROM Claroline\CoreBundle\Entity\Analytics\AnalyticsHourlyMoocStats ahms
 				WHERE ahms.workspace = :workspace
-				AND ahms.action IN (:actions)";
+				AND ahms.action IN (:actions)
+				AND ahms.date >= :from
+				AND ahms.date <= :to";
 	
 		$query = $this->_em->createQuery($dql);
-		$query->setParameter("workspace", $workspace);
+		$query->setParameter("workspace", $session->getMooc()->getWorkspace());
 		$query->setParameter("actions", $include);
+		$query->setParameter("from", $from);
+		$query->setParameter("to", $to);
 	
 		return $query->getSingleResult();
 	}

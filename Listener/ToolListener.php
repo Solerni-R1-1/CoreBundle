@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Controller\Mooc\MoocService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
@@ -34,6 +36,7 @@ class ToolListener
     private $templating;
     private $httpKernel;
     private $security;
+    private $moocService;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
 
@@ -45,7 +48,8 @@ class ToolListener
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "templating"       = @DI\Inject("templating"),
-     *     "httpKernel"       = @DI\Inject("http_kernel")
+     *     "httpKernel"       = @DI\Inject("http_kernel"),
+     *     "moocService"      = @DI\Inject("orange.mooc.service")
      * 
      * })
      */
@@ -55,6 +59,7 @@ class ToolListener
         WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
         SecurityContextInterface $security,
+    	MoocService $moocService,
         $templating,
         $httpKernel
     )
@@ -66,6 +71,7 @@ class ToolListener
         $this->templating = $templating;
         $this->httpKernel = $httpKernel;
         $this->security = $security;
+        $this->moocService = $moocService;
     }
 
     /**
@@ -239,11 +245,16 @@ class ToolListener
         );*/
         
         $user = $this->security->getToken()->getUser();
+    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
         
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/analytics:moocAnalyticsKeynumbers.html.twig',
-            $this->container->get('claroline.manager.analytics_manager')->getAnalyticsMoocKeyNumbers($workspace, $user)
-        );
+    	if ($session) {
+	        return $this->templating->render(
+	            'ClarolineCoreBundle:Tool/workspace/analytics:moocAnalyticsKeynumbers.html.twig',
+	            $this->container->get('claroline.manager.analytics_manager')->getAnalyticsMoocKeyNumbers($session, $user)
+	        );
+    	} else {
+    		throw new NotFoundHttpException("No session found for analytics.");
+    	}
         
     }
 
