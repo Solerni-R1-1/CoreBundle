@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats;
  */
 class AnalyticsUserMoocStatsRepository extends EntityRepository {
 	
-	public function countActiveUsersSince(AbstractWorkspace $workspace, $nbDays) {
+	public function countActiveUsersSince(MoocSession $session, $nbDays) {
 		$date = new \DateTime("today midnight");
 		$date->sub(new \DateInterval("P".$nbDays."D"));
 		$dql = "SELECT COUNT(DISTINCT aums.user)
@@ -29,7 +29,7 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		
 		$query = $this->_em->createQuery($dql);
 		$query->setParameters(array(
-				"workspace" => $workspace,
+				"workspace" => $session->getMooc()->getWorkspace(),
 				"date"		=> $date
 		));
 		
