@@ -17,7 +17,15 @@
         </h2>
 
         <div class="dsk__my_moocs_header">
-            {% if app.user.getMoocSessions()|length > 0 %}
+            {% set sessionNumber = 0 %}
+            {% set sessionNumber = sessionNumber + app.user.getMoocSessions()|length %}
+            {% if app.user.getGroups()|default %}
+                {% for userGroup in app.user.getGroups() %}
+                    {% set sessionNumber = sessionNumber + userGroup.getMoocSessions()|length %}
+                {% endfor %}
+            {% endif %}
+
+            {% if sessionNumber > 0 %}
             
                 <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>
                 <a class="slrn-link-right pink_link"href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'display_all_my_moocs'|trans({}, 'platform') }}</a>
@@ -29,7 +37,7 @@
         </div>
                 
         {# change display if we have more than one active mooc #}
-        {% if app.user.getMoocSessions()|length == 1 %}
+        {% if sessionNumber == 1 %}
             {% set sessionComponentLayout = '2-column' %}
         {% else %}
             {% set sessionComponentLayout = 'slider-small' %}
