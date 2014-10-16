@@ -115,11 +115,11 @@ class GroupManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param User[]                             $users
      */
-    public function addUsersToGroup(Group $group, array $users)
+    public function addUsersToGroup(Group $group, array $users, $checkNotInGroup = true)
     {
     	$this->om->startFlushSuite();
-        foreach ($users as $user) {
-            if (!$group->containsUser($user)) {
+        foreach ($users as $i => $user) {
+            if (!$checkNotInGroup || !$group->containsUser($user)) {
             	$this->logger->info("Start adding user to group...");
                 $group->addUser($user);
                 $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
@@ -127,6 +127,7 @@ class GroupManager
             } else {
             	$this->logger->info("User already in group.");
             }
+            unset($users[$i]);
         }
 
         $this->om->persist($group);
@@ -161,33 +162,32 @@ class GroupManager
     {
         $toImport = array();
         $nonImportedUsers = array();
+        
+        $usernamesAndMails = $this->getUsernamesAndMailsFromCSV($users);
+		$toImport = $this->userRepo->findByUsernameInNotInGroup($usernamesAndMails['usernames'], $group);
+        
+		if (count($toImport) > 0) {
+			echo "Adding ".count($toImport)." to the group...";
+        	$this->addUsersToGroup($group, $toImport, false);
+		} else {
+			echo "Nobody found to add to the group...";
+		}
+		echo "\n";
 
-        foreach ($users as $user) {
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $username = $user[2];
-
-            $existingUser = $this->userRepo->findOneBy(
-                array(
-                    'username' => $username,
-                    'firstName' => $firstName,
-                    'lastName' => $lastName
-                )
-            );
-
-            if (is_null($existingUser)) {
-                $nonImportedUsers[] = array(
-                    'username' => $username,
-                    'firstName' => $firstName,
-                    'lastName' => $lastName
-                );
-            } else {
-                $toImport[] = $existingUser;
-            }
-        }
-        $this->addUsersToGroup($group, $toImport);
-
+        unset($toImport);
+        $this->om->clear();
         return $nonImportedUsers;
+    }
+    
+    public function getUsernamesAndMailsFromCSV($array) {
+    	$usernames = array();
+    	$mails = array();
+    	foreach ($array as $userLine) {
+    		$usernames[] = $userLine[2];
+    		$mails[] = $userLine[4];
+    	}
+    	
+    	return array('usernames' => $usernames, 'mails' => $mails);
     }
 
     /**
@@ -436,7 +436,11 @@ class GroupManager
         return array();
     }
     
-    public function getGroupById($groupId) {
-    	return $this->groupRepo->findOneById($groupId);
+    public function getGroupById($groupId, $getRelations = true) {
+    	if ($getRelations) {
+    		return $this->groupRepo->findOneById($groupId);
+    	} else {
+    		return $this->groupRepo->findOneByIdWithoutRelations($groupId);
+    	}
     }
 }

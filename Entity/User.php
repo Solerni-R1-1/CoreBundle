@@ -362,6 +362,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->id;
     }
+    
+
+    public function setId($id)
+    {
+    	$this->id = $id;
+    }
 
     /**
      * @return string
