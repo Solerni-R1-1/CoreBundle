@@ -121,8 +121,9 @@ class ToolManager
             $this->addRoleToOrderedTool($otr, $role);
         }
 
-        $filePaths = $this->extractFiles($archive, $config);
-
+        //$filePaths = $this->extractFiles($archive, $config);
+        $filePaths= array();
+        
         $this->ed->dispatch(
             'tool_' . $tool->getName() . '_from_template', 'ImportTool',
             array($workspace, $config, $rootDir->getResourceNode(), $manager, $filePaths, $generatedRoles)
@@ -544,7 +545,7 @@ class ToolManager
                 $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
             }
         }
-
+       
         return $realPaths;
     }
 
