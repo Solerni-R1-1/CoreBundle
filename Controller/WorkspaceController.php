@@ -463,7 +463,7 @@ class WorkspaceController extends Controller
             );
         }
         
-        if ( $this->assertIsGranted($toolName, $workspace, false) ) {
+        if ( $this->assertIsGranted($toolName, $workspace, !($user instanceof User && $workspace->isMooc() != null)) ) {
             
             $event = $this->eventDispatcher->dispatch(
 	            'open_tool_workspace_' . $toolName,
