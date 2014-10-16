@@ -46,6 +46,9 @@ class PlatformConfiguration
     private $facebookClientSecret;
     private $facebookClientActive;
     private $formCaptcha;
+    
+    private $httpProxyUrl;
+    private $httpProxyPort;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -449,5 +452,21 @@ class PlatformConfiguration
     public function getFormCaptcha()
     {
         return $this->formCaptcha;
+    }
+    
+    public function setHttpProxyUrl($httpProxyUrl) {
+    	$this->httpProxyUrl = $httpProxyUrl;
+    }
+    
+    public function getHttpProxyUrl() {
+    	return $this->httpProxyUrl;	
+    }
+    
+    public function setHttpProxyPort($httpProxyPort) {
+    	$this->httpProxyPort = $httpProxyPort;
+    }
+    
+    public function getHttpProxyPort() {
+    	return $this->httpProxyPort;	
     }
 }
