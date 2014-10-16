@@ -23,23 +23,25 @@
     	{% if msg == 'accountValidation_key_ok' %}
     		<h1 class="slrn-section-title">Votre compte est validé avec succès.</h1>
             <p>Nous allons vous conduire vers la page demandée. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
-    	{% else %}
+        {% elseif msg == 'accountValidation_key_already' %}
+            <h1 class="slrn-section-title">Votre compte est déjà validé.</h1>
+            <p>Nous allons vous conduire vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
+        {% else %}
     		<h1 class="slrn-section-title">Problème à l'activation du compte</h1>
-    		
-        	<span class="label label-warning">La clé {{key}} ne correspond pas à l'email {{mail}}, ou bien votre compte est déjà activé.</span>
-            <p class="top-margin">Veuillez patientez, nous allons vous diriger vers la page adéquate.</p>
-	        {#<p>Merci de remplir ce formulaire avec votre mail et le code fournit dans le mail envoyé</p>
+        	<span class="label label-warning">La validation du compte correspondant à l'email {{mail}} n'est pas possible. Ce compte n'existe pas, a été supprimé ou bien la clé de validation est incorrecte.</span>
+ 	        {#<p>Merci de remplir ce formulaire avec votre mail et le code fournit dans le mail envoyé</p>
 	        <ul>
         		<li><a href='{{ path('claro_registration_send_mail', { 'mail': mail , 'hash' : hash}) }}' class='slrn-red-link'>Cliquez sur ce lien pour recevoir de nouveau le mail d'activation.</a></li>
         	</ul>
     		{{ form(form) }}#}
     	{% endif %}
-        <script>
-            window.setTimeout(function() {
-                window.location.href = "{{ nextUrl }}";
-            }, 3000);
-        </script>
-
+        {% if nextUrl|default %}
+            <script>
+                window.setTimeout(function() {
+                    window.location.href = "{{ nextUrl }}";
+                }, 3000);
+            </script>
+        {% endif %}
     </div>
 {% endblock %}
 

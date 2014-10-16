@@ -239,11 +239,10 @@ class RegistrationController extends Controller
 
         $nextUrl = '';
 
-        if($userDb == null || $userDb->getIsValidate() || $userDb->getKeyValidate() !== $key){
+        if($userDb == null || $userDb->getKeyValidate() !== $key){
 
             $log->debug("key {$key} not valid for mail {$mail}");
             $msg = 'accountValidation_key_ko';
-
 
             $user = new User();
             if(!empty($mail)){
@@ -251,29 +250,28 @@ class RegistrationController extends Controller
             }
             $user->setKeyValidate(null);
             
-
+            /*
             $form = $this->get('form.factory')
                          ->create(new AccountValidatorType($user));
             $form = $form->createView();
-
+            */
+        } elseif ( $userDb->getIsValidate() ) {
+            $msg = 'accountValidation_key_already';
+            $nextUrl = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'), true);
         } else {
-
             $msg = 'accountValidation_key_ok';
             //Save a valid user
             $userDb->setIsValidate(true);
             $em->persist($userDb);
             $em->flush();
             $log->debug("Auto-validation {$mail} with success with key {$key}");
-
             $token = new UsernamePasswordToken($userDb, null, 'main', $userDb->getRoles());
             $this->get('security.context')->setToken($token);
             $this->get('session')->set('_security_main',serialize($token));
-
-            //Send post-validation
+            //Send post-validation mail
             $this->userManager->sendEmailValidationConfirmee($userDb);
-            
-            $session = $this->request->getSession();
             //Generate next url
+            $session = $this->request->getSession();
             if($session->has('moocSession')){
             	$moocSession = $session->get('moocSession'); 
             	$nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
@@ -281,21 +279,17 @@ class RegistrationController extends Controller
             } else {
                 $nextUrl = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'), true);
             }
-            
-
         }
 
-      
-
-        return array('user'=> $user, 
-                        'msg' => $msg, 
-                        'form' => $form, 
-                        'mail' => $mail, 
-                        'hash' => $this->getHash($mail),
-                        'key' => $key,
-                        'nextUrl' => $nextUrl
-
-                    );
+        return array(
+            'user'=> $user, 
+            'msg' => $msg, 
+            // 'form' => $form, 
+            'mail' => $mail, 
+            'hash' => $this->getHash($mail),
+            'key' => $key,
+            'nextUrl' => $nextUrl
+        );
     }
 
 /************************ END ******************************/
