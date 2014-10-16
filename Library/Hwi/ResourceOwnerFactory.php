@@ -42,7 +42,17 @@ class ResourceOwnerFactory
 
     public function getFacebookResourceOwner()
     {
-        $httpClient = new Curl();
+    	$proxyUrl = $this->configHandler->getParameter('http_proxy_url');
+    	$proxyPort = $this->configHandler->getParameter('http_proxy_port');
+    	$proxy = null;
+    	if ($proxyUrl != null && $proxyUrl != "") {
+    		$proxy = $proxy.$proxyUrl;
+    		if ($proxyPort != null && $proxyPort != "") {
+    			$proxy = $proxy.":".$proxyPort;
+    		}
+    	}
+    	
+        $httpClient = new CurlProxy($proxy);
         $httpClient->setVerifyPeer(true);
         $httpClient->setTimeout(10);
         $httpClient->setMaxRedirects(5);

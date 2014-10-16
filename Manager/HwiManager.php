@@ -68,11 +68,27 @@ class HwiManager
             return array('error' => 'facebook_application_validation_error');
         }
 
+        $proxyUrl = $this->platformConfigHandler->getParameter('http_proxy_url');
+        $proxyPort = $this->platformConfigHandler->getParameter('http_proxy_port');
+        $proxy = "";
+        if ($proxyUrl != null && $proxyUrl != "") {
+        	$proxy = $proxy.$proxyUrl;
+        	if ($proxyPort != null && $proxyPort != "") {
+        		$proxy = $proxy.":".$proxyPort;		
+        	}
+        }
+        
+        
+        
         $secretUrl = "https://graph.facebook.com/{$appId}?fields=roles&access_token={$appId}|{$secret}";
         $curlHandle = curl_init();
         curl_setopt($curlHandle, CURLOPT_URL, $secretUrl);
         curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+        
+        if ($proxy != null && $proxy != "") {
+        	curl_setopt($curlHandle, CURLOPT_PROXY, $proxy);
+        }
         curl_setopt($curlHandle, CURLOPT_USERAGENT, 'ClarolineConnect');
         $json = curl_exec($curlHandle);
         curl_close($curlHandle);

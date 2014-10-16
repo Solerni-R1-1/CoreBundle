@@ -57,7 +57,9 @@ class PlatformConfigurationHandler
         'facebook_client_id' => null,
         'facebook_client_secret' => null,
         'facebook_client_active' => null,
-        'form_captcha' => true
+        'form_captcha' => true,
+        'http_proxy_url' => null,
+        'http_proxy_port' => null
     );
 
     /**
@@ -145,6 +147,12 @@ class PlatformConfigurationHandler
         $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
         $config->setFacebookClientActive($this->parameters['facebook_client_active']);
         $config->setFormCaptcha($this->parameters['form_captcha']);
+    	if (array_key_exists('http_proxy_url', $this->parameters)) {
+        	$config->setHttpProxyUrl($this->parameters['http_proxy_url']);
+        }
+        if (array_key_exists('http_proxy_port', $this->parameters)) {
+        	$config->setHttpProxyPort($this->parameters['http_proxy_port']);
+        }
 
         return $config;
     }
