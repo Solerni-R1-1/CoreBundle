@@ -18,10 +18,16 @@
                     </div>
                     <div class="panel-body">
                         <p class="text-muted">
-                            {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getSenderUsername() }}
+                            {{ 'from_message'|trans({}, 'platform') }}:  <a href="{{ path('claro_public_profile_view', {'publicUrl': ancestor.getSender().getPublicUrl()}) }}">{{ ancestor.getSenderUsername() }}</a>
                         </p>
+                        {% set second = false %}
                         <p class="text-muted">
-                            {{ 'to_message'|trans({}, 'platform') }}: {% for dest in ancestor.getUserMessages() %} {{ dest.getUser().getUserName() }} - {% endfor %}
+                            {{ 'to_message'|trans({}, 'platform') }}: 
+                            {% for dest in ancestor.getUserMessages() %} 
+                                {% if second %} - {% endif %}
+                                <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
+                                {% set second = true %}
+                            {% endfor %}
                         </p>
                         <div>
                             {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
