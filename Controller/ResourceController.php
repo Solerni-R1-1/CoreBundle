@@ -35,6 +35,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Controller\Mooc\MoocService;
 
 class ResourceController extends Controller
 {
@@ -48,7 +49,8 @@ class ResourceController extends Controller
     private $maskManager;
     private $templating;
     private $logManager;
-
+	private $moocService;
+    
     /**
      * @DI\InjectParams({
      *     "sc"              = @DI\Inject("security.context"),
@@ -61,7 +63,8 @@ class ResourceController extends Controller
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"      = @DI\Inject("templating"),
      *     "logManager"      = @DI\Inject("claroline.log.manager"),
-     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager")
+     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "moocService"     = @DI\Inject("orange.mooc.service")
      * })
      */
     public function __construct
@@ -76,7 +79,8 @@ class ResourceController extends Controller
         MaskManager $maskManager,
         TwigEngine $templating,
         LogManager $logManager,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+    	MoocService $moocService
     )
     {
         $this->sc = $sc;
@@ -90,6 +94,7 @@ class ResourceController extends Controller
         $this->templating = $templating;
         $this->logManager = $logManager;
         $this->entityManager = $entityManager;
+        $this->moocService = $moocService;
     }
 
     /**
@@ -210,6 +215,11 @@ class ResourceController extends Controller
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $hasAccess = $this->checkAccess('OPEN', $collection, !($user instanceof User));
+        
+        // If workspace has mooc and sessions, check if user has subscribed to a session...
+        if ($hasAccess && $workspace->getMooc() != null && count($workspace->getMooc()->getMoocSessions()) > 0) {
+        	$hasAccess = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user) != null;
+        }
         
         if ($hasAccess) {
 	        $resourceArray = array($this->resourceManager->getResourceFromNode($node));
