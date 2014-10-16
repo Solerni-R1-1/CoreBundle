@@ -315,8 +315,8 @@ class MoocController extends Controller
 
         $sessionsAvailable = array();
         if(count($userSession) == 0 && $returnAvailable){
-           $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(1500000, $user, 4); //15 days before / after
-           //echo "OUI #".count($sessionsAvailable);
+            //15 days before / after
+            $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(15, $user, 4); 
         } 
 
 

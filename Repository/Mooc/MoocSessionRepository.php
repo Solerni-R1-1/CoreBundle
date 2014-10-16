@@ -254,6 +254,8 @@ class MoocSessionRepository extends EntityRepository
                        )
                 AND ms.startDate >= DATE_SUB(CURRENT_DATE(), :nbDaysAround, 'DAY')
                 AND ms.startDate <= DATE_ADD(CURRENT_DATE(), :nbDaysAround, 'DAY')
+                AND ms.endDate > CURRENT_DATE()
+                AND ms.endInscriptionDate > CURRENT_DATE()
                 ORDER BY ms.endDate DESC 
 
                 ";
