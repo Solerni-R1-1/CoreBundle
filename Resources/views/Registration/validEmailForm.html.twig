@@ -28,7 +28,8 @@
             <p>Nous allons vous conduire vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
         {% else %}
     		<h1 class="slrn-section-title">Problème à l'activation du compte</h1>
-        	<span class="label label-warning">La validation du compte correspondant à l'email {{mail}} n'est pas possible. Ce compte n'existe pas, a été supprimé ou bien la clé de validation est incorrecte.</span>
+        	<p class="label label-warning">La validation du compte correspondant à l'email {{mail}} n'est pas possible. Ce compte n'existe pas, a été supprimé ou bien la clé de validation est incorrecte.</p>
+            <p>Si vous avez supprimé par erreur votre compte, veuillez en récréer un nouveau en cliquant sur <a class="pink_link" href="{{ path('claro_registration_user_registration_form') }}">inscription</a>.<p>
  	        {#<p>Merci de remplir ce formulaire avec votre mail et le code fournit dans le mail envoyé</p>
 	        <ul>
         		<li><a href='{{ path('claro_registration_send_mail', { 'mail': mail , 'hash' : hash}) }}' class='slrn-red-link'>Cliquez sur ce lien pour recevoir de nouveau le mail d'activation.</a></li>
