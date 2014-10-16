@@ -552,20 +552,38 @@ class GroupsController extends Controller
         
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $parsedFile = $this->filterImportUsers($file);
+            $parsedFile = $this->filterImportUsers($file, $group);
             
-            if (count($parsedFile['valid']) > 0) {
+            if (count($parsedFile['valid']) > 0 || count($parsedFile['only_group']) > 0) {
 	            $ctx    = new \ZMQContext();
 	            $sender = new \ZMQSocket($ctx, \ZMQ::SOCKET_PUSH);
 	            $sender->connect("tcp://localhost:11112");
 	            
 	            
 	            $fileChunks = array_chunk($parsedFile['valid'], 500, true);
-	            $countTotal = count($parsedFile['valid']);
+	            $groupChunks = array_chunk($parsedFile['only_group'], 500, true);
+	            $countTotal = count($parsedFile['valid']) + count($parsedFile['only_group']);
 	            $count = 0;
-	            foreach ($fileChunks as $fileChunk) {
+	            
+	            foreach ($groupChunks as $i => $groupChunk) {
+	            	$count += count($groupChunk);
+	            	$message = array(
+	            			'action'		=> 'addToGroup',
+	            			'class_name'	=> "ClarolineCoreBundle:User",
+	            			'group'			=> $group->getId(),
+	            			'users' 		=> $groupChunk,
+	            			'user'			=> $this->getUser()->getId(),
+	            			'total'			=> $countTotal,
+	            			'count'			=> $count
+	            	);
+	            
+	            	$sender->send(json_encode($message));
+	            }
+	            
+	            foreach ($fileChunks as $i => $fileChunk) {
 	            	$count += count($fileChunk);
 		            $message = array(
+	            			'action'		=> 'import',
 		            		'class_name'	=> "ClarolineCoreBundle:User",
 		            		'group'			=> $group->getId(),
 		            		'users' 		=> $fileChunk,
@@ -573,6 +591,7 @@ class GroupsController extends Controller
 		            		'total'			=> $countTotal,
 		            		'count'			=> $count
 		            );
+		            
 		            $sender->send(json_encode($message));
 	            }
             }
@@ -643,7 +662,7 @@ class GroupsController extends Controller
         }
     }
     
-    public function filterImportUsers($file) {
+    public function filterImportUsers($file, Group $group) {
     	$result = array();
     	$result['rejected'] = array();
     	$result['rejected']['wrong_argument_number'] = array();
@@ -652,6 +671,7 @@ class GroupsController extends Controller
     	$result['rejected']['db_mail'] = array();
     	$result['rejected']['db_username'] = array();
     	$result['valid'] = array();
+    	$result['only_group'] = array();
 
     	$lines = str_getcsv(file_get_contents($file), PHP_EOL);
     	$users = array();
@@ -705,11 +725,6 @@ class GroupsController extends Controller
     				unset($result['valid'][$lineIndex]);
     			}
     			
-    			/*$msg = $this->translator->trans(
-    					'username_found_at',
-    					array('%username%' => $username, '%lines%' => $this->getLines($lines)),
-    					'platform'
-    			) . ' ';*/
     		}
     		ksort($rejects);
     	}
@@ -721,11 +736,6 @@ class GroupsController extends Controller
     				$rejects[$lineIndex] = $lines[$lineIndex];
     				unset($result['valid'][$lineIndex]);
     			}
-    			/*$msg = $this->translator->trans(
-    					'email_found_at',
-    					array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
-    					'platform'
-    			) . ' ';*/
     		}
     		ksort($rejects);
     	}
@@ -733,39 +743,60 @@ class GroupsController extends Controller
     	// Validate users
     	$repo = $this->getDoctrine()->getManager()->getRepository("ClarolineCoreBundle:User");
     	
-    	$alreadyExistingUsernames = $repo->findByUsernameIn(array_keys($usernames));
-    	$alreadyExistingMails = $repo->findByMailIn(array_keys($mails));
+    	$mapUsers = function($array) {
+    		$result = new User();
+    		$result->setId($array["id"]);
+    		$result->setUsername($array["username"]);
+    		$result->setMail($array["mail"]);
+    		$result->setFirstName($array["firstName"]);
+    		$result->setLastName($array["lastName"]);
+    		return $result;
+    	};
     	
-    	$rejects = &$result['rejected']['db_username'];
-    	foreach ($alreadyExistingUsernames as $alreadyExistingUser) {
-    		foreach ($users as $lineIndex => $user) {
-    			if (strtolower($user->getUsername()) == strtolower($alreadyExistingUser->getUsername())) {
-    				$rejects[$lineIndex] = $lines[$lineIndex];    
-    				unset($result['valid'][$lineIndex]);
-    			}
-    		}
-    		/*$msg = $this->translator->trans(
-    				'username_already_exists',
-    				array('%username%' => $user->getUsername(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
-    				'platform'
-    		) . ' ';*/
+    	$alreadyExistingUsers = array_map($mapUsers,
+    			$repo->findByUsernameOrMailIn(array_keys($usernames), array_keys($mails)));
+    	
+    	$mailUsers = array();
+    	$usernameUsers = array();
+    	
+    	foreach ($alreadyExistingUsers as $alreadyExistingUser) {
+    		$mailUsers[strtolower($alreadyExistingUser->getMail())] = $alreadyExistingUser;
+    		$usernameUsers[strtolower($alreadyExistingUser->getUsername())] = $alreadyExistingUser;
     	}
-    	ksort($rejects);
+    	
 
-    	$rejects = &$result['rejected']['db_mail'];
-    	foreach ($alreadyExistingMails as $alreadyExistingUser) {
-    		foreach ($users as $lineIndex => $user) {
-    			if (strtolower($user->getMail()) == strtolower($alreadyExistingUser->getMail())) {
-    				$rejects[$lineIndex] = $lines[$lineIndex];
-    				unset($result['valid'][$lineIndex]);
-    			}
-    		}
-    		/*$msg = $this->translator->trans(
-    				'mail_already_exists',
-    				array('%email%' => $user->getMail(), '%lines%' => $this->getLines($usernames[$user->getUsername()])),
-    				'platform'
-    		) . ' ';*/
-    	}
+    	$rejectsName = &$result['rejected']['db_username'];
+    	$rejectsMail = &$result['rejected']['db_mail'];
+    	foreach ($users as $lineIndex => $user) {
+    	  	$unset = false;
+    	  	if (array_key_exists(strtolower($user->getUsername()), $usernameUsers)) {
+    	  		$alreadyExistingUser = $usernameUsers[strtolower($user->getUsername())];
+    	  		if (strtolower($user->getFirstName()) == strtolower($alreadyExistingUser->getFirstName())
+    	  				&& strtolower($user->getLastName()) == strtolower($alreadyExistingUser->getLastName())) {
+    	  			$result['only_group'][$lineIndex] = $result['valid'][$lineIndex];
+    	  		} else {
+    	  			$rejectsName[$lineIndex] = $lines[$lineIndex];
+    	  		}
+  	     		$unset = true;
+    	  	}
+    	  	if (array_key_exists(strtolower($user->getMail()), $mailUsers)) {
+    	  		$alreadyExistingUser = $mailUsers[strtolower($user->getMail())];
+  	    		if (strtolower($user->getFirstName()) == strtolower($alreadyExistingUser->getFirstName())
+  	    				&& strtolower($user->getLastName()) == strtolower($alreadyExistingUser->getLastName())) {
+    	  			$result['only_group'][$lineIndex] = $result['valid'][$lineIndex];
+  	    		} else {
+  	    			$rejectsMail[$lineIndex] = $lines[$lineIndex];
+  	    		}
+  	     		$unset = true;
+  	    	}
+  	    	if ($unset) {
+   	    		unset($result['valid'][$lineIndex]);
+   	    		$unset = false;
+   	    	}
+   		}
+    	ksort($rejects);
+    	
+    	//$this->groupManager->addUsersToGroup($group, $usersToAddToGroup);
     	ksort($rejects);
     	return $result;
     }

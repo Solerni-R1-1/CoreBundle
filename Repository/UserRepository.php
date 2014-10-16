@@ -1173,21 +1173,25 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
     
-    public function findByUsernameIn(array $usernames) {
+    public function findByUsernameOrMailIn(array $usernames, array $mails) {
     	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
-    			WHERE LOWER(u.username) IN (:usernames)';
+    			WHERE LOWER(u.username) IN (:usernames)
+    			OR LOWER(u.mail) IN (:mails)';
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("usernames", array_map("strtolower", $usernames));
-    	
-    	return $query->getResult();
-    }
-    
-    public function findByMailIn(array $mails) {
-    	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
-    			WHERE LOWER(u.mail) IN (:mails)';
-    	$query = $this->_em->createQuery($dql);
     	$query->setParameter("mails", array_map("strtolower", $mails));
-    	 
-    	return $query->getResult();
+    	
+    	return $query->getArrayResult(Query::HYDRATE_SIMPLEOBJECT);
+    }
+
+    public function findByUsernameInNotInGroup(array $usernames, $group) {
+    	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
+    			WHERE LOWER(u.username) IN (:usernames)
+    			AND :group NOT MEMBER OF u.groups';
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("usernames", array_map("strtolower", $usernames));
+    	$query->setParameter("group", $group);
+    	
+    	return $query->getResult(Query::HYDRATE_SIMPLEOBJECT);
     }
 }

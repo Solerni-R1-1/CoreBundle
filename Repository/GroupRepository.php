@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Role;
+use Doctrine\ORM\Query;
 
 class GroupRepository extends EntityRepository
 {
@@ -461,5 +462,14 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+    
+    public function findOneByIdWithoutRelations($id) {
+    	$dql = 'SELECT g FROM Claroline\CoreBundle\Entity\Group g
+    			WHERE g.id = :id';
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('id', $id);
+    	return $query->getSingleResult(Query::HYDRATE_SIMPLEOBJECT);
     }
 }
