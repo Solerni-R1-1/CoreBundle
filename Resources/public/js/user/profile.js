@@ -101,7 +101,7 @@
         }
 
         function updateFieldVisibility(field, visibility) {
-            console.log(field+"-"+visibility);
+            //console.log(field+"-"+visibility);
             var block = $('#' + field);
             if (visibility) {
                 block.removeClass('hidden');
