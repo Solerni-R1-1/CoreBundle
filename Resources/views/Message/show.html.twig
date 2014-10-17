@@ -18,7 +18,7 @@
                     </div>
                     <div class="panel-body">
                         <p class="text-muted">
-                            {{ 'from_message'|trans({}, 'platform') }}:  <a href="{{ path('claro_public_profile_view', {'publicUrl': ancestor.getSender().getPublicUrl()}) }}">{{ ancestor.getSenderUsername() }}</a>
+                            {{ 'from_message'|trans({}, 'platform') }}:  {% if ancestor.getSender() is defined and ancestor.getSender() %}<a href="{{ path('claro_public_profile_view', {'publicUrl': ancestor.getSender().getPublicUrl()}) }}">{{ ancestor.getSenderUsername() }}</a>{% else %}{{ ancestor.getSenderUsername() }}{% endif %}
                         </p>
                         {% set second = false %}
                         <p class="text-muted">
