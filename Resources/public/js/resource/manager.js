@@ -333,7 +333,7 @@
                             });
                         }
                     }
-
+                    this.checkedNodes.nodes = [];
                     this.dispatcher.trigger('picker', {action: 'close'});
                 }
             },
