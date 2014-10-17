@@ -599,8 +599,10 @@ class GroupsController extends Controller
             $shouldWriteRejectFile = array();
             foreach ($parsedFile['rejected'] as $error => $lines) {
             	foreach ($lines as $lineIndex => $line) {
-            		$shouldWriteRejectFile = true;
-            		break 2;
+            		if ($line != "") {
+	            		$shouldWriteRejectFile = true;
+	            		break 2;
+            		}
             	}
             }
             
@@ -635,7 +637,9 @@ class GroupsController extends Controller
 	            	}
 	            	fputs($handle, "*****    ".$errorString."    *****".PHP_EOL);
 	            	foreach ($lines as $lineIndex => $line) {
-	            		fputs($handle, $line.PHP_EOL);
+	            		if ($line != "") {
+	            			fputs($handle, $line.PHP_EOL);
+	            		}
 	            	}
 	            }
 	            
@@ -769,35 +773,31 @@ class GroupsController extends Controller
     	$rejectsMail = &$result['rejected']['db_mail'];
     	foreach ($users as $lineIndex => $user) {
     	  	$unset = false;
-    	  	if (array_key_exists(strtolower($user->getUsername()), $usernameUsers)) {
-    	  		$alreadyExistingUser = $usernameUsers[strtolower($user->getUsername())];
+    	  	if (array_key_exists(strtolower($user->getMail()), $mailUsers)) {
+    	  		$alreadyExistingUser = $mailUsers[strtolower($user->getMail())];
     	  		if (strtolower($user->getFirstName()) == strtolower($alreadyExistingUser->getFirstName())
     	  				&& strtolower($user->getLastName()) == strtolower($alreadyExistingUser->getLastName())) {
     	  			$result['only_group'][$lineIndex] = $result['valid'][$lineIndex];
+    	  			$result['only_group'][$lineIndex][2] = $alreadyExistingUser->getUsername();
     	  		} else {
-    	  			$rejectsName[$lineIndex] = $lines[$lineIndex];
+    	  			$rejectsMail[$lineIndex] = $lines[$lineIndex];
     	  		}
+    	  		$unset = true;
+    	  	} else
+    	  	if (array_key_exists(strtolower($user->getUsername()), $usernameUsers)) {
+    	  		$rejectsName[$lineIndex] = $lines[$lineIndex];
   	     		$unset = true;
     	  	}
-    	  	if (array_key_exists(strtolower($user->getMail()), $mailUsers)) {
-    	  		$alreadyExistingUser = $mailUsers[strtolower($user->getMail())];
-  	    		if (strtolower($user->getFirstName()) == strtolower($alreadyExistingUser->getFirstName())
-  	    				&& strtolower($user->getLastName()) == strtolower($alreadyExistingUser->getLastName())) {
-    	  			$result['only_group'][$lineIndex] = $result['valid'][$lineIndex];
-  	    		} else {
-  	    			$rejectsMail[$lineIndex] = $lines[$lineIndex];
-  	    		}
-  	     		$unset = true;
-  	    	}
+    	  	
   	    	if ($unset) {
    	    		unset($result['valid'][$lineIndex]);
    	    		$unset = false;
    	    	}
    		}
-    	ksort($rejects);
     	
     	//$this->groupManager->addUsersToGroup($group, $usersToAddToGroup);
-    	ksort($rejects);
+    	ksort($rejectsName);
+    	ksort($rejectsMail);
     	return $result;
     }
     
