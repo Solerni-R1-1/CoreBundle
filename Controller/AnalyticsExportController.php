@@ -847,6 +847,6 @@ class AnalyticsExportController extends Controller {
 		$content = stream_get_contents($handle);
 		fclose($handle);
 		
-		return $content;
+		return mb_convert_encoding($content, 'UTF-16LE', 'UTF-8');
 	}
 }
