@@ -258,7 +258,7 @@ $( document ).ready(function() {
         '<div class="input-group">' +
             $('#message_form_to').offsetParent().html() +
             '<span class="input-group-btn">' +
-                '<button id="contacts-button-search" class="btn btn-primary contacts-button" type="button">' +
+                '<button id="contacts-button-search" class="btn btn-primary contacts-button" type="button" disabled="disabled">' +
                     '<i class="icon-search"></i>' +
                 '</button>' +
                 '<button id="contacts-button-add" class="btn btn-primary contacts-button" type="button">' +
@@ -462,7 +462,8 @@ function listSelected(){
 
 function statusSearch(){
     currentValue = $('#message_form_to').val();
-    if(currentValue.charAt(currentValue.length - 1) != ';') {
+    currentValue = currentValue.trim();
+    if(currentValue !== '' && currentValue.charAt(currentValue.length - 1) != ';') {
         $('#contacts-button-search').removeAttr('disabled');
     } else {
         $('#contacts-button-search').attr('disabled','disabled');
