@@ -207,7 +207,12 @@ class MoocService extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function getBackMoocUrl( $workspace, $user ) {
-        return $this->getRouteToTheLastChapter( $this->getLessonFromWorkspace( $workspace, $user ), $user );
+    	$lesson =  $this->getLessonFromWorkspace( $workspace, $user );
+    	if ($lesson != null) {
+        	return $this->getRouteToTheLastChapter( $lesson, $user );
+    	} else {
+    		return "#";
+    	}
     }
 
     /**
