@@ -1,13 +1,13 @@
 <div class="presentation__mooc presentation__mooc--2-column" ng-class="{'presentation__mooc--private': false == document.mooc_is_public_b }" >
 	<div class="presentation__mooc__block presentation__mooc__pic">
         <img class="presentation__mooc__block__image" 
-                 src="{{ './' + document.mooc_illustration_path | tranfo:'zcrop_301_216' }}" 
+                 ng-src="{{ './' + document.mooc_illustration_path | tranfo:'zcrop_301_216' }}" 
                  alt="{{document.mooc_title}}" 
                  width="301" 
                  height="216"
         >
         <a href="{{ document.mooc_owner_cat_url | path }}">
-            <img class="presentation__mooc__block__logo" src="{{ './' + document.mooc_owner_logo_url | tranfo:'sr__35' }}" alt="{{document.mooc_owner_name}} logo" height="35" >
+            <img class="presentation__mooc__block__logo" ng-src="{{ './' + document.mooc_owner_logo_url | tranfo:'sr__35' }}" alt="{{document.mooc_owner_name}} logo" height="35" >
         </a>
         </div>
 	<div class="presentation__mooc__block presentation__mooc__text">
