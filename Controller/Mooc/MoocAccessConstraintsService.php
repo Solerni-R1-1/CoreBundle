@@ -9,6 +9,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\Mooc\SessionsByUsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Repository\Mooc\MoocAccessConstraintsRepository;
 
 
 /**
@@ -58,32 +61,55 @@ class MoocAccessConstraintsService extends Controller
     	$userRepository = $em->getRepository('ClarolineCoreBundle:User');
     	foreach ($constraints as $constraint) {
     		/* @var $constraint MoocAccessConstraints */
-    		$whiteListArray = explode("\n", $constraint->getWhitelist());
-    		$patternsArray = explode("\n", $constraint->getPatterns());
-    	
-    		$constraintsUsers[$constraint->getId()] = $userRepository->findByMailInOrLike($whiteListArray, $patternsArray);
-    		$this->setNewUsersForConstraint($constraint, $constraintsUsers[$constraint->getId()]);
+    		if ($constraint->getWhitelist() != "") {
+    			$whiteListArray = explode("\r\n", $constraint->getWhitelist());
+    		} else {
+    			$whiteListArray = array();
+    		}
+    		if ($constraint->getPatterns() != "") {
+    			$patternsArray = explode("\r\n", $constraint->getPatterns());
+    		} else {
+    			$patternsArray = array();
+    		}
+
+    		if (count($patternsArray) > 0 || count($whiteListArray) > 0) {
+	    		$users = $userRepository->findByMailInOrLike($whiteListArray, $patternsArray);
+    		} else {
+    			$users = array();
+    		}
+    		//die("a");
+	    	$this->setNewUsersForConstraint($constraint, $users);
     	}
     }
     
     public function setNewUsersForConstraint(MoocAccessConstraints $constraint, array $users) {
+    	// Init
     	$em = $this->getDoctrine()->getManager();
+    	/* @var $roleManager RoleManager */
+    	$roleManager = $this->container->get('claroline.manager.role_manager');
+    	
     	$oldSessionsByUsers = $constraint->getSessionsByUsers();
     	$sessions = array();
-    	foreach ($constraint->getMoocs() as $mooc) {
-    		foreach ($mooc->getMoocSessions() as $session) {
-    			$sessions[] = $session;
-    		}
+
+    	if ($constraint->getMoocs() != null) {
+	    	foreach ($constraint->getMoocs() as $mooc) {
+	    		foreach ($mooc->getMoocSessions() as $session) {
+	    			$sessions[] = $session;
+	    		}
+	    	}
     	}
     	
     	if ($oldSessionsByUsers != null) {
 	    	foreach ($oldSessionsByUsers as $i => $oldSessionByUser) {
-	    		if (!in_array($oldSessionByUser->getMoocSession(), $sessions)) {
+    			$collaboratorRole = $roleManager->getCollaboratorRole($oldSessionByUser->getMoocSession()->getMooc()->getWorkspace());
+    			$moocSession = $oldSessionByUser->getMoocSession();
+    			$user = $oldSessionByUser->getUser();
+    			
+	    		if (!in_array($moocSession, $sessions) || !in_array($user, $users)) {
+	    			if (!$user->getMoocSessions()->contains($moocSession)) {
+	    				$user->removeRole($collaboratorRole);
+	    			}
 	    			unset($oldSessionsByUsers[$i]);
-	    			$em->remove($oldSessionByUser);
-	    		} else
-	    		if (!in_array($oldSessionByUser->getUser(), $users)) {
-	    			unset ($oldSessionsByUsers[$i]);
 	    			$em->remove($oldSessionByUser);
 	    		} else {
 	    			unset($users[array_search($oldSessionByUser->getUser(), $users)]);
@@ -95,17 +121,20 @@ class MoocAccessConstraintsService extends Controller
     	}
     	
     	foreach ($users as $user) {
-    		if ($constraint->getMoocs() != null) {
-	    		foreach ($sessions as $session) {
-		    		$newSession = new SessionsByUsers();
-		    		
-		    		$newSession->setMoocAccessConstraints($constraint);
-		    		$newSession->setUser($user);
-		    		$newSession->setMoocSession($session);
-		    		$newSession->setMoocOwner($constraint->getMoocOwner());
-		    		$oldSessionsByUsers->add($newSession);
-		    		$em->persist($newSession);
-	    		}
+    		foreach ($sessions as $session) {
+    	
+    			$collaboratorRole = $roleManager->getCollaboratorRole($session->getMooc()->getWorkspace());
+	    		$newSession = new SessionsByUsers();
+	    		
+	    		$newSession->setMoocAccessConstraints($constraint);
+	    		$newSession->setUser($user);
+	    		$newSession->setMoocSession($session);
+	    		$newSession->setMoocOwner($constraint->getMoocOwner());
+	    		$oldSessionsByUsers->add($newSession);
+	    		$em->persist($newSession);
+	    		
+	    		$user->addRole($collaboratorRole);
+	    		$em->persist($user);
     		}
     	}
 	    $em->persist($constraint);
@@ -133,5 +162,31 @@ class MoocAccessConstraintsService extends Controller
     
     private function getLogger() {
         return $this->container->get('logger');
+    }
+    
+    public function refreshDeletedConstraintForWorkspace(AbstractWorkspace $workspace) {
+    	if ($workspace->getMooc() != null) {
+	    	/* @var $roleManager RoleManager */
+	    	$roleManager = $this->container->get('claroline.manager.role_manager');
+    		$em = $this->getDoctrine()->getManager();
+    		/* @var $constraintsRepo MoocAccessConstraintsRepository */
+    		$constraintsRepo = $em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints');
+    		$constraints = $constraintsRepo->findByMooc($workspace->getMooc(), $workspace->getMooc()->getAccessConstraints()->toArray());
+    		
+    		
+    		foreach ($constraints as $constraint) {
+    			foreach ($constraint->getSessionsByUsers() as $sessionByUser) {
+    				$moocSession = $sessionByUser->getMoocSession();
+    				if ($workspace->getMooc()->getMoocSessions()->contains($moocSession)) {
+	    				$user = $sessionByUser->getUser();
+	    				$collaboratorRole = $roleManager->getCollaboratorRole($moocSession->getMooc()->getWorkspace());
+		    			if (!$user->getMoocSessions()->contains($moocSession)) {
+		    				$user->removeRole($collaboratorRole);
+		    			}
+	    				$em->remove($sessionByUser);
+    				}
+    			}
+    		}
+    	}
     }
 }

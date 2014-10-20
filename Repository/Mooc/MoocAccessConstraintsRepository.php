@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
 
 /**
  * MoocAccessConstraintsRepository
@@ -34,6 +35,21 @@ class MoocAccessConstraintsRepository extends EntityRepository
 		$query->setParameter("start_domain", $domain."\n%");
 		$query->setParameter("middle_domain", "%\n".$domain."\n%");
 		$query->setParameter("end_domain", "%\n".$domain);
+		
+		return $query->getResult();
+	}
+	
+	public function findByMooc(Mooc $mooc, array $exclude = array()) {
+		$dql = "SELECT mac FROM Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints mac
+				WHERE :mooc MEMBER OF mac.moocs";
+		if (count($exclude) > 0) {
+			$dql = $dql." AND mac NOT IN (:constraints)";
+		}
+		$query = $this->_em->createQuery($dql);
+		$query->setParameter("mooc", $mooc);
+		if (count($exclude) > 0) {
+			$query->setParameter("constraints", $exclude);
+		}
 		
 		return $query->getResult();
 	}
