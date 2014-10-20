@@ -1194,4 +1194,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     	
     	return $query->getResult(Query::HYDRATE_SIMPLEOBJECT);
     }
+    
+    public function findByMailInOrLike(array $in, array $like) {
+    	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
+    		WHERE u.mail IN (:in)';
+    	foreach ($like as $i => $l) {
+    		$dql = $dql.' OR u.mail LIKE :like'.$i.'';
+    	}
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("in", $in);
+    	
+    	foreach ($like as $i => $l) {
+    		$query->setParameter("like".$i, "%".$l);
+    	}
+    	
+    	return $query->getResult();
+    }
 }

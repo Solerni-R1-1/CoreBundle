@@ -259,7 +259,7 @@ class WorkspaceManager
         		$constraints = $accessContraints->toArray();
         	}
         	$service = $this->container->get('orange.moocaccesscontraints_service');
-        	$service->processUpgrade($constraints);
+        	$service->processUpgradeConstraints($constraints);
         }
     }
 
