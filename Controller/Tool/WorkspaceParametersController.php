@@ -298,7 +298,7 @@ class WorkspaceParametersController extends Controller
         }
         
         if ( $isMooc ) {
-            if ( $form->isValid() || && $form_mooc->isValid() ) {
+            if ( $form->isValid() && $form_mooc->isValid() ) {
             	$forumIds = array();
             	$hasErrors = false;
                 /* Setting current mooc for newly added sessions */
