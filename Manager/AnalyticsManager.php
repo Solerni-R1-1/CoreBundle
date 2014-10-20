@@ -332,9 +332,10 @@ class AnalyticsManager
     	$subscriptions = array();
     	$subscriptions[] = array();
     	$subscriptions[] = array();
+    	$subscriptions[] = array();
     	
-    	$from 	= new \DateTime($moocSession->getStartDate()->format("Y-m-d"));
-    	$to 	= new \DateTime($moocSession->getEndDate()	->format("Y-m-d"));
+    	$from 	= new \DateTime($moocSession->getStartInscriptionDate()->format("Y-m-d"));
+    	$to 	= new \DateTime($moocSession->getEndInscriptionDate()->format("Y-m-d"));
     	$now 	= new \DateTime("today midnight");
     	
     	if ($now < $to) {
