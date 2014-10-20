@@ -78,7 +78,12 @@ class MessageManager
     {
         $message = new Message();
         $message->setContent($content);
-        $message->setParent($parent);
+        //$message->setParent($parent);
+
+        if($parent != null){
+            $message->setRoot($parent->getRoot());    
+        }
+        
         $message->setObject($object);
         $message->setSender($sender);
         $stringTo = '';
@@ -138,9 +143,6 @@ class MessageManager
             $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
         }
 
-        if (null !== $message->getParent()) {
-            $message->setParent($message->getParent());
-        }
 
         $this->om->persist($message);
 
@@ -259,7 +261,7 @@ class MessageManager
      */
     public function getConversation(Message $message)
     {
-        return $this->messageRepo->findAncestors($message);
+        return $this->messageRepo->findByRoot($message->getRoot());
     }
 
     /**

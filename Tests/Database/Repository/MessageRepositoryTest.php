@@ -52,17 +52,6 @@ class MessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count(self::$repo->findAll()));
     }
 
-    /**
-     * @group message
-     * @group database
-     */
-    public function testFindAncestors()
-    {
-        $messages = self::$repo->findAncestors(self::get('message_2'));
-        $this->assertEquals(2, count($messages));
-        $this->assertEquals(self::get('message_1'), $messages[0]);
-        $this->assertEquals(self::get('message_2'), $messages[1]);
-    }
 
     /**
      * @group message

@@ -141,44 +141,76 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/send/{parentId}",
+     *     "/send/{rootId}",
      *     name="claro_message_send",
-     *     defaults={"parentId" = 0}
+     *     defaults={"rootId" = 0}
      * )
      * @EXT\Method({"POST"})
      * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
-     *     "parent",
+     *     "root",
      *     class="ClarolineCoreBundle:Message",
-     *     options={"id" = "parentId", "strictId" = true}
+     *     options={"id" = "rootId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Message:show.html.twig")
      *
      * Handles the message form submission.
      *
      * @param User    $sender
-     * @param Message $parent
+     * @param Message $root
      *
      * @return Response
      */
-    public function sendAction(User $sender, Message $parent = null)
+    public function sendAction(User $sender, Message $root = null)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
-        $form->handleRequest($this->request);
+        //First message
+        if($root == null){
+            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
+            $form->handleRequest($this->request);
 
-        if ($form->isValid()) {
-            $message = $form->getData();
-            $message->setSender($sender);
-            $message->setParent($parent);
-            $message = $this->messageManager->send($message);
-            $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
+            if ($form->isValid()) {
+                $message = $form->getData();
+                $message->setSender($sender);
+                $message->setRoot($message); //pointer on itself
+                $message = $this->messageManager->send($message);
+                $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
 
-            return new RedirectResponse($url);
+                return new RedirectResponse($url);
+            }
+
+        //Reply
+        } else {
+            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE_SIMPLE, array($this->translator));
+            $form->handleRequest($this->request);
+
+            $receivers = $this->getReceivers($sender, $root);
+
+            $receiversUsername = array();
+            foreach ($receivers as $id => $user_tmp) {
+                $receiversUsername[] = $user_tmp->getUsername();
+            }
+
+            if ($form->isValid()) {
+                $message = new Message();
+                $datas = $form->getData();
+                $message->setContent($datas['content']);
+                $message->setSender($sender);
+                $message->setRoot($root->getRoot());
+                $message->setObject($root->getObject());
+                $message->setTo(implode(";", $receiversUsername));
+                $message = $this->messageManager->send($message);
+                $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
+
+                return new RedirectResponse($url);
+            } 
         }
+        
 
-        $ancestors = $parent ? $this->messageManager->getConversation($parent): array();
+        
 
-        return array('form' => $form->createView(), 'message' => $parent, 'ancestors' => $ancestors);
+        $disqus = $root ? $this->messageManager->getConversation($root): array();
+
+        return array('form' => $form->createView(), 'message' => $root, 'disqus' => $disqus);
     }
 
     /**
@@ -337,79 +369,83 @@ class MessageController
     )
     {
         if ($message) {
+            //Get all conversation, even message with ID > current id asked
+            $disqus = $this->messageManager->getConversation($message);
 
-            //Quickfix : we only authorize 1 child per message
-            $childs = $message->getChildren();
-            while($message
-                    && $childs != null 
-                    && !empty($childs)){
-                
-                if($childs[0] == null){
-                    break;
-                }
-                $message = $childs[0];
-                $childs = $message->getChildren();
-            }
+            // Mark all conversation as readed
+            $this->messageManager->markAsRead($user, $disqus);
 
-            //echo $message->getId().'<hr/>';
-
-            $this->messageManager->markAsRead($user, array($message));
-            $ancestors = $this->messageManager->getConversation($message);
-
-            $receivers = array();
-
-            // We add the send
-            // except if the sender is ourself
-            if( $message->getSenderUsername() !== $user->getUserName()) {
-                $userSender = $this->userManager->getUserByUsername($message->getSenderUsername()); 
-                if($userSender != null){
-                    $receivers[$userSender->getId()] = $userSender; 
-                }
-            }
-
-            $dests = $message->getUserMessages();
-            foreach ($dests as $dest) {
-
-                $user_receivers = $dest->getUser();
-
-                // We add the receiver
-                // except if it's ourself
-                // except if the receiver is also the sender to avoid spam
-                if($user_receivers->getId() !== $user->getId()
-                    && !array_key_exists($user_receivers->getId(), $receivers)) {
-                    $receivers[$user_receivers->getId()] = $user_receivers;    
-                    //echo 'inclus : '.$user_receivers->getUserName().'<hr/>';
-                } else {
-                    //echo 'exclus : '.$user_receivers->getUserName().'<hr/>';
-                }
-            }
+            
+           /* foreach ($disqus as $key => $msg) {
+                echo $msg->getId();
+                echo "<hr/>";
+            }*/
+            //$receivers = $this->getReceivers($user, $message);
 
             /*foreach ($receivers as $id => $user_tmp) {
                 echo $user_tmp->getUsername().' ';
             }
             echo '<hr/>';*/
 
-            $sendString = $this->messageManager->generateStringTo(array_values($receivers), $groups, $workspaces);
+            //$sendString = $this->messageManager->generateStringTo(array_values($receivers), $groups, $workspaces);
         //die($sendString);
             
 
-            $object = 'Re: ' . $message->getObject();
+            //$object = 'Re: ' . $message->getObject();
             $this->checkAccess($message, $user);
+            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE_SIMPLE, array($this->translator)); 
         } else {
             //datas from the post request
-            $sendString = $this->messageManager->generateStringTo($receivers, $groups, $workspaces);
-            $object = '';
-            $ancestors = array();
+            //$sendString = $this->messageManager->generateStringTo($receivers, $groups, $workspaces);
+            //$object = '';
+            $disqus = array();
+            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
         }
-
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object, $this->translator));
+        
 
         return array(
-            'ancestors' => $ancestors,
+            'disqus' => $disqus,
             'message' => $message,
             'form' => $form->createView()
         );
     }
+
+    private function getReceivers($user, $previousMessage){
+        $receivers = array();
+
+        // We add the sender
+        // except if the sender is ourself
+        if( $previousMessage->getSenderUsername() !== $user->getUserName()) {
+            $userSender = $this->userManager->getUserByUsername($previousMessage->getSenderUsername()); 
+            if($userSender != null){
+                $receivers[$userSender->getId()] = $userSender; 
+            }
+        }
+
+        $dests = $previousMessage->getUserMessages();
+        foreach ($dests as $dest) {
+
+            $user_receivers = $dest->getUser();
+
+            // We add the receiver
+            // except if it's ourself
+            // except if the receiver is also the sender to avoid spam
+            if($user_receivers->getId() !== $user->getId()
+                && !array_key_exists($user_receivers->getId(), $receivers)) {
+                $receivers[$user_receivers->getId()] = $user_receivers;   
+            } 
+        }
+
+        if(count($receivers) == 0){
+            $userSender = $this->userManager->getUserByUsername($previousMessage->getSenderUsername()); 
+            if($userSender != null){
+                $receivers[$userSender->getId()] = $userSender; 
+            }
+        }
+
+        return $receivers;
+    }
+    
 
     /**
      * @EXT\Route(
@@ -743,8 +779,8 @@ class MessageController
             }
         }
 
-        if($message->getParent() != null){
-            return $this->checkAccess($message->getParent(), $user);
+        if($message->getRoot() != null){
+            return $this->checkAccess($message->getRoot(), $user);
         }
 
         throw new AccessDeniedException("This isn't your message");

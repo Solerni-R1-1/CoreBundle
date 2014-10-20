@@ -20,6 +20,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class FormFactory
 {
     const TYPE_MESSAGE = 'message';
+    const TYPE_MESSAGE_SIMPLE = 'message_simple';
     const TYPE_ORDERED_TOOL = 'ordered_tool';
     const TYPE_TOOL = 'tool';
     const TYPE_USER = 'user';
@@ -64,6 +65,9 @@ class FormFactory
         self::TYPE_MESSAGE => array(
             'formType' => 'Claroline\CoreBundle\Form\MessageType',
             'entity' => 'Claroline\CoreBundle\Entity\Message'
+        ),
+        self::TYPE_MESSAGE_SIMPLE => array(
+            'formType' => 'Claroline\CoreBundle\Form\MessageSimpleType'
         ),
         self::TYPE_ORDERED_TOOL => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceOrderToolEditType',

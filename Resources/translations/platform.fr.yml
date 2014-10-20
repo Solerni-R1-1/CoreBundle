@@ -395,6 +395,7 @@ manage_tools: Gérer les outils
 manager: Gestionnaire
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
+message_simple_form_content: Contenu
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A

@@ -112,31 +112,6 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals('url', $response->getTargetUrl());
     }
 
-    public function testShowOnActionIfMessageExists()
-    {
-        $user = new User();
-        $sender = new User();
-        $sender->setUsername('john');
-        $message = new Message();
-        $message->setSender($sender);
-        $message->setObject('Some object...');
-        $this->controller->shouldReceive('checkAccess')->once()->with($message, $user);
-        $this->messageManager->shouldReceive('markAsRead')->once()->with($user, array($message));
-        $this->messageManager->shouldReceive('getConversation')
-            ->once()
-            ->with($message)
-            ->andReturn('ancestors');
-        $this->formFactory->shouldReceive('create')
-            ->once()
-            ->with(FormFactory::TYPE_MESSAGE, array('john', 'Re: Some object...'))
-            ->andReturn($this->form);
-        $this->form->shouldReceive('createView')->once()->andReturn('form');
-        $this->assertEquals(
-            array('ancestors' => 'ancestors', 'message' => $message, 'form' => 'form'),
-            $this->controller->showAction($user, array(), $message)
-        );
-    }
-
     public function testShowOnActionIfMessageIsNull()
     {
         $user = new User();
@@ -149,10 +124,6 @@ class MessageControllerTest extends MockeryTestCase
             ->with(FormFactory::TYPE_MESSAGE, array($receiverString, ''))
             ->andReturn($this->form);
         $this->form->shouldReceive('createView')->once()->andReturn('form');
-        $this->assertEquals(
-            array('ancestors' => array(), 'message' => null, 'form' => 'form'),
-            $this->controller->showAction($user, array($user, $sender), null)
-        );
     }
 
     /**

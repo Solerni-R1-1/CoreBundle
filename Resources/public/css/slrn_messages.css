@@ -93,10 +93,12 @@
 }
 
 
-#message_form label{
+#message_form label,
+#message_simple_form label{
 	display: none;
 }
-#message_form .col-md-9{
+#message_form .col-md-9,
+#message_simple_form .col-md-9{
 	width: 100%;
 }
 
@@ -174,4 +176,17 @@ table.scrollable thead th {
 .contact_selected_delete:after{
 	content: "x";
 	padding: 0px 2px;
+}
+
+.msg_header{
+	background-color: #F6F6F8;
+	border: 1px solid #EEEEEF;
+	border-radius: 5px 5px 0 0;
+}
+
+.msg_main{
+	background: #F0F0F0;
+	border: 1px solid #EEEEEF;
+	border-radius: 0 0 5px 5px;
+	padding: 10px;
 }

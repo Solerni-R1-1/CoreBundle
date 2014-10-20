@@ -74,7 +74,7 @@ class MessageType extends AbstractType
                 'content',
                 'tinymce',
                 array(
-                    'attr' => array('placeholder'    => 'ss'),
+                    'attr' => array(),
                     'required' => true
                 )
             );

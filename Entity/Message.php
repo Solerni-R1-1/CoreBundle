@@ -18,7 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\MessageRepository")
  * @ORM\Table(name="claro_message")
- * @Gedmo\Tree(type="nested")
  */
 class Message
 {
@@ -72,47 +71,13 @@ class Message
     protected $userMessages;
 
     /**
-     * @Gedmo\TreeLeft
-     * @ORM\Column(type="integer")
-     */
-    protected $lft;
-
-    /**
-     * @Gedmo\TreeLevel
-     * @ORM\Column(type="integer")
-     */
-    protected $lvl;
-
-    /**
-     * @Gedmo\TreeRight
-     * @ORM\Column(type="integer")
-     */
-    protected $rgt;
-
-    /**
-     * @Gedmo\TreeRoot
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    * @ORM\ManyToOne(
+    *     targetEntity="Claroline\CoreBundle\Entity\Message"
+    * )
+    * @ORM\JoinColumn(onDelete="SET NULL")
+    */
     protected $root;
 
-    /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Message",
-     *     inversedBy="children"
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    protected $parent;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Message",
-     *     mappedBy="parent"
-     * )
-     * @ORM\OrderBy({"lft" = "ASC"})
-     */
-    protected $children;
 
     /**
      * @ORM\Column(name="sender_username")
@@ -203,7 +168,7 @@ class Message
         return $this->userMessages;
     }
 
-    public function getParent()
+    /*public function getParent()
     {
         return $this->parent;
     }
@@ -226,17 +191,22 @@ class Message
     public function getRgt()
     {
         return $this->rgt;
-    }
+    }*/
 
     public function getRoot()
     {
         return $this->root;
     }
 
+    public function setRoot($root){
+        $this->root = $root;
+    }
+    /*
+
     public function getLvl()
     {
         return $this->lvl;
-    }
+    }*/
 
     public function getTo()
     {
