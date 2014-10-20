@@ -752,7 +752,7 @@ class MessageController
 
         $usersMessage = $message->getUserMessages();
         foreach ($usersMessage as $userMessage) {
-            if($userMessage->getUser()->getUsername()){
+            if($userMessage->getUser()->getUsername() === $user->getUsername()){
                 return true;
             }
         }
