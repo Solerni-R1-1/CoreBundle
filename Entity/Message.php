@@ -74,7 +74,7 @@ class Message
     * @ORM\ManyToOne(
     *     targetEntity="Claroline\CoreBundle\Entity\Message"
     * )
-    * @ORM\JoinColumn(onDelete="SET NULL")
+    * @ORM\JoinColumn(name="root", referencedColumnName="id", onDelete="SET NULL")
     */
     protected $root;
 
