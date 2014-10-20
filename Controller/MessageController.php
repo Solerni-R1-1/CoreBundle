@@ -750,6 +750,13 @@ class MessageController
             return true;
         }
 
+        $usersMessage = $message->getUserMessages();
+        foreach ($usersMessage as $userMessage) {
+            if($userMessage->getUser()->getUsername()){
+                return true;
+            }
+        }
+/*
         $receiverString = $message->getTo();
         $names = explode(';', $receiverString);
         $usernames = array();
@@ -781,7 +788,7 @@ class MessageController
 
         if($message->getRoot() != null){
             return $this->checkAccess($message->getRoot(), $user);
-        }
+        }*/
 
         throw new AccessDeniedException("This isn't your message");
     }
