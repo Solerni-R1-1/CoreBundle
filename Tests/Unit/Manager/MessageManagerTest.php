@@ -156,13 +156,6 @@ class MessageManagerTest extends MockeryTestCase
         );
     }
 
-    public function testGetConversation()
-    {
-        $msg = $this->mock('Claroline\CoreBundle\Entity\Message');
-
-        $this->messageRepo->shouldReceive('findAncestors')->with($msg)->andReturn($msg);
-        $this->assertEquals($msg, $this->manager->getConversation($msg));
-    }
 
     public function testRemove()
     {

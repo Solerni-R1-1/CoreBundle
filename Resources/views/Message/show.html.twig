@@ -1,8 +1,8 @@
 {% extends 'ClarolineCoreBundle:Message:layout.html.twig' %}
 
 {% block title %}{% spaceless %}
-    {% if ancestors | length >= 1 %}
-        {{ parent() ~ ' - ' ~ ancestors[0].getObject() | striptags | raw }}
+    {% if disqus | length >= 1 %}
+        {{ parent() ~ ' - ' ~ disqus[0].getObject() | striptags | raw }}
     {% else %}
         {{ 'new_message' | trans({}, 'platform') | striptags | raw }}
     {% endif %}
@@ -10,41 +10,65 @@
 
 {% block section_content %}
     <div class="row">
-        <div class="col-md-6">
-            {% for ancestor in ancestors %}
+        <div class="col-md-12">
+            {% for messageDisqus in disqus %}
                 <div class="panel panel-default">
+                    {% if loop.first %}
                     <div class="panel-heading">
-                        <h3 class='panel-title'>{#{{ ancestor.getId() }}#} {{ ancestor.getObject() | raw }}</h3>
+                        <h3 class='panel-title' id='msg_{{ messageDisqus.getId() }}'>
+                            {{ messageDisqus.getObject() | raw }}
+                        </h3>
                     </div>
+                    {% endif %}
                     <div class="panel-body">
-                        <p class="text-muted">
-                            {{ 'from_message'|trans({}, 'platform') }}:  {% if ancestor.getSender() is defined and ancestor.getSender() %}<a href="{{ path('claro_public_profile_view', {'publicUrl': ancestor.getSender().getPublicUrl()}) }}">{{ ancestor.getSenderUsername() }}</a>{% else %}{{ ancestor.getSenderUsername() }}{% endif %}
-                        </p>
-                        {% set second = false %}
-                        <p class="text-muted">
-                            {{ 'to_message'|trans({}, 'platform') }}: 
-                            {% for dest in ancestor.getUserMessages() %} 
-                                {% if second %} - {% endif %}
-                                <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
-                                {% set second = true %}
-                            {% endfor %}
-                        </p>
-                        <div>
-                            {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
-                                <img src="{{ image( 'thumbnails/tmb_54_54_' ~ ancestor.getSender().getPicture() ).scaleResize(54)}}" class="col-md-2" alt="{{ ancestor.getObject() }}">
-                            {% endif %}
+                        <div class='row msg_header'>
+
+
+                            <div class="col-md-2">
+                                {% if messageDisqus.getSender() and messageDisqus.getSender().getPicture() != "" %}
+                                    <img src="{{ image( 'thumbnails/tmb_54_54_' ~ messageDisqus.getSender().getPicture() ).scaleResize(54)}}" class="" alt="{{ messageDisqus.getObject() }}">
+                                {% endif %}
+                            </div>
+
+
+                            <div class="col-md-8">
+                                <p class="text-muted">
+                                    {{ 'from_message'|trans({}, 'platform') }}:  {% if messageDisqus.getSender() is defined and messageDisqus.getSender() %}<a href="{{ path('claro_public_profile_view', {'publicUrl': messageDisqus.getSender().getPublicUrl()}) }}">{{ messageDisqus.getSenderUsername() }}</a>{% else %}{{ messageDisqus.getSenderUsername() }}{% endif %}
+
+                                    <br/>
+
+                                    {{ 'to_message'|trans({}, 'platform') }}: 
+                                    {% for dest in messageDisqus.getUserMessages() %} 
+                                        {% if not dest.isSent() %}
+                                            {% if not loop.first %} - {% endif %}
+                                            <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
+                                        {% endif %}
+                                        
+                                    {% endfor %}
+                                </p>
+                            </div>
+
+                            <div class="col-md-2">
+                                <p class="text-muted">
+                                    {{ messageDisqus.getDate()|timeAgo }}
+                                </p>
+                            </div>
+
+
                         </div>
-                        <p>
-                            {{ ancestor.getContent()|raw }}
-                            <p class="text-muted">
-                                {{ ancestor.getDate()|timeAgo }}
-                            </p>
-                        </p>
+
+
+                        <div class='row msg_main'>
+                                {{ messageDisqus.getContent()|raw }}
+                        </div>
+
                     </div>
                 </div>
             {% endfor %}
         </div>
-        <div class="col-md-{% if ancestors is empty %}12{% else %}6{% endif %}">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="">
@@ -53,9 +77,9 @@
                 </div>
                 <form role="form" novalidate="novalidate"
                     {% if message is empty %}
-                        action="{{ path('claro_message_send', {'parentId': null}) }}"
+                        action="{{ path('claro_message_send', {'rootId': null}) }}"
                     {% else %}
-                        action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
+                        action="{{ path('claro_message_send', {'rootId': message.getId()}) }}"
                     {% endif %}
                     method="post" {{ form_enctype(form) }}
                     id="generic-form"
@@ -78,6 +102,12 @@
             </div>
         </div>
     </div>
+
+    {% if disqus is empty %}
+        {% set cssHidden = "hidden" %}
+    {% else %}
+        {% set cssHidden = "" %}
+    {% endif %}
 
     <div id="contacts-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
