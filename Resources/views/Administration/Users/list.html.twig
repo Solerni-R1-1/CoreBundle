@@ -116,6 +116,7 @@
                         {% if is_granted('ROLE_ADMIN') %}
                             <th><input type="checkbox" name="all" id="check-all-items" /></th>
                         {% endif %}
+                        <th><a href="{{ sortUrl(max, search, 'isValidate', direction) }}">{{ 'isvalid'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'username', direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'lastName',direction ) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'firstName' , direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
@@ -134,6 +135,14 @@
                                     <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center" />
                                 </td>
                             {% endif %}
+                            <td class="text-center">
+                                {% if user.getIsValidate() %}
+                                   {% set lockClasses = 'icon-unlock' %}
+                                {% else %}
+                                   {% set lockClasses = 'icon-lock pink_link' %}
+                                {% endif %}
+                                <i class="{{lockClasses}}"></i>
+                            </td>
                             <td>
                                 {% if user.getPublicUrl()|default %}
                                     <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
