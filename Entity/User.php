@@ -901,7 +901,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function getOrderableFields()
     {
-        return array('id', 'username', 'lastName', 'firstName', 'mail');
+        return array('id', 'username', 'lastName', 'firstName', 'mail', 'isValidate');
     }
 
     public function isAccountNonExpired()
