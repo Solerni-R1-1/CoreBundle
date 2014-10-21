@@ -313,8 +313,8 @@ class AnalyticsManager
     	$activityByHour = $this->analyticsHourlyMoocStatsRepo->sumHourlyActionsExcluding($session, array("workspace-enter", "workspace-role-subscribe_group", "workspace-role-subscribe_user", "workspace-role-unsubscribe_group", "workspace-role-unsubscribe_user"));
     	
     	for ($i = 0; $i < 24; $i++) {
-    		$audience[0][$i] = $connectionsByHour["h".$i];
-    		$audience[1][$i] = $activityByHour["h".$i];
+    		$audience[0][$i] = intval($connectionsByHour["h".$i]);
+    		$audience[1][$i] = intval($activityByHour["h".$i]);
     	}
     	
     	return $audience;
@@ -361,8 +361,8 @@ class AnalyticsManager
     		$subscriptions[2][$index][0] = $dateCurrent;
     		
     		if (array_key_exists($dateCurrent, $orderedSubByDay)) {
-    			$nbSub = $orderedSubByDay[$dateCurrent]["nbSubscriptions"];
-    			$nbConn = $orderedSubByDay[$dateCurrent]["nbConnections"];
+    			$nbSub = intval($orderedSubByDay[$dateCurrent]["nbSubscriptions"]);
+    			$nbConn = intval($orderedSubByDay[$dateCurrent]["nbConnections"]);
     		} else {
     			$nbSub = 0;
     			$nbConn = 0;
@@ -419,7 +419,7 @@ class AnalyticsManager
 			$contrib[1] = 0;
 			foreach ($messagesPerDay as $i => $message) {
 				if ($message["date"] == $from) {
-					$contrib[1] = $message["nbPublicationsForum"];
+					$contrib[1] = intval($message["nbPublicationsForum"]);
 					break;						
 				}
 			}
@@ -597,7 +597,17 @@ class AnalyticsManager
     }
     
     public function getForumPublicationsDailyMean(MoocSession $session, $filterRoles) {
-    	return $this->analyticsUserMoocStatsRepo->countAverageForumMessagesForSession($session);
+    	$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
+    	$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
+    	$now = new \DateTime("today midnight");
+    	if ($now < $to) {
+    		$to = $now;
+    	}
+    	
+    	$nbDays = date_diff($from, $to, true)->format("%a");
+    	
+    	$nbMessages = $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession($session);
+    	return $nbMessages / $nbDays;
     }
     
     public function getMostActiveSubjects(MoocSession $session, $nbDays, $filterRoles) {
