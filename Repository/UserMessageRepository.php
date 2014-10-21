@@ -67,7 +67,7 @@ class UserMessageRepository extends EntityRepository
                 WHERE m2.root = m.root 
                 AND m.id < m2.id
             )
-            ORDER BY m.date DESC
+            ORDER BY m.id DESC
         ";
         $query = $this->_em->createQuery($dql);
 
@@ -126,6 +126,11 @@ class UserMessageRepository extends EntityRepository
             WHERE u.id = {$receiver->getId()}
             AND um.isRemoved = false
             AND um.isSent = false
+            AND NOT EXISTS (
+                SELECT m2.id FROM Claroline\CoreBundle\Entity\Message m2
+                WHERE m2.root = m.root 
+                AND m.id < m2.id
+            )
             AND (
                 UPPER(m.object) LIKE :search
                 OR UPPER(m.senderUsername) LIKE :search
@@ -157,6 +162,11 @@ class UserMessageRepository extends EntityRepository
             WHERE u.id = {$sender->getId()}
             AND um.isRemoved = false
             AND um.isSent = true
+            AND NOT EXISTS (
+                SELECT m2.id FROM Claroline\CoreBundle\Entity\Message m2
+                WHERE m2.root = m.root 
+                AND m.id < m2.id
+            )
             AND UPPER(m.object) LIKE :search
             ORDER BY m.date DESC
         ";
@@ -189,6 +199,11 @@ class UserMessageRepository extends EntityRepository
             JOIN um.message m
             WHERE u.id = {$user->getId()}
             AND um.isRemoved = true
+            AND NOT EXISTS (
+                SELECT m2.id FROM Claroline\CoreBundle\Entity\Message m2
+                WHERE m2.root = m.root 
+                AND m.id < m2.id
+            )
             AND (
                 UPPER(m.object) LIKE :search
                 OR UPPER(m.senderUsername) LIKE :search
