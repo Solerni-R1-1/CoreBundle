@@ -335,6 +335,51 @@ class RolesController extends Controller
         );
     }
 
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/users/registered/modify/page/{page}/max/{max}/order/{order}/direction/{direction}",
+     *     name="claro_workspace_registered_modify_user_list",
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/users/registered/modify/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
+     *     name="claro_workspace_registered_modify_user_list_search",
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:registeredUsers.html.twig")
+     */
+    public function registeredUserListAction($page, $search, AbstractWorkspace $workspace, $max, $order, $direction)
+    {
+    	$this->checkAccess($workspace);
+    	$wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
+    	$pager = ($search === '') ?
+	    	$this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
+	    	$this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
+    
+    	$direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+    
+    	return array(
+    			'workspace' => $workspace,
+    			'pager' => $pager,
+    			'search' => $search,
+    			'wsRoles' => $wsRoles,
+    			'max' => $max,
+    			'order' => $order,
+    			'direction' => $direction
+    	);
+    }
+
     /**
      * @EXT\Route(
      *     "/{workspace}/groups/unregistered/page/{page}/max/{max}/order/{order}/direction/{direction}",

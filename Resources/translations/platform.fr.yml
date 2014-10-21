@@ -88,6 +88,7 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 add_users: 'Ajouter des utilisateurs'
+modify_users: 'Modifier des utilisateurs'
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
