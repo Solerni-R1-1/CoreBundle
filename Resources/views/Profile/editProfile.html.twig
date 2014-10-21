@@ -78,7 +78,6 @@
                     {{ form_label(form.picture) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.picture) }}
-                        {{ form_errors(form.picture) }} 
                     </div>
                     </div>
                     <div class="form-group row">
@@ -95,9 +94,17 @@
                     {{ form_label(form.pictureFile) }}
                     <div class="col-md-9 col-xs-9">
                         {{ form_widget(form.pictureFile) }}
-                        {{ form_errors(form.pictureFile) }}
                     </div>
                 </div>
+                {# PICTURE ERROR MESSAGE #}
+                {% if form.pictureFile.vars.errors|length %}
+                    <div class="form-group row">
+                        <label class="control-label col-md-3"></label>
+                        <div class="cold-md-9 col-xs-9">
+                            {{ form_errors(form.pictureFile) }}
+                        </div>
+                    </div>
+                {% endif %}
                 {# UPLOAD BUTTON #}
                 <div class="form-group row">
                     <label class="control-label col-md-3">

@@ -96,9 +96,9 @@ class ProfileType extends AbstractType
                 'constraints' => new Image(
                     array(
                         'minWidth'  => 50,
-                        'maxWidth'  => 800,
+                        'maxWidth'  => 2048,
                         'minHeight' => 50,
-                        'maxHeight' => 800,
+                        'maxHeight' => 2048,
                     )
                 ),
                 'label' => 'picture_profile'
