@@ -168,31 +168,6 @@ class Message
         return $this->userMessages;
     }
 
-    /*public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    public function getLft()
-    {
-        return $this->lft;
-    }
-
-    public function getRgt()
-    {
-        return $this->rgt;
-    }*/
-
     public function getRoot()
     {
         return $this->root;
@@ -201,12 +176,6 @@ class Message
     public function setRoot($root){
         $this->root = $root;
     }
-    /*
-
-    public function getLvl()
-    {
-        return $this->lvl;
-    }*/
 
     public function getTo()
     {

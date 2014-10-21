@@ -375,29 +375,10 @@ class MessageController
             // Mark all conversation as readed
             $this->messageManager->markAsRead($user, $disqus);
 
-            
-           /* foreach ($disqus as $key => $msg) {
-                echo $msg->getId();
-                echo "<hr/>";
-            }*/
-            //$receivers = $this->getReceivers($user, $message);
 
-            /*foreach ($receivers as $id => $user_tmp) {
-                echo $user_tmp->getUsername().' ';
-            }
-            echo '<hr/>';*/
-
-            //$sendString = $this->messageManager->generateStringTo(array_values($receivers), $groups, $workspaces);
-        //die($sendString);
-            
-
-            //$object = 'Re: ' . $message->getObject();
             $this->checkAccess($message, $user);
             $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE_SIMPLE, array($this->translator)); 
         } else {
-            //datas from the post request
-            //$sendString = $this->messageManager->generateStringTo($receivers, $groups, $workspaces);
-            //$object = '';
             $disqus = array();
             $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
         }
