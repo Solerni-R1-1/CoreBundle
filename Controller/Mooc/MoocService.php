@@ -79,30 +79,8 @@ class MoocService extends Controller
      * Return user progression in lesson from workspace
      */
     public function getUserProgressionInLesson( $user, $workspace ) {
-        
-        $doctrine = $this->getDoctrine();
-        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
-        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
-        $lesson = $this->getLessonFromWorkspace($workspace, $user);
-        
-        $totalProgression = 0;
-        $currentProgression = 0;
-        $allChapters = $chapterRepository->findByLesson( array('lesson' => $lesson), array('left' => 'ASC'));
-        $firstChapter = null;
-        foreach($allChapters as $chapter){
-            if($chapter->getLevel() > 1){
-                if($firstChapter == null){
-                    $firstChapter = $chapter;
-                }
-                $done = $doneRepository->find(array('lesson' => $chapter->getId(), 'user' => $user->getId()));
-                if($done && $done->getDone()){
-                    $currentProgression++;
-                }
-                $totalProgression++;
-            }
-        }
 
-        return ($totalProgression == 0) ? 0 : round($currentProgression / $totalProgression * 100);
+    	return round($this->getDoctrine()->getRepository('IcapLessonBundle:Done')->getUserProgression($user, $workspace));
         
     }
     
