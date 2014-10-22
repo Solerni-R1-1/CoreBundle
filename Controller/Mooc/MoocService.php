@@ -79,9 +79,7 @@ class MoocService extends Controller
      * Return user progression in lesson from workspace
      */
     public function getUserProgressionInLesson( $user, $workspace ) {
-
     	return round($this->getDoctrine()->getRepository('IcapLessonBundle:Done')->getUserProgression($user, $workspace));
-        
     }
     
     /**
