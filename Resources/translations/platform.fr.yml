@@ -88,6 +88,7 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 add_users: 'Ajouter des utilisateurs'
+modify_users: 'Modifier des utilisateurs'
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
@@ -1087,6 +1088,7 @@ export_badge_skill: Classement des utilisateurs participant aux badges de compé
 export_badge_participation_knowledge: Participation aux badges de connaissances
 export_badge_participation_skill: Participation aux badges de compétences
 export_subscriptions_stats: Liste des inscrits
+export_users_validations_stats: Liste des comptes validés
 export_active_users: Liste des utilisateurs actifs/inactifs
 export_users_activity: Classement des utilisateurs par nombre d'activités
 export_forum_stats: Classement des utilisateurs par nombre de publications

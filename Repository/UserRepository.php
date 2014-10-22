@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Query;
 use Claroline\CoreBundle\Persistence\MissingObjectException;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
@@ -1220,5 +1221,40 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     	
     	$result = $query->getResult();
     	return $result;
+    }
+    
+    public function getAllUsersForExport(MoocSession $session, $excludeRoles = array()) {
+		$from = $session->getStartInscriptionDate();
+		$to = $session->getEndInscriptionDate();
+		
+    	$dql = "SELECT DISTINCT
+    				u.username AS username,
+    				u.firstName AS firstname,
+    				u.lastName AS lastname,
+    				u.mail AS mail,
+    				(CASE WHEN u.isValidate = 1 THEN 'oui' ELSE 'non' END) AS validate
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.groups g
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+    				WITH ((l.receiver = u
+    					AND l.action = 'workspace-role-subscribe_user')
+    				OR (l.receiverGroup = g
+    					AND l.action = 'workspace-role-subscribe_group'))
+    				AND l.dateLog >= :from
+    				AND l.dateLog <= :to
+    				AND l.workspace = :workspace
+    			WHERE u NOT IN (
+   					SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+   					JOIN u2.roles as r
+   					WHERE r.name IN (:roles))
+    			AND u.isEnabled = 1";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $session->getMooc()->getWorkspace());
+    	$query->setParameter("from", $from);
+    	$query->setParameter("to", $to);
+    	$query->setParameter("roles", $excludeRoles);
+    	
+    	return $query->getResult();
     }
 }

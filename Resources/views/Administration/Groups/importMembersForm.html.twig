@@ -37,7 +37,7 @@
     {% if files is defined and files %}<div>
     	{% for file in files %}
     	<div>
-	    	Import reject {{ file['date'] | date('Y-m-d H:i') }}
+	    	Import report {{ file['date'] | date('Y-m-d H:i:s') }}
 	    	<br />
 	    	<a class="btn btn-primary" href="{{ path('claro_admin_import_file_download', {'filepath': file['path']}) }}">Download</a>
 	    	<div class="btn btn-default delete-file" target="{{ path('claro_admin_import_file_delete', {'filepath': file['path']}) }}">Delete</div>

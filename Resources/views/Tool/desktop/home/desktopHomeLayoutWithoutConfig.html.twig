@@ -24,7 +24,6 @@
                     {% set sessionNumber = sessionNumber + userGroup.getMoocSessions()|length %}
                 {% endfor %}
             {% endif %}
-            
             {% if sessionNumber > 0 %}
             
                 <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>

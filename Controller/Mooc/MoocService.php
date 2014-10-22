@@ -203,4 +203,10 @@ class MoocService extends Controller
         ->getAvailableSessionAroundToday( $user, $nbDaysAround, $nbMaxResults );
     }
     
+
+    public function countUsersForSession(MoocSession $session) {
+    	return $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')
+    			->countUsersForSession($session);
+    }
+    
 }

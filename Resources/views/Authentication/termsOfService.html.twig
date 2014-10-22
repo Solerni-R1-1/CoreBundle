@@ -10,7 +10,7 @@
         <form role="form" action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
               method="post" id="terms_of_service_form">
             <div id="text_content" class="panel-body">
-                <p>Pour vous connecter via Facebook, vous devez d'abord accepter nos <a class="js-open" href="{{ twig_cgu_url }}">conditions générales d'utilisation</a>.</p>
+                <p>Pour vous connecter, vous devez d'abord accepter nos <a class="js-open" href="{{ twig_cgu_url }}">conditions générales d'utilisation</a>.</p>
                 {# CACHE : CONDITIONS D'UTILISATION #}
                 <div class="form-group row hide">
                     {{ form_label(form.scroll, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}

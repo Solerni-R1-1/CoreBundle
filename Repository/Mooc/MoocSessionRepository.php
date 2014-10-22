@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Mooc\Mooc;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 /**
  * MoocSessionRepository
@@ -274,5 +275,20 @@ class MoocSessionRepository extends EntityRepository
 
         return $result;
         
+    }
+
+    public function countUsersForSession(MoocSession $session) {
+	    $dql = "SELECT COUNT(DISTINCT u) + COUNT(DISTINCT u2)
+	    			FROM Claroline\CoreBundle\Entity\Mooc\MoocSession s
+	    			JOIN s.users u
+	    			JOIN s.groups g
+	    			JOIN g.users u2
+	    		WHERE s = :session
+	    		AND u.isEnabled = 1";
+	    
+	    $query = $this->_em->createQuery($dql);
+	    $query->setParameter("session", $session);
+	    
+	    return $query->getSingleScalarResult();
     }
 }

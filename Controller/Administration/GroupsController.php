@@ -478,7 +478,7 @@ class GroupsController extends Controller
 	        	$fileData['fileName'] = $filename;
 	        	$explodedFilename = explode('_', explode('.', $filename)[0]); 
 	        	$time = $explodedFilename[2]."_".$explodedFilename[3];
-	        	$fileData['date'] = \DateTime::createFromFormat("Y-m-d_H-i", $time);
+	        	$fileData['date'] = \DateTime::createFromFormat("Y-m-d_H-i-s", $time);
 	        	$files[$time] = $fileData;
 	        }
         
@@ -489,12 +489,12 @@ class GroupsController extends Controller
     }
 
     /**
-     * @EXT\Route("/import/download/reject", name="claro_admin_import_file_download")
+     * @EXT\Route("/import/download/report", name="claro_admin_import_file_download")
      * @EXT\Method("GET")
      *
      * @return Response
      */
-    public function downloadImportRejectFileAction()
+    public function downloadImportReportFileAction()
     {
     	$this->checkOpen();
     	 
@@ -504,7 +504,7 @@ class GroupsController extends Controller
     	 
     	return new Response($content, 200, array(
     			'Content-Type' => 'application/force-download',
-    			'Content-Disposition' => 'attachment; filename="rejected_import_users.csv"'
+    			'Content-Disposition' => 'attachment; filename="report_import_users.csv"'
     	));
     }
     
@@ -595,20 +595,21 @@ class GroupsController extends Controller
 		            $sender->send(json_encode($message));
 	            }
             }
+
+            $handle = fopen('php://memory', 'r+');
             
-            $shouldWriteRejectFile = array();
+            $shouldWriteReject = false;
             foreach ($parsedFile['rejected'] as $error => $lines) {
             	foreach ($lines as $lineIndex => $line) {
             		if ($line != "") {
-	            		$shouldWriteRejectFile = true;
+	            		$shouldWriteReject = true;
 	            		break 2;
             		}
             	}
             }
-            
-			if ($shouldWriteRejectFile) {
-	            $handle = fopen('php://memory', 'r+');
 
+			if ($shouldWriteReject) {
+	            fputs($handle, "************    REJECTIONS    ***********".PHP_EOL);
 	            foreach ($parsedFile['rejected'] as $error => $lines) {
 	            	switch($error) {
 	            		case "file_mail":
@@ -642,21 +643,58 @@ class GroupsController extends Controller
 	            		}
 	            	}
 	            }
-	            
-	            rewind($handle);
-	            $content = stream_get_contents($handle);
-	            fclose($handle);
-	            
-	            $fs = new Filesystem();
-	            $importFailureTempFolder = sys_get_temp_dir()."/claroline/import/failure/groups/".$group->getId();
-	            if (!$fs->exists($importFailureTempFolder)) {
-	            	$fs->mkdir($importFailureTempFolder, 0700);
-	            }
-            	$now = new \DateTime();
-            	$filename = $importFailureTempFolder."/import_reject_".$now->format("Y-m-d_H-i").".csv";
-            	$fs->touch($filename);
-            	file_put_contents($filename, $content);
+	            fputs($handle, PHP_EOL.PHP_EOL.PHP_EOL);
 			}
+
+			fputs($handle, "************    COMPTES DEJA INSCRITS ET AJOUTES AU GROUPE (".count($parsedFile['only_group']).")   ***********".PHP_EOL);
+			foreach ($parsedFile['only_group'] as $lineIndex => $line) {
+				if ($line != "") {
+					fputcsv($handle, $line, ";");
+				}
+			}
+			fputs($handle, PHP_EOL.PHP_EOL.PHP_EOL);
+			
+
+			fputs($handle, "************    COMPTES INSCRITS A LA PLATEFORME ET AJOUTES AU GROUPE (".count($parsedFile['valid']).")   ***********".PHP_EOL);
+			foreach ($parsedFile['valid'] as $lineIndex => $line) {
+				if ($line != "") {
+					fputcsv($handle, $line, ";");
+				}
+			}
+			fputs($handle, PHP_EOL.PHP_EOL.PHP_EOL);
+			
+
+			fputs($handle, "************    MAILS DEJA INSCRITS ET AJOUTES AU GROUPE (".count($parsedFile['only_group']).")   ***********".PHP_EOL);
+			foreach ($parsedFile['only_group'] as $lineIndex => $line) {
+				if ($line != "") {
+					fputs($handle, $line[4].PHP_EOL);
+				}
+			}
+			fputs($handle, PHP_EOL.PHP_EOL.PHP_EOL);
+			
+
+			fputs($handle, "************    MAILS INSCRITS A LA PLATEFORME ET AJOUTES AU GROUPE (".count($parsedFile['valid']).")   ***********".PHP_EOL);
+			foreach ($parsedFile['valid'] as $lineIndex => $line) {
+				if ($line != "") {
+					fputs($handle, $line[4].PHP_EOL);
+				}
+			}
+			fputs($handle, PHP_EOL.PHP_EOL.PHP_EOL);
+			
+	            
+	        rewind($handle);
+	        $content = stream_get_contents($handle);
+	        fclose($handle);
+	           
+	        $fs = new Filesystem();
+	        $importFailureTempFolder = sys_get_temp_dir()."/claroline/import/failure/groups/".$group->getId();
+	        if (!$fs->exists($importFailureTempFolder)) {
+	        	$fs->mkdir($importFailureTempFolder, 0700);
+	        }
+            $now = new \DateTime();
+            $filename = $importFailureTempFolder."/import_reject_".$now->format("Y-m-d_H-i-s").".csv";
+            $fs->touch($filename);
+            file_put_contents($filename, $content);
             
             return new RedirectResponse(
                 $this->router->generate('claro_admin_import_users_into_group_form', array('groupId' => $group->getId()))

@@ -69,17 +69,26 @@
     <div class="list-group">
         <div class="list-group-item">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="btn-group margin-md">
-                        <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-                            <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
-                        </a>
-                        <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-                            <i class="icon-envelope"></i> {{ 'send_message_to_workspace'|trans({}, 'platform') }}
-                        </a>
+                    	<div class="btn-group">
+	                        <a href="{{ path('claro_workspace_registered_modify_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
+	                            <i class="icon-plus"></i> {{ 'modify_users'|trans({}, 'platform') }}
+	                        </a>
+	                    </div>
+                    	<div class="btn-group">
+	                        <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
+	                            <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
+	                        </a>
+	                    </div>
+                    	<div class="btn-group">
+	                        <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
+	                            <i class="icon-envelope"></i> {{ 'send_message_to_workspace'|trans({}, 'platform') }}
+	                        </a>
+	                    </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="input-group margin-md">
                         <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                         <span class="input-group-btn">

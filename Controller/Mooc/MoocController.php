@@ -104,13 +104,16 @@ class MoocController extends Controller
         }
 
         $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
-
+        
+        $nbUsers = $this->moocService->countUsersForSession($session);
+		
         return $this->render(
             'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
             array(
                 'mooc'      => $mooc,
                 'session'   => $session,
-                'user'      => $user
+                'user'      => $user,
+            	'nbUsers'	=> $nbUsers
             )
         );
     }

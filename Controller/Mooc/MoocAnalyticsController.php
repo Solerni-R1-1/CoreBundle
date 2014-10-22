@@ -406,6 +406,7 @@ class MoocAnalyticsController extends Controller
         
         // route => libelle
         $exports = array(
+            'solerni_export_users_general_stats'                    => 'export_users_validations_stats',
             'solerni_export_subscriptions_stats'                    => 'export_subscriptions_stats',
             'solerni_export_active_users_stats'                     => 'export_active_users',
             'solerni_export_users_activity'                         => 'export_users_activity',
