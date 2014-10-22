@@ -427,4 +427,45 @@ class BadgeRepository extends EntityRepository
     	 
     	return $query->getResult();
     }
+    
+    public function getAllBadgesInProgressForUser(User $user) {
+    	$dql = "SELECT b AS badge,
+					count(DISTINCT c.id) AS nbCorrecDone,
+					count(DISTINCT c2.id) AS nbCorrecHad,
+    				rn.id AS resourceId,
+    				rn_type.name AS resourceType,
+    				dz.startAllowDrop AS startAllowDrop,
+					dz.expectedTotalCorrection AS totalCorrection,
+					MAX(l.dateLog) AS dateLog
+				FROM Claroline\CoreBundle\Entity\Badge\Badge b
+					JOIN b.badgeRules br
+						WITH br.action LIKE '%icap_dropzone%'
+					JOIN br.resource rn
+    				JOIN rn.resourceType AS rn_type
+					JOIN Icap\DropzoneBundle\Entity\Dropzone dz
+						WITH dz.resourceNode = rn
+						AND dz.endReview > :now
+					JOIN dz.drops AS d
+						WITH d.user = :user
+					LEFT JOIN Icap\DropzoneBundle\Entity\Correction c
+						WITH c.dropzone = dz
+						AND c.user = :user
+						AND c.finished = 1
+					LEFT JOIN d.corrections c2
+						WITH c.finished = 1
+					JOIN Claroline\CoreBundle\Entity\Log\Log l
+						WITH l.resourceNode = rn
+						AND l.doer = :user
+				WHERE b.deletedAt IS NULL
+				GROUP BY badge
+				HAVING nbCorrecDone < totalCorrection
+					AND nbCorrecHad < totalCorrection
+				ORDER BY dateLog DESC";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("now", new \DateTime());
+    	$query->setParameter("user", $user);
+    	
+    	return $query->getResult();
+    }
 }

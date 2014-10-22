@@ -77,12 +77,51 @@ class BadgeController extends Controller
      * @ParamConverter( "user", options={"authenticatedUser" = true })
      */
     public function userEvaluationsPageAction(User $user) {
+        $router = $this->get('router');
+        $result = $this->badgeManager->getAllBadgesInProgressForUser($user);
         
-        $result = $this->badgeManager->getAllBadgesInProgress($user);
+        $orderedBadges = array();
+        
+        foreach ($result as $badgeQ) {
+        	/* @var $badge Badge */
+        	$badge = $badgeQ["badge"];
+        	$workspace = $badge->getWorkspace();
+        	$resourceId = $badgeQ["resourceId"];
+        	$resourceType = $badgeQ["resourceType"];
+        	$startAllowDrop = $badgeQ["startAllowDrop"];
+        	
+        	if (!array_key_exists($workspace->getId(), $orderedBadges)) {
+        		$orderedBadges[$workspace->getId()] = array();
+        		$orderedBadges[$workspace->getId()]["badges"] = array();
+        		$orderedBadges[$workspace->getId()]["workspace"] = $workspace;
+        	}
+        	$orderedBadge = array();
+        	$orderedBadge["badge"] = $badge;
+        	
+        	// HACK FOR COMPATIBILITY WITH TEMPLATE
+        	$orderedBadge["status"] = Badge::BADGE_STATUS_IN_PROGRESS;
+        	$orderedBadge["resource"] = array();
+        	$orderedBadge["resource"]["url"] = 
+        			$router->generate('claro_resource_open', array(
+			    			'node' => $resourceId,
+			    			'resourceType' => $resourceType
+			    	));
+        	$orderedBadge["resource"]["status"] = Badge::RES_STATUS_IN_PROGRESS; 
+        	$orderedBadge["resource"]["resource"] = array();
+        	
+        	// DIRTIER HACK FOR COMPATIBILITY WITH TEMPLATE
+        	$dropzone = new Dropzone();
+        	$dropzone->setStartAllowDrop($startAllowDrop);
+        	$orderedBadge["resource"]["resource"]["dropzone"] = $dropzone;
+        	// END HACK FOR COMPATIBILITY WITH TEMPLATE
+        	
+        	$orderedBadges[$workspace->getId()]["badges"][] = $orderedBadge;
+        	
+        }
         
         return $this->render(
             'ClarolineCoreBundle:Mooc:myEvaluationslist.html.twig',
-            array( 'WorkspacesBadgeList' => $result )
+            array( 'WorkspacesBadgeList' => $orderedBadges )
         );
         
     }

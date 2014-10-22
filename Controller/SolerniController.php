@@ -254,60 +254,32 @@ class SolerniController extends Controller
             case 'evals':
             	// Services initialization
             	$badgeManager = $this->get('claroline.manager.badge');
-
-            	// Get all in progress badges
-            	$badgesInProgress = $badgeManager->getAllBadgesInProgress($user);
             	
-            	// Change status to reflect the number of ongoing badges
-            	$evalsCount = 0;
-            	foreach ($badgesInProgress as $badgeWorkspace) {
-            		foreach ($badgeWorkspace['badges'] as $badge) {
-            			$evalsCount++;
-            		}
-            	}
-            	// If we have at least a badge
+            	$badgesInProgress = $badgeManager->getAllBadgesInProgressForUser($user);
+            	
+
+            	// Pluralize
+            	$evalsCount = count($badgesInProgress);
+            	$plural = $evalsCount > 1 ? 's' : '';
+            	$statusText = $translator->trans( 'in_progress_badges', array( '%number%' => $evalsCount, '%plural%' => $plural ), 'platform');
+            	
             	if ($evalsCount > 0) {
-            		// Repositories init
-	            	$logRepository = $doctrine->getRepository('ClarolineCoreBundle:Log\Log');
-	            	$resourceType = $doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('icap_dropzone');
+            	
+	            	$lastBadgeQ = $badgesInProgress[0];
+	            	$lastBadge = $lastBadgeQ["badge"];
+	            	$resourceId = $lastBadgeQ["resourceId"];
+	            	$resourceType = $lastBadgeQ["resourceType"];
 	            	
-	            	// Pluralize
-            		$plural = $evalsCount > 1 ? 's' : '';
-	            	$statusText = $translator->trans( 'in_progress_badges', array( '%number%' => $evalsCount, '%plural%' => $plural ), 'platform');
-	            	
-	            	$mostRecentAction = null;
-	            	$lastBadge;
-	            	// Loop on all the badges of all workspaces
-	            	foreach($badgesInProgress as $badgeWorkspace) {
-	            		foreach($badgeWorkspace['badges'] as $badge) {
-	            			// Get the last action made by the user on the associated dropzone
-	            			$lastDoerAction = $logRepository->findOneBy(
-	            					array(
-	            							'resourceType' => $resourceType,
-	            							'doer' => $user,
-	            							'resourceNode' => $badge['resource']['resource']['dropzone']->getResourceNode()
-	            					),
-	            					array('dateLog' => 'DESC')
-	            			);
-	            			
-	            			// If we have no most recent action yet or if the last found action is posterior to the one saved
-	            			if ($mostRecentAction == null
-	            					|| $lastDoerAction->getDateLog() > $mostRecentAction->getDateLog()) {
-	            				// Replace it and save the last badge
-	            				$mostRecentAction = $lastDoerAction;
-	            				$lastBadge = $badge;
-	            			}
-	            		}
-	            	}
-	
-	            	//show last eval
 	            	$containerClass = 'footer__block__withImage';
 	            	$iconClass .= '_actif';
-	            	$iconImageSubstitute = $lastBadge['badge']->getWebPath();
-	            	$badgeTitle = $lastBadge['badge']->getName();
+	            	$iconImageSubstitute = $lastBadge->getWebPath();
+	            	$badgeTitle = $lastBadge->getName();
 	            	$subTitle = ( mb_strlen ( $badgeTitle, "UTF-8" ) > 20 ) ? mb_substr( $badgeTitle, 0, 15, "UTF-8"  ) . '...' : $badgeTitle;
-	            	$subText = $lastBadge['badge']->getWorkspace()->getMooc()->getTitle();
-	            	$subUrl = $lastBadge['resource']['url'];
+	            	$subText = $lastBadge->getWorkspace()->getMooc()->getTitle();
+	            	$subUrl = $router->generate('claro_resource_open', array(
+			    			'node' => $resourceId,
+			    			'resourceType' => $resourceType
+			    	));
 	            	$footerText = $translator->trans( 'show_my_evals', array(), 'platform');
 	            	$footerUrl = $router->generate('solerni_user_evaluations');
             	}

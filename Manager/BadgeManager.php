@@ -23,6 +23,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use UJM\ExoBundle\Services\classes\exerciseServices;
+use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 
 /**
  * @DI\Service("claroline.manager.badge")
@@ -309,6 +310,12 @@ class BadgeManager
     	 
     	return $result;
     }
+    
+     public function getAllBadgesInProgressForUser(User $user) {
+     	/* @var $badgeRepository BadgeRepository */
+     	$badgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge');
+     	return $badgeRepository->getAllBadgesInProgressForUser($user);
+     }
     
 
     /*
