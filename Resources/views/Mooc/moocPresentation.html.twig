@@ -163,6 +163,19 @@
                     {% endif %}
                 </span>
 			</li>
+            
+            {# NOMBRE INSCRITS #}
+            <li>
+                <i class='essentiels-icon essentiels__subscribers'></i>
+                Nombre d'inscrits :<br>
+                {% set sessionUsers = session.getUsers()|length %}
+                {% for group in session.getGroups %}
+                    {% set sessionUsers = sessionUsers + group.getUsers|length %}
+                {% endfor %}
+                <span class="slrn-bold">{{ sessionUsers }} inscrits à ce jour</span>
+                
+            </li>
+            
 			{% endif %}
 		</ul>
 		<center>
