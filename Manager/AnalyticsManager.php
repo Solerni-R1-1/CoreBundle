@@ -67,7 +67,7 @@ class AnalyticsManager
     private $analyticsMoocStatsRepo;
     /** @var AnalyticsHourlyMoocStatsRepository */
     private $analyticsHourlyMoocStatsRepo;
-    /** @var AnalyticsUserMoocStatsRepository */
+    /* @var $analyticsUserMoocStatsRepo AnalyticsUserMoocStatsRepository */
     private $analyticsUserMoocStatsRepo;
     /** @var AnalyticsBadgeMoocStatsRepository */
     private $analyticsBadgeMoocStatsRepo;
@@ -681,21 +681,8 @@ class AnalyticsManager
     	}
     }
     
-    public function getMostActiveUsers(MoocSession $moocSession) {    	
-    	$users = $this->analyticsUserMoocStatsRepo->getUsersActivity($moocSession);
-    	$mostActiveUsers = array();
-    	foreach ($users as $i => $user) {
-    		$mostActiveUser = array();
-    		$mostActiveUser['firstname'] = $user["firstname"];
-    		$mostActiveUser['lastname'] = $user["lastname"];
-    		$mostActiveUser['username'] = $user["username"];
-    		$mostActiveUser['mail'] = $user["mail"];
-    		
-    		$mostActiveUser['nbLogs'] = $user["nbActivity"];
-    		$mostActiveUsers[] = $mostActiveUser;
-    	}
-    	
-    	return $mostActiveUsers;
+    public function getMostActiveUsers(MoocSession $moocSession) {
+    	return $this->analyticsUserMoocStatsRepo->getUsersActivity($moocSession);
     }
     
     public function getAnalyticsMoocKeyNumbers(AbstractWorkspace $workspace, User $user) {

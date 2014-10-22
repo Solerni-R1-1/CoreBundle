@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Repository\UserRepository;
 
 
 /**
@@ -44,9 +45,12 @@ class AnalyticsExportController extends Controller {
 
 	/** @var LogRepository */
 	private $logRepository;
-	
+
 	/** @var MessageRepository */
 	private $messageRepository;
+	
+	/** @var UserRepository */
+	private $userRepository;
 	
 	/** @var MoocService */
 	private $moocService;
@@ -84,6 +88,8 @@ class AnalyticsExportController extends Controller {
 		
 		$this->logRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
 		$this->messageRepository = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
+		$this->userRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:User");
+		
 		$this->translator = $this->get('translator');
 		
 	}
@@ -468,6 +474,48 @@ class AnalyticsExportController extends Controller {
 	
 	/**
 	 * @EXT\Route(
+	 *     "{workspace}/users/general",
+	 *     name="solerni_export_users_general_stats"
+	 * )
+	 *
+	 * @param AbstractWorkspace $workspace
+	 *
+	 * @return Response
+	 */
+	public function exportUsersGeneralStatsAction(AbstractWorkspace $workspace) {
+    	// Init the roles to filter the stats.
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	
+		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+		$from = $currentSession->getStartInscriptionDate();
+		$to = $currentSession->getEndInscriptionDate();
+				
+		$headerCSV = array();
+
+		$headerCSV[0] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$headerCSV[1] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$headerCSV[2] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$headerCSV[4] = "Compte validé ?";
+		
+		$rowsCSV = $this->userRepository->getAllUsersForExport($currentSession, $excludeRoles);
+		
+		array_unshift($rowsCSV, $headerCSV);
+		
+		$content = $this->createCSVFromArray($rowsCSV);
+		
+		return new Response($content, 200, array(
+				'Content-Type' => 'application/force-download',
+				'Content-Disposition' => 'attachment; filename="export.csv"'
+		));
+	}
+	
+	/**
+	 * @EXT\Route(
 	 *     "{workspace}/subscriptions",
 	 *     name="solerni_export_subscriptions_stats"
 	 * )
@@ -681,7 +729,7 @@ class AnalyticsExportController extends Controller {
 				'Content-Disposition' => 'attachment; filename="export.csv"'
 		));
 	}
-	
+
 	/**
 	 * @EXT\Route(
 	 *     "{workspace}/users/activity",
@@ -693,13 +741,67 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportUsersActivityAction(AbstractWorkspace $workspace) {
-    	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
-    	
+		// Init the roles to filter the stats.
+		$excludeRoles = array();
+		$managerRole = $this->roleManager->getManagerRole($workspace);
+		$excludeRoles[] = $managerRole->getName();
+		$excludeRoles[] = "ROLE_ADMIN";
+		$excludeRoles[] = "ROLE_WS_CREATOR";
+		 
+		$headerCSV = array();
+		$header = array();
+	
+		$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$header[4] = $this->translator->trans('mooc_analytics_users_nb_logs', array(), 'platform');
+	
+		$headerCSV[] = $header;
+
+		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+		$data = $this->analyticsManager->getMostActiveUsers($currentSession);
+// 		$data = array();
+// 		foreach ($usersActivity as $userActivity) {
+// 			/* @var $user User */
+// 			$user = $userActivity['user'];
+// 			$row = array();
+// 			$row[] = $user->getLastName();
+// 			$row[] = $user->getFirstName();
+// 			$row[] = $user->getUsername();
+// 			$row[] = $user->getMail();
+// 			$row[] = $userActivity['nbLogs'];
+				
+// 			$data[] = $row;
+// 		}
+	
+		$rowsCSV = array_merge($headerCSV, $data);
+		$content = $this->createCSVFromArray($rowsCSV);
+	
+		return new Response($content, 200, array(
+				'Content-Type' => 'application/force-download',
+				'Content-Disposition' => 'attachment; filename="export.csv"'
+		));
+	}
+
+	/**
+	 * @EXT\Route(
+	 *     "{workspace}/users/general",
+	 *     name="solerni_export_users_general"
+	 * )
+	 *
+	 * @param AbstractWorkspace $workspace
+	 *
+	 * @return Response
+	 */
+	public function exportUsersGeneralAction(AbstractWorkspace $workspace) {
+		// Init the roles to filter the stats.
+		$excludeRoles = array();
+		$managerRole = $this->roleManager->getManagerRole($workspace);
+		$excludeRoles[] = $managerRole->getName();
+		$excludeRoles[] = "ROLE_ADMIN";
+		$excludeRoles[] = "ROLE_WS_CREATOR";
+		 
 		$headerCSV = array();
 		$header = array();
 	
@@ -722,13 +824,13 @@ class AnalyticsExportController extends Controller {
 			$row[] = $user->getUsername();
 			$row[] = $user->getMail();
 			$row[] = $userActivity['nbLogs'];
-			
+				
 			$data[] = $row;
 		}
 	
 		$rowsCSV = array_merge($headerCSV, $data);
 		$content = $this->createCSVFromArray($rowsCSV);
-
+	
 		return new Response($content, 200, array(
 				'Content-Type' => 'application/force-download',
 				'Content-Disposition' => 'attachment; filename="export.csv"'

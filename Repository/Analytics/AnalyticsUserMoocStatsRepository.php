@@ -46,7 +46,7 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 					u.lastName as lastname,
 					u.username as username,
 					u.mail as mail, 
-					SUM(aums.nbActivity) as nbActivity
+					SUM(aums.nbActivity) as nbLogs
 				FROM Claroline\CoreBundle\Entity\User u
 				JOIN Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums
 					WITH aums.user = u
@@ -56,7 +56,7 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 						AND aums.date >= :from
 						AND aums.date <= :to))
 				GROUP BY u
-				ORDER BY nbActivity DESC";
+				ORDER BY nbLogs DESC";
 		
 		$query = $this->_em->createQuery($dql);
 		$query->setParameters(array(
