@@ -387,7 +387,7 @@ class UsersController extends Controller
         $this->checkOpen();
         
         if ( $user->getId() == $this->sc->getToken()->getUser()->getId() ) {
-            throw new AccessDeniedException('User cannot unvalidate himself');
+            return new JsonResponse( array('errorMessage' => 'Current user cannot desactivate himself'), 418);
         }
         
         // get origin URL if possible

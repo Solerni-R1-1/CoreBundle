@@ -26,8 +26,15 @@ jQuery(document).ready(function(jQuery) {
                             .tooltip('show');
                 }
             },
-            error:      function(data) {
-                alert('There was an error during the update user process. Please try to reload the page and if the error repeats itself, report to administrator');
+            error:      function(xhr, status, error) {
+                // Specific error when user try to unvalidate his own mail
+                if ( xhr.status == 418 ) {
+                    console.log (xhr);
+                    alert(xhr.responseJSON.errorMessage);
+                } else {
+                    alert('There was an (' + xhr.status + ') error during the update user process. Please try to reload the page and if the error repeats itself, report to administrator');
+            
+                }
             }
         });
         
