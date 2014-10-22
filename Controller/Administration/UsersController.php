@@ -27,6 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -367,5 +368,57 @@ class UsersController extends Controller
         }
 
         throw new AccessDeniedException();
+    }
+    
+    
+    /**
+     * @EXT\Route("/change_activation_status/{userId}/{activate}", 
+     *      name="claro_admin_change_user_activation_status",
+     *      requirements={"activate"="0|1"})
+     * @EXT\ParamConverter(
+     *     "user",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"id" = "userId", "strictId" = true}
+     * )
+     * @return Response
+     */
+    public function changeUserActivationStatusAction( User $user, $activate ) {
+        
+        $this->checkOpen();
+        
+        if ( $user->getId() == $this->sc->getToken()->getUser()->getId() ) {
+            throw new AccessDeniedException('User cannot unvalidate himself');
+        }
+        
+        // get origin URL if possible
+        $originUrl = $this->request->get('originUrl');
+        if ( ! $originUrl && isset( $_SERVER['HTTP_REFERER'] ) ) {
+           $originUrl = $_SERVER['HTTP_REFERER'];
+        }
+
+        // Update User
+        $em = $this->getDoctrine()->getEntityManager();
+        $user->setIsValidate($activate);
+        $em->persist($user);
+        $em->flush();
+        
+        // Send update info from ajax
+        if ( $this->request->isXmlHttpRequest() ) {
+
+            if ( $originUrl ) {
+                $newUrl = $this->generateUrl('claro_admin_change_user_activation_status', array('userId' => $user->getId(), 'activate' => ( $activate ) ? 0 : 1, 'originUrl' => $originUrl ));
+            } else {
+                $newUrl = $this->generateUrl('claro_admin_change_user_activation_status', array('userId' => $user->getId(), 'activate' => ( $activate ) ? 0 : 1 ));
+            }
+
+            return new JsonResponse(array( 'newUrl' => $newUrl, 'activationStatus' => $activate ));
+        }
+        
+        // redirect to origin or default
+        if ( $originUrl ) {
+            return new RedirectResponse($originUrl, 302);
+        } else {
+            return new RedirectResponse($this->router->generate('claro_admin_user_list'));
+        }
     }
 }

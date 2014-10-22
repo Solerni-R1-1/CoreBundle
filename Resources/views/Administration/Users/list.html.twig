@@ -135,13 +135,8 @@
                                     <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center" />
                                 </td>
                             {% endif %}
-                            <td class="text-center">
-                                {% if user.getIsValidate() %}
-                                   {% set lockClasses = 'icon-unlock' %}
-                                {% else %}
-                                   {% set lockClasses = 'icon-lock pink_link' %}
-                                {% endif %}
-                                <i class="{{lockClasses}}"></i>
+                            <td class="text-center js-user-status">
+                                {% include'ClarolineCoreBundle:Partials\\Administration:userActivateStatus.html.twig' %}
                             </td>
                             <td>
                                 {% if user.getPublicUrl()|default %}
@@ -201,4 +196,5 @@
         parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
         Claroline.Table.initialize(parameters);
     </script>
+    <script src='{{ asset('bundles/clarolinecore/js/administration/usersUpdateStatus.js') }}' type="text/javascript"></script>
 {% endblock %}

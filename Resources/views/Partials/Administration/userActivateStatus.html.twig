@@ -1,0 +1,18 @@
+{# TD content of the user list (user active status) #}
+{% set isAdmin = is_granted('ROLE_ADMIN') %}
+{% set thisUserName = user.username %}
+{% set tooltipIsActivatedMessage, tooltipIsNotActivatedMessage = thisUserName ~ ' has his email validated.', thisUserName ~ ' has his email not validated.' %}
+{% if isAdmin %}
+    {% set tooltipIsActivatedMessage, tooltipIsNotActivatedMessage = tooltipIsActivatedMessage ~ ' ' ~ 'Click here to force email activation process again.', tooltipIsNotActivatedMessage ~ ' ' ~ 'Click to force validatation of this user email.' %}
+    <a class="js-status-link" href="{{ path('claro_admin_change_user_activation_status', {'userId': user.id, 'activate': user.getIsValidate() ? 0 : 1, 'originUrl': app.request.uri  }) }}">
+{% endif %}
+<i class="{{ user.getIsValidate() ? 'icon-unlock' : 'icon-lock pink_link' }}" 
+   data-toggle="tooltip" 
+   data-placement="top" 
+   data-original-title="{{ user.getIsValidate() ? tooltipIsActivatedMessage : tooltipIsNotActivatedMessage }}" 
+   data-is-validated="{{tooltipIsActivatedMessage}}" 
+   data-is-not-validated="{{tooltipIsNotActivatedMessage}}">
+</i>
+{% if isAdmin %}
+    </a>
+{% endif %}
