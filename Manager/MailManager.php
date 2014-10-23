@@ -143,21 +143,7 @@ class MailManager
      * @return boolean
      */
     public function sendCreationMessage(User $user)
-    {/*
-        $locale = $user->getLocale();
-        $content = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_registration'));
-        $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
-        $body = $content[$displayedLocale]['content'];
-        $subject = $content[$displayedLocale]['title'];
-
-        $body = str_replace('%first_name%', $user->getFirstName(), $body);
-        $body = str_replace('%last_name%', $user->getLastName(), $body);
-        $body = str_replace('%username%', $user->getUsername(), $body);
-        $body = str_replace('%password%', $user->getPlainPassword(), $body);
-        $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
-
-        return $this->send($subject, $body, array($user));*/
-
+    {
         $subject = 'Bienvenue sur Solerni';
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailRegistration.html.twig',  array('user' => $user));
@@ -165,6 +151,22 @@ class MailManager
 
         return $this->send($subject, $body, array($user));
     }
+
+    /**
+     * @param User $user
+     *
+     * @return boolean
+     */
+    public function sendChangePasswordMessage(User $user)
+    {
+        $subject = 'Changement de votre mot de passe Solerni';
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Registration:emailChangePassword.html.twig',  array('user' => $user));
+
+
+        return $this->send($subject, $body, array($user));
+    }
+
 
     public function getMailInscription()
     {

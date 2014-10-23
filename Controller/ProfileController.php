@@ -58,7 +58,7 @@ class ProfileController extends Controller
      *     "security"        = @DI\Inject("security.context"),
      *     "request"         = @DI\Inject("request"),
      *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
-     *     "encoderFactory"  = @DI\Inject("security.encoder_factory")
+     *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
      * })
      */
     public function __construct(
@@ -71,13 +71,13 @@ class ProfileController extends Controller
         EncoderFactoryInterface $encoderFactory
     )
     {
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->security = $security;
-        $this->request = $request;
-        $this->localeManager = $localeManager;
-        $this->encoderFactory = $encoderFactory;
+        $this->userManager      = $userManager;
+        $this->roleManager      = $roleManager;
+        $this->eventDispatcher  = $eventDispatcher;
+        $this->security         = $security;
+        $this->request          = $request;
+        $this->localeManager    = $localeManager;
+        $this->encoderFactory   = $encoderFactory;
     }
 
     private function isInRoles($role, $roles)
@@ -339,6 +339,9 @@ class ProfileController extends Controller
                 $entityManager = $this->get('doctrine.orm.entity_manager');
                 $entityManager->persist($loggedUser);
                 $entityManager->flush();
+
+                $this->userManager->sendEmailChangePassword($loggedUser);              
+
                 $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
                 return $this->redirect($this->generateUrl('claro_profile_view'));
             } else {

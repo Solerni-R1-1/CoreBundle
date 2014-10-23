@@ -161,6 +161,19 @@ class UserManager
             $this->mailManager->sendCreationMessage($user);
     	}
     }
+
+    /**
+     * Send an email post-changing password
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function sendEmailChangePassword($user){
+        if ($this->mailManager->isMailerAvailable()) {
+            $this->mailManager->sendChangePasswordMessage($user);
+        }
+    }
     
 
     /**
