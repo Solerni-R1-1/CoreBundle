@@ -322,7 +322,7 @@ class ProfileController extends Controller
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
 
-        $form = $this->createForm(new ResetPasswordType($translator));
+        $form = $this->createForm(new ResetPasswordType($translator, true));
         $oldPassword = $loggedUser->getPassword();
         $form->handleRequest($this->request);
 
