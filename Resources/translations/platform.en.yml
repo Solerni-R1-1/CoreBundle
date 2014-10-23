@@ -1,865 +1,1168 @@
-'Action List': 'Action List'
-'Actions per day': 'Actions per day'
-'Activate the terms of service in the platform': 'Activate the terms of service in the platform'
-'Add a logo': 'Add a logo'
-'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
-'Audience/user visits': 'Audience/user visits'
-'Choose a logo': 'Choose a logo'
-'Choose visible actions in the widget': 'Choose visible actions in the widget'
-'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
-'Create a new resource': 'Create a new resource'
-'Draw an area on the graph to zoom, double-click to cancel': 'Draw an area on the graph to zoom, double-click to cancel'
-'Filter actions': 'Filter actions'
-'First name': 'First name'
-'Google HTML tag validation': 'Google HTML tag validation'
-'I accept the terms of service': 'I accept the terms of service'
-'Last action': '{1} Last action|[1,Inf] Last %logAmount% actions'
-'Last name': 'Last name'
-'Or choose an existing file from resource manager': 'Or choose an existing file from resource manager'
-'Overview of all recent activities in %workspaceName%': 'Overview of all recent activities in %workspaceName%'
-'Overview of recent activities in %workspaceName%': 'Overview of recent activities in %workspaceName%'
-'Overview of recent activities of your workspaces': 'Overview of recent activities of your workspaces'
-'Paste here the meta tag provides by Google Webmaster': 'Paste here the meta tag provides by Google Webmaster'
-'See all': 'See all'
-'Select a Language': 'Select a Language'
-'Show actions': 'Show actions'
-'Show the name of the platform in the top bar': 'Show the name of the platform in the top bar'
-'Terms of service': 'Terms of service'
-'The form is not valid': 'The form is not valid'
-'This placeholder is optional and will be replaced by the author first name': 'This placeholder is optional and will be replaced by the author first name'
-'This placeholder is optional and will be replaced by the author first name': This placeholder is optional and will be replaced by the author first name
-'This placeholder is optional and will be replaced by the author last name': 'This placeholder is optional and will be replaced by the author last name'
-'This placeholder is optional and will be replaced by the author last name': This placeholder is optional and will be replaced by the author last name
-'This placeholder is optional and will be replaced by your platform name': 'This placeholder is optional and will be replaced by your platform name'
-'This placeholder is optional and will be replaced by your platform name': This placeholder is optional and will be replaced by your platform name
-'This placeholder is required and will be replaced by the actual mail content': 'This placeholder is required and will be replaced by the actual mail content'
-'This placeholder is required and will be replaced by the actual mail content': This placeholder is required and will be replaced by the actual mail content
-'This variable is optional and will be replaced by your platform name': 'This variable is optional and will be replaced by your platform name'
-'This variable is required and will be replaced by the actual mail content': 'This variable is required and will be replaced by the actual mail content'
-'Upload a file': 'Upload a file'
-'User name': 'User name'
-'You can redefine the content of the registration mail here': 'You can redefine the content of the registration mail here'
-'You can redefine the layout used when a mail is sent': 'You can redefine the layout used when a mail is sent'
-'You can use the following variables in your form': 'You can use the following variables in your form'
-'You can use the full screen version of the text editor to include HTML': 'You can use the full screen version of the text editor to include HTML'
-'Your changes have been saved': 'Your changes have been saved'
-'for period': 'for period'
-'select all': 'Select all'
-'unique connections': 'Nb unique Cnx.'
-'will be replaced by your platform name': 'will be replaced by your platform name'
-'will display the password': 'will display the password'
-'will display the user first name': 'will display the user first name'
-'will display the user last name': 'will display the user last name'
-'will display the username': 'will display the username'
-404: 'Page Not found'
-Active: 'Active'
-Active: Active
-Create a new resource: 'Create a new resource'
-First name: 'First name'
-Indexing: Indexing
-Language: Language
-Last name: 'Last name'
-None: None
-Show: Show
-This variable is optional and will be replaced by your platform name: 'This variable is optional and will be replaced by your platform name'
-This variable is required and will be replaced by the actual mail content: 'This variable is required and will be replaced by the actual mail content'
-User name: 'User name'
-You can redefine the content of the registration mail here: 'You can redefine the content of the registration mail here'
-You can redefine the layout used when a mail is sent: 'You can redefine the layout used when a mail is sent'
-You can use the following variables in your form: 'You can use the following variables in your form'
-You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
-account_created: 'Account created.'
-account_general_statistics: 'Account general statistics'
+'Action List': 'Liste des actions'
+'Actions per day': 'Nombre d''actions par jour'
+'Activate the terms of service in the platform': 'Activez les conditions d''utilisation dans la plate-forme'
+'Add a logo': 'Ajouter un logo'
+'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
+'Audience/user visits': 'Audience/Visites utilisateurs'
+'Choose a logo': 'Choisir un logo'
+'Choose visible actions in the widget': 'Choisissez les actions visibles dans le widget'
+'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
+'Create a new resource': 'Créer une nouvelle ressource'
+'Draw an area on the graph to zoom, double-click to cancel': 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
+'Filter actions': 'Filtrer les actions'
+'First name': Prénom
+'Google HTML tag validation': 'Balise HTML de validation Google'
+'I accept the terms of service': 'J''accepte les conditions d''utilisation'
+'I agree that my personal information be used for commercial purposes' : 'J''accepte que mes informations personnelles soient utilisées à des fins commerciales '
+'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
+'Last name': Nom
+'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
+'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
+'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
+'Overview of recent activities of your workspaces': 'Aperçu des activités récentes de vos espaces de travail'
+'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
+'See all': 'Voir tous'
+'Select a Language': 'Sélectionnez une langue'
+'Show actions': 'Afficher les actions'
+'Show the name of the platform in the top bar': 'Afficher le nom de la plateforme dans la barre supérieure'
+'Terms of service': 'Conditions d''utilisation'
+'The form is not valid': 'Le formulaire n''est pas valide'
+'This placeholder is optional and will be replaced by the author first name': 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
+'This placeholder is optional and will be replaced by the author last name': 'Ce placeholder est optionnel et sera remplacé par le nom de l''auteur'
+'This placeholder is optional and will be replaced by your platform name': 'Ce placeholder est optionnel et sera remplacé par le nom de la plateforme'
+'This placeholder is required and will be replaced by the actual mail content': 'Ce placeholder est requis et sera remplacé par le contenu du mail'
+'This variable is optional and will be replaced by your platform name': 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
+'This variable is required and will be replaced by the actual mail content': 'Ce variable est requis et sera replacé par le contenu du mail'
+'Upload a file': 'Télécharger un fichier'
+'User name': 'Nom d''utilisateur'
+'You can redefine the content of the registration mail here': 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
+'You can redefine the layout used when a mail is sent': 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
+'You can use the following variables in your form': 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
+'You can use the full screen version of the text editor to include HTML': 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
+'Your changes have been saved': 'Vos changements ont été sauvegardés'
+'for period': 'sur la période du :'
+'select all': 'Tout sélectionner'
+'unique connections': 'Nb Cnx. uniques'
+'will be replaced by your platform name': 'qui sera remplacé par le nom de votre plateforme'
+'will display the password': 'qui affichera le mot de passe de l''utilisateur'
+'will display the user first name': 'qui affichera le prénom de l''utilisateur'
+'will display the user last name': 'qui affichera le nom de famille de l''utilisateur'
+'will display the username': 'qui affichera le nom de l''utilisateur'
+404: 'La page que vous cherchez n''existe pas.'
+Active: 'Actif'
+Active: Actif
+Create a new resource: 'Créer une nouvelle ressource'
+First name: Prénom
+Indexing: Référencement
+Language: Langue
+Last name: Nom
+None: Aucun
+Show the name of the platform in the top bar: 'Afficher le nom de la plateforme dans la barre supérieure'
+Show: Afficher
+This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
+This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
+User name: 'Nom d''utilisateur'
+You can redefine the content of the registration mail here: 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
+You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
+You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
+You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
+account_created: 'Compte créé'
+account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
-active_widgets: 'Active widgets'
+active_widgets: 'Widgets actifs'
 activity_form_instructions: Instructions
-activity_form_name: Name
-add: Add
-add_category: 'Add category'
-add_group: 'Add group'
-add_group_s_confirm_message: 'group(s) added'
-add_groups: 'Add groups'
-add_resource: 'Add resource'
-add_role: 'Add role'
-add_roles_confirm_message: 'Do you want to add the following roles to the %count% selected elements'
-add_subcategory: 'Add a subcategory'
-add_tag: 'Add tag'
-add_tag_to_workspace: 'Add tag to workspace'
-add_user: 'Add user'
-add_user_s_confirm_message: 'users(s) added'
-add_users: 'Add users'
-add_widget_to_home_tab: 'Add widget to Home tab'
-add_workspace: 'Add workspace'
-admin: Administrator
-admin_analytics: 'Platform analytics'
-admin_analytics_no_data: 'No data.'
-admin_home_tabs_configuration: 'Home tabs configuration'
-admin_logs: 'Platform logs'
-admin_third_party_application: 'Third-party applications'
-admin_workspace_tag_form_name: Name
+activity_form_name: Nom
+add: Ajouter
+add_category: 'Ajouter une catégorie'
+add_group: 'Ajouter un groupe'
+add_group_s_confirm_message: 'groupe(s) ajouté(s)'
+add_groups: 'Ajouter des groupes'
+add_resource: 'Ajouter une ressource'
+add_role: 'Ajouter un role'
+add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
+add_sessions_confirm_message: 'Ainsi qu''ajouter les élément(s) sélectionné(s) aux session(s) : '
+add_subcategory: 'Ajouter une sous-catégorie'
+add_tag: 'Ajouter un Tag'
+add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
+add_user: 'Ajouter un utilisateur'
+add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
+add_users: 'Ajouter des utilisateurs'
+modify_users: 'Modifier des utilisateurs'
+add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
+add_workspace: 'Ajouter un espace d''activités'
+admin: Administrateur
+admin_analytics: 'Statistiques plateforme'
+admin_analytics_no_data: 'Aucune donnée.'
+admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
+admin_logs: 'Suivi plateforme'
+admin_third_party_application: 'Applications tierces'
+admin_tag_form_name: Nom
 administration: Administration
-administrative_code: 'Administrative code'
-advanced: Advanced
+administrative_code: 'Code administratif'
+advanced: Avancé
 agenda: Agenda
-all: All
-all_available_workspaces: 'All available workspaces'
-all_my_workspaces: 'All my workspaces'
-all_workspaces: 'All public workspaces'
-already_existing_user: 'The user already exists'
-an_error_occured_message: 'An error occured. Please contact the administrator.'
-analytics_connections: Connections
-analytics_home: Home
-analytics_resources: Resources
-analytics_top: Top
-anonymous: Anonymous
-answer: Answer
-appearance: Appearance
-apply: Apply
-at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
-available_widgets: 'Available widgets'
-available_workspaces: 'Available workspaces'
-back: Back
-back_to_profile: 'Back to profile'
-bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
-badges_management: 'Badges management'
-base_informations: 'Basic information'
-by: by
-by_workspace: 'By workspace'
-canCopy: 'Right to copy'
-canCreate: 'Create %type%'
-canDelete: 'Right to delete'
-canEdit: 'Right to edit'
-canExport: 'Right to export'
-canOpen: 'Right to open'
-cancel: Cancel
-cannot_delete_unique_manager: 'Cannot remove the unique manager.'
-cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
+all: Tous
+all_available_workspaces: 'Tous les espaces d''activités disponibles'
+all_my_workspaces: 'Tous mes espaces d''activités'
+all_workspaces: 'Tous les espaces d''activités (publics)'
+already_existing_user: 'L''utilisateur existe déjà.'
+an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
+analytics_connections: 'Visites utilisateurs'
+analytics_home: 'Vue de l''ensemble'
+analytics_resources: 'Contenu plateforme'
+analytics_top: 'Top des activités'
+anonymous: Anonyme
+answer: Répondre
+appearance: Apparence
+apply: Appliquer
+at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
+available_widgets: 'Widgets disponibles'
+available_workspaces: 'Espaces d''activités disponibles'
+back: Retour
+back_to_profile: 'Retour au profil'
+bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
+badges_management: 'Gestion des badges'
+base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription'
+by: par
+by_workspace: 'Par espace'
+canCopy: 'Droit de copier'
+canCreate: 'Creation de %type%'
+canDelete: 'Droit de supprimer'
+canEdit: 'Droit de modifier'
+canExport: 'Droit d''exporter'
+canOpen: 'Droit d''ouvrir'
+cancel: Annuler
+cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
+cannot_unsubscribe_from_workspace: 'Impossible de vous désinscrire de l''espace d''activités'
 captcha: Captcha
-categories: Categories
-categories_organization: 'Categories organization'
-categorize: Categorize
-category_explanations_1: 'Each category must have an unique name.'
-category_explanations_2: 'Select a category to manage its subcategories.'
-category_root: 'Root categories'
-category_structure: 'Category structure'
-change_view: 'Change the display'
-choose_resource_form_type: 'Resource type'
-classify_my_workspaces: 'Classify my workspaces'
-classify_workspaces: 'Classify workspaces'
-close: Close
+categories: Catégories
+categories_organization: 'Organisation des catégories'
+categorize: 'Classer par catégorie'
+category_explanations_1: 'Chaque catégorie doit avoir un nom unique.'
+category_explanations_2: 'Sélectionnez une catégorie pour gérer ses sous-catégories.'
+category_root: 'Catégories de base'
+category_structure: 'Structure des catégories'
+change_view: 'Changer l''affichage'
+choose_resource_form_type: 'Type de ressource'
+classify_my_workspaces: 'Classer mes espaces'
+classify_workspaces: 'Classer les espaces'
+close: Fermer
 code: Code
-collaborator: Collaborator
+collaborator: Collaborateur
 communication: Communication
 configuration: Configuration
-configure: Configure
-connections: Connections
-cookie_lifetime: 'Cookie lifetime'
+configure: Configurer
+connections: 'Nb Cnx.'
+cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
-copy: Copy
-create: Create
-create_category: 'Create a category'
-create_group: 'Create group'
-create_new_admin_tag: 'Create new admin tag'
-create_new_home_tab: 'Create new tab'
-create_new_tag: 'Create new tag'
-create_new_user_account: 'New user account for ClarolineConnect'
-create_role: Create role
-create_subcategory: 'Create a subcategory'
-create_user: 'Create user'
-create_widget_instance: 'Create a widget'
-create_workspace: 'Create workspace'
-creation: Creation
-creation_date: 'Creation date'
-creator: Creator
-csv_users_import_infos: 'CSV file informations'
+copy: Copier
+create: Créer
+create_category: 'Créer une catégorie'
+create_group: 'Créer un groupe'
+create_new_admin_tag: 'Créer un nouveau Tag administrateur'
+create_new_home_tab: 'Créer un nouvel onglet'
+create_new_tag: 'Créer un nouveau Tag'
+create_new_user_account: 'Creation de votre compte ClarolineConnect'
+create_role: Créer un rôle
+create_subcategory: 'Créer une sous-catégorie'
+create_user: 'Créer un utilisateur'
+create_widget_instance: 'Créer un nouveau Widget'
+create_workspace: 'Créer un espace d''activités'
+creation: Création
+creation_date: 'Date de création'
+creator: Créateur
+csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
-csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
-csv_users_import_infos_format_b: 'Note that you must not add a file header'
-csv_users_import_infos_optional: Optional
-csv_users_import_infos_required: Required
-curl_facebook_application_validation_error: 'Curl extension is missing.'
-current_category: 'Current category'
-cut: Cut
-mes moocs: 'My Moocs'
-dashboard: Dashboard
-data_col: 'Database id column'
-database: Database
-database_connection_failed: 'Database connection failed.'
+csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
+csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
+csv_users_import_infos_optional: Optionel
+csv_users_import_infos_required: Requis
+curl_facebook_application_validation_error: 'Extension php curl manquante.'
+current_category: 'Catégorie courante'
+cut: Couper
+mes moocs: 'Mes Moocs'
+dashboard: 'Tableau de bord'
+data_col: 'Colonne des données'
+database: 'Base de données'
+database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
-date_form_format: MM/dd/yyyy
-date_form_placeholder: mm/dd/yyyy
-date_format: m/d/Y
-date_range.apply: Apply
-date_range.clear: Clear
-date_range.custom_range: 'Custom range'
-date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
-date_range.first_day: '0'
-date_range.format: m/d/Y
-date_range.from: From
-date_range.js_format: MM/dd/yyyy
-date_range.last_month: 'Last month'
-date_range.last_school_year: 'Last school year'
-date_range.last_seven_days: 'Last 7 days'
-date_range.last_thirty_days: 'Last 30 days'
-date_range.last_week: 'Last week'
-date_range.last_year: 'Last year'
-date_range.month_names: '["January","February","March","April","May","June","July","August","September","October","November","December"]'
+date_form_format: dd/MM/yyyy
+date_form_placeholder: jj/mm/aaaa
+date_format: d/m/Y
+date_range.apply: Appliquer
+date_range.clear: Effacer
+date_range.custom_range: 'Plage personnalisée'
+date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
+date_range.first_day: '1'
+date_range.format: d/m/Y
+date_range.from: De
+date_range.js_format: dd/MM/yyyy
+date_range.last_month: 'Mois précédent'
+date_range.last_school_year: 'Année sco. précédente'
+date_range.last_seven_days: '7 derniers jours'
+date_range.last_thirty_days: '30 derniers jours'
+date_range.last_week: 'Semaine précédente'
+date_range.last_year: 'Année précédente'
+date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
 date_range.separator: '-'
-date_range.this_month: 'This month'
-date_range.this_school_year: 'This school year'
-date_range.this_week: 'This week'
-date_range.this_year: 'This year'
-date_range.to: To
-date_range.today: Today
-date_range.week: w
-date_range.yesterday: Yesterday
-db_table: 'Database table'
-deletable: Deletable
-delete: Delete
-delete_category: 'Delete category'
-delete_category_confirm_message: 'Do you really want to delete this category ?'
-delete_category_confirm_title: 'Category deletion'
-delete_home_tab: 'Delete tab'
+date_range.this_month: 'Mois en cours'
+date_range.this_school_year: 'Année sco. en cours'
+date_range.this_week: 'Semaine en cours'
+date_range.this_year: 'Année en cours'
+date_range.to: A
+date_range.today: 'Aujourd''hui'
+date_range.week: s
+date_range.yesterday: Hier
+db_table: 'Table de la base de données'
+deletable: Supprimable
+delete: Supprimer
+delete_category: 'Supprimer la catégorie'
+delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
+delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_home_tab: 'Supprimer l''onglet'
 description: 'Description'
-desktop: Desktop
-desktop_home_tab_creation: 'Desktop Home tab creation'
-desktop_home_tab_edition: 'Desktop Home tab edition'
-desktop_home_tabs: 'Desktop Home tabs'
-desktop_tools: 'Desktop tools'
-directory: Directory
-directory_form_name: Name
-directory_form_shareType: Sharable
-display: Display
-display_captcha: 'Display captcha for anonymous'
-display_options: 'Display options'
-done_on: 'done on'
-down: Down
-download: Download
-downloads: Downloads
-drag_file_here: 'Drag the file here'
-drop_file: 'Drop the file'
+desktop: Bureau
+desktop_home_tab_creation: 'Création d''un onglet pour le bureau'
+desktop_home_tab_edition: 'Edition de l''onglet pour le bureau'
+desktop_home_tabs: 'Onglets pour le bureau'
+desktop_tools: 'Outils du bureau'
+directory: Répertoire
+directory_form_name: Nom
+directory_form_shareType: Redistribution
+display: Afficher
+display_captcha: 'Afficher les captcha pour les anonymes'
+display_options: 'Options d''affichage'
+done_on: 'effectuée sur'
+down: Descendre
+download: Télécharger
+downloads: 'Nb tchgr.'
+drag_file_here: 'Déplacez le fichier ici'
+drop_file: 'Déposez le fichier'
 dsn: dsn
-edit: Edit
-edit_password: 'Edit your password'
-edit_password_error: 'An error occured while editing your password.'
-edit_password_message: 'Do you really want to update your passwords ?'
-edit_password_success: 'Your password has been edited with success.'
-edit_profile: 'Edit your profile'
-edit_profile_error: 'An error occured while editing the profile.'
-edit_profile_success: 'The profile has been edited with success.'
-edit_public_profile: 'Edit public profil'
-edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
-edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
-edit_your_profile_error: 'An error occured while editing your profile.'
-edit_your_profile_success: 'Your profile has been edited with success.'
-editable: Editable
-email: 'Email adress'
-email_form_mail: 'Enter your email'
-email_found_at: 'The email %email% was found at lines: %lines%'
-empty_file: 'Empty file'
-enter_tag_name_message: 'Please enter a tag name'
-entries_per_day: 'Entries per day'
-export: Export
+edit: Modifier
+edit_password: 'Modifier mon mot de passe'
+edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
+edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
+edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
+edit_profile: 'Modifier votre profil'
+edit_profile_error: 'Une erreur est survenue pendant la modification du profil.'
+edit_profile_success: 'Modification du profil effectué avec succès.'
+edit_public_profile: 'Modifier le profil public'
+edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
+edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
+edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
+edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
+edit_profile_upload: 'Choisissez un fichier'
+edit_profile_upload_file_name: 'Aucun fichier choisi'
+editable: Modifiable
+email: 'Adresse email'
+email_form_mail: 'Entrez votre adresse email'
+email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
+mail_already_exists: 'Un utilisateur avec l''adresse mail %email% existe déjà (lignes : %lines%)'
+empty_file: 'Fichier vide'
+enter_tag_name_message: 'Veuillez entrer un nom de Tag'
+entries_per_day: 'Nombre d''entrées par jour'
+error_sessions_same_forum: 'Deux sessions ne peuvent pas avoir le même forum.'
+error_session_end_date_inferior_start_date: 'La date de fin doit être supérieure à la date de début.'
+error_session_invalid_start_inscription_date: 'L''inscription ne peut pas commencer après le début de la session.'
+error_session_end_inscription_date_inferior_start_inscription_date: 'La date de fin d''inscription doit être supérieure à la date de début d''inscription.'
+error_session_end_inscription_date_superior_end_date: 'L''inscription ne peut pas terminer après la fin de la session.'
+export: Exporter
 exportable: Exportable
-external_pdo_database: 'External database (PDO)'
+external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
-facebook_application_validation_error: 'Provided credentials are not valid.'
-fast_answer: 'Fast answer'
-fb_client_id: 'Application id'
-fb_client_secret: 'Application secret'
-file: Files
-file_form_file: File
+facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
+fast_answer: 'Réponse rapide'
+fb_client_id: 'Id de l''application'
+fb_client_secret: 'Secret de l''application'
+file: Fichier
+file_form_file: Fichier
 file_form_license: License
-file_form_name: Name
-file_form_shareType: Sharable
-file_form_shareType_0: Yes
-file_form_shareType_1: false
-files: Files
-filter: Filter
-find_workspaces: 'All public workspaces'
-firstName: 'First name'
-first_name: 'First name'
-forgot_password: 'Forgot your password ?'
-form_role: Role
-from: From
-from_message: From
-general: General
-general_parameters: 'General parameters'
-generate_url: 'Public URL Subscription '
-generate_url_subscription: 'Subscription to a workspace for a user'
-generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
-generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
-generate_url_subscription_success: 'You have been added to the workspace'
-get_mail_notifications: 'I want to be notified by email on %adress%.'
-grant_access: 'Grant access'
-group: Group
-group_configuration: 'Group configuration'
-group_creation: 'Group creation'
-group_form_name: Name
-group_form_ownedRoles: Roles
+file_form_name: Nom
+file_form_shareType: Redistribution
+file_form_shareType_0: Oui
+file_form_shareType_1: Non
+files: Fichiers
+filter: Filtrer
+find_workspaces: 'Tous les espaces d''activités publics'
+firstName: Prénom
+first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
+form_role: Rôle
+from: Depuis
+from_message: De
+general: Général
+general_parameters: 'Paramètres généraux'
+generate_url: 'Inscription publique'
+generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
+generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
+generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
+generate_url_subscription_sucsess: 'Vous avez été ajouté à l''espace d''activité'
+get_mail_notifications: 'Je veux recevoir les notifications sur %adress%.'
+grant_access: 'Donner l''accès'
+group: Groupe
+group_configuration: 'Configuration du groupe'
+group_creation: 'Création d''un groupe'
+group_form_name: Nom
+group_form_ownedRoles: Rôles
 group_form_platformRole: Role
-group_parameter: 'Group parameter'
-groups: Groups
-groups_list: 'Groups list'
-groups_per_page: 'Groups per page'
-groups_per_page: Groups per page
-groups_registration_in_workspace: 'Groups registration in workspace'
-has_been_put_in_category: 'has been put in category'
-has_been_suscribed_with_role: 'has been suscribed with role'
-has_been_suscribed_with_role_group: 'has been suscribed with role'
-has_not_been_imported: 'has not been imported'
-has_not_been_imported_into_the_group: 'has not been imported into the group'
-hide: Hide
-history: History
-home: Home
-home_parameters: 'Home parameters'
-home_tab: 'Home tab'
-home_tab_creation: 'Home tab creation'
-home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
-home_tab_delete_confirm_title: 'Delete Home tab'
-home_tab_edition: 'Home tab edition'
-home_tab_form_name: Name
-home_tab_widgets: 'Home tab widgets'
-home_tab_widgets_configuration: 'Home tab widgets configuration'
-home_tabs: 'Home tabs'
-home_tabs_configuration: 'Home tabs configuration'
+group_parameter: 'Paramètres du groupe'
+groups: Groupes
+groups_list: 'Liste des groupes'
+groups_per_page: 'Groupes par page'
+groups_per_page: Groupes par page
+groups_registration_in_workspace: 'Inscription des groupes à l''espace d''activités'
+has_been_put_in_category: 'a été placé dans la catégorie'
+has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
+has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
+has_not_been_imported: 'n''a pas été importé(e)'
+has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+hide: Cacher
+history: Historique
+home: Accueil
+home_parameters: 'Paramètres de l''accueil'
+home_tab: Onglet
+home_tab_creation: 'Création d''un onglet'
+home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet de la page d''accueil ?'
+home_tab_delete_confirm_title: 'Suppression de l''onglet'
+home_tab_edition: 'Edition de l''onglet'
+home_tab_form_name: Nom
+home_tab_widgets: 'Widgets de l''onglet'
+home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
+home_tabs: 'Onglets de la page d''accueil'
+home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 id: Id
-id_col: 'Database data column'
-import: Import
-import_user_file_file: 'Import from a csv file'
-import_users: 'Import users'
+id_col: 'Colonne des identifiants'
+import: Importer
+import_user_file_file: 'Importer depuis fichier csv'
+import_users: 'Importer des utilisateurs'
 informations: Informations
-inscription_mail: 'Inscription mail'
-instructions: Instructions
-internal_error: 'Internal server error. Please contact the administrator.'
-invalid_auth_mode: 'Invalid encryption'
-invalid_csv_file: 'Invalid CSV file'
-invalid_driver: 'This driver is not valid'
-invalid_email: 'This email address is not valid'
-invalid_encryption: 'Invalid authentication mode'
-invalid_transport: 'Invalid transport'
-invalid_url: 'This url is not valid'
-is_already_in_category: 'is already in category'
-is_mail_displayed: 'Display email ?'
-jqplot_date_output_format: '%m/%d/%Y'
-keep_me_logged_in: 'Keep me logged in'
-lastName: 'Last name'
-last_30_days_activity: 'Activity over the last 30 days'
-last_name: 'Last name'
+inscription_mail: 'Mail d''inscription'
+instructions: Consignes
+internal_error: 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
+invalid_auth_mode: 'Cryptage non valide'
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
+invalid_driver: 'Ce driver n''est pas valide'
+invalid_email: 'Cette adresse email n''est pas valide'
+invalid_encryption: 'Mode d''authentification non valide'
+invalid_transport: 'Transport non valide'
+invalid_url: 'Cette url n''est pas valide'
+is_already_in_category: 'est déjà dans la catégorie'
+is_mail_displayed: 'Afficher l''email ?'
+jqplot_date_output_format: '%d-%m-%Y'
+keep_me_logged_in: 'Se souvenir de moi'
+lastName: Nom
+last_30_days_activity: 'Activités des 30 derniers jours'
+last_name: Nom
 layout: Layout
-leave_this_page: 'If you leave this page you may lose your changes.'
-left: Left
-line_number: 'Line %line%:'
-line_per_page: 'Results per page'
-link: Link
-link_outdated: 'link is no more valid'
-list_groups: 'List groups'
-list_users: 'List users'
-list_workspaces: 'List workspaces'
-lock: Lock
-login: Login
-login_failure: 'Login has failed. Check your username and password are correct.'
-logout: Logout
-logs: tracking
+leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
+left: Gauche
+line_number: 'Ligne %line%:'
+line_per_page: 'Résultats par page'
+link: Lien
+link_outdated: 'le lien n''est plus valide'
+list_groups: 'Lister les groupes'
+list_users: 'Lister les utilisateurs'
+list_workspaces: 'Tous les espaces d''activités'
+lock: Verrouiller
+login: Connexion
+login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
+logout: Déconnexion
+logs: suivi
 mail: Mail
-mail_click: 'Click on this link to reset your password'
-mail_config_problem: Please contact your administrator platform to reinitialize your password.
-mail_form_content: Content
-mail_form_object: Object
-mail_form_receiver: Receiver(s)
-mail_invalid: 'Mail format is not valid'
-mail_layout: 'Mail layout.'
-mail_login: 'Your Claroline''s login'
-mail_message: 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
-mail_not_available: The mail function is not available.
-mail_not_exist: 'This mail does not exist'
-mail_sent: A email has been sent to your address. Check your inbox mail and your spam box.
-make_my_public_profil_visible: 'Make my public profile visible'
-make_public_profile_visible_to_everybody: 'to <strong>everybody</strong>'
-make_public_profile_visible_to_nobody: 'to <strong>nobody</strong>'
-make_public_profile_visible_to_platform_user: 'to <strong>platform users</strong>'
-manage_public_profile_preferences: 'Manage public profile preferences'
-manage_rights: 'Manage rights'
-manage_tools: Manage tools
-manager: Manager
-max_size_is: 'The maximum size is %size%'
-media_most_viewed: 'Most viewed media'
-message_form_content: Content
-message_form_object: Object
-message_form_to: To
-messages: Message
-messages_confirm_delete: 'Are your sure , you want to delete this file ?'
-messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
-messages_confirm_restore: 'Are you sure you want to restore this(these) message(s) ?'
-messages_received: 'Messages received'
-messages_received_removed: 'Messages received removed'
-messages_removed: 'Messages removed'
-messages_sent: 'Messages sent'
-messages_sent_removed: 'Messages sent removed'
-misc: Miscellaneous
-missing_%content%: 'The variable %content% is missing for "%language%".'
-missing_%password%: 'The variable %password% is missing for "%language%".'
-missing_%username%: 'The variable %username% is missing for "%language%".'
-month.April: April
-month.August: August
-month.December: December
-month.February: February
-month.January: January
-month.July: July
-month.June: June
-month.March: March
-month.May: May
-month.November: November
-month.October: October
-month.September: September
-move: Move
-my_account: 'My account'
-my_agenda: 'My agenda'
-my_applications: 'My applications'
-my_badges: 'My badges'
-my_contacts: 'My contacts'
-my_favourite_workspaces: 'My favourite workspaces'
-my_notes: 'My notes'
-my_portfolio: 'My portfolio'
-my_profile: 'My profile'
-my_profile: My profile
-my_resources: 'My resources'
-my_workspace: 'My workspace'
-my_workspaces: 'My workspaces'
-name: Name
-new: New
-new_message: 'New message'
-new_message_alert: 'You have %count% new message(s)'
-new_password: New password
-new_role_message: 'You received the role %name%'
-new_role_message_object: 'Your permissions on the platform have changed'
-no: no
-no_category: 'There is no category'
-no_email: 'No email found, check the spelling'
-no_group: 'No group'
-no_home_tab: 'There is no Home tab'
-no_message: 'No message'
-no_role_selected_message: 'No role selected.'
-no_search_results: 'Your search hasn''t returned any result.'
-no_tag: 'There is no tag'
-no_user: 'No user'
-no_workspace: 'There is no workspace'
-none: None
-not_allowed_message: 'You are not allowed to perform this action.'
-not_blank_expected: 'This value should not be blank'
+mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
+mail_config_problem: Veuillez contacter l'administrateur pour réinitialiser votre mot de passe.
+mail_form_content: Contenu
+mail_form_object: Objet
+mail_form_receiver: destinataire(s)
+mail_invalid: 'Le format de votre email n''est pas valide'
+mail_layout: 'Mise en page des emails.'
+mail_login: 'Cliquez sur le lien'
+mail_message: 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
+mail_not_available: La fonction d'envoi d'email n'est pas disponible.
+mail_not_exist: 'Cet email n''existe pas '
+mail_sent: Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où celui-ci n'apparaîtrait pas dans votre boîte de réception.
+make_my_public_profil_visible: 'Rendre mon profil public visible'
+make_public_profile_visible_to_everybody: 'à <strong>tout le monde</strong>'
+make_public_profile_visible_to_nobody: 'à <strong>personne</strong>'
+make_public_profile_visible_to_platform_user: 'aux <strong>utilisateurs de la plateforme</strong>'
+manage_public_profile_preferences: 'Gérer les préférences du profil public'
+public_profile_removed: Compte inexistant
+public_profile_removed_text: Désolé, cet utilisateur n'existe pas ou son compte est supprimé.
+manage_rights: 'Gérer les droits'
+manage_tools: Gérer les outils
+manager: Gestionnaire
+max_size_is: 'La taille maximale est %size%'
+media_most_viewed: 'Media les plus consultés'
+message_simple_form_content: Contenu
+message_form_content: Contenu
+message_form_object: Objet
+message_form_to: A
+messages: Messages
+messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
+messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
+messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
+messages_received: 'Messages reçus'
+messages_received_removed: 'Messages reçus supprimés'
+messages_removed: 'Messages supprimés'
+messages_sent: 'Messages envoyés'
+messages_sent_removed: 'Messages envoyés supprimés'
+misc: Divers
+missing_%content%: 'La variable %content% est manquante pour la langue "%language%".'
+missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
+missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
+month.April: Avril
+month.August: Août
+month.December: Décembre
+month.February: Février
+month.January: Janvier
+month.July: Juillet
+month.June: Juin
+month.March: Mars
+month.May: Mai
+month.November: Novembre
+month.October: Octobre
+month.September: Septembre
+move: Déplacer
+my_account: 'Mon compte'
+my_agenda: 'Mon agenda'
+my_applications: 'Mes applications'
+my_badges: 'Mes badges'
+my_contacts: 'Mes contacts'
+my_favourite_workspaces: 'Mes espaces d''activités favoris'
+my_notes: 'Mes notes'
+my_portfolio: 'Mon portfolio'
+my_profile: Mon profil
+my_resources: 'Mes ressources'
+my_workspace: 'Espace personnel'
+my_workspaces: 'Mes espaces d''activités'
+name: Nom
+new: Nouveau
+new_message: 'Nouveau message'
+new_message_alert: 'Vous avez %count% nouveaux message(s)'
+new_password: Nouveau mot de passe
+new_role_message: 'Vous venez de recevoir le role %name%'
+new_role_message_object: 'Vos permissions sur la plateforme ont changé'
+no: non
+no_category: 'Il n''y a aucune catégorie'
+no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_group: 'Aucun groupe'
+no_home_tab: 'Il n''y a aucun onglet'
+no_message: 'Aucun message'
+no_role_selected_message: 'Aucun role sélectionné.'
+no_search_results: 'Votre recherche n''a retourné aucun résultat.'
+no_tag: 'Il n''y a aucun Tag'
+no_user: 'Aucun utilisateur'
+no_workspace: 'Il n''y a aucun espace d''activités'
+no_session_choice: 'Pas de session'
+none: Aucun
+not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
+not_blank_expected: 'Cette valeur ne peut pas être vide'
 note: Note
-notification_activated: 'Notifications activated.'
-notification_deactivated: 'Notifications deactivated.'
+notification_activated: 'Notifications activées.'
+notification_deactivated: 'Notifications désactivées.'
+notifications: 'Notifications'
 oauth: Oauth
-object: Object
+object: Objet
 ok: Ok
-only_for_workspace_creation: 'Only for workspace creation'
-open: Open
-operation_done: 'Operation done.'
+only_for_creation: 'Seulement pour la création d''un espace d''activités'
+open: Ouvrir
+operation_done: 'Opération effectuée.'
 options: Options
-or: Or
-order: Order
-organize_admin_tags: 'Organize admin tags'
-organize_categories: 'Organize categories'
-organize_private_tags: 'Organize private tags'
-over_max_length: 'This value is too long'
-owner: Owner
-owner_s: Owner(s)
-parameters: Parameters
-password: Password
-password_mismatch: 'Passwords mismatch'
-password_ok: 'Your password has been changed, you can login now'
-paste: Paste
-path: Path
+or: Ou
+order: Ordre
+organize_admin_tags: 'Organiser les Tags administrateur'
+organize_categories: 'Organiser les catégories'
+organize_private_tags: 'Organiser les Tags personnels'
+over_max_length: 'Cette valeur est trop longue'
+owner: Propriétaire
+owner_s: Propriétaire(s)
+parameters: Paramètres
+password: 'Mot de passe'
+password_mismatch: 'Les mots de passe ne correspondent pas.'
+password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
+paste: Coller
+path: Emplacement
 permissions: Permissions
-personal_workspace: 'Personal workspace - '
-phone: Phone
-picture_profile: 'Picture profile'
-platform_appearance: 'Platform appearance'
-platform_parameters: 'Platform parameters'
-platform_parameters_form_auth_mode: 'Authentication mode'
-platform_parameters_form_content: Content
-platform_parameters_form_cookie_lifetime: 'Session lifetime'
-platform_parameters_form_defaultRole: 'Default role'
+personal_workspace: 'Espace personnel - '
+phone: Téléphone
+picture_profile: 'Photo de profil'
+current_picture_profile: Photo de profil actuellement utilisée
+platform_appearance: 'Apparence de la plateforme'
+platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_auth_mode: 'Mode d''authentification'
+platform_parameters_form_content: Contenu
+platform_parameters_form_cookie_lifetime: 'Durée de la session'
+platform_parameters_form_defaultRole: 'Rôle par défaut'
 platform_parameters_form_encryption: Encryption
-platform_parameters_form_footer: Footer
+platform_parameters_form_footer: 'Pied de page'
 platform_parameters_form_host: Host
-platform_parameters_form_icon: 'Platform Icon'
-platform_parameters_form_localeLanguage: 'Default Language'
-platform_parameters_form_mailer_auth_mode: 'Authentication mode'
+platform_parameters_form_icon: 'Icône de la plateforme'
+platform_parameters_form_localeLanguage: 'Langue par défaut'
+platform_parameters_form_mailer_auth_mode: 'Mode d''authentification'
 platform_parameters_form_mailer_encryption: Encryption
 platform_parameters_form_mailer_host: Host
-platform_parameters_form_mailer_password: Password
+platform_parameters_form_mailer_password: 'Mot de passe'
 platform_parameters_form_mailer_port: Port
 platform_parameters_form_mailer_transport: Transport
-platform_parameters_form_mailer_username: Username
-platform_parameters_form_name: 'Name of the platform'
-platform_parameters_form_password: Password
+platform_parameters_form_mailer_username: 'Nom d''utilisateur'
+platform_parameters_form_name: 'Nom de la plateforme'
+platform_parameters_form_password: 'Mot de passe'
 platform_parameters_form_port: Port
 platform_parameters_form_selfRegistration: Auto-inscription
-platform_parameters_form_theme: Theme
-platform_plugins: 'Platform plugins'
-platform_role: 'Platform role'
-platform_widgets: 'Platform widgets'
-please_wait: 'Please wait...'
+platform_parameters_form_theme: Thème
+platform_plugins: 'Plugins de la plateforme'
+platform_role: 'Rôle plateforme'
+platform_widgets: 'Widgets de la plateforme'
+please_wait: 'Veuillez patienter...'
 position: Position
-positive_number_expected: 'This value should be a positive number'
-private: Private
-profil_edition: 'User profile edition'
-properties: Properties
+positive_number_expected: 'Cette valeur doit être un nombre positif'
+private: Privée
+profil_edition: 'Modifier mon profil'
+properties: Propriétés
 public: Public
-public_profile: 'Public profile'
-public_profile_preferences_allow_mail_sending: 'Mail sending'
-public_profile_preferences_allow_message_sending: 'Message sending'
-public_profile_undiscoverable: 'Profile undiscoverable'
-public_profile_undiscoverable_anonymously: 'Mandatory connection to access the profile'
-public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%" title="Connection">connected</a> to the platform to access profile <strong>%publicUrl%</strong>'
-public_profile_undiscoverable_text: 'We didn''t find any profile corresponding to <strong>%publicUrl%</strong>'
-public_profile_url_tuning_only_once: 'Public profile URL tuning is possible just once'
-public_registration: 'Public registration'
-public_url_help: 'Note : Your tuned URL must have maximum 30 letters or figures. Don''t use whitspaces, symbols or special characters.'
-public_workspace_empty: 'There are no public workspaces.'
-public_workspaces: 'Public workspaces'
-recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
-redirect_after_login: 'Redirect to last visited page'
-register: Register
-register_to_a_public_workspace: 'Register to a public workspace'
-register_to_a_workspace: 'Register to a workspace'
-registered: Registered
-registered_groups: 'Registered groups'
-registered_users: 'Registered users'
-registration: Registration
-registration_to_workspaces: 'Registration to workspaces'
-remove_group_confirm_message: 'Are you sure you want to delete this group ?'
-remove_group_s_confirm_message: 'Are you sure you want to delete these %count% groups ?'
-remove_message_confirm_message: 'Are you sure you want to delete this message ?'
-remove_message_s_confirm_message: 'Are you sure you want to delete these %count% messages ?'
-remove_subcategory: 'Remove subcategory'
-remove_user_confirm_message: 'Are you sure you want to delete this user ?'
-remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users ?'
-remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
-remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category ?'
-remove_workspace_from_category_confirm_title: 'Remove workspace from category'
-remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
-rename: Rename
-rename_category: 'Rename category'
-rename_tool: 'Rename tool'
-rename_widget_instance: 'Rename widget'
-repeat_password: Repeat the password
-reset: Reset
-reset_password: Reset password
-reset_password_message: Are you sure you want to reinitialize password ?
-reset_password_txt: You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.
-resetting_your_password: Resetting your password
-resource: Resource
-resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'
-resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
-resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
-resource_delete: 'Are you sure you want to delete this resource ?'
-resource_properties_form_sharable: 'Share this resource'
-resource_properties_form_shareType: 'Share type'
-resource_properties_form_userIcon: Icon
-resource_right_form_canCopy: Copy
-resource_right_form_canDelete: Selete
-resource_right_form_canEdit: Edit
-resource_right_form_canExport: Export
-resource_right_form_canOpen: Open
-resource_right_form_canShare: Share
-resource_right_form_canView: See
-resource_right_form_isRecursive: 'Apply changes to current and sub directories'
-resources: Resources
-resources_delete: 'Are you sure you want to delete these resources ?'
-resources_most_downloaded: 'Most downloaded resources'
-resources_rights: 'Resources rights'
-resources_rights_management: 'Resources rights management'
-resources_usage_list: 'Resources usage list'
-resources_usage_ratio: 'Resources usage ratio'
-restore: Restore
-restore_messages_confirm_message: 'restored message(s)'
-results: Results
-results_for_search_on: 'Results for search on'
-right: Right
-rights: Rights
-rights_management: 'Rights Management'
-role: Role
-role_creation: 'Role creation'
-role_edition: 'Role edition'
-role_name_type_form_translationKey: Name
-roles: Roles
-roles_management: 'Roles management'
-save: Save
-save_as_template: 'Save as template'
-save_workspace_as_template: 'Save workspace as template'
-search: Search
-search_group: 'Search for a group'
-search_user: 'Search for an user'
-search_workspace: 'Search for a workspace'
-see: See
-see_more: 'See more'
-see_public_profile: 'See my public profile'
-select_all: 'Select all'
-select_category: 'Select a category'
-select_contacts_title: 'Select receivers'
-select_groups_for_registration_to_workspace: 'Select groups to register'
-select_roles_to_assign: 'Select roles to assign'
-select_users_for_registration_to_workspace: 'Select users to register'
-select_workspaces_for_registration: 'Select workspaces for registration'
-selected_workspaces_for_registration: 'Selected workspaces for registration'
-selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
-send: send
-send_mail: 'Send a mail'
+public_profile: 'Profil public'
+public_profile_preferences_allow_mail_sending: 'Envoi de mail'
+public_profile_preferences_allow_message_sending: 'Envoi de message'
+public_profile_undiscoverable: 'Profil introuvable'
+public_profile_undiscoverable_anonymously: 'Connexion obligatoire pour accéder au profil'
+public_profile_undiscoverable_anonymously_text: 'Vous devez être <a href="%loginUrl%" title="Connexion">connectez</a> à la plateforme pour accéder au profil <strong>%publicUrl%</strong>'
+public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concordant pour <strong>%publicUrl%</strong>'
+public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
+public_registration: 'Inscription publique'
+public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+public_empty: 'Il n''y a aucun espace d''activités public.'
+public_workspaces: 'Espaces d''activités publics'
+recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
+redirect_after_login: 'Rediriger vers la dernière page visitée'
+register: Inscription
+register_to_a_public_workspace: 'Inscription à un espace d''activités public'
+register_to_a_workspace: 'M''inscrire à un espace'
+registered: Inscrit
+registered_groups: 'Groupes enregistrés'
+registered_users: 'Utilisateurs enregistrés'
+registration: Inscription
+registration_to_workspaces: 'Inscription à des espaces d''activités'
+remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
+remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
+remove_message_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce message ?'
+remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% messages?'
+remove_subcategory: 'Retirer la sous-catégorie'
+remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
+remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
+remove_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
+remove_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
+remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
+rename: Renommer
+rename_category: 'Renommer la catégorie'
+rename_tool: 'Renommage d''un outil'
+rename_widget_instance: 'Renommage du Widget'
+repeat_password: Répétez le mot de passe
+reset: Réinitialiser
+reset_password: Réinitialiser le mot de passe
+reset_password_message: Êtes-vous sûr de vouloir réinitialiser le mot de passe ?
+reset_password_txt: Vous avez demandé la réinitialisation de votre mot de passe. Si vous n'êtes pas à l'origine de cette action, veuillez ignorer ce message.
+resetting_your_password: Réinitialisation de votre mot de passe
+resource: Ressource
+resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
+resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
+resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
+resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
+resource_properties_form_sharable: 'Partager cette ressource'
+resource_properties_form_shareType: 'Type de partage'
+resource_properties_form_userIcon: Icône
+resource_right_form_canCopy: Copier
+resource_right_form_canDelete: Supprimer
+resource_right_form_canEdit: Editer
+resource_right_form_canExport: Exporter
+resource_right_form_canOpen: Ouvrir
+resource_right_form_canShare: Partager
+resource_right_form_canView: Voir
+resource_right_form_isRecursive: 'Appliquer au contenu du répertoire et aux sous-répertoires'
+resources: Ressources
+resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
+resources_most_downloaded: 'Ressources les plus téléchargés'
+resources_rights: 'Droits des ressources'
+resources_rights_management: 'Gestion des droits des ressources'
+resources_usage_list: 'Liste d''utilisation des ressources'
+resources_usage_ratio: 'Taux d''utilisation des resources'
+restore: Restaurer
+restore_messages_confirm_message: 'message(s) restauré(s)'
+results: Résultats
+results_for_search_on: 'Résultats de la recherche sur'
+right: Droit
+rights: Droits
+rights_management: 'Gestion des droits'
+
+role: Rôle
+role_creation: 'Création d''un rôle'
+role_edition: 'Modification d''un rôle'
+role_name_type_form_translationKey: Nom
+roles: Rôles
+roles_management: 'Gestion des rôles'
+save: Sauvegarder
+save_as_template: 'Sauvegarder comme modèle'
+save_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
+search: Rechercher
+search_maj: RECHERCHER
+search_group: 'Rechercher un groupe'
+search_user: 'Rechercher un utilisateur'
+search_workspace: 'Rechercher un espace d''activités'
+see: Voir
+
+see_more: 'Voir plus'
+see_public_profile: 'Voir mon profil public'
+select_all: 'Tout sélectionner'
+select_category: 'Sélectionner une catégorie'
+select_contacts_title: 'Sélectionnez le(s) destinataire(s)'
+select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
+select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
+select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
+select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
+selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
+selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
+send: Envoyer
+send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
-send_mail_form_object: Object
-send_message: 'Send a message'
-send_message_to_workspace: 'Send a message to the users of the workspace.'
-send_message_to_workspace: Send a message to the users of the workspace.
-server: Server
+send_mail_form_object: Objet
+send_message: 'Envoyer un message'
+send_message_to_workspace: 'Envoyer un message aux utilisateurs de l''espace'
+send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+server: Serveur
 session: Session
-session_db_cannot_perform_operations: 'Cannot read or write in the specified table. Please check that the database user has sufficient permissions and that there isn''t any special constraint on this table.'
-session_db_id_col_must_be_pk: 'Id column (and only this column) must be the primary key.'
-session_db_invalid_type_data_col: 'Data colum must be of type "text" (e.g. "LONGTEXT").'
-session_db_invalid_type_id_col: 'Id colum must be of type "string" (e.g. "VARCHAR").'
-session_db_invalid_type_time_col: 'Time colum must be of type "integer" (e.g. "INT").'
-session_db_no_data_col: 'Data column doesn''t exist.'
-session_db_no_id_col: 'Id column doesn''t exist.'
-session_db_no_table: 'The specified table doesn''t exist.'
-session_db_no_time_col: 'Time column doesn''t exist.'
-session_id: 'Session id'
-settings: Settings
-sharable: Sharable
-show: Show
-show_as: 'Show as'
-show_as_admin: 'Show as admin'
-show_as_user: 'Show as user'
-show_profile: 'Show profile'
+session_db_cannot_perform_operations: 'L''écriture et/ou la lecture d''enregistrements dans la table renseignée est impossible. Veuillez vérifier que l''utilisateur de la base de données dispose de droits suffisants et qu''aucune contrainte particulière n''a été affectée à cette table.'
+session_db_id_col_must_be_pk: 'La colonne des identifiants (et uniquement cette colonne) doit être la clé primaire de la table.'
+session_db_invalid_type_data_col: 'La colonne des données doit être de type "text" (e.g. "LONGTEXT").'
+session_db_invalid_type_id_col: 'La colonne des identifiants doit être de type "string" (e.g. "VARCHAR").'
+session_db_invalid_type_time_col: 'La colonne des durées doit être de type "integer" (e.g. "INT").'
+session_db_no_data_col: 'La colonne des données n''existe pas.'
+session_db_no_id_col: 'La colonne des identifiants n''existe pas.'
+session_db_no_table: 'La table renseignée n''existe pas.'
+session_db_no_time_col: 'La colonne des durées n''existe pas.'
+session_id: 'Identifiant de session'
+settings: Paramètres
+sharable: Partageable
+show: Voir
+show_as: 'Voir en tant que'
+show_as_admin: 'Voir comme admin'
+show_as_user: 'Voir comme utilisateur'
+show_profile: 'Voir le profile'
 simple: Simple
-steal_session: 'Steal the session'
-storage_type: 'Storage type'
-subcategories: Subcategories
-subscribe_groups: 'Subscribe groups'
-subscribe_selected_groups: 'Subscribe selected groups'
-subscribe_selected_users: 'Subscribe selected users'
-subscribe_users: 'Subscribe users'
-support_email: 'Support email'
-switch: Switch
+steal_session: 'Voler la session'
+storage_type: 'Type de stockage'
+subcategories: Sous-catégories
+subscribe_groups: 'Inscrire des groupes'
+subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
+subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
+subscribe_users: 'Inscrire des utilisateurs'
+support_email: 'Email du support'
+switch: Echanger
 tag: Tag
-tag_children_list: 'Tag children list'
-tag_potential_children_list: 'Tag potential children list'
-tags_add_remove_children_to: 'Add/Remove children to'
-tags_hierarchy: 'Tags hierarchy'
-tags_list: 'Tags list'
-tags_management: 'Tags management'
-tags_organization: 'Tags organization'
-teacher: Teacher
-text_form_content: Content
-text_form_name: Name
-text_form_shareType: Sharable
-text_form_text: Text
-the_following_users_were_not_imported: 'The following users were not imported.'
-the_workspace: Workspace
-this_page_requires_authentication: 'This page requires authentication. Please login.'
-time_col: 'Database time column'
-tinymce_all_buttons: All tools
-to: To
-to_anonymous: 'to anonymous users'
-to_everyone: 'to everyone'
-to_message: To
-to_platform_users: 'to platform users'
-to_workspace_members: 'to the members of this workspace'
-today: Today
-tool: Tool
-tool_form_displayName: 'Displayed tool name'
-tool_form_name: 'tool name'
-tool_parameters: 'Tool parameters'
-tool_roles_create_directory: 'The "Create a directory" option allow you to automatically create a directory for that group.'
-tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.
-tools: Tools
-tools_rights_configuration: 'Tools rights configuration'
+tag_children_list: 'Liste des enfants'
+tag_potential_children_list: 'Liste des enfants potentiels'
+tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
+tags_hierarchy: 'Hiérarchie des Tags'
+tags_list: 'Liste des Tags'
+tags_management: 'Gestion des Tags'
+tags_organization: 'Organisation des Tags'
+teacher: Professeur
+text_form_content: Contenu
+text_form_name: Nom
+text_form_shareType: Redistribution
+text_form_text: Texte
+the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
+the_workspace: 'L''espace d''activités'
+this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
+time_col: 'Colonne des durées'
+tinymce_all_buttons: Tous les outils
+to: Jusque
+to_anonymous: 'aux utilisateurs anonymes'
+to_everyone: 'à tout le monde'
+to_message: À
+to_platform_users: 'aux utilisateurs de la plateforme'
+to_members: 'aux membres de cet espace'
+today: 'Aujourd''hui'
+tool: Outil
+tool_form_displayName: 'Nom affiché'
+tool_form_name: Nom
+tool_parameters: 'Paramètres des outils'
+tool_roles_create_directory: 'L''option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.'
+tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
+tools: Outils
+tools_rights_configuration: 'Configuration des droits sur les outils'
 top: Top
-top_extension: 'Top filetypes having the most files'
-top_media_views: 'Top most viewed media'
-top_resources_downloads: 'Top most downloaded resources'
-top_resources_views: 'Top most viewed resources'
-top_users_connections: 'Top users being the most connected to platform'
-top_users_workspaces_enrolled: 'Top users having access in most workspaces'
-top_users_workspaces_owners: 'Top users having the most workspaces'
-top_workspaces_connections: 'Top most visited workspaces'
-top_workspaces_resources: 'Top workspaces having the most resources'
+top_extension: 'Top des extensions (Media), par nombre de fichiers'
+top_media_views: 'Top des Medias le plus consultés'
+top_resources_downloads: 'Top des resources les plus téléchargés'
+top_resources_views: 'Top des resources les plus consultés'
+top_users_connections: 'Top des utilisateurs s''étant les plus connectés'
+top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plus de modules'
+top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
+top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
+top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
 total: Total
-trash: Trash
-tune: 'Tune'
-tune_public_url_error: 'An error occured while tuning your public profile URL.'
-tune_public_url_success: 'Tuning of your public profile URL made with success.'
-tune_your_public_profile: 'Tune your public profile'
-tune_your_public_profile_url: 'Tune your public profile URL'
+trash: Corbeille
+tune: 'Personnaliser'
+tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
+tune_public_url_success: 'Personnalisation de l''URL de votre profil public effectuée avec succès.'
+tune_your_public_profile: 'Personnalisez votre profil public'
+tune_your_public_profile_url: 'Personnaliser l''URL de votre profil public'
 type: Type
 type_s: Type(s)
-unable_to_start_gmail: 'The connection with Gmail SMTP service cannot be established. Please check that the credentials you provided are correct.'
-unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check that one of them is installed and correctly configured.'
-unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'
-unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
-unauthorized: 'You are not authorized to see this page.'
-under_min_length: 'This value is too short'
-unregister: Unregister
-unregister_from_a_workspace: 'Unregister from a workspace'
-unregistered: Unregistered
-unregistered_groups: 'Unregistered groups'
-unregistered_users: 'Unregistered users'
-unwritable_file_exception: 'The file %path% is not writable.'
-up: Up
-upload: upload
-upload_denied: 'Permission denied'
-upload_fail: 'Upload failed'
-url_invalid: 'the code is not correct, do no try to change the url'
-user: User
-user_accounts: 'User accounts'
-user_creation: 'User creation'
-user_parameters: 'User parameters'
-user_picker: 'User picker'
-user_profile: 'User profile'
-user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
-user_removed: 'User removed'
-username: Username
-username_found_at: 'The username %username% was found at lines: %lines%'
-username_or_email: 'Username or email'
-users: Users
-users_connected_once: 'users connected at least once'
-users_import: 'Users import'
-users_list: 'Users list'
-users_management: 'Users management'
-users_minimum_requirement_msg: 'Users validation has the following requirements: 3 chars username, 4 chars password, valid email.'
-users_per_page: 'Users per page'
-users_per_page: Users per page
-users_registration_in_workspace: 'Users registration in workspace'
-users_visits: 'Users'' connections'
-validate: Validate
-verification: 'Verification'
-view: View
-view_category_hierarchy: 'View category hierarchy'
-views: Views
-visibility: Visibility
+unable_to_start_gmail: 'La connexion avec le service SMTP de Gmail ne peut pas être établie. Veuillez vérifier que le nom d`utilisateur et le mot de passe que vous avez renseignés sont corrects.'
+unable_to_start_sendmail: 'La connexion avec Sendmail ou Postfix ne peut pas être établie. Veuillez vérifier qu''un de ces logiciels est installé et correctement configuré.'
+unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
+unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
+unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
+under_min_length: 'Cette valeur est trop courte'
+unregister: Désinscription
+unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
+unregistered: 'Non inscrit'
+unregistered_groups: 'Groupes non enregistrés'
+unregistered_users: 'Utilisateurs non enregistrés'
+unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
+up: Monter
+upload: Téléchargement
+upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
+upload_fail: 'Echec du téléchargement'
+url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
+
+user: Utilisateur
+user_accounts: 'Comptes utilisateur'
+user_creation: 'Création d''un utilisateur'
+user_parameters: 'Paramètres de l''utilisateur'
+user_picker: 'Outil pour choisir un utilisateur'
+user_profile: 'Profil utilisateur'
+user_public_profile_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link shared_policy_link_platform_users">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link shared_policy_link_everybody">tout le monde</span>.'
+user_removed: 'Utilisateur supprimé'
+username: 'Nom d''utilisateur'
+username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
+username_already_exists: 'Un utilisateur avec le nom d''utilisateur %username% existe déjà (lignes : %lines%)'
+username_or_email: 'Nom d''utilisateur ou email'
+users: Utilisateurs
+users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
+users_import: 'Importer des utilisateurs'
+users_list: 'Liste des utilisateurs'
+users_management: 'Gestion des utilisateurs'
+users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, mot de passe de 4 caractères, email valide.'
+users_per_page: 'Utilisateurs par page'
+users_per_page: Utilisateurs par page
+users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
+users_visits: 'Visites des utilisateurs'
+validate: Valider
+verification: 'Vérification'
+view: Voir
+view_category_hierarchy: 'Visualiser la structure des catégories'
+views: 'Nb vues'
+visibility: Visibilité
 visible: Visible
-visitor: Visitor
-warning_user_impersonation: 'You are connected as %user%.'
-warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
+visitor: Visiteur
+warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
+warning_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
-widget_display_form_name: Name
-widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
-widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
-widget_settings: 'Widget settings'
+widget_display_form_name: Nom
+widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
+widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
+widget_settings: 'Paramètres des widgets'
 widgets: Widgets
-widgets_configuration: 'Widgets configuration'
-workspace.create: 'Create a new workspace'
-workspace.name_not_blank: 'The workspace''s name is required.'
-workspace: Workspace
+widgets_configuration: 'Configuration des widgets'
+workspace.create: 'Créer un nouvel espace d''activités'
+workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
+workspace: 'Espace d''activités'
 workspace_administration: Administration
-workspace_classification: 'Workspace classification'
-workspace_delete: 'Delete the workspace'
-workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
-workspace_delete_confirm_title: 'Delete Confirm'
-workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
+workspace_classification: 'Classification des espaces d''activités'
+workspace_delete: 'Supprimer l''espace d''activités'
+workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
+workspace_delete_confirm_title: 'Confirmation de suppression'
+workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
 workspace_edit_form_code: Code
-workspace_edit_form_creationDate: 'Creation date'
-workspace_edit_form_creator : 'Creator of the workspace'
-workspace_edit_form_description: Description
-workspace_edit_form_displayable: Displayable
-workspace_edit_form_name: Name
-workspace_edit_form_number : Number of subscriber(s)
-workspace_edit_form_selfRegistration: 'Public registration'
-workspace_edit_form_selfUnregistration: 'Public unregistration'
+workspace_edit_form_creationDate : 'Date de création'
+workspace_edit_form_creator : 'Créateur de l''espace'
+workspace_edit_form_description: Description de l'espace
+workspace_edit_form_displayable: Visible
+workspace_edit_form_name: Nom
+workspace_edit_form_number : Nombre d'inscrits
+workspace_edit_form_selfRegistration: 'Inscription publique'
+workspace_edit_form_selfUnregistration: 'Désinscription publique'
+workspace_edit_form_isMooc: Est un MOOC
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
-workspace_form_name: Name
-workspace_form_selfRegistration: 'Public registration'
-workspace_form_selfUnregistration: 'Public unregistration'
-workspace_form_template: Template
+workspace_form_name: Nom
+workspace_form_selfRegistration: 'Inscription publique'
+workspace_form_selfUnregistration: 'Désinscription publique'
+workspace_form_template: Modèle
 workspace_form_type: Type
-workspace_home_tab_creation: 'Workspace Home tab creation'
-workspace_home_tab_edition: 'Workspace Home tab edition'
-workspace_home_tabs: 'Workspace Home tabs'
-workspace_list: 'Workspace list'
-workspace_list: Workspace list
-workspace_order_tool_edit_form_name: Name
-workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
-workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
-workspace_registration_message_object: 'Workspace registration'
-workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category ?'
-workspace_remove_from_category_confirm_title: 'Remove workspace from category'
-workspace_resource: Resources
-workspace_role_type_form_requireDir: 'Create a directory'
-workspace_role_type_form_translationKey: Name
-workspace_tag_form_name: Name
-workspace_tag_remove_confirm_message: 'Do you really want to remove this category ?'
-workspace_tag_remove_confirm_title: 'Remove category'
-workspace_template_form_name: Name
-workspace_tools: Tools
-workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
-workspace_welcome: Welcome
-workspaces: Workspaces
-workspaces_included_in_category: 'Workspaces included in this category'
-workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
-workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
-workspaces_management: 'Workspaces management'
-workspaces_per_page: 'Workspace per page'
-wrong_captcha : 'The code does not match the picture'
-ws_creator: 'Workspace creator'
-ws_most_viewed: 'Most viewed workspaces'
-yes: yes
-yesterday_activity: 'Yesterday''s activity'
-your_current_url: 'Your current URL'
-public_profile_url_tuning_only_once: 'Public profile URL tuning is possible just once'
-public_url_help: 'Note : Your tuned URL must have maximum 30 letters or figures. Don''t use whitspaces, symbols or special characters.'
-manage_tools: Manage tools
-create_role: Create role
-uncompress_file: Uncompress the file if possible
-your_username: 'Your username is '
+workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
+workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
+workspace_home_tabs: 'Onglets pour les espaces d''activités'
+workspace_list: 'Liste des espaces d''activités'
+workspace_list: Liste des espaces d'activités
+workspace_order_tool_edit_form_name: Nom
+workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
+workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
+workspace_registration_message_object: 'Inscription à un espace d''activité'
+workspace_remove_from_category_confirm_message: 'Voulez-vous vraiment retirer l''espace d''activités de cette catégorie ?'
+workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+workspace_resource: Ressources
+workspace_role_type_form_requireDir: 'Créer un répertoire'
+workspace_role_type_form_translationKey: Nom
+workspace_tag_form_name: Nom
+
+workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
+workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
+workspace_template_form_name: Nom
+workspace_tools: Outils
+workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
+workspace_welcome: Accueil
+workspaces: 'Espaces d''activités'
+workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
+workspaces_management: 'Gestions des espaces d''activités '
+workspaces_per_page: 'Espaces par page'
+wrong_captcha : 'Le code ne correspond pas avec l''image indiquée'
+ws_creator: 'Créateur d''espaces'
+ws_most_viewed: 'Espaces d''activités les plus consultés'
+yes: oui
+yesterday_activity: 'Activité de la veille'
+your_current_url: 'Votre URL actuelle'
+public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
+public_url_help: 'L''URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+manage_tools: Gérer les outils
+create_role: Créer un rôle
+uncompress_file: Décompresser le fichier si possible
+your_username: 'Votre nom d''utilisateur est '
 
 #Custom Solerni
-connect_with_mail: 'I log in with my email'
-register_with_mail: 'I register with my email'
-must_use_password: 'You must type your password'
-login_failure: 'Your credentials are invalid. Please try again'
-btn_connect_message: 'Log me in'
-forgot_password: 'I forget my password'
-user_form_mail: 'Email'
-user_form_firstName_invalid: 'You must type your first name'
-user_form_lastName_invalid: 'You must type your first name'
-user_form_username_invalid: 'Username must be at least 4 characters and contains only letters and numbers (no special characters)'
-mail_invalid : 'You must type an valid email'
-user_form_plainPassword_second: 'Password verification'
-user_rules_password: 'You must type a password with at least four characters'
-password_mismatch : 'Password mismatch'
-account_created: 'Your user account has been created'
-what_is_solerni: 'About'
-no_message: 'No new message'
-solerni_homepage: 'Back to homepage'
-solerni_hello: 'Hello'
-my_account: 'My profile'
-profile_parameters: 'Parameters'
-competence_badges: 'Competence Badges'
-knowledge_badges: 'Knowledge Badges'
-my_progress : 'My progression'
-badge_knowledge_short: 'Knowledge'
-badge_skill_short: 'Skills'
-lesson_button_done: 'Done'
-previous_lesson: 'Previous subject or activity'
-next_lesson: 'Next subject or activity'
-lesson_button_done_tooltip: 'Click to validate this step'
-lesson_button_undone_tooltip: 'Click to unvalidate this step'
-cgu_terms_invalid: 'You must accept the General Terms of Use'
-cgu_terms_label: 'I have read and I accept the General Terms of Use'
-cgu_terms_invalid: 'You have to agree on the General Terms of Use'
-cgu_terms_label_partial: 'I have read and I accept the '
-cgu_terms_link: 'general terms of use'
-page_my_badges: 'Get new badges'
-ou: 'or'
-add_file: 'Add a file'
-add_file_tooltip: 'Add a file with the Resource Picker'
-add_new_tooltip: 'New resource or file'
-my_library: 'My library'
-mooc_resources: 'MOOC Resources'
-more_about_badges: 'More about badges'
-currentPassword: Current password
-edit_password_error_current : The current password typed is not equal to your current password
+connect_with_mail: 'Je me connecte avec mon email'
+register_with_mail: 'Je m''inscris avec mon email'
+must_use_password: 'Vous devez saisir votre mot de passe'
+login_failure: 'Vos identifiants sont incorrects. Merci de réessayer'
+login_register_mooc: 'S''inscrire à <strong>%moocName%</strong>'
+btn_connect_message: 'Je me connecte'
+forgot_password: 'J''ai oublié mon mot de passe'
+user_form_mail: 'Adresse email'
+user_form_firstName: 'Prénom'
+user_form_lastName: 'Nom'
+user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux.'
+user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux.'
+user_form_username: 'Pseudo'
+user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres et posséder au minimum 3 caractères'
+mail: 'Email'
+mail_invalid: 'Vous devez saisir une adresse email valide'
+user_form_plainPassword_first: 'Mot de passe'
+user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères au minimum'
+user_form_plainPassword_second: 'Vérification du mot de passe'
+password_mismatch : 'Les mots de passe ne correspondent pas'
+account_created: 'Votre compte utilisateur a été crée'
+what_is_solerni: 'A propos'
+catalogue: 'Catalogue'
+no_message: 'Pas de nouveaux message'
+solerni_homepage: 'Retour à l''accueil'
+solerni_hello: 'Bonjour'
+my_account: 'Mon profil'
+profile_parameters: 'Paramètres'
+competence_badges: 'Obtenez des badges de compétences'
+knowledge_badges: 'Badges de connaissances'
+my_progress: 'Ma progression'
+badge_knowledge_short: 'Connaissances'
+badge_skill_short: 'Compétences'
+lesson_button_done: 'Effectué'
+previous_lesson: 'Sujet ou activité précédent'
+next_lesson: 'Sujet ou activité suivant'
+lesson_button_done_tooltip: 'Cliquez pour valider cette étape'
+lesson_button_undone_tooltip: 'Cliquez si vous ne souhaitez pas valider cette étape'
+cgu_terms_label: 'J''ai lu et j''accepte les conditions générales d''utilisation'
+cgu_terms_invalid: 'Vous devez accepter les conditions générales d''utilisation'
+cgu_terms_label_partial: 'J''ai lu et j''accepte les '
+cgu_terms_link: 'conditions générales d''utilisation'
+page_my_badges: 'Obtenir des badges'
+ou: 'ou'
+add_file: 'Ajouter un fichier'
+add_file_tooltip: 'Ajouter un fichier avec le Resource Picker'
+add_new_tooltip: 'Nouvelle ressource ou fichier'
+my_library: 'Ma bibliothèque'
+mooc_resources: 'Les ressources du MOOC'
+read_faq: 'Consulter les FAQ'
+more_about_badges: 'En savoir plus sur les badges'
+
+my_badge_details: 'See my badges details'
+go_to_evaluation: 'Go to my evaluation space'
+get_this_badge: 'Get this badge'
+my_evals: 'My evaluations'
+get_more_badges: 'Get more badges'
+show_my_evals: Show my evaluations
+
+back_to_parameters: 'Retour à l''administration'
+
+#Mooc Form Edit
+workspace_form_isMooc: 'Mooc'
+claroline_corebundle_mooc: 'Formulaire d''édition du MOOC'
+claroline_corebundle_mooc_title: 'Titre'
+claroline_corebundle_mooc_alias: 'Alias'
+claroline_corebundle_mooc_description: 'Description du mooc'
+claroline_corebundle_mooc_owner: 'Propriétaire'
+claroline_corebundle_mooc_isPublic: 'MOOC public'
+claroline_corebundle_mooc_accessConstraints: 'Règles d''accès'
+claroline_corebundle_mooc_categories: 'Catégories'
+claroline_corebundle_mooc_aboutPageDescription: 'Page En savoir +'
+claroline_corebundle_mooc_file: 'Image d''illustration'
+claroline_corebundle_mooc_illustrationPath: 'Illustration du mooc'
+claroline_corebundle_mooc_postEndAction: 'Après fermeture'
+claroline_corebundle_mooc_duration: 'Durée <br><span style="font-weight:normal">(en semaines)</span>'
+claroline_corebundle_mooc_weeklyTime: 'Durée hebdomadaire'
+claroline_corebundle_mooc_language: 'Langue'
+claroline_corebundle_mooc_cost: 'Tarif'
+claroline_corebundle_mooc_hasVideo: 'Vidéos'
+claroline_corebundle_mooc_hasSubtitle: 'Avec sous-titres'
+claroline_corebundle_mooc_prerequisites: 'Prérequis'
+claroline_corebundle_mooc_teamDescription: 'Equipe pédagogique'
+claroline_corebundle_mooc_badgesUrl: 'URL de détail des badges'
+claroline_corebundle_mooc_knowledgeBadgesUrl: 'URL des badges de connaissance'
+claroline_corebundle_mooc_badgesText: 'Description des badges'
+claroline_corebundle_mooc_googleAnalyticsToken: 'Token Google Analytics'
+claroline_corebundle_mooc_hasFacebookShare: 'Activer le partage Facebook'
+claroline_corebundle_mooc_hasTweeterShare: 'Activer le partage Twitter'
+claroline_corebundle_mooc_hasGplusShare: 'Activer le partage G+'
+claroline_corebundle_mooc_hasLinkedinShare: 'Activer le partage Linkedin'
+claroline_corebundle_mooc_lesson: 'Cours du MOOC'
+claroline_corebundle_mooc_category_name: 'Nom de la catégorie'
+claroline_corebundle_moocs : 'Moocs'
+claroline_corebundle_mooc_certificationType : 'Certification'
+claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
+claroline_corebundle_mooc_blog: Blog du Mooc
+choose_blog_mooc: -- Choisir un blog pour le mooc --
+
+
+workspace_edit: 'Paramètres du workspace'
+mooc_edit: 'Paramètres du MOOC'
+sessions_edit: 'Gestion des sessions du MOOC'
+add_session: 'Créer une nouvelle session'
+delete_session: 'Supprimer la session'
+#categories
+
+mooc_categories: 'Catégories des MOOCs'
+mooc_categories_create: 'Créer une catégorie'
+mooc_categories_list: 'Liste des catégories'
+mooc_categories_list_empty: 'Aucune catégorie'
+mooc_category_name: 'catégorie'
+mooc_categories_edit: 'Editer une catégorie'
+mooc_category_edit: 'Nom de la catégorie'
+mooc_category_create: 'Nom de la catégorie'
+delete_category_confirm_message: Supprimer une catégorie
+delete_category_confirm_title: Supprimer cette catégorie
+
+mooc_owners: 'Propriétaires de MOOCs'
+mooc_owner_create: 'Créer un propriétaire'
+mooc_owner_list: 'Liste des propriétaires'
+mooc_owner_list_empty: 'Aucun propriétaire'
+mooc_owner_edit: 'Propriétaire à éditer'
+mooc_owner_create: 'Créer un propriétaire'
+delete_owner_confirm_message: Supprimer un propriétaire
+delete_owner_confirm_title: Supprimer ce propriétaire
+
+claroline_corebundle_mooc_owner_name: 'Nom du propriétaire'
+claroline_corebundle_mooc_owner_description: 'Slogan ou description'
+claroline_corebundle_mooc_owner_logoPath: 'Logo'
+claroline_corebundle_mooc_owner_logoFile: 'Choisir un logo'
+claroline_corebundle_mooc_owner_dressingPath: 'Image d''habillage'
+claroline_corebundle_mooc_owner_dressingFile: 'Choisir une image d''habillage'
+
+mooc_accessconstraints: 'Règles d''accès aux MOOCs'
+mooc_accessconstraints_create: 'Créer un ensemble de règles d''accès'
+mooc_accessconstraints_list: 'Liste des règles d''accès'
+mooc_accessconstraints_list_empty: 'Aucun ensemble de règles d''accès'
+mooc_accessconstraints_edit: 'Modifier une Règle d''accès'
+delete_accessConstraint_confirm_message: Supprimer une règle d'accès
+delete_accessConstraint_confirm_title: Supprimer cette règle d'accès
+
+claroline_corebundle_mooc_accessconstraints_name: 'Nom de l''ensemble de règles'
+claroline_corebundle_mooc_accessconstraints_whitelist: 'Liste blanche'
+claroline_corebundle_mooc_accessconstraints_patterns: 'Patterns'
+claroline_corebundle_mooc_accessconstraints_moocOwner: 'Propriétaire'
+
+
+create_mooc: Créer un mooc
+search_engine: Moteur de recherche
+search_entities_to_index: Entités à indexer
+mooc_administration: Administration générale des MOOCs
+back_to_mooc_parameters: Retour à l'administration des MOOCs
+mooc_list: Liste des MOOCs
+mooc_parameters: Editer le MOOC
+entity_cannot_be_deleted: 'Cette entité ne peut pas supprimée car associée aux MOOCs suivants :'
+workspace_parameters: 'Paramètres du workspace'
+
+mooc_by_entreprise: Les Moocs proposés par %entreprise%
+proposed_by: Proposé par
+know_more: En savoir +
+mooc_archives: Accéder aux archives du cours
+get_warned_next_session: M'avertir de la prochaine session
+mooc_is_over: Mooc terminé
+go_to_mooc: Accéder au mooc
+subscribe_to_mooc: S'inscrire au mooc
+inscription_closed: Inscription terminée
+session_full: Mooc complet
+mooc_private: mooc privé
+my_moocs: Mes moocs
+display_all_my_moocs: Afficher mes moocs
+recommandations: Recommandations
+display_catalogue: Afficher le catalogue
+running: En cours
+to_come: A venir
+over: Terminé
+no_moocs_owner: Pas de Mooc disponible pour cette entreprise
+no_evals_yet: <p>Vous n'avez pas d'évaluations en cours.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
+
+new message: Nouveau message
+add_destinataires : Ajouter le(s) destinataire(s)
+
+mailsystem: Messagerie
+dashboard_widget_message_default_text: Retrouvez votre dernier message dans cet espace
+show_mailsystem: Afficher ma messagerie
+last_message: 'Dernier message :'
+@at: à
+
+no_badges: Aucun badge obtenu
+dashboard_widget_badges_default_text: Rejoignez un Mooc et tentez d'obtenir des badges !
+show_badges: Afficher mes badges
+last_badge: 'Dernier badge obtenu :'
+
+no_evals: Aucune évaluation en cours
+dashboard_widget_evals_default_text: Rejoignez un Mooc et passez un badge de compétences
+
+in_progress_badges: %number% évaluation%plural% en cours
+
+choose_lesson_mooc: -- Choisir un cours pour le mooc --
+choose_language_mooc: -- Choisir une langue --
+fr_FR: Français
+en_EN: Anglais
+mooc_certif_badge: Badge
+mooc_certif_attestation: Attestation de réussite
+choose_replay_mooc: -- Choisir une action --
+mooc_can_replay: Rejouable
+mooc_cannot_replay: Non rejouable
+mooc_choose_owner: -- Choisir un propriétaire pour ce MOOC --
+
+session_start_date: Début de session
+session_end_date: Fin de session
+session_start_subscription: Début pour l'inscription
+session_end_subscription: Fin pour l'inscription
+session_title: Titre de la session
+session_max_users: Nombre maximum d'inscrits<br><span style="font-weight:normal">(0 pour aucune limite)</span>
+session_choose_forum: -- Choisir un forum de session --
+constraint_whitelist: Liste blanche<br><span style="font-weight:normal">(1 adresse email par ligne)</span>
+constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@domaine.ext, 1 par ligne)</span>
+constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
+
+
+fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
+see_all_owner_moocs: Voir tous les moocs
+mooc_analytics: Statistiques du MOOC
+mooc_analytics_home: Claroline
+mooc_analytics_keynumbers: Chiffres clés
+mooc_analytics_details: Détails du MOOC
+mooc_analytics_knowledge_badges: Badges de connaissances
+mooc_analytics_skill_badges: Badges de compétences
+mooc_analytics_badges_chart: Badges (Charts)
+mooc_analytics_export: Exports
+mooc_analytics_user_name: Nom
+mooc_analytics_user_firstname: Prénom
+mooc_analytics_user_username: Pseudo
+mooc_analytics_user_mail: Adresse e-mail
+mooc_analytics_publisher_nb_pub: Nombre de publications
+mooc_analytics_users_nb_logs: Activité
+mooc_analytics_users_nb_published_posts: Nombre de messages publiés
+
+mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
+mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
+mooc_analytics_keynumbers_subscriptions_today: "Nombre d'inscrits du jour"
+mooc_analytics_keynumbers_subscriptions_total: "Nombre total d'inscrits"
+mooc_analytics_keynumbers_active_users: "Nombre d'utilisateurs actifs (1)"
+mooc_analytics_keynumbers_connection_hour: "Plage horaire moyenne la plus connectée"
+mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active"
+mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum"
+mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour"
+
+mooc_analytics_theme_name: Nom du thème 
+mooc_analytics_theme_nb_posts: Nombre de publications dans le thème
+
+mooc_analytics_export: Exportez les données du MOOC
+export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances
+export_badge_skill: Classement des utilisateurs participant aux badges de compétences
+export_badge_participation_knowledge: Participation aux badges de connaissances
+export_badge_participation_skill: Participation aux badges de compétences
+export_subscriptions_stats: Liste des inscrits
+export_users_validations_stats: Liste des comptes validés
+export_active_users: Liste des utilisateurs actifs/inactifs
+export_users_activity: Classement des utilisateurs par nombre d'activités
+export_forum_stats: Classement des utilisateurs par nombre de publications
+
+subscriptionStats: Suivi des inscriptions
+hourlyAudience: Connexions et activités par heure
+mooc_forum_publication: Publication dans le forum
+activeUsers: Répartition des utilisateurs actifs / inactifs
+mooc_badges_knowledge_piechart: Répartition des badges de connaissances par statut
+mooc_badges_skill_piechart: Répartition des badges de compétences par statut
+mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
+mooc_badges_skill_chart: Répartition cumulée des badges de compétences
+
+mooc_register_modal_title: '<b>Bienvenue</b>,'
+mooc_register_modal_mooc_name: 'Vous vous êtes inscrit au MOOC "%moocName%".'
+mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débutera le %moocDate% prochain.</strong>'
+mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
+mooc_register_modal_text2: 'A très bientôt.'
+
+mooc_register_modal_text_started: 'Le cours est ouvert : vous pouvez y accéder dès à présent.'
+mooc_register_modal_text2_started: 'Bon MOOC !'
+
+
+user_wish_to_unsubscribe: Vous souhaitez vous désinscrire de Solerni ?
+unsubscribe_self: se désinscrire
+back_to_profile: Retour au profil
+
+slrn_public_profile_undiscoverable: Profil privé
+slrn_public_profile_undiscoverable_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+public_profile_undiscoverable_anonymously: Profil privé
+public_profile_undiscoverable_anonymously_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
+profile_options_personalize: Options de personnalisation
+slrn_edit_public_profile: Gérer les préférences du profil public
+
+slrn_my_public_profile: Mon profil public
+slrn_unsubscribe_me: Se désinscrire de Solerni
+slrn_solerni_unsubscribe_intro: Etes-vous sûr de vouloir vous désinscrire de Solerni ?
+slrn_solerni_unsubscribe_text: Une fois que vous serez désinscrit, vous ne pourrez plus consulter votre parcours au sein des moocs auxquels vous êtes inscrit.
+yes_unsubscribe_me: Oui, me désinscrire de Solerni
+no_unsubscription: Non, conservez mon compte
+
+analytics_keynumbers_footnote: '(1) Nombre d''utilisateurs actifs : nombre d''apprenants s''étant connectés au moins 1 fois durant les 7 derniers jours'
+subscriptions_connections: Inscriptions et connexions
+forum: Forum
+
+subscriptionStatsDescription: Suivez l'évolution des inscriptions au MOOC
+activeUsersDescription: Un utilisateur actif est un utilisateur qui s'est connecté au moins une fois au cours des 7 derniers jours
+hourlyAudienceDescription: Découvrez quelle est la plage horaire la plus active (nombre d'actions enregistrées en simultané) et quelle est la plage horaire la plus connectée (nombre de connexions enregsitrées en simultané)
+mostActiveUsers: Top des utilisateurs les plus actifs
+mostActiveUsersDescription: Les utilisateurs les plus actifs sont les utilisateurs enregistrant le plus d'activités cumulées sur le MOOC
+forumPublishers: Top des meilleurs contributeurs
+forumPublishersDescription: Les meilleurs contributeurs sont les utilisateurs publiant le plus de messages sur le forum
+forumContributions: Niveau d'activité générale
+forumContributionsDescription: Mesurez le niveau d'activité générale du forum
+forumMostActiveSubjects: Top des thèmes les plus actifs
+forumMostActiveSubjectsDescription: Découvrez quels sont les thèmes les plus actifs (nombre de publications cumulées)
+analytics_no_data: Pas de données sur cet onglet
+SuccessRateBadge: Taux de réussite au badge
+SuccessRateDescription: identifiez les participants les plus talentueux
+ParticipationEvolutionRateBadge: Evolution de la participation au badge
+ParticipationEvolutionRateDescription: Mesurez la tendance de la participation au badge
+mooc_analytics_exports: Rapports disponibles en téléchargement (fichier CSV)
+analytics_key_data: En données
+connectionStats: Suivi des connections
+connectionStatsDescription: Suivez l'évolution des connections au MOOC
+ParticipationRateBadge: Taux de participation au badge
+ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge
+isvalid: Statut
+to_workspace_members: aux collaborateurs du workspace
+
+currentPassword: Mot de passe actuel
+edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à votre mot de passe actuel.
