@@ -861,3 +861,5 @@ add_new_tooltip: 'New resource or file'
 my_library: 'My library'
 mooc_resources: 'MOOC Resources'
 more_about_badges: 'More about badges'
+currentPassword: Current password
+edit_password_error_current : The current password typed is not equal to your current password

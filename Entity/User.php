@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -336,7 +337,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="is_facebook_account", type="boolean", nullable=true)
      */
     protected $isFacebookAccount = false;
-    
+
 
     public function __construct()
     {
