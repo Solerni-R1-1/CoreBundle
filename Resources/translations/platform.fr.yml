@@ -1157,3 +1157,4 @@ connectionStatsDescription: Suivez l'évolution des connections au MOOC
 ParticipationRateBadge: Taux de participation au badge
 ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge
 isvalid: Statut
+to_workspace_members: aux collaborateurs du workspace
