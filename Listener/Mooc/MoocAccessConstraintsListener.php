@@ -44,7 +44,7 @@ class MoocAccessConstraintsListener extends ContainerAware
 
         if ($entity instanceof MoocAccessConstraints) {
             $service = $this->container->get('orange.moocaccesscontraints_service');
-            $service->processUpgrade(array($entity));
+            $service->processUpgradeConstraints(array($entity));
         } else
         if ($entity instanceof User) {
         	$uow = $this->container->get("doctrine.orm.entity_manager")->getUnitOfWork();
@@ -52,7 +52,7 @@ class MoocAccessConstraintsListener extends ContainerAware
         	
         	if (array_key_exists("mail", $changeSet)) {
 	            $service = $this->container->get('orange.moocaccesscontraints_service');
-	            $service->processUpgrade(array(), $entity);
+	            $service->processUpgradeUsers(array($entity));
         	}
         }
 

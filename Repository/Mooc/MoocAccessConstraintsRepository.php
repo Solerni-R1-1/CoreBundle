@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Repository\Mooc;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
 
 /**
  * MoocAccessConstraintsRepository
@@ -13,4 +15,42 @@ use Doctrine\ORM\EntityRepository;
 class MoocAccessConstraintsRepository extends EntityRepository
 {
 
+	public function findByUserMail($mail) {
+		$domain = substr($mail, strrpos($mail, '@'));
+		echo $domain."<br />";
+		
+		$dql = "SELECT mac FROM Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints mac
+				WHERE mac.patterns LIKE :start_domain
+				OR mac.patterns LIKE :middle_domain
+				OR mac.patterns LIKE :end_domain
+				
+				OR mac.whitelist LIKE :start_mail
+				OR mac.whitelist LIKE :middle_mail
+				OR mac.whitelist LIKE :end_mail";
+		$query = $this->_em->createQuery($dql);
+		$query->setParameter("start_mail", $mail."\n%");
+		$query->setParameter("middle_mail", "%\n".$mail."\n%");
+		$query->setParameter("end_mail", "%\n".$mail);
+		
+		$query->setParameter("start_domain", $domain."\n%");
+		$query->setParameter("middle_domain", "%\n".$domain."\n%");
+		$query->setParameter("end_domain", "%\n".$domain);
+		
+		return $query->getResult();
+	}
+	
+	public function findByMooc(Mooc $mooc, array $exclude = array()) {
+		$dql = "SELECT mac FROM Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints mac
+				WHERE :mooc MEMBER OF mac.moocs";
+		if (count($exclude) > 0) {
+			$dql = $dql." AND mac NOT IN (:constraints)";
+		}
+		$query = $this->_em->createQuery($dql);
+		$query->setParameter("mooc", $mooc);
+		if (count($exclude) > 0) {
+			$query->setParameter("constraints", $exclude);
+		}
+		
+		return $query->getResult();
+	}
 }

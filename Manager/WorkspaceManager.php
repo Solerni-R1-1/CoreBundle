@@ -246,6 +246,8 @@ class WorkspaceManager
      */
     public function createWorkspace(AbstractWorkspace $workspace)
     {
+        $service = $this->container->get('orange.moocaccesscontraints_service');
+        $service->refreshDeletedConstraintForWorkspace($workspace);
         $this->om->persist($workspace);
         $this->om->flush();
         
@@ -258,8 +260,8 @@ class WorkspaceManager
         	if (!empty($accessContraints)) {
         		$constraints = $accessContraints->toArray();
         	}
-        	$service = $this->container->get('orange.moocaccesscontraints_service');
-        	$service->processUpgrade($constraints);
+        	$service->processUpgradeConstraints($constraints);
+        	
         }
     }
 

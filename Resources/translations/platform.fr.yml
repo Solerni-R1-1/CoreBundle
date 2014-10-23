@@ -441,8 +441,8 @@ name: Nom
 new: Nouveau
 new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
-new_role_message: 'Vous venez de recevoir le role %name%'
 new_password: Nouveau mot de passe
+new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
 no_category: 'Il n''y a aucune catégorie'
@@ -595,6 +595,7 @@ results_for_search_on: 'Résultats de la recherche sur'
 right: Droit
 rights: Droits
 rights_management: 'Gestion des droits'
+
 role: Rôle
 role_creation: 'Création d''un rôle'
 role_edition: 'Modification d''un rôle'
@@ -610,6 +611,7 @@ search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
 see: Voir
+
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select_all: 'Tout sélectionner'
@@ -726,6 +728,7 @@ upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
 url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
+
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
@@ -807,6 +810,7 @@ workspace_resource: Ressources
 workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
+
 workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
 workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_template_form_name: Nom
@@ -829,6 +833,7 @@ manage_tools: Gérer les outils
 create_role: Créer un rôle
 uncompress_file: Décompresser le fichier si possible
 your_username: 'Votre nom d''utilisateur est '
+
 #Custom Solerni
 connect_with_mail: 'Je me connecte avec mon email'
 register_with_mail: 'Je m''inscris avec mon email'
@@ -1157,3 +1162,8 @@ connectionStatsDescription: Suivez l'évolution des connections au MOOC
 ParticipationRateBadge: Taux de participation au badge
 ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge
 isvalid: Statut
+to_workspace_members: aux collaborateurs du workspace
+
+currentPassword: Mot de passe actuel
+edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à votre mot de passe actuel.
+

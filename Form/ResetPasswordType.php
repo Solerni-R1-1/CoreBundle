@@ -15,6 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class ResetPasswordType extends AbstractType
 {
@@ -35,7 +36,15 @@ class ResetPasswordType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add(
+        $builder
+            ->add('password', 
+                'password',
+                array('required' => true, 
+                      'label' => 'currentPassword',
+                      'attr' => array ('placeholder' => $this->translator->trans('currentPassword'))
+                      )
+            )
+            ->add(
             'plainPassword',
             'repeated',
             array(
@@ -71,7 +80,6 @@ class ResetPasswordType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\User',
                 'translation_domain' => 'platform'
             )
         );
