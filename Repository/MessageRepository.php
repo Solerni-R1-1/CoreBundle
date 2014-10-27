@@ -31,8 +31,7 @@ class MessageRepository extends EntityRepository
         $dql = "
             SELECT COUNT(m) FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
-            JOIN um.user u
-            WHERE u.id = {$user->getId()}
+            WHERE um.user = {$user->getId()}
             AND um.isRead = false
             AND um.isRemoved = false
             AND (m.user IS NULL OR m.user != :user)
