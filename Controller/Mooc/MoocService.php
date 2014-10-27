@@ -205,8 +205,8 @@ class MoocService extends Controller
     
 
     public function countUsersForSession(MoocSession $session) {
-    	return $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')
-    			->countUsersForSession($session);
+    	$sessionRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
+    	return $sessionRepo->countUsersForSession($session) + $sessionRepo->countGroupsUsersForSession($session);
     }
     
 }
