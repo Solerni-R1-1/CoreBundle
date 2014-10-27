@@ -1226,7 +1226,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function getAllUsersForExport(MoocSession $session, $excludeRoles = array()) {
 		$from = $session->getStartInscriptionDate();
 		$to = $session->getEndInscriptionDate();
-		
+
+
     	$dql = "SELECT DISTINCT
     				u.username AS username,
     				u.firstName AS firstname,
@@ -1234,27 +1235,22 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     				u.mail AS mail,
     				(CASE WHEN u.isValidate = 1 THEN 'oui' ELSE 'non' END) AS validate
     			FROM Claroline\CoreBundle\Entity\User u
-    			JOIN u.groups g
-    			JOIN Claroline\CoreBundle\Entity\Log\Log l
-    				WITH ((l.receiver = u
-    					AND l.action = 'workspace-role-subscribe_user')
-    				OR (l.receiverGroup = g
-    					AND l.action = 'workspace-role-subscribe_group'))
-    				AND l.dateLog >= :from
-    				AND l.dateLog <= :to
-    				AND l.workspace = :workspace
-    			WHERE u NOT IN (
+    			LEFT JOIN u.groups g
+    			LEFT JOIN u.moocSessions s
+    			LEFT JOIN g.moocSessions s2
+    			WHERE (s = :session OR s2 = :session)
+    			AND u.isEnabled = 1
+    			AND u NOT IN (
    					SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
    					JOIN u2.roles as r
-   					WHERE r.name IN (:roles))
-    			AND u.isEnabled = 1";
-    	
+   					WHERE r.name IN (:roles))";
+
     	$query = $this->_em->createQuery($dql);
-    	$query->setParameter("workspace", $session->getMooc()->getWorkspace());
-    	$query->setParameter("from", $from);
-    	$query->setParameter("to", $to);
+		$query->setParameter("session", $session);
     	$query->setParameter("roles", $excludeRoles);
-    	
-    	return $query->getResult();
+
+    	$result = $query->getResult(); 	
+
+    	return $result;
     }
 }
