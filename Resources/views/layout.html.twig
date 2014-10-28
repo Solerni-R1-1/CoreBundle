@@ -230,15 +230,18 @@ DEPLACE DANS base.html.twig
         'bundles/clarolinecore/js/locale.js'
         'bundles/clarolinecore/js/utilities.js'
         'bundles/clarolinecore/js/startup.js'
-
-        'bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js'
-        'bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js'
-        'bundles/clarolinecore/js/tinymce/tinymce.js'
+        
         'bundles/clarolinecore/js/bxslider/jquery.bxslider.min.js'
 
 
         %}<script type="text/javascript" src="{{ static_base_url ~ asset_url }}"></script>
     {% endjavascripts %}
+    
+    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+
+
 
     {#<script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
     {#<script type="text/javascript" src="{{ asset('bundles/bazingaexposetranslation/js/translator.js') }}"></script> #}
