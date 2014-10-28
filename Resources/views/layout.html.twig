@@ -18,7 +18,7 @@
         'bundles/frontend/jquery/plugin/datepicker/css/datepicker3.css'
         'bundles/clarolinecore/css/iframe/iframe.css'
     %}
-    <link rel="stylesheet" href="{{ static_base_url ~ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {# REMOVE CUSTOM THEMING AND USING claroline BOOSTRAP CSS INSTEAD #}
@@ -77,7 +77,7 @@ DEPLACE DANS base.html.twig
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-    <div id="homeAsset" class="hide">{{ '//' ~ app.request.host ~ asset("") }}</div>
+    <div id="homeAsset" class="hide">{{ assets_base_urls[random(assets_base_urls|keys)] }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
         {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
             {{ app.request.locale }}
@@ -172,7 +172,7 @@ DEPLACE DANS base.html.twig
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/topbar.js'
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/checkbox-dropdown.js'
         '../vendor/jms/twig-js/twig.js'
-        %}<script type="text/javascript" src="{{ static_base_url ~ asset_url }}"></script>
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
      {#{% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
@@ -200,7 +200,7 @@ DEPLACE DANS base.html.twig
         "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeWorkspacesConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/noRoleSelected.html.twigjs"
-        %}<script type="text/javascript" src="{{ static_base_url ~ asset_url }}"></script>
+        %}<script type="text/javascript" src="{{  asset_url }}"></script>
     {% endjavascripts %}
     {#{% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
         'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
@@ -234,7 +234,7 @@ DEPLACE DANS base.html.twig
         'bundles/clarolinecore/js/bxslider/jquery.bxslider.min.js'
 
 
-        %}<script type="text/javascript" src="{{ static_base_url ~ asset_url }}"></script>
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
