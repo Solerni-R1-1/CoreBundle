@@ -277,6 +277,7 @@ class MoocController extends Controller
                     $this->workspaceManager->addUserAction( $workspace, $user );
                 }
                 /* add user to moocSession */
+                $users = $moocSession->getUsers();
                 $users->add( $user );
                 $moocSession->setUsers( $users );
                 $this->getDoctrine()->getManager()->persist($moocSession);
