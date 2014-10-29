@@ -24,27 +24,32 @@ class ResetPasswordType extends AbstractType
     /** @var \Symfony\Component\Translation\TranslatorInterface */
     private $translator;
 
+    private $askOldPass;
+
     /**
      * @DI\InjectParams({
      *     "translator" = @DI\Inject("translator")
      * })
      *
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, $askOldPass = false)
     {
         $this->translator = $translator;
+        $this->askOldPass = $askOldPass;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
-            ->add('password', 
-                'password',
-                array('required' => true, 
-                      'label' => 'currentPassword',
-                      'attr' => array ('placeholder' => $this->translator->trans('currentPassword'))
-                      )
-            )
-            ->add(
+    public function buildForm(FormBuilderInterface $builder, array $options, $askOldPass = false) {
+        
+        if($this->askOldPass) {
+                $builder->add('password', 
+                    'password',
+                    array('required' => true, 
+                          'label' => 'currentPassword',
+                          'attr' => array ('placeholder' => $this->translator->trans('currentPassword'))
+                          )
+            );
+        }
+        $builder->add(
             'plainPassword',
             'repeated',
             array(

@@ -917,8 +917,11 @@ class UserManager
     public function uploadAvatar(User $user)
     {
         if (null !== $user->getPictureFile()) {
+        	$now = time();
             $user->setPicture(
-                sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension()
+                sha1($user->getPictureFile()->getClientOriginalName().
+                	'-'.$user->getId().
+                	'-'.$now).'.'.$user->getPictureFile()->guessExtension()
             );
             $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }

@@ -4,6 +4,7 @@ twig:
     globals:
         chosenRangeKeys: %chosenRangeKeys%
         mooc_service: "@orange.mooc.service"
+        assets_base_urls: %static_base_url%
     form:
         resources:
             - 'ClarolineCoreBundle:Form:date_range.html.twig'
