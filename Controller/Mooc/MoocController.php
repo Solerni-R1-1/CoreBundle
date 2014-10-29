@@ -327,6 +327,9 @@ class MoocController extends Controller
         if(count($userSession) == 0 && $returnAvailable){
             //15 days before / after
             $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(15, $user, 4); 
+            if (count($sessionsAvailable) > 1) {
+            	$sessionComponentLayout = "slider-small";
+            }
         } 
 
 
