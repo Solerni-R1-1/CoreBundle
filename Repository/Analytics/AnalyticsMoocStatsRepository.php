@@ -40,8 +40,8 @@ class AnalyticsMoocStatsRepository extends EntityRepository {
 	
 	public function countSubscriptionsForSession(MoocSession $moocSession) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
-		$from = $moocSession->getStartDate();
-		$to = $moocSession->getEndDate();
+		$from = $moocSession->getStartInscriptionDate();
+		$to = $moocSession->getEndInscriptionDate();
 	
 		$dql = "SELECT SUM(ams.nbSubscriptions)
 				FROM Claroline\CoreBundle\Entity\Analytics\AnalyticsMoocStats ams
@@ -76,7 +76,7 @@ class AnalyticsMoocStatsRepository extends EntityRepository {
 	
 	public function getSubscriptionsAndConnectionsByDay(MoocSession $moocSession) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
-		$from = $moocSession->getStartDate();
+		$from = $moocSession->getStartInscriptionDate();
 		$to = $moocSession->getEndDate();
 		
 		$dql = "SELECT ams.date AS date,
