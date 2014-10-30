@@ -278,7 +278,7 @@ class MoocSessionRepository extends EntityRepository
     }
     
     public function countUsersForSession(MoocSession $session) {
-    	$dql = "SELECT COUNT(DISTINCT u)
+    	$dql = "SELECT COUNT(DISTINCT u.id)
 	    			FROM Claroline\CoreBundle\Entity\Mooc\MoocSession s
 	    			JOIN s.users u
 	    		WHERE s = :session
@@ -291,7 +291,7 @@ class MoocSessionRepository extends EntityRepository
     }
     
     public function countGroupsUsersForSession(MoocSession $session) {
-    	$dql = "SELECT COUNT(DISTINCT u)
+    	$dql = "SELECT COUNT(DISTINCT u.id)
 	    			FROM Claroline\CoreBundle\Entity\Mooc\MoocSession s
 	    			JOIN s.groups g
 	    			JOIN g.users u

@@ -468,4 +468,17 @@ class BadgeRepository extends EntityRepository
     	
     	return $query->getResult();
     }
+    
+    public function findSkillOrKnowledgeForWorkspace(AbstractWorkspace $workspace) {
+    	$dql = "SELECT b
+    			FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    			JOIN b.badgeRules br
+    				WITH (br.action LIKE '%ujm_exercise%' OR br.action LIKE '%icap_dropzone%') 
+    			WHERE b.workspace = :workspace";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	
+    	return $query->getResult();
+    }
 }

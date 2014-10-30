@@ -46,7 +46,8 @@ class SolerniController extends Controller
      */
     public function getWorkspaceUserBadges(AbstractWorkspace $workspace, User $user) {
         $doctrine = $this->getDoctrine();
-        $badges = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
+        $badges = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')
+        									->findSkillOrKnowledgeForWorkspace($workspace);
 
         $locale = $this->getRequest()->getLocale();
 
@@ -67,14 +68,16 @@ class SolerniController extends Controller
             foreach($badge->getRules() as $rule){
                 if (strpos($rule->getAction(), 'ujm_exercise') !== false) {
                 $knowledgeBadges[] = $badgeValue;
-                if ($badge->getUsers()->contains($user)) {
+                if ($user->getBadges()->contains($badge)) {
+                //if ($badge->getUsers()->contains($user)) {
                     $myKnowledgeBadges[] = $badgeValue['id'];
                 }
                     break;
                 }
                 if (strpos($rule->getAction(), 'icap_dropzone') !== false) {
                 $skillBadges[] = $badgeValue;
-                if ($badge->getUsers()->contains($user)) {
+                if ($user->getBadges()->contains($badge)) {
+                //if ($badge->getUsers()->contains($user)) {
                     $mySkillBadges[] = $badgeValue['id'];
                 }
                     break;
