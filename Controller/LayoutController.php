@@ -126,16 +126,11 @@ class LayoutController extends Controller
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $isInAWorkspace = false;
-        $countUnviewedNotifications = 0;
+        $isInAWorkspace = ($workspace !== null);
 
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
-
-        if (!is_null($workspace)) {
-            $isInAWorkspace = true;
-        }
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
             $isLogged = true;
@@ -145,16 +140,10 @@ class LayoutController extends Controller
             $isLogged = true;
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
             $personalWs = $user->getPersonalWorkspace();
-            $workspaces = $this->findWorkspacesFromLogs();
-            $countUnviewedNotifications = $this->get('icap.notification.manager')->
-                countUnviewedNotifications($user->getId());
         } else {
-            $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
-
             if (true === $this->configHandler->getParameter('allow_self_registration')) {
                 $registerTarget = 'claro_registration_user_registration_form';
             }
-
             $loginTarget = $this->router->generate('claro_desktop_open');
         }
 
@@ -163,12 +152,10 @@ class LayoutController extends Controller
             'countUnreadMessages' => $countUnreadMessages,
             'register_target' => $registerTarget,
             'login_target' => $loginTarget,
-            'workspaces' => $workspaces,
             'personalWs' => $personalWs,
-            "isImpersonated" => $this->isImpersonated(),
+            'isImpersonated' => $this->isImpersonated(),
             'isInAWorkspace' => $isInAWorkspace,
             'currentWorkspace' => $workspace,
-            'countUnviewedNotifications' => $countUnviewedNotifications,
             'canAdministrate' => $canAdministrate
         );
     }

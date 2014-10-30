@@ -146,7 +146,7 @@ DEPLACE DANS base.html.twig
     </div>
    {% block footer %}
         {% if not is_path_mode %}
-            {% render controller('ClarolineCoreBundle:Layout:footer') %}
+            {% include 'ClarolineCoreBundle:Layout:footer.html.twig' %}
         {% endif %}
     {% endblock%}
 {% endblock %}

@@ -18,6 +18,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogRepository extends EntityRepository
 {
@@ -841,5 +842,23 @@ class LogRepository extends EntityRepository
     	$query->setParameters($parameters);
     	
     	return $query->getResult();
+    }
+    
+    public function getDetailsForDoerActionResource(User $doer, $action, ResourceNode $resourceNode) {
+    	$dql = "SELECT l.details FROM Claroline\CoreBundle\Entity\Log\Log l
+    			WHERE l.doer = :doer
+    			AND l.action = :action
+    			AND l.resourceNode = :resourceNode
+    			ORDER BY l.dateLog DESC";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameters(array(
+    			"doer" => $doer,
+    			"action" => $action,
+    			"resourceNode" => $resourceNode
+    	));
+    	$query->setMaxResults(1);
+    	
+    	return $query->getSingleResult();
     }
 }

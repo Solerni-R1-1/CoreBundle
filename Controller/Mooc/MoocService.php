@@ -101,16 +101,10 @@ class MoocService extends Controller
         }
 
         if($user instanceof User){
-            $log = $logRepository->findOneBy(
-                    array(
-                        'resourceType' => $resourceType->getId(),
-                        'doer' => $user->getId(),
-                        'action' => LogChapterReadEvent::ACTION,
-                    	'workspace' => $lesson->getResourceNode()->getWorkspace(),
-                    	'resourceNode' => $lesson->getResourceNode()
-                    ),
-                    array('dateLog' => 'DESC')
-                );
+        	$log = $logRepository->getDetailsForDoerActionResource(
+        			$user,
+        			LogChapterReadEvent::ACTION,
+        			$lesson->getResourceNode());
         } else {
             $log = null;
         }
@@ -132,7 +126,7 @@ class MoocService extends Controller
                 $url = $router->generate('icap_lesson', array('resourceId' => $lesson->getId()));
             }
         } else {
-            $details = $log->getDetails();
+            $details = $log["details"];
             $url = $router->generate('icap_lesson_chapter', array('resourceId' => $details['chapter']['lesson'], 'chapterId' => $details['chapter']['chapter']));
         }
         
