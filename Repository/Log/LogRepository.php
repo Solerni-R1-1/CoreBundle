@@ -728,6 +728,68 @@ class LogRepository extends EntityRepository
 	    $result = $qb->getQuery()->getResult(); 
     	return count($result) > 0 ? $result[0] : null;
     } 
+    
+
+
+    public function getLastConnectionAndSubscriptionForWorkspace(AbstractWorkspace $workspace, array $excludeRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:roles)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("roles", $excludeRoles);
+    	$excludeUsers = $query->getResult();
+
+    	$dql = "SELECT u.lastName,
+    				u.firstName,
+    				u.username,
+    				u.mail,
+    				l1.shortDateLog AS subscriptionDate,
+    				CASE WHEN l2 IS NOT NULL THEN MAX(l2.shortDateLog) ELSE 'N/A' END AS connectionDate
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l1
+    				WITH l1.workspace = :workspace
+    				AND l1.receiver = u
+    				AND l1.action = 'workspace-role-subscribe_user'
+    			LEFT JOIN Claroline\CoreBundle\Entity\Log\Log l2
+    				WITH l2.workspace = :workspace
+    				AND l2.doer = u
+    				AND l2.action = 'workspace-enter'
+    			WHERE u.id NOT IN (:excludeUsers)
+    			GROUP BY u.id";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	
+    	$result = $query->getScalarResult();
+
+    	$dql = "SELECT u.lastName,
+    				u.firstName,
+    				u.username,
+    				u.mail,
+    				l1.shortDateLog AS subscriptionDate,
+    				CASE WHEN l2 IS NOT NULL THEN MAX(l2.shortDateLog) ELSE 'N/A' END AS connectionDate
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.groups g
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l1
+    				WITH l1.workspace = :workspace
+    				AND l1.receiverGroup = g
+    				AND l1.action = 'workspace-role-subscribe_group'
+    			LEFT JOIN Claroline\CoreBundle\Entity\Log\Log l2
+    				WITH l2.workspace = :workspace
+    				AND l2.doer = u
+    				AND l2.action = 'workspace-enter'
+    			WHERE u.id NOT IN (:excludeUsers)
+    			GROUP BY u.id";
+
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	 
+    	$result = array_merge($result, $query->getScalarResult());
+    	
+    	return $result;
+    }
 
     public function getLastSubscription(AbstractWorkspace $workspace, User $user) {
     	$dql = "SELECT l FROM Claroline\CoreBundle\Entity\Log\Log l

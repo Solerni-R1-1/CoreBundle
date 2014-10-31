@@ -481,4 +481,57 @@ class BadgeRepository extends EntityRepository
     	
     	return $query->getResult();
     }
+    
+    public function getKnowledgeBadgesStats(AbstractWorkspace $workspace, array $excludeRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:excludeRoles)";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("excludeRoles", $excludeRoles);
+    	$excludeUsers = $query->getResult();
+    	
+    	
+    	$dql = "SELECT
+    				u.id 				AS user_id, 
+    				u.lastName			AS user_lastname,
+    				u.firstName			AS user_firstname,
+    				u.username			AS user_username,
+    				u.mail				AS user_mail,
+    				p.id				AS paper_id,
+    				p.ordreQuestion		AS paper_ordre_question,
+    				p.numPaper			AS paper_num,
+    				b.id				AS badge_id,
+    				i18n.name			AS badge_name,
+    				SUM(r.mark) 		AS mark
+    				
+    			FROM Claroline\CoreBundle\Entity\User u
+    			
+    			JOIN UJM\ExoBundle\Entity\Paper p
+    				WITH p.user = u
+    			JOIN p.exercise e
+    			JOIN UJM\ExoBundle\Entity\Response r
+    				WITH r.paper = p
+    			JOIN e.resourceNode rn
+    			JOIN Claroline\CoreBundle\Entity\Badge\BadgeRule br
+    				WITH br.action LIKE 'resource-ujm_exercise-exercise%'
+    				AND br.resource = rn
+    			JOIN br.associatedBadge b
+    				WITH b.workspace = :workspace
+    				AND b.deletedAt IS NULL
+    			JOIN b.translations i18n
+    				WITH i18n.locale = 'fr'
+    			
+    			WHERE u.id NOT IN (:excludeUsers)
+    			
+    			GROUP BY u.id, p.id, b.id
+    			ORDER BY mark DESC";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	
+    	$result = $query->getScalarResult();
+    	
+    	return $result;
+    }
 }

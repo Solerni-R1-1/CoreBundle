@@ -29,6 +29,8 @@ use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use UJM\ExoBundle\Repository\ExerciseRepository;
 
 
 /**
@@ -51,6 +53,12 @@ class AnalyticsExportController extends Controller {
 	
 	/** @var UserRepository */
 	private $userRepository;
+
+	/* @var $exoRepository ExerciseRepository */
+	private $exoRepository;
+	
+	/** @var BadgeRepository */
+	private $badgeRepository;
 	
 	/** @var MoocService */
 	private $moocService;
@@ -89,6 +97,9 @@ class AnalyticsExportController extends Controller {
 		$this->logRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
 		$this->messageRepository = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
 		$this->userRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:User");
+		$this->badgeRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Badge\Badge");
+		$this->exoRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
+		
 		
 		$this->translator = $this->get('translator');
 		
@@ -230,99 +241,112 @@ class AnalyticsExportController extends Controller {
 	    	
 			$exerciseRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
 			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-			$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
+			//$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
 				
-	
+
+			$data = $this->badgeRepository->getKnowledgeBadgesStats($workspace, $excludeRoles);
 	
 			$headerCSV = array();
 			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
 			$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
 			$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
 			$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
-			$rowsCSV = array();
+			//$rowsCSV = array();
 			$badgeMaxTries = array();
 			$usersBadges = array();
-			foreach ($workspaceUsers as $user) {
-				$badges = $this->badgeManager->getAllBadgesForWorkspace($user, $workspace, false, true);
-				$usersBadges[$user->getId()] = array();
-				$usersBadges[$user->getId()]['user'] = $user;
-				$userBadges = array();
-				foreach($badges as $badge) {
-					$badgeId = $badge['badge']->getId();
-					$nbMarks = sizeof($badge['resource']['resource']['marks']);
-					if (!isset($badgeMaxTries[$badgeId]) || $badgeMaxTries[$badgeId] < $nbMarks) {
-						$badgeMaxTries[$badgeId] = $nbMarks;
-					}
-					$userBadges[$badgeId] = $badge;
+			
+			$orderedData = array();
+			$maxTries = array();
+			$allBadges = array();
+			
+			// Prepare the data
+			foreach ($data as $val) {
+				$userId 				= $val['user_id'];
+				$userLastname 			= $val['user_lastname'];
+				$userFirstname 			= $val['user_firstname'];
+				$userMail 				= $val['user_mail'];
+				$userUsername			= $val['user_username'];
+				$paperId				= $val['paper_id'];
+				$paperNum				= $val['paper_num'];
+				$badgeId				= $val['badge_id'];
+				$badgeName				= $val['badge_name'];
+				$mark					= $val['mark'];
+				$paperOrdreQuestions 	= $val['paper_ordre_question'];
+				
+				if (!array_key_exists($userId, $orderedData)) {
+					$orderedData[$userId] = array();
+					$orderedData[$userId]['user_lastname'] = $userLastname;
+					$orderedData[$userId]['user_firstname'] = $userFirstname;
+					$orderedData[$userId]['user_username'] = $userUsername;
+					$orderedData[$userId]['user_mail'] = $userMail;
+					$orderedData[$userId]['badges'] = array();
+					
 				}
-				ksort($userBadges);
-				$usersBadges[$user->getId()]['badges'] = $userBadges;
+				$badges = &$orderedData[$userId]['badges'];
+				if (!array_key_exists($badgeId, $badges)) {
+					$badges[$badgeId] = array();
+					$badges[$badgeId]['marks'] = array();
+					$badges[$badgeId]['name'] = $badgeName;
+				}
+				
+				$marks = &$orderedData[$userId]['badges'][$badgeId]['marks'];
+				$maxMark = $this->exoRepository->getMaximalMarkForPaperQCMOrdreQuestion($paperOrdreQuestions);
+				$marks[$paperNum] = ($mark / $maxMark) * 20;
+				
+				if (!array_key_exists($badgeId, $maxTries)) {
+					$maxTries[$badgeId] = 0;
+				}
+				if ($maxTries[$badgeId] < count($marks)) {
+					$maxTries[$badgeId] = count($marks);
+				}
+				
+				if (!array_key_exists($badgeId, $allBadges)) {
+					$allBadges[$badgeId] = $badgeName;
+				}
 			}
 			
-			$totalTries = array_sum($badgeMaxTries);
+			// Sort everything
+			ksort($allBadges);
+			foreach ($orderedData as &$d) {
+				$badges = &$d['badges']; 
+				ksort($badges);
+ 				foreach ($badges as &$badge) {
+ 					$marks = &$badge['marks'];
+ 					ksort($marks);
+ 				}
+			}
 			
-			foreach($usersBadges as $userBadges) {
-				$indexBadge = 4;
-				foreach($userBadges['badges'] as $userBadge) {
-					$index = 1;
-					for($i = 0; $i < $badgeMaxTries[$userBadge['badge']->getId()]; $i++) {
-						$headerCSV[] = $userBadge['badge']->getName()." - Essai ".$index;
-						$index++;
-					}
-					$headerCSV[$indexBadge + $totalTries] = $userBadge['badge']->getName()." obtenu ?";
-					$indexBadge++;
+			// Complete headers
+			foreach ($allBadges as $id => $name) {
+				for ($i = 1; $i < $maxTries[$id] + 1; $i++) {
+					$headerCSV[] = $name.", Essai ".$i;
 				}
-				break;
 			}
 			
 			
-			
-			foreach ($usersBadges as $userBadges) {
-				/* @var $user User */
-				$user = $userBadges['user'];
-				$badges = $userBadges['badges'];
+			$rowsCSV = array();
+			// Concatenate all the data
+			foreach ($orderedData as &$d) {
 				$rowCSV = array();
-	
-				$rowCSV[0] = $user->getLastName();
-				$rowCSV[1] = $user->getFirstName();
-				$rowCSV[2] = $user->getUsername();
-				$rowCSV[3] = $user->getMail();
-	
-				$nbOwnedBadges = 0;
-				$totalNotes = 0;
-				$nbNotes = 0;
-				$index = 4;
-				$indexBadge = 4;
-				foreach ($badges as $badge) {
-					/* @var $badgeEntity Badge */
-					$badgeEntity = $badge['badge'];
-					$badgeName = $badgeEntity->getName();
-						
-					/* @var $exercise Exercise */
-					$exercise = $badge['resource']['resource']['exercise'];
-	
-					if ($badge['status'] == Badge::BADGE_STATUS_OWNED) {
-						$nbOwnedBadges++;
-					}
-
-					$nbMaxTries = $badgeMaxTries[$badgeEntity->getId()];
-					$marks = $badge['resource']['resource']['marks'];
-					for ($i = 0; $i < $nbMaxTries; $i++) {
-						$rowCSV[$index] = isset($marks[$i]) ? $marks[$i] : "";
-						$index++;  
-					}
-					
-					if ($badge['resource']['status'] == Badge::RES_STATUS_SUCCEED) {
-						$rowCSV[$totalTries + $indexBadge] = "oui";
-					} else if ($badge['resource']['status'] == Badge::RES_STATUS_FAILED) {
-						$rowCSV[$totalTries + $indexBadge] = "non";
+				$rowCSV[] = $d['user_lastname']; 
+				$rowCSV[] = $d['user_firstname']; 
+				$rowCSV[] = $d['user_username'];
+				$rowCSV[] = $d['user_mail'];
+				foreach ($allBadges as $id => $name) {
+					if (array_key_exists($id, $d['badges'])) {
+						for ($i = 1; $i < $maxTries[$id] + 1; $i++) {
+							if (array_key_exists($i, $d['badges'][$id]['marks'])) {
+								$rowCSV[] = $d['badges'][$id]['marks'][$i];
+							} else {
+								$rowCSV[] = "";
+							}
+						}
 					} else {
-						$rowCSV[$totalTries + $indexBadge] = "non";
+						for ($i = 0; $i < $maxTries[$id]; $i++) {
+							$rowCSV[] = "";
+						}
 					}
-					
-					$indexBadge++;
 				}
-				ksort($rowCSV);
 				$rowsCSV[] = $rowCSV;
 			}
 
@@ -627,46 +651,20 @@ class AnalyticsExportController extends Controller {
 
 	    	$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
 			$badgesIndex = array();
-			$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
+			//$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
 			$mooc = $workspace->getMooc();
-			
-			$rowsCSV = array();
 	
 			$headerCSV = array();
-
 			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
 			$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
 			$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
 			$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 			$headerCSV[4] = "Subscription date";
 			$headerCSV[5] = "Last connection date";
-			$rowsCSV[] = $headerCSV;
-	
-			// Extract data
-			foreach ($workspaceUsers as $user) {
-				// Get information from database
-				$lastConnectionLog = $this->logRepository->getLastConnection($workspace, $user);
-				$lastSubscriptionLog = $this->logRepository->getLastSubscription($workspace, $user);
-	
 			
-				$rowCSV = array();
-				$rowCSV[0] = $user->getLastName();
-				$rowCSV[1] = $user->getFirstName();
-				$rowCSV[2] = $user->getUsername();
-				$rowCSV[3] = $user->getMail();
-				if ($lastSubscriptionLog != null) {
-					$rowCSV[4] = $lastSubscriptionLog->getDateLog()->format("d/m/Y");
-				} else {
-					$rowCSV[4] = "N/A";
-				}
-				if ($lastConnectionLog != null) {
-					$rowCSV[5] = $lastConnectionLog->getDateLog()->format("d/m/Y");
-				} else {
-					$rowCSV[5] = "N/A";
-				}
-				$rowsCSV[] = $rowCSV;
-			}
-	
+			$rowsCSV = $this->logRepository->getLastConnectionAndSubscriptionForWorkspace($workspace, $excludeRoles);
+			
+			array_unshift($rowsCSV, $headerCSV);
 
 			$content = $this->createCSVFromArray($rowsCSV);
 	
