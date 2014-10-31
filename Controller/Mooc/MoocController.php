@@ -319,7 +319,9 @@ class MoocController extends Controller
         $groups = $user->getGroups();
         foreach ($groups as $group) {
         	foreach ($group->getMoocSessions() as $groupSession) {
-        		$userSession[] = $groupSession;
+        		if (!$userSession->contains($groupSession)) {
+        			$userSession[] = $groupSession;
+        		}
         	}
         }
 
