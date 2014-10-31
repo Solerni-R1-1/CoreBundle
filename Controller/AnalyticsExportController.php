@@ -690,22 +690,8 @@ class AnalyticsExportController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function exportForumStatsAction(AbstractWorkspace $workspace) {
-    	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
-    	
+	public function exportForumStatsAction(AbstractWorkspace $workspace) {    	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-		$from = $currentSession->getStartDate();
-		$to = $currentSession->getEndDate();
-		
-		$now = new \DateTime();
-		if ($now < $to) {
-			$to = $now;
-		}
 		
 		$headerCSV = array();
 		$header = array();
@@ -719,7 +705,7 @@ class AnalyticsExportController extends Controller {
 		$headerCSV[] = $header;
 		 
 
-		$data = $this->analyticsManager->getForumStats($workspace, $from, $to, $excludeRoles);
+		$data = $this->analyticsManager->getForumStats($currentSession);
 		
 		$rowsCSV = array_merge($headerCSV, $data);
 		$content = $this->createCSVFromArray($rowsCSV);
