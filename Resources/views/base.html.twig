@@ -92,16 +92,5 @@
             
             ga('send', 'pageview');
         </script>
-        {% if workspace|default and workspace.isMooc() %}
-            <script>
-                console.log('isMooc');
-                {% if workspace.getMooc().getOwner().getName()|default %}
-                    console.log('Owner : {{ workspace.getMooc().getOwner().getName() }}');
-                {% endif %}
-                {% if workspace.getMooc().getTitle()|default %}
-                    console.log('Mooc : {{ workspace.getMooc().getTitle() }}');
-                {% endif %}
-            </script>
-        {% endif %} 
     </body>
 </html>
