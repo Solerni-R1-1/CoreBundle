@@ -573,7 +573,46 @@ class AnalyticsExportController extends Controller {
 		$rowsCSV[] = $headerCSV;
 		
 		$data = $this->logRepository->getSubscriptionsForWorkspace($workspace, $excludeRoles);
-		$rowsCSV = array_merge($rowsCSV, $data);		
+		$orderedData = array();
+		foreach ($data as $datum) {
+			$mail = $datum['mail'];
+			if (array_key_exists($mail, $orderedData)) {
+				$date1 = $datum['subscriptionDate'];
+				$time1 = $datum['subscriptionTime'];
+
+				$date2 = $orderedData[$mail]['subscriptionDate'];
+				$time2 = $orderedData[$mail]['subscriptionTime'];
+				
+				if (($date1 > $date2) || ($date1 == $date2 && $time1 > $time2)) {
+					$orderedData[$mail] = $datum;					
+				}
+			} else {
+				$orderedData[$mail] = $datum;
+			}
+		}
+		usort($orderedData, function($a, $b) {
+			$date1 = $a['subscriptionDate'];
+			$time1 = $a['subscriptionTime'];
+
+			$date2 = $b['subscriptionDate'];
+			$time2 = $b['subscriptionTime'];
+			
+			if ($date1 > $date2) {
+				return 1;
+			} else if ($date1 < $date2) {
+				return -1;
+			} else {
+				if ($time1 > $time2) {
+					return 1;
+				} else if ($time1 < $time2) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
+		
+		$rowsCSV = array_merge($rowsCSV, $orderedData);	
 		
 
 		$content = $this->createCSVFromArray($rowsCSV);
