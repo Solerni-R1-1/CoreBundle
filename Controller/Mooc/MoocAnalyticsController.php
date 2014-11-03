@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of StaticController
@@ -94,7 +95,7 @@ class MoocAnalyticsController extends Controller
      */
     public function analyticsMoocDetailsAction( $workspace, $user ) {
     	// Base parameters
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	$session = $this->getSession($workspace);
         $from = $session->getStartDate();
         $to = $session->getEndDate();
         $now = new \DateTime();
@@ -103,11 +104,7 @@ class MoocAnalyticsController extends Controller
         }
 
         // Init the roles to filter the stats.
-        $excludeRoles = array();
-        $managerRole = $this->roleManager->getManagerRole($workspace);
-        $excludeRoles[] = $managerRole->getName();
-        $excludeRoles[] = "ROLE_ADMIN";
-        $excludeRoles[] = "ROLE_WS_CREATOR";
+        $excludeRoles = $this->getExcludeRoles($workspace);
         
         // Fetch all the necessary data
     	$hourlyAudience = $this->analyticsManager->getHourlyAudience($session, $excludeRoles);
@@ -300,13 +297,9 @@ class MoocAnalyticsController extends Controller
      */
     public function analyticsMoocBadgesAction( $workspace, $user, $badgeType ) {
     	// Get session
-    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	$session = $this->getSession($workspace);
     	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	$excludeRoles = $this->getExcludeRoles($workspace);
         
         $skillBadges        = ( $badgeType == 'skill' ) ? true : false;
         $knowledgeBadges    = ( $badgeType == 'knowledge' ) ? true : false;
@@ -426,5 +419,25 @@ class MoocAnalyticsController extends Controller
         );
     }
     
+    private function getSession(AbstractWorkspace $workspace) {
+    	if ($workspace->isMooc() && count($workspace->getMooc()->getMoocSessions()) > 0) {
+	    	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+	    	if ($session == null) {
+	    		$session = $workspace->getMooc()->getMoocSessions()->first();
+	    	}
+	    	return $session;
+    	} else {
+    		throw new NotFoundHttpException();
+    	}
+    }
     
+    private function getExcludeRoles(AbstractWorkspace $workspace) {
+    	$excludeRoles = array();
+    	$managerRole = $this->roleManager->getManagerRole($workspace);
+    	$excludeRoles[] = $managerRole->getName();
+    	$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	
+    	return $excludeRoles;
+    }
 }

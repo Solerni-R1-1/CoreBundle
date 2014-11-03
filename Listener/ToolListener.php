@@ -246,6 +246,9 @@ class ToolListener
         
         $user = $this->security->getToken()->getUser();
     	$session = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+    	if ($session == null && $workspace->isMooc() && !$workspace->getMooc()->getMoocSessions()->isEmpty()) {
+    		$session = $workspace->getMooc()->getMoocSessions()->first();
+    	}
         
     	if ($session) {
 	        return $this->templating->render(
