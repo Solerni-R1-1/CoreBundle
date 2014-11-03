@@ -32,7 +32,7 @@
         {# give access to mooc archives if the user was subscribed #}
         <a href="{{ path( 'mooc_view_session', { 
 				        'moocId': session.getMooc().getId(), 
-				        'moocName': session.getMooc().getAlias(), 
+				        'moocName': session.getMooc().getAlias()|url_encode,
 				        'sessionId': session.getId(), 
 				        'word': 'apprendre'
 				    }) }}"
