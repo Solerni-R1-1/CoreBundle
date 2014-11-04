@@ -650,10 +650,11 @@
                     }));
                 } else {
                     _.each(nodes, function (node) {
+                    	var allowCopy = typeof node.mask != "undefined" && ((node.mask & 2) == 2);
                         var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
                         thumbnail.render(
                             node,
-                            directoryId !== '0' || !this.parameters.isPickerMode,
+                            (directoryId !== '0' || !this.parameters.isPickerMode) && allowCopy,
                             directoryId !== '0' && !this.parameters.isPickerMode
                         );
                         $(this.el).append(thumbnail.$el);
