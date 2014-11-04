@@ -17,13 +17,21 @@
         </h2>
 
         <div class="dsk__my_moocs_header">
-            {% set sessionNumber = 0 %}
-            {% set sessionNumber = sessionNumber + app.user.getMoocSessions()|length %}
+            {% set sessionIds = [] %}
+            {% for userSession in app.user.getMoocSessions() %}
+            	{% set sessionIds = sessionIds|merge([userSession.getId()]) %}
+            {% endfor %}
             {% if app.user.getGroups()|default %}
                 {% for userGroup in app.user.getGroups() %}
-                    {% set sessionNumber = sessionNumber + userGroup.getMoocSessions()|length %}
+                	{% for userSession in userGroup.getMoocSessions() %}
+	                	{% if userSession.getId() not in sessionIds %}
+							{% set sessionIds = sessionIds|merge([userSession.getId()]) %}
+	                    {% endif %}
+	                {% endfor %}
                 {% endfor %}
             {% endif %}
+            
+            {% set sessionNumber = sessionIds|length %}
             
             {% if sessionNumber > 0 %}
             

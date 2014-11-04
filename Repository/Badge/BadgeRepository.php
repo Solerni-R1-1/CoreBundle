@@ -359,6 +359,111 @@ class BadgeRepository extends EntityRepository
     	return $query->getResult();
     }
     
+    public function getSkillBadgesParticipations(MoocSession $session, array $excludedRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:roles)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("roles", $excludedRoles);
+    	$excludeUsers = $query->getResult();
+    	
+    	$from = $session->getStartDate();
+    	$to = $session->getEndDate();
+    	$workspace = $session->getMooc()->getWorkspace();
+    	$dql = "
+    		SELECT
+    			b.id		AS badge_id,
+    			i18n.name	AS badge_name,
+    			u.firstName	AS user_firstname,
+    			u.lastName	AS user_lastname,
+    			u.username	AS user_username,
+    			u.mail		AS user_mail,
+    			MIN(SUBSTRING(d.dropDate, 1, 10)) AS date
+    			
+    		FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    			
+    		JOIN b.badgeRules br
+    			WITH br.action LIKE 'resource-icap_dropzone%'
+    		JOIN br.resource res
+    		JOIN Icap\DropzoneBundle\Entity\Dropzone dz
+    			WITH res = dz.resourceNode
+    		JOIN dz.drops d
+	    		WITH d.dropDate >= :from
+	    		AND d.dropDate <= :to
+    		JOIN d.user u
+    			WITH u NOT IN (:excludeUsers) 
+    		JOIN res.resourceType res_type
+    			WITH res_type.name = 'icap_dropzone'
+    		JOIN b.translations i18n
+    			WITH i18n.locale = 'fr'
+    			
+    		WHERE b.workspace = :workspace
+    		AND b.deletedAt IS NULL
+    			
+    		GROUP BY badge_id, user_mail";
+    	 
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	$query->setParameter("from", $from);
+    	$query->setParameter("to", $to);
+    	 
+    	return $query->getResult();
+    }
+    
+    public function getKnowledgeBadgesParticipations(MoocSession $session, array $excludedRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:roles)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("roles", $excludedRoles);
+    	$excludeUsers = $query->getResult();
+    	
+    	$from = $session->getStartDate();
+    	$to = $session->getEndDate();
+    	$workspace = $session->getMooc()->getWorkspace();
+    	$dql = "
+    		SELECT
+    			b.id		AS badge_id,
+    			i18n.name	AS badge_name,
+    			u.firstName	AS user_firstname,
+    			u.lastName	AS user_lastname,
+    			u.username	AS user_username,
+    			u.mail		AS user_mail,
+    			MIN(SUBSTRING(p.start, 1, 10)) AS date
+    			
+    		FROM Claroline\CoreBundle\Entity\Badge\Badge b
+    			
+    		JOIN b.badgeRules br
+    			WITH br.action LIKE 'resource-ujm_exercise-exercise%'
+    		JOIN br.resource res
+    		JOIN UJM\ExoBundle\Entity\Exercise e
+    			WITH res = e.resourceNode
+    		JOIN UJM\ExoBundle\Entity\Paper p
+    			WITH p.exercise = e
+	    		AND p.start >= :from
+	    		AND p.start <= :to
+    		JOIN p.user u
+    			WITH u NOT IN (:excludeUsers) 
+    		JOIN res.resourceType res_type
+    			WITH res_type.name = 'ujm_exercise'
+    		JOIN b.translations i18n
+    			WITH i18n.locale = 'fr'
+    			
+    		WHERE b.deletedAt IS NULL
+    			AND b.workspace = :workspace
+    			
+    		GROUP BY badge_id, user_mail";
+    
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	$query->setParameter("from", $from->format("Y-m-d H:i"));
+    	$query->setParameter("to", $to->format("Y-m-d H:i"));
+    	 
+    	return $query->getResult();
+    }
+    
     public function getBadgesSuccess(MoocSession $session, array $excludedRoles) {
     	$workspace = $session->getMooc()->getWorkspace();
     	$dql = "SELECT
@@ -532,6 +637,62 @@ class BadgeRepository extends EntityRepository
     	
     	$result = $query->getScalarResult();
     	
+    	return $result;
+    }
+    
+    public function getSkillBadgesStats(AbstractWorkspace $workspace, array $excludeRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:excludeRoles)";
+    	 
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("excludeRoles", $excludeRoles);
+    	$excludeUsers = $query->getResult();
+    	 
+    	 
+    	$dql = "SELECT
+    				u.id 					AS user_id,
+    				u.lastName				AS user_lastname,
+    				u.firstName				AS user_firstname,
+    				u.username				AS user_username,
+    				u.mail					AS user_mail,
+    				b.id					AS badge_id,
+    				i18n.name				AS badge_name,
+    				AVG(c.totalGrade)		AS mark,
+    				COUNT(DISTINCT c.id)	AS nbCorrections,
+    				dz.expectedTotalCorrection	AS expectedCorrections,
+    				CASE WHEN ub IS NOT NULL THEN '1' ELSE '0' END AS hasBadge
+    				
+    
+    			FROM Claroline\CoreBundle\Entity\User u
+    
+    			JOIN Icap\DropzoneBundle\Entity\Drop d
+    				WITH d.user = u
+    				AND d.finished = 1
+    			JOIN d.dropzone dz
+    			JOIN d.corrections c
+    			JOIN dz.resourceNode rn
+    			JOIN Claroline\CoreBundle\Entity\Badge\BadgeRule br
+    				WITH br.action LIKE 'resource-icap_dropzone%'
+    				AND br.resource = rn
+    			JOIN br.associatedBadge b
+    				WITH b.workspace = :workspace
+    				AND b.deletedAt IS NULL
+    			JOIN b.translations i18n
+    				WITH i18n.locale = 'fr'
+    			LEFT JOIN u.userBadges AS ub
+    				WITH ub.badge = b
+    
+    			WHERE u.id NOT IN (:excludeUsers)
+    
+    			GROUP BY u.id, d.id, b.id
+    			ORDER BY mark DESC";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	 
+    	$result = $query->getScalarResult();
+    	 
     	return $result;
     }
 }
