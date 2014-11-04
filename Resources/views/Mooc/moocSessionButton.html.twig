@@ -5,22 +5,23 @@
 {% if isRegistered is not defined %}
     {% set isRegistered = false %}
     {% if user != 'anon.' %}
-        {% set sessionUsers = session.getUsers() %}
+        {% set sessionUsers = user.getMoocSessions() %}
         {% for sessionUser in sessionUsers %}
-            {% if sessionUser.getId() == user.getId() %}
+            {% if sessionUser.getId() == session.getId() %}
                 {% set isRegistered = true %}
             {% endif %}
         {% endfor %}
-        {% set sessionGroups = session.getGroups() %}
-        {% for sessionGroup in sessionGroups %}
-        	{% for userGroup in user.getGroups() %}
-	            {% if sessionGroup.getId() == userGroup.getId() %}
+        {% set userGroups = user.getGroups() %}
+        {% for userGroup in userGroups %}
+        	{% for sessionGroup in userGroup.getMoocSessions() %}
+	            {% if sessionGroup.getId() == session.getId() %}
 	                {% set isRegistered = true %}
 	            {% endif %}
 	        {% endfor %}
         {% endfor %}
     {% endif %}
 {% endif %}
+
 
 {# session is over #}
 {% if session.getEndDate() < date("midnight today") %}
@@ -57,13 +58,6 @@
     </span>
     <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
     
-{# inscription is open but session is full #}
-{% elseif session.getMaxUsers() != 0 and session.getUsers()|length >= session.getMaxUsers() and not isRegistered %}
-    <span class="mooc_status">
-        {{ 'session_full'|trans({}, 'platform') }}
-    </span>
-    <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
-    
 {# Inscription is open, user is registered #}
 {% elseif isRegistered %}
     {# button go to mooc #}
@@ -73,6 +67,13 @@
         'sessionId': session.getId(), 
         'word': 'apprendre'
     }) }}">{{ 'go_to_mooc'|trans({}, 'platform') }}</a>
+{# inscription is open but session is full #}
+{% elseif session.getMaxUsers() != 0 and nbUsers >= session.getMaxUsers() %}
+    <span class="mooc_status">
+        {{ 'session_full'|trans({}, 'platform') }}
+    </span>
+    <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
+    
 {# not registered and registration is started, so subscribe #}
 {% else %}
     <a class="btn btn-primary" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">

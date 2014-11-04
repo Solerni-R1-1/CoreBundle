@@ -33,6 +33,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Controller of the user profile.
@@ -45,6 +48,7 @@ class ProfileController extends Controller
     private $security;
     private $request;
     private $localeManager;
+    private $encoderFactory;
 
     /**
      * @DI\InjectParams({
@@ -53,7 +57,8 @@ class ProfileController extends Controller
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"        = @DI\Inject("security.context"),
      *     "request"         = @DI\Inject("request"),
-     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager")
+     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
+     *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
      * })
      */
     public function __construct(
@@ -62,15 +67,17 @@ class ProfileController extends Controller
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         Request $request,
-        LocaleManager $localeManager
+        LocaleManager $localeManager,
+        EncoderFactoryInterface $encoderFactory
     )
     {
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->security = $security;
-        $this->request = $request;
-        $this->localeManager = $localeManager;
+        $this->userManager      = $userManager;
+        $this->roleManager      = $roleManager;
+        $this->eventDispatcher  = $eventDispatcher;
+        $this->security         = $security;
+        $this->request          = $request;
+        $this->localeManager    = $localeManager;
+        $this->encoderFactory   = $encoderFactory;
     }
 
     private function isInRoles($role, $roles)
@@ -315,37 +322,34 @@ class ProfileController extends Controller
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
 
-        $form = $this->createForm(new ResetPasswordType($translator), $loggedUser);
+        $form = $this->createForm(new ResetPasswordType($translator, true));
+        $oldPassword = $loggedUser->getPassword();
         $form->handleRequest($this->request);
-
-        //We don't allow edit password for FB account
-        if( $loggedUser->isFacebookAccount() === TRUE){
-            return $this->redirect($this->generateUrl('claro_profile_view'));
-        }
 
         if ($form->isValid()) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
-            
+            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            $translator = $this->get('translator');
+            $loggedUser->setPlainPassword($form['password']->getData());
 
-            try {
-                /** @var \Claroline\CoreBundle\Entity\User $user */
-                $user = $form->getData();
-
-                if ($user !== $loggedUser) {
-                    throw new \Exception();
-                }
-
+            if ($this->encodePassword($loggedUser) === $oldPassword) {
+                $loggedUser->setPlainPassword($form['plainPassword']->getData());
+                $loggedUser->setPassword($this->encodePassword($loggedUser));
                 $entityManager = $this->get('doctrine.orm.entity_manager');
-                $entityManager->persist($user);
+                $entityManager->persist($loggedUser);
                 $entityManager->flush();
 
+                $this->userManager->sendEmailChangePassword($loggedUser);              
+
                 $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
-            } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $translator->trans('edit_password_error', array(), 'platform'));
+                return $this->redirect($this->generateUrl('claro_profile_view'));
+            } else {
+                $sessionFlashBag->add('error', $translator->trans('edit_password_error_current', array(), 'platform'));
+                return $this->redirect($this->generateUrl('claro_user_password_edit'));
             }
 
-            return $this->redirect($this->generateUrl('claro_profile_view'));
+            
         }
 
         return array(
@@ -478,5 +482,12 @@ class ProfileController extends Controller
         $this->security->setToken(NULL);
         
         return $this->redirect( $this->generateUrl('solerni_static_page', array( 'name' => 'cms_url' ) ) );
+    }
+
+    private function encodePassword(User $user)
+    {
+        return $this->encoderFactory
+            ->getEncoder($user)
+            ->encodePassword($user->getPlainPassword(), $user->getSalt());
     }
 }

@@ -47,7 +47,14 @@
 
         {# The Modernizr script MUST stay before the body tag. #}
         {% block javascripts_header %}
-            <script src="{{ asset('bundles/frontend/modernizr/modernizr-2.5.3.min.js') }}"></script>
+            {% javascripts debug=false filter='jsmin'
+                    'bundles/frontend/modernizr/modernizr-2.5.3.min.js'
+                    'bundles/frontend/jquery/jquery-2.1.0.min.js'
+
+                %}<script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            {#<script src="{{ asset('bundles/frontend/modernizr/modernizr-2.5.3.min.js') }}"></script>#}
         {% endblock %}
         {# TARGETING : SPECIFIC IE8, SPECIFIC IE9, BOTH #}
         <!--[if IE 8]>

@@ -262,10 +262,8 @@ class MoocController extends Controller
         	$this->get('session')->set('moocSession', $moocSession);
             $route = $this->router->generate('claro_security_login', array () );
         } else {
-            /* get all users */
-            $users = $moocSession->getUsers();
-            /* if not already in users, add user */
-            if ( ! $users->contains( $user ) ) {
+        	$showmodal = false;
+            if (!$user->isRegisteredToSession($moocSession)) {
                 /* add user to workspace if not already member */
                 $workspace = $moocSession->getMooc()->getWorkspace();
                 $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
@@ -279,6 +277,7 @@ class MoocController extends Controller
                     $this->workspaceManager->addUserAction( $workspace, $user );
                 }
                 /* add user to moocSession */
+                $users = $moocSession->getUsers();
                 $users->add( $user );
                 $moocSession->setUsers( $users );
                 $this->getDoctrine()->getManager()->persist($moocSession);
@@ -288,14 +287,22 @@ class MoocController extends Controller
                 if ($this->mailManager->isMailerAvailable()) {
                     $this->mailManager->sendInscriptionMoocMessage($user, $moocSession);
                 }
+                $showmodal = true;
             }
 
             /* redirect to lesson default page */
-            $route = $this->router->generate('mooc_view', array ( 
-                'moocId' => $moocSession->getMooc()->getId(), 
-                'moocName' => $moocSession->getMooc()->getAlias(),
-            	'showmodal' => true
-                ) );
+            if ($showmodal) {
+	            $route = $this->router->generate('mooc_view', array ( 
+	                'moocId' => $moocSession->getMooc()->getId(), 
+	                'moocName' => $moocSession->getMooc()->getAlias(),
+	            	'showmodal' => $showmodal
+	                ) );
+            } else {
+	            $route = $this->router->generate('mooc_view', array ( 
+	                'moocId' => $moocSession->getMooc()->getId(), 
+	                'moocName' => $moocSession->getMooc()->getAlias()
+	                ) );
+            }
         }
 
         return new RedirectResponse($route);
@@ -320,6 +327,9 @@ class MoocController extends Controller
         if(count($userSession) == 0 && $returnAvailable){
             //15 days before / after
             $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(15, $user, 4); 
+            if (count($sessionsAvailable) > 1) {
+            	$sessionComponentLayout = "slider-small";
+            }
         } 
 
 

@@ -15,6 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class ResetPasswordType extends AbstractType
 {
@@ -23,18 +24,31 @@ class ResetPasswordType extends AbstractType
     /** @var \Symfony\Component\Translation\TranslatorInterface */
     private $translator;
 
+    private $askOldPass;
+
     /**
      * @DI\InjectParams({
      *     "translator" = @DI\Inject("translator")
      * })
      *
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, $askOldPass = false)
     {
         $this->translator = $translator;
+        $this->askOldPass = $askOldPass;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options, $askOldPass = false) {
+        
+        if($this->askOldPass) {
+                $builder->add('password', 
+                    'password',
+                    array('required' => true, 
+                          'label' => 'currentPassword',
+                          'attr' => array ('placeholder' => $this->translator->trans('currentPassword'))
+                          )
+            );
+        }
         $builder->add(
             'plainPassword',
             'repeated',
@@ -71,7 +85,6 @@ class ResetPasswordType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\User',
                 'translation_domain' => 'platform'
             )
         );

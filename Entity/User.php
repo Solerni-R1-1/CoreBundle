@@ -26,6 +26,8 @@ use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -336,7 +338,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="is_facebook_account", type="boolean", nullable=true)
      */
     protected $isFacebookAccount = false;
-    
+
 
     public function __construct()
     {
@@ -1083,5 +1085,23 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     
     public function __toString() {
     	return "User(".$this->id.") : ".$this->username;
+    }
+    
+    public function isRegisteredToSession(MoocSession $session) {
+    	foreach ($this->moocSessions as $moocSession) {
+    		if ($moocSession->getId() == $session->getId()) {
+    			return true;
+    		}
+    	}
+    	
+    	foreach ($this->groups as $group) {
+    		foreach ($group->getMoocSessions() as $moocSession) {
+    			if ($moocSession->getId() == $session->getId()) {
+    				return true;
+    			}	
+    		}
+    	}
+    	
+    	return false;
     }
 }

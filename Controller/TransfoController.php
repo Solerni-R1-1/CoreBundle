@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Gregwar\ImageBundle\ImageHandler;
 
 
 class TransfoController extends Controller
@@ -38,7 +39,11 @@ class TransfoController extends Controller
         $imageURI = $this->get('request')->get('img_uri');
 
         if (@fopen($imageURI, "r")) {
+            /* @var $image Image */
             $image = $this->filter($this->get('image.handling')->open($imageURI), $filters);
+            if ($image instanceof ImageHandler) {
+            	$image->setFileCallback(null);
+            }
             $image_mime = image_type_to_mime_type(exif_imagetype($imageURI));
 
 
@@ -46,9 +51,9 @@ class TransfoController extends Controller
             $webDir = "{$this->container->get('kernel')->getRootDir()}{$ds}..{$ds}web";
             //remove base app path
             $basePath = $this->getRequest()->getBasePath();
-            $cacheFile = preg_replace( '/'.preg_quote($basePath,  '/').'/', '', $image->cacheFile('guess'), 1);
-            
-            $cacheData = file_get_contents($webDir.$cacheFile);
+            $cacheFile = $image->cacheFile('guess');
+
+            $cacheData = file_get_contents($webDir.'/'.$cacheFile);
 
             if ( $cacheData ) {
                 $response = new Response($cacheData);

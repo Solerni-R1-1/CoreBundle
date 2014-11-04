@@ -161,6 +161,19 @@ class UserManager
             $this->mailManager->sendCreationMessage($user);
     	}
     }
+
+    /**
+     * Send an email post-changing password
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function sendEmailChangePassword($user){
+        if ($this->mailManager->isMailerAvailable()) {
+            $this->mailManager->sendChangePasswordMessage($user);
+        }
+    }
     
 
     /**
@@ -904,8 +917,11 @@ class UserManager
     public function uploadAvatar(User $user)
     {
         if (null !== $user->getPictureFile()) {
+        	$now = time();
             $user->setPicture(
-                sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension()
+                sha1($user->getPictureFile()->getClientOriginalName().
+                	'-'.$user->getId().
+                	'-'.$now).'.'.$user->getPictureFile()->guessExtension()
             );
             $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }

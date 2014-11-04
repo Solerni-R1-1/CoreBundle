@@ -604,7 +604,7 @@ class AnalyticsManager
     		$to = $now;
     	}
     	
-    	$nbDays = date_diff($from, $to, true)->format("%a");
+    	$nbDays = date_diff($from, $to, true)->format("%a") + 1;
     	
     	$nbMessages = $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession($session);
     	return $nbMessages / $nbDays;
