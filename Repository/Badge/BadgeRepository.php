@@ -459,7 +459,7 @@ class BadgeRepository extends EntityRepository
 				WHERE b.deletedAt IS NULL
 				GROUP BY badge
 				HAVING nbCorrecDone < totalCorrection
-					AND nbCorrecHad < totalCorrection
+					OR nbCorrecHad < totalCorrection
 				ORDER BY dateLog DESC";
     	
     	$query = $this->_em->createQuery($dql);
