@@ -89,10 +89,10 @@
             {% if workspace|default and workspace.isMooc() %}
                 
                 {% if workspace.getMooc().getOwner().getName()|default %}
-                    ga('set', 'dimension1', '{{ workspace.getMooc().getOwner().getName() }}');
+                    ga('set', 'dimension1', '{{ workspace.getMooc().getOwner().getName()|escape('js') }}');
                 {% endif %}
                 {% if workspace.getMooc().getTitle()|default %}
-                    ga('set', 'dimension2', '{{ workspace.getMooc().getTitle() }}');
+                    ga('set', 'dimension2', '{{ workspace.getMooc().getTitle()|escape('js') }}');
                 {% endif %}
 
             {% endif %} 
