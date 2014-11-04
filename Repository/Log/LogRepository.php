@@ -921,6 +921,6 @@ class LogRepository extends EntityRepository
     	));
     	$query->setMaxResults(1);
     	
-    	return $query->getSingleResult();
+    	return $query->getOneOrNullResult();
     }
 }
