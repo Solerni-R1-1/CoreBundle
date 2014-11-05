@@ -812,6 +812,37 @@ class UserManager
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getNotifiedByWorkspace(AbstractWorkspace $workspace, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
+    {
+    	$res = $this->userRepo->findNotifiedByWorkspace($workspace, true, $orderedBy, $order);
+    
+    	return $this->pagerFactory->createPager($res, $page, $max);
+    }
+    
+
+    /**
+     * @param AbstractWorkspace $workspace
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getNotifiedByWorkspaceWithName(AbstractWorkspace $workspace, $search, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
+    {
+    	$res = $this->userRepo->findNotifiedByWorkspaceWithName($workspace, $search, true, $orderedBy, $order);
+    
+    	return $this->pagerFactory->createPager($res, $page, $max);
+    }
+
+    /**
      * @param Role[]  $roles
      * @param string  $search
      * @param integer $page

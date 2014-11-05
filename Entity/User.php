@@ -339,6 +339,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $isFacebookAccount = false;
 
+    /**
+     *
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *      mappedBy="notifyUsers"
+     * )
+     * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     */
+    protected $notifyWorkspaces;
+
 
     public function __construct()
     {
@@ -1103,5 +1113,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     	}
     	
     	return false;
+    }
+    
+    public function getNotifyWorkspaces() {
+    	return $this->notifyWorkspaces;
     }
 }

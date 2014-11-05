@@ -59,10 +59,10 @@
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs margin-bottom-md">
-            <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
+            <li><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
-            <li><a href="{{ path('claro_workspace_notify_user_list', {'workspace': workspace.getId()} ) }}">{{ 'notify_user_list'|trans({}, 'platform') }}</a></li>
+            <li class="active"><a href="{{ path('claro_workspace_notify_user_list', {'workspace': workspace.getId()} ) }}">{{ 'notify_user_list'|trans({}, 'platform') }}</a></li>
         </ul>
         <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
         {{ macros.flashBox() }}
@@ -73,18 +73,13 @@
                 <div class="col-md-10">
                     <div class="btn-group margin-md">
                     	<div class="btn-group">
-	                        <a href="{{ path('claro_workspace_registered_modify_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-	                            <i class="icon-plus"></i> {{ 'modify_users'|trans({}, 'platform') }}
+	                        <a href="{{ path('claro_workspace_notify_user_list_export', {'workspace': workspace.getId(), 'format' : 'csv'}) }}" class="btn btn-default dropdown-toggle" role="button">
+	                            <i class="icon-download-alt"></i> {{ 'export_csv'|trans({}, 'platform') }}
 	                        </a>
 	                    </div>
                     	<div class="btn-group">
-	                        <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-	                            <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
-	                        </a>
-	                    </div>
-                    	<div class="btn-group">
-	                        <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-	                            <i class="icon-envelope"></i> {{ 'send_message_to_workspace'|trans({}, 'platform') }}
+	                        <a href="{{ path('claro_workspace_notify_user_list_export', {'workspace': workspace.getId(), 'format' : 'mail'}) }}" class="btn btn-default dropdown-toggle" role="button">
+	                            <i class="icon-download-alt"></i> {{ 'export_mail'|trans({}, 'platform') }}
 	                        </a>
 	                    </div>
                     </div>
@@ -120,8 +115,6 @@
                             <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(), direction) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(), direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
-                            <th>{{ 'role'|trans({}, 'platform') }}</th>
-                            <th>{{ 'session'|trans({}, 'platform') }}</th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
@@ -136,57 +129,6 @@
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
                                 <td>{{ user.getMail() }}</td>
-
-                                <td class="cell-roles">
-                                    {% for role in user.getEntityRoles() %}
-                                        {% if role.getWorkspace() == workspace %}
-                                            <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                <i class="icon-remove-sign pointer-hand remove-role-button"
-                                                    href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'role': role.getId() } ) }}"
-                                                    >
-                                                </i>
-                                            </span>
-                                        {% endif %}
-                                    {% endfor %}
-
-                                    {% set groups = user.getGroups() %}
-                                        {% for group in groups %}
-                                        {% for role in group.getEntityRoles() %}
-                                            {% if role.getWorkspace() == workspace %}
-                                                <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
-                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                </span>
-
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endfor %}
-
-                                </td>
-                                <td class="cell-sessions">
-                                    {% for session in user.getMoocSessions() %}
-                                        {% if session.getMooc().getWorkspace() == workspace %}
-                                            <span class="label label-success" id="label-{{ session.getId () }}-{{ user.getId()}}">
-                                                {{ session.getTitle() }}
-                                                <i class="icon-remove-sign pointer-hand remove-role-button"
-                                                    href="{{ path('claro_workspace_remove_session_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'session': session.getId() } ) }}">
-                                                </i>
-                                            </span>
-                                        {% endif %}
-                                    {% endfor %}
-                                    
-                                    {% set groups = user.getGroups() %}
-                                        {% for group in groups %}
-                                        {% for session in group.getMoocSessions() %}
-                                            {% if session.getMooc().getWorkspace() == workspace %}
-                                                <span title="{{ group.getName() }}" class="label label-default" id="label-session-{{ session.getId () }}-{{ user.getId()}}">
-                                                    {{ session.getTitle() }}
-                                                </span>
-
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endfor %}
-                                </td>
                             </tr>
                         {% endfor %}
 
@@ -207,8 +149,8 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_registered_user_list", "parameters": {'workspace': {{  workspace.getId() }}, 'order': '{{ order }}' }};
-        parameters.route.search = {"route": "claro_workspace_registered_user_list_search", "parameters": {'workspace': {{  workspace.getId() }}, 'order': '{{ order }}' }};
+        parameters.route.normal = {"route": "claro_workspace_notify_user_list", "parameters": {'workspace': {{  workspace.getId() }} }};
+        parameters.route.search = {"route": "claro_workspace_notify_user_list_search", "parameters": {'workspace': {{  workspace.getId() }} }};
         Claroline.Table.initialize(parameters);
 
         $('.popover-block').popover();

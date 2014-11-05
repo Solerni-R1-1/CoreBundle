@@ -150,11 +150,22 @@ abstract class AbstractWorkspace
      */
     protected $isMooc;
     
+    /**
+     * 
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\User",
+     *      inversedBy="notifyWorkspaces"
+     * )
+     * @var Claroline\CoreBundle\Entity\User
+     */
+    protected $notifyUsers;
+    
 
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
-        $this->orderedTools = new ArrayCollection();
+        $this->roles		= new ArrayCollection();
+        $this->orderedTools	= new ArrayCollection();
+        $this->notifyUsers	= new ArrayCollection();
     }
 
     public function getId()
@@ -353,4 +364,19 @@ abstract class AbstractWorkspace
     	return array_unique($users);
     }
 
+    public function getNotifyUsers() {
+    	return $this->notifyUsers;
+    }
+    
+    public function addNotifyUser($user) {
+    	if (!$this->notifyUsers->contains($user)) {
+    		$this->notifyUsers->add($user);
+    	}
+    }
+    
+    public function removeNotifyUser($user) {
+    	if ($this->notifyUsers->contains($user)) {
+    		$this->notifyUsers->removeElement($user);
+    	}
+    }
 }

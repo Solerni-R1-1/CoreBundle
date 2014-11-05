@@ -463,6 +463,7 @@ note: Note
 notification_activated: 'Notifications activées.'
 notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
+notify_user_list: 'Utilisateurs à notifier'
 oauth: Oauth
 object: Objet
 ok: Ok
@@ -998,6 +999,7 @@ proposed_by: Proposé par
 know_more: En savoir +
 mooc_archives: Accéder aux archives du cours
 get_warned_next_session: M'avertir de la prochaine session
+dont_get_warned_next_session: Ne pas m'avertir de la prochaine session
 mooc_is_over: Mooc terminé
 go_to_mooc: Accéder au mooc
 subscribe_to_mooc: S'inscrire au mooc
@@ -1167,3 +1169,5 @@ to_workspace_members: aux collaborateurs du workspace
 currentPassword: Mot de passe actuel
 edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à votre mot de passe actuel.
 
+export_csv: 'Exporter en CSV'
+export_mail: 'Exporter les adresses mail'
