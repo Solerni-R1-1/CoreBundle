@@ -36,6 +36,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Controller\Mooc\MoocService;
+use Claroline\CoreBundle\Entity\Role;
 
 class ResourceController extends Controller
 {
@@ -216,11 +217,18 @@ class ResourceController extends Controller
         $node = $this->getRealTarget($node);
         $hasAccess = $this->checkAccess('OPEN', $collection, !($user instanceof User));
         
-        // If workspace has mooc and sessions, check if user has subscribed to a session...
-        if ($hasAccess && $workspace->getMooc() != null && count($workspace->getMooc()->getMoocSessions()) > 0) {
-        	$hasAccess = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user) != null;
+
+        $mustCheckIfSession = true;
+        foreach ($node->getRights() as $right) {
+        	if ($right->getRole()->getType() == Role::PLATFORM_ROLE && (($right->getMask() & 1) == 1)) {
+        		$mustCheckIfSession = false;
+        	}
         }
         
+        // If workspace has mooc and sessions, check if user has subscribed to a session...
+        if ($mustCheckIfSession && $hasAccess && $workspace->getMooc() != null && count($workspace->getMooc()->getMoocSessions()) > 0) {
+        	$hasAccess = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user) != null;
+        }
         if ($hasAccess) {
 	        $resourceArray = array($this->resourceManager->getResourceFromNode($node));
 	        $event = $this->dispatcher->dispatch(
