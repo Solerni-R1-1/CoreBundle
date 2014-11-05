@@ -922,7 +922,7 @@ class LogRepository extends EntityRepository
     	));
     	$query->setMaxResults(1);
     	
-    	return $query->getSingleResult();
+    	return $query->getOneOrNullResult();
     }
     
 	public function getSubscriptionsForWorkspace(AbstractWorkspace $workspace, array $excludeRoles) {
