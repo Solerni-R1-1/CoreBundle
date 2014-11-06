@@ -346,7 +346,11 @@ claro_registration_validate_user_form:
     resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
     prefix: register
     type: annotation
-    
+
 claro_mooc_analytics:
     resource: "@ClarolineCoreBundle/Controller/Mooc/MoocAnalyticsController.php"
+    type: annotation
+
+contact_view:
+    resource: "@ClarolineCoreBundle/Controller/Contact/ContactController.php"
     type: annotation

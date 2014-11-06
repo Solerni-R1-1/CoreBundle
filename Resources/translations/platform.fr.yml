@@ -1171,3 +1171,16 @@ edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à
 
 export_csv: 'Exporter en CSV'
 export_mail: 'Exporter les adresses mail'
+
+#Page contact
+contact_general : Général
+contact : Contactez nous
+Contactez_nous : Contactez nous
+contact_form_replyTo : Votre email
+contact_form_object : Intitulé du message
+contact_form_content : Contenu
+Contactez_nous_edition : Edition de la liste des services
+contact_name : Label du service
+contact_mail : Email du service
+contact_success : Votre message a été envoyé avec succès.
+#Page contact
