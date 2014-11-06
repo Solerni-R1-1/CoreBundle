@@ -350,12 +350,12 @@ class BadgeManager
     					$papers = $paperRepo->getExerciseUserPapers(
     							$loggedUser->getId(),
     							$associatedExercise->getId(),
-    							"start");
+    							"paper_start");
 
     					$bestMark = 0;
     					$normalizedScores = array();
     					foreach ($papers as $paper) {
-    						$normalizedScore = $this->exerciseService->getPaperNormalizedScore($paper);
+    						$normalizedScore = $this->exerciseService->getPaperNormalizedScore($paper['paper']);
     						if ($normalizedScore > $bestMark) {
     							$bestMark = $normalizedScore;
     						}
