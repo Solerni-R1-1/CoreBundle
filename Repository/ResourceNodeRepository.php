@@ -156,7 +156,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findWorkspaceRootsByUser(User $user)
     {
-    	// First, get accessible workspaces...   
+        // First, get accessible workspaces...   
     	$now = new \DateTime();
         $dql = "SELECT aw.id
         			FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
