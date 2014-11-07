@@ -156,14 +156,68 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findWorkspaceRootsByUser(User $user)
     {
-        $builder = new ResourceQueryBuilder();
-        $dql = $builder->selectAsArray()
-            ->whereParentIsNull()
-            ->whereInUserWorkspace($user)
-            ->orderByPath()
-            ->getDql();
+        // First, get accessible workspaces...   
+    	$now = new \DateTime();
+        $dql = "SELECT aw.id
+        			FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
+        			LEFT JOIN aw.mooc m
+        			LEFT JOIN m.moocSessions ms
+        				WITH ms.startDate < :now
+        				AND ms.endDate > :now
+        			JOIN aw.roles r
+        			JOIN r.users u
+        			WHERE u.id = :user_id
+        			AND (m IS NULL
+        				OR ms IS NOT NULL)";
         $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        $query->setParameter("user_id", $user->getId());
+        $query->setParameter("now", $now);
+        $workspaces = $query->getScalarResult(); 
+        
+        $dql = "SELECT aw.id
+        			FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
+        			LEFT JOIN aw.mooc m
+        			LEFT JOIN m.moocSessions ms
+        				WITH ms.startDate < :now
+        				AND ms.endDate > :now
+        			JOIN aw.roles r
+        			JOIN r.groups g
+        			JOIN g.users u
+        			WHERE u.id = :user_id
+        			AND (m IS NULL
+        				OR ms IS NOT NULL)";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("user_id", $user->getId());
+        $query->setParameter("now", $now);
+        $workspaces = array_merge($workspaces, $query->getScalarResult());
+        
+        // Then get nodes for these workspaces
+        $dql = "SELECT DISTINCT
+        			node.id as id,
+        			node.name as name,
+        			node.path as path,
+        			parent.id as parent_id,
+        			creator.username as creator_username,
+        			resourceType.name as type,
+        			previous.id as previous_id,
+        			next.id as next_id,
+        			icon.relativeUrl as large_icon,
+        			node.mimeType as mime_type
+        		FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node
+        		
+        		JOIN node.workspace w
+        			WITH w IN (:workspaces)
+        		JOIN node.creator creator
+        		JOIN node.resourceType resourceType
+        		LEFT JOIN node.next next
+        		LEFT JOIN node.previous previous
+        		LEFT JOIN node.parent parent
+        		LEFT JOIN node.icon icon
+        		WHERE node.parent IS NULL
+        		ORDER BY node.path";
+        
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("workspaces", $workspaces);
 
         return $this->executeQuery($query);
     }
