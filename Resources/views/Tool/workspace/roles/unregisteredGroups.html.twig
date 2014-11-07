@@ -152,8 +152,9 @@
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                         <tr>
+                        	{% set inverseDirection = direction == "DESC" ? "ASC" : "DESC" %}
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(max, search, 'name', workspace.getId(), direction) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'name', workspace.getId(), (order == 'name' ? inverseDirection : "ASC")) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
                             <th>{{ 'session'|trans({}, 'platform') }}</th>
                         </tr>

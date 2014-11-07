@@ -115,11 +115,12 @@
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                         <tr>
-                            <th><a href="{{ sortUrl(max, search, 'isValidate', workspace.getId(), direction) }}">{{ 'isvalid'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'username', workspace.getId(), direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(), direction) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(), direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                        	{% set inverseDirection = direction == "DESC" ? "ASC" : "DESC" %}
+                            <th><a href="{{ sortUrl(max, search, 'isValidate', workspace.getId(), order == 'isValidate' ? inverseDirection : "ASC") }}">{{ 'isvalid'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'username', workspace.getId(), order == 'username' ? inverseDirection : "ASC") }}">{{ 'username'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(), order == 'lastName' ? inverseDirection : "ASC") }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(), order == 'firstName' ? inverseDirection : "ASC") }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), order == 'mail' ? inverseDirection : "ASC") }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
                             <th>{{ 'session'|trans({}, 'platform') }}</th>
                         </tr>

@@ -328,7 +328,7 @@ class RolesController extends Controller
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+        $direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
         return array(
             'workspace' => $workspace,
@@ -373,7 +373,7 @@ class RolesController extends Controller
 	    	$this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
 	    	$this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
     
-    	$direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+    	$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
     
     	return array(
     			'workspace' => $workspace,
@@ -570,7 +570,7 @@ class RolesController extends Controller
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+        $direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
         return array(
             'workspace' => $workspace,
@@ -614,7 +614,7 @@ class RolesController extends Controller
     	$this->userManager->getNotifiedByWorkspace($workspace, $page, $max, $order, $direction):
     	$this->userManager->getNotifiedByWorkspaceWithName($workspace, $search, $page, $max, $order, $direction);
     
-    	$direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+    	$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
     
     	return array(
     			'workspace' => $workspace,
@@ -691,7 +691,7 @@ class RolesController extends Controller
             $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order, $direction):
             $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+        $direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
         return array(
             'workspace' => $workspace,
