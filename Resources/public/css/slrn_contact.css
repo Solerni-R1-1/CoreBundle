@@ -10,5 +10,7 @@ a.cms_style {
 }
 form.nolabel label{
 	display:none;
-
+}
+.contact-form{
+	display:none;	
 }

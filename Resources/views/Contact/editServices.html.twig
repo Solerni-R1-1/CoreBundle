@@ -73,11 +73,17 @@
 		            <h2 class="slrn-content-main-title">{{ "Contactez_nous_edition" | trans({}, "platform" )}}</h3>
 		        </div>
 
-		        {#{% for contact in contacts %}
-		        	{contacts
-		        {% endfor %} #}
+		        {% for contact in contacts %}
+		        	<a class="btn btn-gris js-submit-button contact-edit" href="#" data-value='{{contact.id}}'>Editer le Contact</a> 
+		        	<a class="btn btn-primary" href="{{path('contact_delete_services',{'id': contact.id })}}">Supprimer le Contact</a>
+		        	{{ contact.name }} <br/><br/>
+		        {% endfor %} 
+		        <a class="btn btn-gris js-submit-button contact-edit" href="#" data-value='-1'>Nouveau Contact</a> 
+		    	<a class="btn btn-primary" href="{{path('contact_show')}}">Retour</a>
+		    	
+		        <hr/>
 		        {% for id, form in forms %}
-		        <div id='contact{{id}}'>
+		        <div id='contact-{{id}}' class='contact-form'>
 			        <form role="form"
 			              action="{{path('contact_save_services',{'id': id })}}"
 			              method="post" {{ form_enctype(form) }}
@@ -89,9 +95,7 @@
 			            </div>
 			            <div class="panel-footer">
 			                <button type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
-			                {% if id > -1 %}
-			                <a class="btn btn-primary" href="{{path('contact_delete_services',{'id': id })}}">Supprimer</a>
-			                {% endif %}
+			                <a class="btn btn-gris js-submit-button contact-close" href="#">Annuler</a> 
 			            </div>
 			        </form>
 		        </div>
@@ -99,7 +103,6 @@
 
 		    </div>
 
-		    <a class="btn btn-primary" href="{{path('contact_show')}}">Retour</a>
 
 		</div>
 	</div>
@@ -115,5 +118,16 @@
         <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
     <![endif]-->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
-
+    <script type="text/javascript">
+    	$( document ).ready(function() {
+    		$(".contact-close").click(function(e){
+            	$(".contact-form").hide();
+        	});
+    		$(".contact-edit").click(function(e){
+    			$(".contact-form").hide();
+            	id = $(this).attr('data-value');
+            	$("#contact-"+id).show();
+        	});
+    	});
+    </script>
 {% endblock %}
