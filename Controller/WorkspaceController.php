@@ -1215,9 +1215,12 @@ class WorkspaceController extends Controller
     	$om = $this->getDoctrine()->getManager();
     	$om->persist($workspace);
     	$om->flush();
-    	return $this->redirectToRoute('mooc_view',
-    			array('moocId' => $workspace->getMooc()->getId(),
-    					'moocName' => $workspace->getMooc()->getAlias()));
+        
+        return $this->redirect( $this->get('router')
+                                        ->generate('mooc_view', array( 
+                                            'moocId' => $workspace->getMooc()->getId(), 
+                                            'moocName' => $workspace->getMooc()->getTitle()))
+        );
     }
     
     /**
@@ -1245,8 +1248,10 @@ class WorkspaceController extends Controller
     	$om = $this->getDoctrine()->getManager();
     	$om->persist($workspace);
     	$om->flush();
-    	return $this->redirectToRoute('mooc_view',
-    			array('moocId' => $workspace->getMooc()->getId(),
-    					'moocName' => $workspace->getMooc()->getAlias()));
+        return $this->redirect( $this->get('router')
+                                        ->generate('mooc_view', array( 
+                                            'moocId' => $workspace->getMooc()->getId(), 
+                                            'moocName' => $workspace->getMooc()->getTitle()))
+        );
     } 
 }
