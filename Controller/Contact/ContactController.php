@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Manager\MailManager;
 use Icap\LessonBundle\Entity\Lesson;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -23,7 +24,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Contact\Contact;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Contact\ContactManager;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 
 /**
@@ -132,8 +135,15 @@ class ContactController extends Controller
 
     /**
      * @Route("/contact/services/edit", name="contact_edit_services")
+     *
+     * @SEC\PreAuthorize("hasRole('ADMIN')")
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function editServicesAction( ) {
+    public function editServicesAction(User $loggedUser) {
+
+        if(!$loggedUser->hasRole('ROLE_ADMIN')){
+            throw new AccessDeniedException("Access denied");
+        }
 
     	$contactsCollection = $this->contactManager->getAllContacts();
     	$formArray = array();
@@ -157,8 +167,15 @@ class ContactController extends Controller
 
     /**
      * @Route("/contact/services/save/{id}", name="contact_save_services")
+     *
+     * @SEC\PreAuthorize("hasRole('ADMIN')")
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function saveServicesAction( $id  ) {
+    public function saveServicesAction(User $loggedUser, $id  ) {
+
+        if(!$loggedUser->hasRole('ROLE_ADMIN')){
+            throw new AccessDeniedException("Access denied");
+        }
 
         $contactService = null;
         if($id !== -1){
@@ -181,8 +198,15 @@ class ContactController extends Controller
 
     /**
      * @Route("/contact/services/delete/{id}", name="contact_delete_services")
+     *
+     * @SEC\PreAuthorize("hasRole('ADMIN')")
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function deleteServicesAction( $id  ) {
+    public function deleteServicesAction(User $loggedUser, $id  ) {
+
+        if(!$loggedUser->hasRole('ROLE_ADMIN')){
+            throw new AccessDeniedException("Access denied");
+        }
 
         $em = $this->getDoctrine()->getManager();
         $contactService = $em->getRepository('ClarolineCoreBundle:Contact\Contact')->find($id);
