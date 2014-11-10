@@ -19,124 +19,127 @@
         {% endfor %}
             
         /* jqplot rendering */
-        var {{ key }} = $.jqplot(
-            '{{ key }}',
-            [
-            {% for graph_value_set in graph_datas.graph_values %}
-	        	{% set loop1 = loop.index0 %}
-	        	{% for serie in graph_value_set.series %}
-                    graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}]{% if not loop.last %},{% endif %}
-                {% endfor %}
-                {% if not loop.last %},{% endif %}
-            {% endfor %}
-            ],
-            {
-                title: { show: false },
-                grid: {
-                    drawBorder: true,
-                    borderWidth: 1.0,
-                    shadow: true,
-                    background: 'transparent'
-                },
-                axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                    tickRenderer: $.jqplot.CanvasAxisTickRenderer
-                },
-                axes: {
-                    xaxis: {
-                        {% if 'date' == graph_datas.x_data.x_renderer %}renderer: $.jqplot.DateAxisRenderer,
-                        tickOptions: {
-                            formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
-                            showGridline: false,
-                            showMark: true,
-                            angle: -20,
-                            fontSize: '10px'
-                        },
-                        numberTicks:10,{% endif %}
-                        label: '{{ graph_datas.x_data.x_label }}',
-                        pad: 0
-                    },
-                    {% for graph_value_set in graph_datas.graph_values %}
-                    {% set yIndex = loop.index %}
-                    y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis: {
-                        label: "{{ graph_value_set.y_label|e('js') }}",
-                        min:{% if graph_value_set.min is defined %}{{graph_value_set.min}}{%else%}0{% endif %},
-                        {% if graph_value_set.max is defined %}max:{{graph_value_set.max}},{% endif %}
-                        {% if graph_value_set.tickInterval is defined %}tickInterval:{{graph_value_set.tickInterval}},{% endif %}
-                        showTickMarks: true,
-                        numberTicks: {% if graph_value_set.numberTicks is defined %}{{graph_value_set.numberTicks}}{% else %}5{% endif %}
-                    }{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                },
-                highlighter: {
-                    show: true,
-                    sizeAdjust: 1,
-                    tooltipOffset:12,
-                    tooltipLocation:'n',
-                    tooltipAxes:'xy',
-                    formatString:'%s <br/> %d',
-                    tooltipFadeSpeed:'fast'
-                },
-                cursor: {
-                    show: true,
-                    zoom: true,
-                    showTooltip: false
-                },
-                seriesDefaults: {
-                    showMarker:((graph_mapped_values[0].length<10)?true:false),
-                    markerOptions:{shadow:false},
-                    shadow:false,
-                    showLine:true,
-                    useNegativeColors: false,
-                    fill: true,
-                    lineWidth: 1.5,
-                    fillAndStroke: true,
-                    fillAlpha: 0.12,
-                    rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
-                },
-                series: [
-                    {% for graph_value_set in graph_datas.graph_values %}
-                    	{% set yIndex = loop.index %}
-    	        		{% for label, serie in graph_value_set.series %}
-                            {yaxis:'y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis', label:'{{ label|e('js') }}'}{% if not loop.last %},{% endif %}
-                    	{% endfor %}{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                ],
-                legend: {
-                    location: 's',
-                    show: true,
-                    border: 'none',
-                    placement: 'outsideGrid'
-                }
-                {% set hasMean = false %}
-                {% for graph_value_set in graph_datas.graph_values %}
-                    {% if graph_value_set.constants is defined and graph_value_set.constants.mean is defined %}
-                        {% set hasMean = true %}
-                    {% endif %}
-                {% endfor %}    
-                {% if hasMean %}
-                    ,
-                    canvasOverlay: {
-                        show: true,
-                        objects: [
-                    {% for graph_value_set in graph_datas.graph_values %}
-                        {% if graph_value_set.constants is defined and graph_value_set.constants.mean is defined %} 
-                            {dashedHorizontalLine: {
-                                name: 'average',
-                                y: {{ graph_value_set.constants.mean }},
-                                lineWidth: 1,
-                                color: 'rgb(255, 0, 79)',
-                                shadow: true
-                            }}
-                        {% endif %}
-                    {% endfor %}
-                    ]
-                }
-                {% endif %}
-            }
-        );
-        // Store jqplot object to invoke him when displaying tab
-        jqplots.push({{key}});
+        if ({% for graph_value_set in graph_datas.graph_values %}{% set loop1 = loop.index0 %}{% set loop1last = loop.last %}{% for serie in graph_value_set.series %}graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}].length != 0{% if not(loop.last and loop1last) %} && {% endif %}{% endfor %}{% endfor %}) {
+        		
+	        var {{ key }} = $.jqplot(
+	            '{{ key }}',
+	            [
+	            {% for graph_value_set in graph_datas.graph_values %}
+		        	{% set loop1 = loop.index0 %}
+		        	{% for serie in graph_value_set.series %}
+	                    graph_mapped_values[{{ (loop1 * 10) + loop.index0 }}]{% if not loop.last %},{% endif %}
+	                {% endfor %}
+	                {% if not loop.last %},{% endif %}
+	            {% endfor %}
+	            ],
+	            {
+	                title: { show: false },
+	                grid: {
+	                    drawBorder: true,
+	                    borderWidth: 1.0,
+	                    shadow: true,
+	                    background: 'transparent'
+	                },
+	                axesDefaults: {
+	                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+	                    tickRenderer: $.jqplot.CanvasAxisTickRenderer
+	                },
+	                axes: {
+	                    xaxis: {
+	                        {% if 'date' == graph_datas.x_data.x_renderer %}renderer: $.jqplot.DateAxisRenderer,
+	                        tickOptions: {
+	                            formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+	                            showGridline: false,
+	                            showMark: true,
+	                            angle: -20,
+	                            fontSize: '10px'
+	                        },
+	                        numberTicks:10,{% endif %}
+	                        label: '{{ graph_datas.x_data.x_label }}',
+	                        pad: 0
+	                    },
+	                    {% for graph_value_set in graph_datas.graph_values %}
+	                    {% set yIndex = loop.index %}
+	                    y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis: {
+	                        label: "{{ graph_value_set.y_label|e('js') }}",
+	                        min:{% if graph_value_set.min is defined %}{{graph_value_set.min}}{%else%}0{% endif %},
+	                        {% if graph_value_set.max is defined %}max:{{graph_value_set.max}},{% endif %}
+	                        {% if graph_value_set.tickInterval is defined %}tickInterval:{{graph_value_set.tickInterval}},{% endif %}
+	                        showTickMarks: true,
+	                        numberTicks: {% if graph_value_set.numberTicks is defined %}{{graph_value_set.numberTicks}}{% else %}5{% endif %}
+	                    }{% if not loop.last %},{% endif %}
+	                    {% endfor %}
+	                },
+	                highlighter: {
+	                    show: true,
+	                    sizeAdjust: 1,
+	                    tooltipOffset:12,
+	                    tooltipLocation:'n',
+	                    tooltipAxes:'xy',
+	                    formatString:'%s <br/> %d',
+	                    tooltipFadeSpeed:'fast'
+	                },
+	                cursor: {
+	                    show: true,
+	                    zoom: true,
+	                    showTooltip: false
+	                },
+	                seriesDefaults: {
+	                    showMarker:((graph_mapped_values[0].length<10)?true:false),
+	                    markerOptions:{shadow:false},
+	                    shadow:false,
+	                    showLine:true,
+	                    useNegativeColors: false,
+	                    fill: true,
+	                    lineWidth: 1.5,
+	                    fillAndStroke: true,
+	                    fillAlpha: 0.12,
+	                    rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+	                },
+	                series: [
+	                    {% for graph_value_set in graph_datas.graph_values %}
+	                    	{% set yIndex = loop.index %}
+	    	        		{% for label, serie in graph_value_set.series %}
+	                            {yaxis:'y{% if yIndex != 1 %}{{yIndex}}{% endif %}axis', label:'{{ label|e('js') }}'}{% if not loop.last %},{% endif %}
+	                    	{% endfor %}{% if not loop.last %},{% endif %}
+	                    {% endfor %}
+	                ],
+	                legend: {
+	                    location: 's',
+	                    show: true,
+	                    border: 'none',
+	                    placement: 'outsideGrid'
+	                }
+	                {% set hasMean = false %}
+	                {% for graph_value_set in graph_datas.graph_values %}
+	                    {% if graph_value_set.constants is defined and graph_value_set.constants.mean is defined %}
+	                        {% set hasMean = true %}
+	                    {% endif %}
+	                {% endfor %}    
+	                {% if hasMean %}
+	                    ,
+	                    canvasOverlay: {
+	                        show: true,
+	                        objects: [
+	                    {% for graph_value_set in graph_datas.graph_values %}
+	                        {% if graph_value_set.constants is defined and graph_value_set.constants.mean is defined %} 
+	                            {dashedHorizontalLine: {
+	                                name: 'average',
+	                                y: {{ graph_value_set.constants.mean }},
+	                                lineWidth: 1,
+	                                color: 'rgb(255, 0, 79)',
+	                                shadow: true
+	                            }}
+	                        {% endif %}
+	                    {% endfor %}
+	                    ]
+	                }
+	                {% endif %}
+	            }
+	        );
+	        // Store jqplot object to invoke him when displaying tab
+	        jqplots.push({{key}});
+    	}
     });
 </script>
 

@@ -60,6 +60,8 @@ class FormFactory
     const TYPE_AGENDA_IMPORTER = 'import_agenda_file';
     const TYPE_MOOC = 'mooc';
     const TYPE_ACCOUNT_VALIDATOR = 'account_validator';
+    const TYPE_CONTACT = 'contact';
+    const TYPE_CONTACT_SERVICE = 'contact_services';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -206,7 +208,12 @@ class FormFactory
         ),self::TYPE_ACCOUNT_VALIDATOR => array(
             'formType' => 'Claroline\CoreBundle\Form\AccountValidatorType',
             'entity' => 'Claroline\CoreBundle\Entity\User'
-        )
+        ), self::TYPE_CONTACT => array(
+            'formType' => 'Claroline\CoreBundle\Form\Contact\ContactType'
+        ), self::TYPE_CONTACT_SERVICE => array(
+            'formType' => 'Claroline\CoreBundle\Form\Contact\ContactServiceType',
+            'entity' => 'Claroline\CoreBundle\Entity\Contact\Contact'
+        ),
     );
 
     private $factory;

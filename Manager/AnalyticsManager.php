@@ -543,8 +543,8 @@ class AnalyticsManager
     }
     
     public function getMeanNumberConnectionsDaily(MoocSession $session, $filterRoles) {
-    	return $this->analyticsMoocStatsRepo->avgConnectionsForSession(
-    			$session);
+    	$mean = $this->analyticsMoocStatsRepo->avgConnectionsForSession($session);
+    	return $mean != null ? $mean : 0;
     }
     
     public function getNumberActiveUsers(MoocSession $session, $nbDays, $filterRoles) {

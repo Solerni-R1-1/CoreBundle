@@ -32,11 +32,14 @@ use Claroline\CoreBundle\Manager\RightsManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\MoocSessionManager;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RolesController extends Controller
 {
     private $roleManager;
     private $userManager;
+    private $workspaceManager;
     private $groupManager;
     private $resourceManager;
     private $moocSessionManager;
@@ -50,6 +53,7 @@ class RolesController extends Controller
      * @DI\InjectParams({
      *     "roleManager"      	= @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"      	= @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"      	= @DI\Inject("claroline.manager.workspace_manager"),
      *     "groupManager"     	= @DI\Inject("claroline.manager.group_manager"),
      *     "resourceManager"  	= @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"    	= @DI\Inject("claroline.manager.rights_manager"),
@@ -64,6 +68,7 @@ class RolesController extends Controller
         RoleManager $roleManager,
         UserManager $userManager,
         GroupManager $groupManager,
+        WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
     	MoocSessionManager $moocSessionManager,
@@ -76,6 +81,7 @@ class RolesController extends Controller
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
+        $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->moocSessionManager = $moocSessionManager;
@@ -322,7 +328,7 @@ class RolesController extends Controller
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+        $direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
         return array(
             'workspace' => $workspace,
@@ -367,7 +373,7 @@ class RolesController extends Controller
 	    	$this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
 	    	$this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
     
-    	$direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+    	$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
     
     	return array(
     			'workspace' => $workspace,
@@ -564,7 +570,7 @@ class RolesController extends Controller
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+        $direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
         return array(
             'workspace' => $workspace,
@@ -575,6 +581,78 @@ class RolesController extends Controller
             'order' => $order,
             'direction' => $direction
         );
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/users/notify/page/{page}/max/{max}/order/{order}/direction/{direction}",
+     *     name="claro_workspace_notify_user_list",
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/users/notify/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
+     *     name="claro_workspace_notify_user_list_search",
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceNotifyUsers.html.twig")
+     */
+    public function notifyUsersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
+    {
+    
+    	$this->checkAccess($workspace);
+    
+    	$pager = ($search === '') ?
+    	$this->userManager->getNotifiedByWorkspace($workspace, $page, $max, $order, $direction):
+    	$this->userManager->getNotifiedByWorkspaceWithName($workspace, $search, $page, $max, $order, $direction);
+    
+    	$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
+    
+    	return array(
+    			'workspace' => $workspace,
+    			'pager' => $pager,
+    			'search' => $search,
+    			'max' => $max,
+    			'order' => $order,
+    			'direction' => $direction
+    	);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/users/notify/export/{format}",
+     *     name="claro_workspace_notify_user_list_export",
+     *     defaults={"format"="csv"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * 
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceNotifyUsers.html.twig")
+     */
+    public function exportCSVNotifyUsersListAction(AbstractWorkspace $workspace, $format)
+    {
+    	$this->checkAccess($workspace);
+    	
+    	if ($format == 'csv') {
+    		$content = $this->workspaceManager->exportWorkspaceNotifyUsersAsCSV($workspace);
+    	} else if ($format == 'mail') {
+    		$content = $this->workspaceManager->exportWorkspaceNotifyUsersMailsAsCSV($workspace);
+    	} else {
+    		throw new NotFoundHttpException();
+    	}
+
+    	return new Response($content, 200, array(
+    			'Content-Type' => 'application/force-download',
+    			'Content-Disposition' => 'attachment; filename="export.csv"'
+    	));
     }
 
     /**
@@ -613,7 +691,7 @@ class RolesController extends Controller
             $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order, $direction):
             $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
+        $direction = $direction === 'DESC' ? 'DESC' : 'ASC';
 
         return array(
             'workspace' => $workspace,

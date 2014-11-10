@@ -1189,4 +1189,69 @@ class WorkspaceController extends Controller
             throw new AccessDeniedException();
         }
     }
+    
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/register/notify",
+     *     name="claro_workspace_register_notify",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     * 
+     * Adds a workspace to the notification list.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Response
+     */
+    public function registerUserToNotifyList(AbstractWorkspace $workspace, User $user) {
+    	$workspace->addNotifyUser($user);
+    	$om = $this->getDoctrine()->getManager();
+    	$om->persist($workspace);
+    	$om->flush();
+        
+        return $this->redirect( $this->get('router')
+                                        ->generate('mooc_view', array( 
+                                            'moocId' => $workspace->getMooc()->getId(), 
+                                            'moocName' => $workspace->getMooc()->getTitle()))
+        );
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/unregister/notify",
+     *     name="claro_workspace_unregister_notify",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     *
+     * Removes a workspace to the notification list.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Response
+     */
+    public function unregisterUserToNotifyList(AbstractWorkspace $workspace, User $user) {
+    	$workspace->removeNotifyUser($user);
+    	$om = $this->getDoctrine()->getManager();
+    	$om->persist($workspace);
+    	$om->flush();
+        return $this->redirect( $this->get('router')
+                                        ->generate('mooc_view', array( 
+                                            'moocId' => $workspace->getMooc()->getId(), 
+                                            'moocName' => $workspace->getMooc()->getTitle()))
+        );
+    } 
 }

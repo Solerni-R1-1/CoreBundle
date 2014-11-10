@@ -922,7 +922,7 @@ class LogRepository extends EntityRepository
     	));
     	$query->setMaxResults(1);
     	
-    	return $query->getSingleResult();
+    	return $query->getOneOrNullResult();
     }
     
 	public function getSubscriptionsForWorkspace(AbstractWorkspace $workspace, array $excludeRoles) {
@@ -945,8 +945,7 @@ class LogRepository extends EntityRepository
     				AND l.receiver = u
     				AND l.action = 'workspace-role-subscribe_user'
     			WHERE u.id NOT IN (:excludeUsers)
-    			GROUP BY u.id
-    			ORDER BY l.dateLog";
+    			GROUP BY u.id";
     	
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
@@ -967,8 +966,7 @@ class LogRepository extends EntityRepository
     				AND l.receiverGroup = g
     				AND l.action = 'workspace-role-subscribe_group'
     			WHERE u.id NOT IN (:excludeUsers)
-    			GROUP BY u.id
-    			ORDER BY l.dateLog";
+    			GROUP BY u.id";
 
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
