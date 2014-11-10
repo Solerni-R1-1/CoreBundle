@@ -354,3 +354,7 @@ claro_mooc_analytics:
 contact_view:
     resource: "@ClarolineCoreBundle/Controller/Contact/ContactController.php"
     type: annotation
+
+claro_message_suggest:
+    resource: "@ClarolineCoreBundle/Controller/MessageController.php"
+    type: annotation

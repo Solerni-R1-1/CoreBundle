@@ -773,4 +773,39 @@ class MessageController
 
         throw new AccessDeniedException("This isn't your message");
     }
+
+    /**
+     * @EXT\Route(
+     *     "/message/suggest/{search}/{page}",
+     *     name="claro_message_suggest",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of groups that the current user can send a message to,
+     * optionally filtered by a search on group name
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param User    $user
+     *
+     * @return Response
+     */
+    public function suggestResultAction(User $user, $search, $page){
+
+        // Array with id / last / first / username
+        // Default : 5 by 5 
+        $suggestedUsers = $this->userManager->suggestUser($search, 5, $page);
+
+        //Double array to allow fully json in Ajax Response
+        return array('data' => array(
+            'users' => $suggestedUsers,
+            'moocs' => array(
+                ),
+            ));
+    }
 }

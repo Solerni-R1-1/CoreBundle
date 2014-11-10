@@ -1030,4 +1030,13 @@ class UserManager
 
         return $userPublicProfilePreferences;
     }
+
+    /**
+     * Return an array of users based on 
+     *
+     *
+     **/
+    public function suggestUser($search, $number, $page){
+        return  $this->userRepo->findSuggestedUser($search, $number, $page);
+    }
 }

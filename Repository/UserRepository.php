@@ -1307,4 +1307,34 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     	return $result;
     }
+
+    /**
+     * Return list of user based on partial data for the first/last/user name
+     *
+     * Return array with data : id / first / last / username
+     *
+     **/
+    public function findSuggestedUser($search, $number, $page){
+        $dql = "SELECT DISTINCT
+                    u.username AS username,
+                    u.firstName AS firstname,
+                    u.lastName AS lastname,
+                    u.id AS id
+                FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.isValidate = 1
+                AND (
+                        u.username like :search
+                        OR u.lastName like :search
+                        OR u.firstName like :search
+                    )";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setFirstResult(($page -1) * $number);
+        $query->setMaxResults($number);
+
+        $query->setParameter("search", '%'.$search.'%');
+
+        $result = $query->getResult();  
+        return $result;
+    }
 }
