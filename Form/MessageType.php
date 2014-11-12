@@ -50,7 +50,8 @@ class MessageType extends AbstractType
                 'to',
                 'text',
                 array(
-                    'attr' => array('placeholder'    => $this->translator->trans('message_form_to', array(), 'plateform')),
+                    'attr' => array('placeholder'    => $this->translator->trans('message_form_to', array(), 'plateform'),
+                                    'autocomplete'   => "off"),
                     'data' => $this->username,
                     'required' => true,
                     'mapped' => true,

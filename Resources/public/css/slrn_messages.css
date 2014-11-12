@@ -190,3 +190,44 @@ table.scrollable thead th {
 	border-radius: 0 0 5px 5px;
 	padding: 10px;
 }
+
+.suggest-box{
+	display: block;
+	position: absolute;
+	min-width: 300px;
+	border: 1px dotted;
+	background: #CCC;
+	border-radius: 0 0 10px 10px;
+	z-index: 1;
+	margin: -1px 5px 0 5px;
+	width: 94%;
+}
+
+.suggest-box-list{
+	list-style: none outside;
+	margin: 0;
+	padding: 5px;
+}
+.selectable{
+	cursor: pointer;
+}
+.selectable:hover{
+	background: #DDD;
+}
+.user-avatar{
+	display: inline-block;
+	position:relative;
+	width: 30px;
+	height: 30px;
+}
+.user-avatar-img{
+	position: absolute;
+}
+.user-data{
+	display: inline-block;
+}
+.user-line{
+	display: block;
+	line-height: 1em;
+	margin-left: 5px;
+}

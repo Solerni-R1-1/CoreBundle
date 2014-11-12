@@ -1319,7 +1319,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u.username AS username,
                     u.firstName AS firstname,
                     u.lastName AS lastname,
-                    u.id AS id
+                    u.id AS id,
+                    u.picture as picture
                 FROM Claroline\CoreBundle\Entity\User u
                 WHERE u.isValidate = 1
                 AND (

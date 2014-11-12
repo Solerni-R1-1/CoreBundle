@@ -7,20 +7,17 @@
         <div class="panel-heading">
             <h3 class="panel-title">{{ "send_message" | trans({}, "platform" )}}</h3>
         </div>
-        <form role="form"
-              novalidate="novalidate"
-              action="{{path('claro_message_send')}}"
-              method="post" {{ form_enctype(form) }}
-              id="generic-form"
-              class="form-horizontal">
-            <div class="panel-body">
-                {{ form_widget(form) }}
-                {{ form_rest(form) }}
-            </div>
-            <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            </div>
-        </form>
+        <div class='contacts_selected_wrapper'/>999</div>
+
     </div>
 {% endblock %}
 
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/message/jquery.jqote2.min.js') }}"></script>
+    <script type="text/x-jqote-template" id="jqote2_simple">
+        <![CDATA[<li data-id="<%=this.id%>"><%=this.firsname%> <%=this.lastname%> <%=this.username%></li>]]>
+    </script>#}
+{% endblock %}
