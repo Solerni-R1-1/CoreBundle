@@ -14,3 +14,7 @@ form.nolabel label{
 .contact-form{
 	display:none;	
 }
+
+.contact_text{
+	min-height: 100px;
+}

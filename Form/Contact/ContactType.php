@@ -26,6 +26,7 @@ class ContactType extends AbstractType
 
     public function __construct(TranslatorInterface $translator, $contacts) {
         $this->translator = $translator;
+        asort($contacts);
         $this->contacts = $contacts;
 
     }
@@ -59,9 +60,9 @@ class ContactType extends AbstractType
             )
             ->add(
                 'content',
-                'tinymce',
+                'textarea',
                 array(
-                    'attr' => array(),
+                    'attr' => array('class' => 'contact_text'),
                     'required' => true
                 )
             );
