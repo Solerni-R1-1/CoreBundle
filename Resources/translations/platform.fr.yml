@@ -1176,8 +1176,17 @@ export_mail: 'Exporter les adresses mail'
 contact_general : Général
 contact : Contactez nous
 Contactez_nous : Contactez nous
-contact_form_replyTo : Votre email
-contact_form_object : Intitulé du message
+contact_form_demande : Votre demande concerne
+contact_form_civil : Civilité
+contact_form_civil_monsieur : Monsieur
+contact_form_civil_madame : Madame
+contact_form_civil_mademoiselle : Mademoiselle
+contact_form_prenom : Prénom
+contact_form_nom : Nom
+contact_form_replyTo : Email
+contact_form_societe : Société
+contact_form_telephone : Téléphone
+contact_form_fonction : Fonction
 contact_form_content : Contenu
 Contactez_nous_edition : Edition de la liste des services
 contact_name : Label du service

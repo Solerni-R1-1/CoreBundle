@@ -108,7 +108,6 @@ class ContactController extends Controller
 
         	$contactId = $data['contact'];
         	$replyTo = $data['replyTo'];
-        	$object = $data['object'];
         	$content = $data['content'];
 
         	$contactName = $this->translator->trans($defaultServiceName, array(), 'platform');
@@ -119,18 +118,28 @@ class ContactController extends Controller
         		$contactMail = $contactsMail[$contactId];
         	}
 
-			$this->mailManager->sendContactMessage($contactName, $contactMail, $replyTo, $object, $content);
+			$this->mailManager->sendContactMessage($contactName, $contactMail, $replyTo, $data, $content);
 
 			$message = $this->translator->trans('contact_success', array(), 'platform');
+            return $this->render(
+                'ClarolineCoreBundle:Contact:contact.html.twig',
+                array(
+                   'form' => $form->createView(),
+                   'message' => $message
+                )
+            );
+
+        } else {
+            return $this->render(
+                'ClarolineCoreBundle:Contact:contact.html.twig',
+                array(
+                   'form' => $form->createView(),
+                   'message' => $message
+                )
+            );
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Contact:contact.html.twig',
-            array(
-               'form' => $form->createView(),
-               'message' => $message
-            )
-        );
+        
     }
 
     /**

@@ -1171,9 +1171,17 @@ edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à
 contact_general : General
 contact : Contact us
 Contactez_nous : Contact us
-contact_form_replyTo : Your mail
-contact_form_object : Title of the message
-contact_form_content : Content
+contact_form_demande : Votre demande concerne
+contact_form_civil : Civilité
+contact_form_civil_monsieur : Monsieur
+contact_form_civil_madame : Madame
+contact_form_civil_mademoiselle : Mademoiselle
+contact_form_prenom : First Name
+contact_form_nom : Last Name
+contact_form_replyTo : Mail
+contact_form_societe : Company
+contact_form_telephone : Phone
+contact_form_fonction : Founction
 Contactez_nous_edition : Edition of services
 contact_name : Label of service
 contact_mail : Mail of service

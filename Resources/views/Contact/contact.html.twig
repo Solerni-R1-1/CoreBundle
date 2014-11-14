@@ -107,5 +107,11 @@
         <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
     <![endif]-->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
+    <script type="text/javascript">
 
+$( document ).ready(function() {
+    $('[required="required"]').addClass('slrn-required');
+});
+
+    </script>
 {% endblock %}
