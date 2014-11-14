@@ -35,6 +35,11 @@ class MessageRepository extends EntityRepository
             AND um.isRead = false
             AND um.isRemoved = false
             AND (m.user IS NULL OR m.user != :user)
+            AND NOT EXISTS (
+                SELECT m2.id FROM Claroline\CoreBundle\Entity\Message m2
+                WHERE m2.root = m.root 
+                AND m.id < m2.id
+            )
         ";
 
         $query = $this->_em->createQuery($dql);

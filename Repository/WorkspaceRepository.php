@@ -591,4 +591,33 @@ class WorkspaceRepository extends EntityRepository
     	
     	return $query->getResult();
     }
+    
+    public function getExportDataForWorkspaceNotify(AbstractWorkspace $workspace) {
+    	$dql = 'SELECT u.firstName,
+    				u.lastName,
+    				u.username,
+    				u.mail
+    			FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+    			JOIN w.notifyUsers u
+    			WHERE w = :workspace';
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('workspace', $workspace);
+    	
+    	return $query->getResult();
+    }
+
+
+    public function getExportMailForWorkspaceNotify(AbstractWorkspace $workspace) {
+    	$dql = 'SELECT 
+    				u.mail
+    			FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+    			JOIN w.notifyUsers u
+    			WHERE w = :workspace';
+    	 
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('workspace', $workspace);
+    	 
+    	return $query->getResult();
+    }
 }

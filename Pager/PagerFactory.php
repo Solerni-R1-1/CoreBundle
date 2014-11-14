@@ -24,9 +24,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class PagerFactory
 {
-    public function createPager(Query $query, $currentPage, $max = 20)
+    public function createPager(Query $query, $currentPage, $max = 20, $fetchJoins = true, $useOutputWalkers = true)
     {
-        $adapter = new DoctrineORMAdapter($query);
+        $adapter = new DoctrineORMAdapter($query, $fetchJoins, $useOutputWalkers);
 
         return $this->createPagerfanta($adapter, $currentPage, $max);
     }

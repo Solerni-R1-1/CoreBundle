@@ -833,6 +833,60 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return ($getQuery) ? $query: $query->getResult();
     }
+    
+
+    /**
+     * @param AbstractWorkspace $workspace
+     * @param boolean $getQuery
+     * @param string  $orderedBy
+     *
+     * @return Query|User[]
+     */
+    public function findNotifiedByWorkspace(AbstractWorkspace $workspace, $getQuery = false, $orderedBy = 'id', $order)
+    {
+    	$order = $order === 'DESC' ? 'DESC' : 'ASC';
+    	$dql = "
+	    	SELECT u, ws
+	    	FROM Claroline\CoreBundle\Entity\User u
+	    	JOIN u.notifyWorkspaces ws
+	    	WHERE ws = :workspace
+	    	AND u.isEnabled = true
+	    	ORDER BY u.{$orderedBy} ".
+    	$order;
+    
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('workspace', $workspace);
+    
+    	return ($getQuery) ? $query: $query->getResult();
+    }
+    
+    /**
+     * @param AbstractWorkspace $workspace
+     * @param string  $name
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
+     */
+    public function findNotifiedByWorkspaceWithName(AbstractWorkspace $workspace, $name, $getQuery = false)
+    {
+    	$search = strtoupper($name);
+    	$dql = "
+            SELECT u
+    		FROM Claroline\CoreBundle\Entity\User u
+	    	JOIN u.notifyWorkspaces ws
+    		WHERE ws = :workspace
+            AND (UPPER(u.username) LIKE :search
+            OR UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search)
+            AND u.isEnabled = true
+            ORDER BY u.lastName";
+    
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('workspace', $workspace);
+    	$query->setParameter('search', "%{$search}%");
+    
+    	return ($getQuery) ? $query: $query->getResult();
+    }
 
     /**
      * @param Role[]  $roles

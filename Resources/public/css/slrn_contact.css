@@ -1,0 +1,20 @@
+div.cms_style{
+	margin-top: 40px;
+}
+ul.cms_style {
+	margin : 0;
+}
+a.cms_style {
+	color : #606060;
+	font-size: 1.1em;
+}
+form.nolabel label{
+	display:none;
+}
+.contact-form{
+	display:none;	
+}
+
+.contact_text{
+	min-height: 100px;
+}

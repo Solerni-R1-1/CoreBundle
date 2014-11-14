@@ -19,6 +19,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 class LogRepository extends EntityRepository
 {
@@ -922,5 +923,57 @@ class LogRepository extends EntityRepository
     	$query->setMaxResults(1);
     	
     	return $query->getOneOrNullResult();
+    }
+    
+	public function getSubscriptionsForWorkspace(AbstractWorkspace $workspace, array $excludeRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:roles)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("roles", $excludeRoles);
+    	$excludeUsers = $query->getResult();
+
+    	$dql = "SELECT u.lastName,
+    				u.firstName,
+    				u.username,
+    				u.mail,
+    				SUBSTRING(l.dateLog, 1, 10) AS subscriptionDate,
+    				SUBSTRING(l.dateLog, 12, 5) AS subscriptionTime
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+    				WITH l.workspace = :workspace
+    				AND l.receiver = u
+    				AND l.action = 'workspace-role-subscribe_user'
+    			WHERE u.id NOT IN (:excludeUsers)
+    			GROUP BY u.id";
+    	
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	
+    	$result = $query->getScalarResult();
+
+    	$dql = "SELECT u.lastName,
+    				u.firstName,
+    				u.username,
+    				u.mail,
+    				SUBSTRING(l.dateLog, 1, 10) AS subscriptionDate,
+    				SUBSTRING(l.dateLog, 12, 5) AS subscriptionTime
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.groups g
+    			JOIN Claroline\CoreBundle\Entity\Log\Log l
+    				WITH l.workspace = :workspace
+    				AND l.receiverGroup = g
+    				AND l.action = 'workspace-role-subscribe_group'
+    			WHERE u.id NOT IN (:excludeUsers)
+    			GROUP BY u.id";
+
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeUsers", $excludeUsers);
+    	 
+    	$result = array_merge($result, $query->getScalarResult());
+    	
+    	return $result;
     }
 }

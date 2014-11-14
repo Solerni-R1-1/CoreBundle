@@ -66,6 +66,7 @@
             <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li><a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a></li>
             <li><a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a></li>
+            <li><a href="{{ path('claro_workspace_notify_user_list', {'workspace': workspace.getId()} ) }}">{{ 'notify_user_list'|trans({}, 'platform') }}</a></li>
         </ul>
         <h3>{{ 'users_registration_in_workspace'|trans({}, 'platform') }}</h3>
         {{ macros.flashBox() }}
@@ -153,10 +154,11 @@
                     <thead>
                         <tr>
                             <th><input type="checkbox" name="all" id="check-all-items"></input></th>
-                            <th><a href="{{ sortUrl(max, search, 'username', workspace.getId(),direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(),direction ) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(),direction )  }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(),direction ) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                        	{% set inverseDirection = direction == "DESC" ? "ASC" : "DESC" %}
+                            <th><a href="{{ sortUrl(max, search, 'username', workspace.getId(), order == 'username' ? inverseDirection : "ASC") }}">{{ 'username'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(), order == 'lastName' ? inverseDirection : "ASC") }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(), order == 'firstName' ? inverseDirection : "ASC") }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), order == 'mail' ? inverseDirection : "ASC") }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
                             <th>{{ 'session'|trans({}, 'platform') }}</th>
                         </tr>

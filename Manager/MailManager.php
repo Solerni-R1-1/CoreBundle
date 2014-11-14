@@ -295,4 +295,32 @@ class MailManager
             $event->addCacheParameter('is_mailer_available', false);
         }
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return boolean
+     */
+    public function sendContactMessage($contactName, $contactMail, $replyTo, $object, $content){
+
+        $subject = 'Demande de contact Solerni au service '.$contactName;
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Contact:emailContact.html.twig',  
+                array('contactName' => $contactName,
+                        'replyTo' => $replyTo,
+                        'object' => $object,
+                        'content' => $content));
+
+        $userSolerni = new User();
+        $userSolerni->setMail($contactMail);
+
+        $userToReply = new User();
+        $userToReply->setMail($replyTo);
+
+        return $this->send($subject, $body, array($userSolerni), null, $userToReply);
+    }
+
+    public function getSupportMail(){
+        return $this->ch->getParameter('support_email');
+    }
 }

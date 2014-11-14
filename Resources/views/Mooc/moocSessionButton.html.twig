@@ -32,7 +32,7 @@
         {# give access to mooc archives if the user was subscribed #}
         <a href="{{ path( 'mooc_view_session', { 
 				        'moocId': session.getMooc().getId(), 
-				        'moocName': session.getMooc().getAlias(), 
+				        'moocName': session.getMooc().getAlias()|url_encode,
 				        'sessionId': session.getId(), 
 				        'word': 'apprendre'
 				    }) }}"
@@ -40,7 +40,11 @@
     {% else %}
         {# if the mooc is redoable, ask for notification #}
         {% if session.getMooc().getPostEndAction() == 1 %}
-            <a href="#" title="Non fonctionnel" class="btn btn-primary longText">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
+        	{% if user.getNotifyWorkspaces().contains(session.getMooc().getWorkspace()) %}
+            <a href="{{ path( 'claro_workspace_unregister_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-gris longText">{{ 'dont_get_warned_next_session'|trans({}, 'platform') }}</a>
+        	{% else %}
+            <a href="{{ path( 'claro_workspace_register_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-primary longText">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
+        	{% endif %}
         {% else %}
             {# otherwise just display invisible button for spacing #}
             <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}

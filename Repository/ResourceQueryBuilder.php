@@ -208,17 +208,17 @@ class ResourceQueryBuilder
     {
         $eol = PHP_EOL;
         $clause =
-            "node.workspace IN{$eol}" .
-            "({$eol}" .
-            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
-            "    JOIN aw.roles r{$eol}" .
-            "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
-            "       LEFT JOIN r2.users u {$eol}" .
-            "       LEFT JOIN r2.groups g {$eol}" .
-            "       LEFT JOIN g.users u2 {$eol}" .
-            "       WHERE u.id = :user_id OR u2.id = :user_id {$eol}" .
-            "   ) {$eol}" .
-            ") {$eol}";
+            "node.workspace IN 
+            (
+                SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
+                JOIN aw.roles r
+                WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2
+                   LEFT JOIN r2.users u
+                   LEFT JOIN r2.groups g
+                   LEFT JOIN g.users u2
+                   WHERE u.id = :user_id OR u2.id = :user_id
+               )
+            )";
         $this->addWhereClause($clause);
         $this->parameters[':user_id'] = $user->getId();
 

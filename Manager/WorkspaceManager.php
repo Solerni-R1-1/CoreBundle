@@ -910,4 +910,42 @@ class WorkspaceManager
     {
         return $this->workspaceRepo->countUsers($workspaceId);
     }
+    
+    public function exportWorkspaceNotifyUsersAsCSV(AbstractWorkspace $workspace) {
+    	$data = $this->workspaceRepo->getExportDataForWorkspaceNotify($workspace);
+    	
+    	$headerCSV = array();
+    	$headerCSV[] = 'Prénom';
+    	$headerCSV[] = 'Nom';
+    	$headerCSV[] = 'Pseudo';
+    	$headerCSV[] = 'Mail';
+    	
+    	$data = array_merge(array($headerCSV), $data);
+    	
+    	return $this->createCSVFromArray($data);
+    }
+    
+    public function exportWorkspaceNotifyUsersMailsAsCSV(AbstractWorkspace $workspace) {
+    	$data = $this->workspaceRepo->getExportMailForWorkspaceNotify($workspace);
+    	 
+    	$headerCSV = array();
+    	$headerCSV[] = 'Mail';
+    	 
+    	$data = array_merge(array($headerCSV), $data);
+    	 
+    	return $this->createCSVFromArray($data);
+    }
+    
+    private function createCSVFromArray(array $data) {
+    	$handle = fopen('php://memory', 'r+');
+    	foreach ($data as $rowCSV) {
+    		fputcsv($handle, $rowCSV, ';');
+    	}
+    
+    	rewind($handle);
+    	$content = stream_get_contents($handle);
+    	fclose($handle);
+    
+    	return mb_convert_encoding($content, 'UTF-16LE', 'UTF-8');
+    }
 }

@@ -20,7 +20,7 @@ class AnalyticsMoocStatsRepository extends EntityRepository {
 	
 	public function avgConnectionsForSession(MoocSession $moocSession) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
-		$from = $moocSession->getStartDate();
+		$from = $moocSession->getStartInscriptionDate();
 		$to = $moocSession->getEndDate();
 		
 		$dql = "SELECT AVG(ams.nbConnections)
