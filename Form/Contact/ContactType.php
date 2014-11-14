@@ -26,14 +26,11 @@ class ContactType extends AbstractType
 
     private $civilite = array();
 
-    public function __construct(TranslatorInterface $translator, $contacts) {
+    public function __construct(TranslatorInterface $translator, $contacts, $civilite) {
         $this->translator = $translator;
         asort($contacts);
         $this->contacts = $contacts;
-        $this->civilite = array($this->translator->trans('contact_form_civil_monsieur', array(), 'plateform'),
-                                $this->translator->trans('contact_form_civil_madame', array(), 'plateform'),
-                                $this->translator->trans('contact_form_civil_mademoiselle', array(), 'plateform'),
-                );
+        $this->civilite = $civilite;
 
     }
 
@@ -41,35 +38,35 @@ class ContactType extends AbstractType
 
         $builder->add('contact', 'choice', 
         		array(
-        			'empty_value' => $this->translator->trans('contact_form_demande', array(), 'plateform'),
+        			'empty_value' => $this->translator->trans('contact_form_demande', array(), 'platform'),
 				    'choices'   => $this->contacts,
 				    'required'  => true,
 				)
         	)->add('civilite', 'choice', 
                 array(
-                    'empty_value' => $this->translator->trans('contact_form_civil', array(), 'plateform'),
+                    'empty_value' => $this->translator->trans('contact_form_civil', array(), 'platform'),
                     'choices'   => $this->civilite,
-                    'required'  => true,
+                    'required'  => false,
                 )
             )->add(
                 'prenom',
                 'text',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_prenom', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_prenom', array(), 'platform')),
                     'required'  => true,
                 )
             )->add(
                 'nom',
                 'text',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_nom', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_nom', array(), 'platform')),
                     'required'  => true,
                 )
             )->add(
                 'replyTo',
                 'email',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_replyTo', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_replyTo', array(), 'platform')),
                     'required' => true,
                     'constraints' => new Email()
                 )
@@ -77,21 +74,21 @@ class ContactType extends AbstractType
                 'societe',
                 'text',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_societe', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_societe', array(), 'platform')),
                     'required'  => false,
                 )
             )->add(
                 'telephone',
                 'text',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_telephone', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_telephone', array(), 'platform')),
                     'required'  => false,
                 )
             )->add(
                 'fonction',
                 'text',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_fonction', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_fonction', array(), 'platform')),
                     'required'  => false,
                 )
             )

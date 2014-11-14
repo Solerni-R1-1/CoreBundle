@@ -97,10 +97,17 @@ class ContactController extends Controller
 	        }
 
         }
+
+        $civilite = array(
+                    $this->translator->trans('contact_form_civil_monsieur', array(), 'platform'),
+                    $this->translator->trans('contact_form_civil_madame', array(), 'platform'),
+                    $this->translator->trans('contact_form_civil_mademoiselle', array(), 'platform'),
+                );
         
-    	$form = $this->formFactory->create(FormFactory::TYPE_CONTACT, array($this->translator, $contacts));
+    	$form = $this->formFactory->create(FormFactory::TYPE_CONTACT, array($this->translator, $contacts, $civilite));
         $form->handleRequest($this->request);
         $message = null;
+        $formView = null;
 
         // Formulaire complété
         if ($form->isValid()) {
@@ -109,6 +116,12 @@ class ContactController extends Controller
         	$contactId = $data['contact'];
         	$replyTo = $data['replyTo'];
         	$content = $data['content'];
+            if(isset($data['civilite'])) {
+                $data['civilite'] = $civilite[$data['civilite']];
+            }
+            unset($data['contact']);
+            unset($data['replyTo']);
+            unset($data['content']);
 
         	$contactName = $this->translator->trans($defaultServiceName, array(), 'platform');
         	$contactMail = $this->mailManager->getSupportMail();
@@ -121,23 +134,17 @@ class ContactController extends Controller
 			$this->mailManager->sendContactMessage($contactName, $contactMail, $replyTo, $data, $content);
 
 			$message = $this->translator->trans('contact_success', array(), 'platform');
-            return $this->render(
-                'ClarolineCoreBundle:Contact:contact.html.twig',
-                array(
-                   'form' => $form->createView(),
-                   'message' => $message
-                )
-            );
-
         } else {
-            return $this->render(
-                'ClarolineCoreBundle:Contact:contact.html.twig',
-                array(
-                   'form' => $form->createView(),
-                   'message' => $message
-                )
-            );
+            $formView = $form->createView();
         }
+
+        return $this->render(
+            'ClarolineCoreBundle:Contact:contact.html.twig',
+            array(
+               'form' => $formView,
+               'message' => $message
+            )
+        );
 
         
     }

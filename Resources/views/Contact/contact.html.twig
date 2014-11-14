@@ -72,25 +72,29 @@
 		        <div class="panel-heading">
 		            <h2 class="slrn-content-main-title">{{ "Contactez_nous" | trans({}, "platform" )}}</h3>
 		        </div>
-		        {% if has_role('ROLE_ADMIN') %}
-		        	<a href='{{path('contact_edit_services')}}'>Edit list</a>
+		        {% if form is defined and form is not null %}
+			        {% if has_role('ROLE_ADMIN') %}
+			        	<a href='{{path('contact_edit_services')}}'>Edit list</a>
+			        {% endif %}
 		        {% endif %}
 		        {% if message is defined and message is not null %}
 		        	<p>{{ message }}</p>
 		        {% endif %}
-		        <form role="form"
-		              action="{{path('contact_show')}}"
-		              method="post" {{ form_enctype(form) }}
-		              id="generic-form"
-		              class="form-horizontal nolabel has-validation-callback">
-		            <div class="panel-body">
-		                {{ form_widget(form) }}
-		                {{ form_rest(form) }}
-		            </div>
-		            <div class="panel-footer">
-		                <button type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
-		            </div>
-		        </form>
+		        {% if form is defined and form is not null %}
+			        <form role="form"
+			              action="{{path('contact_show')}}"
+			              method="post" {{ form_enctype(form) }}
+			              id="generic-form"
+			              class="form-horizontal nolabel has-validation-callback">
+			            <div class="panel-body">
+			                {{ form_widget(form) }}
+			                {{ form_rest(form) }}
+			            </div>
+			            <div class="panel-footer">
+			                <button type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
+			            </div>
+			        </form>
+			    {% endif %}
 		    </div>
 
 		</div>

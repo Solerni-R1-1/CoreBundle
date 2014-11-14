@@ -1174,8 +1174,8 @@ export_mail: 'Exporter les adresses mail'
 
 #Page contact
 contact_general : Général
-contact : Contactez nous
-Contactez_nous : Contactez nous
+contact : Nous contacter
+Contactez_nous : Nous contacter
 contact_form_demande : Votre demande concerne
 contact_form_civil : Civilité
 contact_form_civil_monsieur : Monsieur
@@ -1191,5 +1191,5 @@ contact_form_content : Contenu
 Contactez_nous_edition : Edition de la liste des services
 contact_name : Label du service
 contact_mail : Email du service
-contact_success : Votre message a été envoyé avec succès.
+contact_success : Votre message a bien été envoyé.
 #Page contact

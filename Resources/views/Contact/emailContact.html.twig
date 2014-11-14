@@ -29,8 +29,13 @@
                                     <td>
 
 
-Demande de la part de {{replyTo}} à l'attention du service {{contactName}}. Voici son message :<br/>
-Intitul&eacute; : "{{object}}"<br/>
+<p>Demande de la part de {{replyTo}} à l'attention du service {{contactName}}.</p>
+<ul>
+{% for key, value in data %}
+    <li>{{key}} : {{value}}</li>
+{% endfor %}
+</ul>
+<p>Voici son message :</p>
 <blockquote>
     {{content|raw}}
 </blockquote>
