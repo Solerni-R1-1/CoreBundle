@@ -330,7 +330,7 @@ class MessageController
      * @EXT\ParamConverter(
      *      "receivers",
      *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true}
+     *      options={"multipleIds" = true, "name"="ids"}
      * )
      * @EXT\ParamConverter(
      *      "workspaces",
@@ -368,6 +368,36 @@ class MessageController
         Message $message = null
     )
     {
+        
+        $initialDestinaters = array();
+        if($receivers){
+            $strUsers = array();
+            foreach ($receivers as $value) {
+                $strUsers[] = $value->getUsername();
+            }
+            $initialDestinaters[] = implode(';', $strUsers);
+        }
+        if($workspaces){
+            $strWorkspace = array();
+            foreach ($workspaces as $value) {
+                $strWorkspace[] = '['.$value->getCode().']';
+            }
+            $initialDestinaters[] = implode(';', $strWorkspace);
+        }
+        if($groups){
+            $strGroups = array();
+            foreach ($groups as $value) {
+                $strGroups[] = '{'.$value->getCode().'}';
+            }
+            $initialDestinaters[] = implode(';', $strGroups);
+        }
+
+        $initialdest = '';
+        if(count($initialDestinaters) > 0){
+            $initialdest = implode(';', $initialDestinaters);    
+        }
+        
+
         if ($message) {
             //Get all conversation, even message with ID > current id asked
             $disqus = $this->messageManager->getConversation($message);
@@ -380,9 +410,8 @@ class MessageController
             $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE_SIMPLE, array($this->translator)); 
         } else {
             $disqus = array();
-            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
+            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($initialdest, null, $this->translator));
         }
-        
 
         return array(
             'disqus' => $disqus,
