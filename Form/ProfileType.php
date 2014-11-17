@@ -60,12 +60,21 @@ class ProfileType extends AbstractType
                     'text',
                     array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
                 )
+                ->add('publicUrl','text', array('label' => 'user_form_public_url' ))
                 ->add('mail', 'email', array('read_only' => true, 'disabled' => true, 'required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+                ->add(
+                    'accepted_com_terms', 
+                    'checkbox', 
+                    array(
+                        'label' => 'I agree that my personal information be used for commercial purposes',
+                        'required' => false
+                ));
         } else {
             $builder->add('username', 'text', array('label' => 'user_form_username'))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
+                ->add('publicUrl','text', array('label' => 'user_form_public_url'))
                 ->add('mail', 'email', array('required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
@@ -110,14 +119,8 @@ class ProfileType extends AbstractType
             'description',
             'tinymce',
             array('required' => false, 'label' => 'description')
-        )
-        ->add(
-            'accepted_com_terms', 
-            'checkbox', 
-            array(
-                'label' => 'I agree that my personal information be used for commercial purposes',
-                'required' => false
-        ));
+        );
+
     }
 
     public function getName()
