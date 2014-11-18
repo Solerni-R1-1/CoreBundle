@@ -34,7 +34,7 @@
 				        'moocId': session.getMooc().getId(), 
 				        'moocName': session.getMooc().getAlias()|url_encode,
 				        'sessionId': session.getId(), 
-				        'word': 'apprendre'
+				        'word': 'sinformer'
 				    }) }}"
 		  class="link-btn-spacing pink_link">{{ 'mooc_archives'|trans({}, 'platform') }}</a>
     {% else %}
@@ -69,7 +69,7 @@
         'moocId': session.getMooc().getId(), 
         'moocName': session.getMooc().getAlias(), 
         'sessionId': session.getId(), 
-        'word': 'apprendre'
+        'word': 'sinformer'
     }) }}">{{ 'go_to_mooc'|trans({}, 'platform') }}</a>
 {# inscription is open but session is full #}
 {% elseif session.getMaxUsers() != 0 and nbUsers >= session.getMaxUsers() %}
