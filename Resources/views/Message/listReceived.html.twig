@@ -39,14 +39,13 @@
 {% block title %}{{ 'messages_received' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
+     
     <div class="search-bar row margin-bottom-md">
         <div class='col-xs-12 col-md-12'>
             {{ displayControls() }}
         </div>
     </div>
-    <div id="flashbox">
-
-    </div>
+    
     {#<div>
     {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}

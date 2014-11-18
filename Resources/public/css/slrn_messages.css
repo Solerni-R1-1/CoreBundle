@@ -1,3 +1,17 @@
+body.dsk .alert{
+	display: block;
+}
+
+.alert .close{
+	display: block;
+}
+
+.alert-success {
+	background-color: #d4ffb0;
+	border-color: #d7ff97;
+	color: #468847;
+}
+
 .flat_block{
 	padding:0;
 	display: inline-block;

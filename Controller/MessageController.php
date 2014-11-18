@@ -173,8 +173,14 @@ class MessageController
                 $message->setSender($sender);
                 $message->setRoot($message); //pointer on itself
                 $message = $this->messageManager->send($message);
-                $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
 
+                $this->request->getSession()
+                    ->getFlashBag()
+                    ->add('success', $this->translator->trans('message_send', array(), 'platform'));
+
+                /*$url = $this->router->generate('claro_message_show', array('message' => $message->getId()));*/
+
+                $url = $this->router->generate('claro_message_list_received', array());
                 return new RedirectResponse($url);
             }
 
@@ -199,12 +205,16 @@ class MessageController
                 $message->setObject($root->getObject());
                 $message->setTo(implode(";", $receiversUsername));
                 $message = $this->messageManager->send($message);
-                $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
 
+                $this->request->getSession()
+                    ->getFlashBag()
+                    ->add('success', $this->translator->trans('message_send', array(), 'platform'));
+
+                /*$url = $this->router->generate('claro_message_show', array('message' => $message->getId()));*/
+                $url = $this->router->generate('claro_message_list_received', array());
                 return new RedirectResponse($url);
             } 
         }
-        
 
         
 
@@ -551,17 +561,17 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/contactable/users/page/{page}",
+     *     "/contactable/users/page/{page}/{orderfield}/{orderby}",
      *     name="claro_message_contactable_users",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "orderfield"="id", "orderby" = "ASC"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/contactable/users/page/{page}/search/{search}",
+     *     "/contactable/users/page/{page}/{orderfield}/{orderby}/search/{search}",
      *     name="claro_message_contactable_users_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "orderfield"="id", "orderby" = "ASC"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -574,19 +584,31 @@ class MessageController
      * @param integer $page
      * @param string  $search
      * @param User    $user
+     * @param string  $orderfield can be id / username / lastname / firstname
+     * @param string  $orderby  can be asc or desc
      *
      * @return Response
      */
-    public function contactableUsersListAction(User $user, $page, $search)
+    public function contactableUsersListAction(User $user, $page, $search, $orderfield, $orderby)
     {
+        if($orderfield !== 'id' and $orderfield !== 'username' and $orderfield !== 'lastName' and $orderfield !== 'firstName'){
+            $orderfield = 'id';
+        }
+
+        if($orderby !== 'ASC' and $orderby !== 'DESC'){
+            $orderby = 'ASC';
+        }
+
+        $maxPerPage = 20;
+        
         $trimmedSearch = trim($search);
 
         if ($user->hasRole('ROLE_ADMIN')) {
             if ($trimmedSearch === '') {
-                $users = $this->userManager->getAllUsers($page);
+                $users = $this->userManager->getAllUsers($page, $maxPerPage, $orderfield, $orderby);
             } else {
                 $users = $this->userManager
-                    ->getAllUsersBySearch($page, $trimmedSearch);
+                    ->getAllUsersBySearch($page, $trimmedSearch, $maxPerPage, $orderfield, $orderby);
             }
         } else {
             $users = array();
@@ -597,12 +619,15 @@ class MessageController
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
                     $users = $this->userManager
-                        ->getUsersByWorkspaces($workspaces, $page);
+                        ->getUsersByWorkspaces($workspaces, $page, $maxPerPage, $orderfield, $orderby);
                 } else {
                     $users = $this->userManager->getUsersByWorkspacesAndSearch(
                         $workspaces,
                         $page,
-                        $search
+                        $maxPerPage, 
+                        $search, 
+                        $orderfield, 
+                        $orderby
                     );
                 }
             }

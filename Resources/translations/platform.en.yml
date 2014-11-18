@@ -1187,3 +1187,5 @@ contact_name : Label of service
 contact_mail : Mail of service
 contact_success : Your message has been send with success
 #Page contact
+
+message_send : Your message has been send with success

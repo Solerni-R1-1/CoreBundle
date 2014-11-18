@@ -29,6 +29,9 @@ var typeMapLabel = {
 var isSearch = false;
 var initialData = null;
 
+var currentSortfield = 'id';
+var currentSortby = 'ASC';
+
 function getPage(tab)
 {
     var page = 1;
@@ -88,7 +91,7 @@ function cleanToList(toList){
     return toList.replace(reg, toList);
 }
 
-function displayPager(type, normalRoute, searchRoute)
+function displayPager(type, normalRoute, searchRoute, reinit, callback)
 {
     currentType = type;
     var toList = $('#message_form_to').val();
@@ -100,7 +103,8 @@ function displayPager(type, normalRoute, searchRoute)
     if(isSearch) {
         search = toListArray[toListArray.length - 1].trim();
     }
-    if(initialData !== null){
+
+    if(reinit !== null && reinit !== false && initialData !== null){
         typeMap = {
             'user': [],
             'group': [],
@@ -150,10 +154,10 @@ function displayPager(type, normalRoute, searchRoute)
     var route;
 
     if (search === '') {
-        route = Routing.generate(normalRoute);
+        route = Routing.generate(normalRoute, {'orderfield' : currentSortfield, 'orderby' : currentSortby});
     } else {
         route = Routing.generate(
-            searchRoute, {'search': search}
+            searchRoute, {'search': search, 'orderfield' : currentSortfield, 'orderby' : currentSortby}
         );
     }
 
@@ -164,6 +168,9 @@ function displayPager(type, normalRoute, searchRoute)
             $('#contacts-list').empty();
             $('#contacts-list').append(datas);
             displayCheckBoxStatus();
+            if (callback && (typeof callback == "function")) {
+                callback();
+            }
         }
     });
 }
@@ -235,6 +242,7 @@ function updateContactInput()
 }
 
 $( document ).ready(function() {
+
 
     //If errors
     if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
@@ -335,7 +343,6 @@ $( document ).ready(function() {
 
 
 });
-
 $('body').on('click', '.pagination > ul > li > a', function (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -350,8 +357,8 @@ $('body').on('click', '.pagination > ul > li > a', function (event) {
 
         if (currentType === 'user') {
             route = (search !== '') ?
-                Routing.generate('claro_message_contactable_users_search', {'page': page, 'search': search}):
-                Routing.generate('claro_message_contactable_users', {'page': page});
+                Routing.generate('claro_message_contactable_users_search', {'page': page, 'search': search, 'orderfield' : currentSortfield, 'orderby' : currentSortby}):
+                Routing.generate('claro_message_contactable_users', {'page': page, 'orderfield' : currentSortfield, 'orderby' : currentSortby});
         }
 
         if (currentType === 'group') {
@@ -467,5 +474,36 @@ function statusSearch(){
         $('#contacts-button-search').removeAttr('disabled');
     } else {
         $('#contacts-button-search').attr('disabled','disabled');
+    }
+}
+
+
+$('body').on('click', 'a.sortable', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    currentSortfield = $(this).attr('data-field');
+    currentSortby = $(this).attr('data-by');
+
+    displayPager(
+        'user',
+        'claro_message_contactable_users',
+        'claro_message_contactable_users_search',
+        false, // don't reinit data
+        postSortCallback
+    );
+
+   
+
+});   
+
+function postSortCallback(){
+
+    field = $('.sort-'+currentSortfield);
+
+    if(currentSortby === 'DESC'){
+        field.attr('data-by', 'ASC');
+    } else {
+        field.attr('data-by', 'DESC');        
     }
 }
