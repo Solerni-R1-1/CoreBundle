@@ -402,6 +402,14 @@ class AnalyticsExportController extends Controller {
 			$badgesIndex = array();
 			$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
 			//$workspaceUsers = $currentSession->getAllUsers($excludeRoles);
+            
+            if ( ! $currentSession ) {
+                 $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
+             }
+
+             if (  ! $currentSession ) {
+                 throw new NotFoundHttpException();
+             }
 
 			$headerCSV = array();
 			$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
@@ -510,6 +518,15 @@ class AnalyticsExportController extends Controller {
     	$excludeRoles[] = "ROLE_WS_CREATOR";
     	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        
+        if ( ! $currentSession ) {
+            $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
+        }
+        
+        if (  ! $currentSession ) {
+            throw new NotFoundHttpException();
+        }
+        
 		$from = $currentSession->getStartInscriptionDate();
 		$to = $currentSession->getEndInscriptionDate();
 				
@@ -552,6 +569,15 @@ class AnalyticsExportController extends Controller {
     	$excludeRoles[] = "ROLE_WS_CREATOR";
     	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        
+       if ( ! $currentSession ) {
+            $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
+        }
+        
+        if (  ! $currentSession ) {
+            throw new NotFoundHttpException();
+        }
+        
 		$from = $currentSession->getStartInscriptionDate();
 		$to = $currentSession->getEndInscriptionDate();
 		
@@ -683,6 +709,14 @@ class AnalyticsExportController extends Controller {
 	 */
 	public function exportForumStatsAction(AbstractWorkspace $workspace) {    	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        
+       if ( ! $currentSession ) {
+            $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
+        }
+        
+        if (  ! $currentSession ) {
+            throw new NotFoundHttpException();
+        }
 		
 		$headerCSV = array();
 		$header = array();
@@ -737,6 +771,15 @@ class AnalyticsExportController extends Controller {
 		$headerCSV[] = $header;
 
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        
+        if ( ! $currentSession ) {
+            $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
+        }
+        
+        if (  ! $currentSession ) {
+            throw new NotFoundHttpException();
+        }
+        
 		$data = $this->analyticsManager->getMostActiveUsers($currentSession);
 	
 		$rowsCSV = array_merge($headerCSV, $data);
