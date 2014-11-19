@@ -7,9 +7,13 @@ body.dsk .alert{
 }
 
 .alert-success {
-	background-color: #d4ffb0;
-	border-color: #d7ff97;
+	/*background-color: #d4ffb0;*/
+	border: 1px solid #d7ff97;
 	color: #468847;
+	font-weight: bold;
+	/*background-color: #D90045;
+	border-color: #D90045;
+	color: #fff;*/
 }
 
 .flat_block{
