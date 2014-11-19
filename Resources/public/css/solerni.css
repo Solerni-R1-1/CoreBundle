@@ -192,15 +192,38 @@ body.subnavbar-fixed {
     pointer-events: none;
 }
 
+.navbar-inverse .navbar-nav .slrn-topbar--messages a,
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a{
+    display: block;
+    margin-top:3px;
+    height: 43px;
+    width: 41px;
+    background: url('../images/sprites_solerni.png') no-repeat -82px -44px scroll;
+    font-size: 0em;
+    color: transparent;
+}
+.navbar-inverse .navbar-nav .slrn-topbar--messages a:hover{
+    background-position: -124px -44px;
+}
+
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a{
+    background-position: -82px 0px;
+}
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a:hover{
+    background-position: -124px 0px;
+}
+
+/*
 .slrn-topbar--messages:hover:before,
 .slrn-topbar--messages.active:before { background-color: #FFF; }
 .slrn-topbar--messages:hover i,
 .slrn-topbar--messages.active i { color: #4B667C; }
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:before,
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a { color: #C9D200; border-color: #C9D200; }
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:hover:before,
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages.active:before { background-color: #C9D200; }
 
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:before,
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a { color: #ee2553; border-color: #FFF; }
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:hover:before,
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages.active:before { color: #FFF; border-color: #ee2553;background-color: #ee2553; }
+*/
 /* BOOTSTRAP */
 .please-wait { z-index: 1100; }
 
@@ -793,11 +816,11 @@ body.dsk .alert { display: none; }
 .dsk__menu__link.active {
     background-color: #4B667C;
     color: #FFF;
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 
 .dsk__menu__link.active:hover {
-    text-decoration: none;    
+   /* text-decoration: none;  */  
 }
 
 .dsk_menu__link--disabled {
