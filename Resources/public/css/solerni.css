@@ -198,19 +198,19 @@ body.subnavbar-fixed {
     margin-top:3px;
     height: 43px;
     width: 41px;
-    background: url('../images/sprites_solerni.png') no-repeat -82px -44px scroll;
+    background: url('../images/sprites_solerni.png') no-repeat -109px -212px scroll;
     font-size: 0em;
     color: transparent;
 }
 .navbar-inverse .navbar-nav .slrn-topbar--messages a:hover{
-    background-position: -124px -44px;
+    background-position: -150px -212px;
 }
 
 .navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a{
-    background-position: -82px 0px;
+    background-position: -109px -169px;
 }
 .navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a:hover{
-    background-position: -124px 0px;
+    background-position: -150px -169px;
 }
 
 /*
