@@ -2192,3 +2192,16 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 .slrn-required{
     border-color: #900;
 }
+
+
+/**************** Sticky bar ******************/
+.headroom {
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}
+/**************** Sticky bar ******************/
