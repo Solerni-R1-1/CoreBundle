@@ -816,11 +816,11 @@ body.dsk .alert { display: none; }
 .dsk__menu__link.active {
     background-color: #4B667C;
     color: #FFF;
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 
 .dsk__menu__link.active:hover {
-    text-decoration: none;    
+   /* text-decoration: none;  */  
 }
 
 .dsk_menu__link--disabled {
