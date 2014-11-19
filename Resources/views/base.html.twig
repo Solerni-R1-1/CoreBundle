@@ -85,8 +85,8 @@
 
             ga('create', 'UA-48106816-5', 'solerni.org');
             ga('require', 'linkid', 'linkid.js');
-            
-            {% if workspace|default and workspace.isMooc() %}   
+            ga('require', 'displayfeatures');
+            {% if workspace|default and workspace.isMooc() %}
                 {% if workspace.getMooc().getOwner().getName()|default %}
                     ga('set', 'dimension1', '{{ workspace.getMooc().getOwner().getName()|escape('js') }}');
                 {% endif %}
