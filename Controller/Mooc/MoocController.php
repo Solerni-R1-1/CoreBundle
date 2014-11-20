@@ -169,6 +169,10 @@ class MoocController extends Controller
             case "partager" :
                 return $this->sessionPartagerPage($mooc->getWorkspace());
                 break;
+            
+            case "sinformer" :
+                return $this->sessionSinformerPage($moocSession->getMooc(), $user);
+                break;
 
             case "subscribe" :
                 return $this->sessionAddUserAction( $moocSession, $user );
@@ -242,6 +246,25 @@ class MoocController extends Controller
         $url = $this->get('router')
                      ->generate('claro_workspace_open_tool', array('workspaceId' => $workspaceId, "toolName" => "resource_manager"));
         return  $this->redirect($url);
+
+    }
+    
+    /**
+     * Redirect user to the blog resource of the workspace
+     * Fallback to page apprendre
+     */
+    private function sessionSinformerPage($mooc, $user) {
+
+        $blogRes = $mooc->getBlog();
+        if ($blogRes != null) {
+            $blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
+            $url = $this->get('router')->generate('icap_blog_view', array('blogId' => $blog->getId()));
+            return  $this->redirect($url);
+            
+        } else {
+            return $this->sessionApprendrePage($mooc, $user);
+            
+        }
 
     }
 

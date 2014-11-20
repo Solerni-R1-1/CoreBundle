@@ -1033,11 +1033,25 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $this;
     }
 
-    public function isPublicUrlValid(ExecutionContextInterface $context)
+    public function isPublicUrlValid(ExecutionContextInterface $context = null)
     {
         // Search for whitespaces
-        if (!preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
+        if ( $context && ! preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
+        } elseif ( !preg_match(USER::$patternUrlPublic, $this->getPublicUrl()) )  {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+        public function isUserNameValid()
+    {
+        // Alphanumeric + dot
+        if ( !preg_match(USER::$patternUrlPublic, $this->getUsername()) )  {
+            return false;
+        } else {
+            return true;
         }
     }
 

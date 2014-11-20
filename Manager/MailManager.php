@@ -301,14 +301,14 @@ class MailManager
      *
      * @return boolean
      */
-    public function sendContactMessage($contactName, $contactMail, $replyTo, $object, $content){
+    public function sendContactMessage($contactName, $contactMail, $replyTo, $data, $content){
 
         $subject = 'Demande de contact Solerni au service '.$contactName;
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Contact:emailContact.html.twig',  
                 array('contactName' => $contactName,
                         'replyTo' => $replyTo,
-                        'object' => $object,
+                        'data' => $data,
                         'content' => $content));
 
         $userSolerni = new User();

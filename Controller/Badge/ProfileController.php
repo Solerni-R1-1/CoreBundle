@@ -143,13 +143,41 @@ class ProfileController extends Controller
         $doctrine = $this->getDoctrine();
         $doctrine->getManager()->getFilters()->disable('softdeleteable');
         $userBadges       = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
-        $badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
-        $badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
+
+        $badgesPerMoocs = array('nomooc' => 
+                                        array(
+                                            'mooc'=>null, 
+                                            'badges' => array()
+                                        )
+                                );
+        
+        foreach ($userBadges as $userBadge) {
+            
+            $w = $userBadge->getBadge()->getWorkspace();
+
+            if($w == null || $w->getMooc() == null){
+                $badgesPerMoocs['nomooc']['userBadges'][] = $userBadge;
+            } else {
+                $mooc = $w->getMooc();
+                $moocName = $mooc->getName();
+                if(!isset($badgesPerMoocs[$moocName])){
+                    $badgesPerMoocs[$moocName] = array(
+                                                    'mooc'=>$mooc, 
+                                                    'userBadges' => array()
+                                                );
+                }
+                $badgesPerMoocs[$moocName]['userBadge'][] = $userBadge;
+            }
+        }
+
+        //$badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
+        //$badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
 
         return array(
             'userBadges'       => $userBadges,
-            'badgeClaims'      => $badgeClaims,
-            'badgeCollections' => $badgeCollections
+            'badgesPerMoocs'   => $badgesPerMoocs
+           // 'badgeClaims'      => $badgeClaims,
+           // 'badgeCollections' => $badgeCollections
         );
     }
 }

@@ -849,12 +849,14 @@ user_form_lastName: 'Nom'
 user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux.'
 user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux.'
 user_form_username: 'Pseudo'
-user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres et posséder au minimum 3 caractères'
+user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres, des points et des underscores, et posséder au minimum 3 caractères'
 mail: 'Email'
 mail_invalid: 'Vous devez saisir une adresse email valide'
 user_form_plainPassword_first: 'Mot de passe'
 user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères au minimum'
 user_form_plainPassword_second: 'Vérification du mot de passe'
+user_form_public_url: Url de profil public
+user_form_publicUrl_invalid: L'URL publique ne peut contenir que des lettres en minuscules, des chiffres, des points ou des underscores
 password_mismatch : 'Les mots de passe ne correspondent pas'
 account_created: 'Votre compte utilisateur a été crée'
 what_is_solerni: 'A propos'
@@ -1174,13 +1176,24 @@ export_mail: 'Exporter les adresses mail'
 
 #Page contact
 contact_general : Général
-contact : Contactez nous
-Contactez_nous : Contactez nous
-contact_form_replyTo : Votre email
-contact_form_object : Intitulé du message
+contact : Nous contacter
+Contactez_nous : Nous contacter
+contact_form_demande : Votre demande concerne
+contact_form_civil : Civilité
+contact_form_civil_monsieur : Monsieur
+contact_form_civil_madame : Madame
+contact_form_civil_mademoiselle : Mademoiselle
+contact_form_prenom : Prénom
+contact_form_nom : Nom
+contact_form_replyTo : Email
+contact_form_societe : Société
+contact_form_telephone : Téléphone
+contact_form_fonction : Fonction
 contact_form_content : Contenu
 Contactez_nous_edition : Edition de la liste des services
 contact_name : Label du service
 contact_mail : Email du service
-contact_success : Votre message a été envoyé avec succès.
+contact_success : Votre message a bien été envoyé.
 #Page contact
+
+message_send : Votre message a bien été envoyé.

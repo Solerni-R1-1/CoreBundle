@@ -25,21 +25,28 @@
                             {{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}
                         {#</a>#}
                     </strong>
-                </p>
-                {{ form_errors(form) }}
-                {{ form_errors(form.public_url) }}
+                </p>              
                 <div class="form-group public_profile_url">
                     <label class="col-md-3 control-label">{{ path('claro_profile_view') }}</label>
                     <div class="col-md-4">
                         {{ form_widget(form.public_url) }}
+                        {{ form_errors(form.public_url) }}
                         <input type="hidden" value="{{ currentPublicUrl }}" id="current_public_profile_url">
                     </div>
                     <div class="col-md-1 slrn-more-info">
                         <i class="icon-info-sign" data-toggle="tooltip" title="{{ 'public_url_help'|trans({}, 'platform') }}"></i>
                     </div>
                 </div>
-
-                {{ form_rest(form) }}
+                {# display form if there is an error #}
+                <div class="form-group public_profile_url {% if user.isUserNameValid() %}hide{% endif %}">
+                    <label class="col-md-3 control-label">{{ 'user_form_username'|trans({}, 'platform')}}</label>
+                    <div class="col-md-4">
+                        {{ form_widget(form.username) }}
+                        {{ form_errors(form.username) }}
+                        {{ form_errors(form) }}
+                    </div>
+                </div>
+                {{ form_widget(form._token) }}
             </div>
             <div class="form-group row slrn-form-group-button">
                 <div class="col-md-3 col-xs-3"></div>
