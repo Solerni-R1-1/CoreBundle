@@ -614,7 +614,16 @@ class MessageController
             $users = array();
             $token = $this->securityContext->getToken();
             $roles = $this->utils->getRoles($token);
-            $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+
+            //FIXME getOpenable ou mooc actuellement inscrit ? ?
+            //$workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+            $workspaces = array();
+            foreach ($user->getMoocSessions() as $moocSessions) {
+                $w = $moocSessions->getMooc()->getWorkspace();
+                $workspaces[$w->getId()] = $w;
+                
+            }
+            $workspaces = array_values($workspaces);
 
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {

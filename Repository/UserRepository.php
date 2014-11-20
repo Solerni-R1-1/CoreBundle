@@ -411,7 +411,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT DISTINCT u from Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = " . Role::WS_ROLE . "
             )
             LEFT JOIN wr.workspace w
             LEFT JOIN u.personalWorkspace ws
