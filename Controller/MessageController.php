@@ -624,8 +624,8 @@ class MessageController
                     $users = $this->userManager->getUsersByWorkspacesAndSearch(
                         $workspaces,
                         $page,
+                        $trimmedSearch, 
                         $maxPerPage, 
-                        $search, 
                         $orderfield, 
                         $orderby
                     );
