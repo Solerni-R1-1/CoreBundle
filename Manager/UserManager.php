@@ -650,7 +650,7 @@ class UserManager
     {
         $users = $this->userRepo
             ->findUsersByWorkspacesAndSearch($workspaces, $search, $orderedBy, $order);
-
+            
         return $this->pagerFactory->createPagerFromArray($users, $page, $max, true, false);
     }
 
