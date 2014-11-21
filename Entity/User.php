@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -348,6 +349,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     protected $notifyWorkspaces;
+    
+    /**
+     * @ORM\OneToMany(
+     * 		targetEntity="UJM\ExoBundle\Entity\ExerciseUser",
+     * 		mappedBy="user")
+     * @var array
+     */
+    protected $givenUpExercises;
 
 
     public function __construct()
@@ -1131,5 +1140,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     
     public function getNotifyWorkspaces() {
     	return $this->notifyWorkspaces;
+    }
+    
+    public function hasGivenUpExercise(Exercise $exercise) {
+    	foreach ($this->givenUpExercises as $exerciseUser) {
+    		if ($exerciseUser->isGivenUp()
+    				&& $exerciseUser->getExercise()->getId() == $exercise->getId()) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }
