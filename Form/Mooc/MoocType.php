@@ -115,6 +115,9 @@ class MoocType extends AbstractType
             			return $er->getQueryFindByWorkspaceAndResourceType($this->workspace, $this->blogResourceType);
             		}
             ))
+            ->add('showResourceManager', 'checkbox', array(
+            		'required'		=> false
+            ))
             ->add('moocSessions', 'collection', array(
                     'type' => new MoocSessionType( $this->workspace, $this->forumResourceType ),
                     'allow_add'     => true,

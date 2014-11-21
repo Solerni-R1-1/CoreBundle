@@ -935,6 +935,7 @@ claroline_corebundle_moocs : 'Moocs'
 claroline_corebundle_mooc_certificationType : 'Certification'
 claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
 claroline_corebundle_mooc_blog: Blog du Mooc
+claroline_corebundle_mooc_showResourceManager: 'Onglet "Partager"'
 choose_blog_mooc: -- Choisir un blog pour le mooc --
 
 

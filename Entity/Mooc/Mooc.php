@@ -256,6 +256,11 @@ class Mooc
     private $blog;
     
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $showResourceManager;
+    
+    /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      * 
      * @ORM\ManyToOne(
@@ -1002,5 +1007,13 @@ class Mooc
     
     public function setKnowledgeBadgesUrl($knowledgeBadgesUrl) {
     	$this->knowledgeBadgesUrl = $knowledgeBadgesUrl;
+    }
+    
+    public function isShowResourceManager() {
+    	return $this->showResourceManager;
+    }
+    
+    public function setShowResourceManager($showResourceManager) {
+    	$this->showResourceManager = $showResourceManager;
     }
 }

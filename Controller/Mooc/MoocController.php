@@ -456,7 +456,11 @@ class MoocController extends Controller
         }
         
         // Generate tab for resource manager
-        if ( $session ) {
+        $showResourceManager = true;
+        if ($workspace->isMooc() && !$workspace->getMooc()->isShowResourceManager()) {
+        	$showResourceManager = false;
+        }
+        if ( $session && $showResourceManager ) {
             $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
             $solerniTabs['solerniTabs'][] = array(
                 'name' => 'Partager',
