@@ -414,4 +414,19 @@
             }
         }
     });
+
+
+    $('#mooc_select').on('change', function () {
+
+        if( $( '#mooc_select' ).val() == 'all') {
+            $(".mooc_wrapper").show();
+        } else {
+            $(".mooc_wrapper").hide();
+            $("#" + $( '#mooc_select' ).val()).show();
+        }
+        
+    });
+
+
 })(jQuery);
+
