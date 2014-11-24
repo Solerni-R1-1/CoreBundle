@@ -866,7 +866,7 @@ solerni_homepage: 'Retour à l''accueil'
 solerni_hello: 'Bonjour'
 my_account: 'Mon profil'
 profile_parameters: 'Paramètres'
-competence_badges: 'Obtenez des badges de compétences'
+competence_badges: 'Badges<br/>de compétences'
 knowledge_badges: 'Badges de connaissances'
 my_progress: 'Ma progression'
 badge_knowledge_short: 'Connaissances'
@@ -889,6 +889,8 @@ my_library: 'Ma bibliothèque'
 mooc_resources: 'Les ressources du MOOC'
 read_faq: 'Consulter les FAQ'
 more_about_badges: 'En savoir plus sur les badges'
+workgroup: 'Collaborer'
+workgroup_title: 'Le groupe de travail du MOOC'
 
 my_badge_details: 'Consulter mon badge en détail'
 go_to_evaluation: 'Aller dans mon espace d''évaluation'
@@ -936,6 +938,8 @@ claroline_corebundle_mooc_certificationType : 'Certification'
 claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
 claroline_corebundle_mooc_blog: Blog du Mooc
 claroline_corebundle_mooc_showResourceManager: 'Onglet "Partager"'
+claroline_corebundle_mooc_showWorkGroup: 'Onglet "Groupe de travail"'
+claroline_corebundle_mooc_workGroup: 'Contenu de l''onglet "Groupe de travail"'
 choose_blog_mooc: -- Choisir un blog pour le mooc --
 
 

@@ -285,6 +285,16 @@ class Mooc
     private $accessConstraints;
     
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $showWorkGroup;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $workGroup;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -1015,5 +1025,21 @@ class Mooc
     
     public function setShowResourceManager($showResourceManager) {
     	$this->showResourceManager = $showResourceManager;
+    }
+    
+    public function setWorkGroup($workGroup) {
+    	$this->workGroup = $workGroup;
+    }
+    
+    public function getWorkGroup() {
+    	return $this->workGroup;
+    }
+    
+    public function setShowWorkGroup($showWorkGroup) {
+    	$this->showWorkGroup = $showWorkGroup;
+    }
+    
+    public function isShowWorkGroup() {
+    	return $this->showWorkGroup;
     }
 }

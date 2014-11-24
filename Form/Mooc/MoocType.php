@@ -118,6 +118,12 @@ class MoocType extends AbstractType
             ->add('showResourceManager', 'checkbox', array(
             		'required'		=> false
             ))
+            ->add('showWorkGroup', 'checkbox', array(
+            		'required'		=> false
+            ))
+            ->add('workGroup', 'tinymce', array(
+            		'required'		=> false
+            ))
             ->add('moocSessions', 'collection', array(
                     'type' => new MoocSessionType( $this->workspace, $this->forumResourceType ),
                     'allow_add'     => true,

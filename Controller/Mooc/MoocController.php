@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Controller\Mooc\MoocService;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of StaticController
@@ -397,6 +398,33 @@ class MoocController extends Controller
     }
     
     /**
+     * @Route("/workspace/{workspaceId}/workgroup", name="claro_show_work_group")
+     *
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @ParamConverter("user", options={"authenticatedUser" = false })
+     */
+    public function showWorkGroupAction(AbstractWorkspace $workspace, $user) {
+    	if ($workspace->isMooc() && $workspace->getMooc()->isShowWorkGroup()) {
+    		$workgroup = $workspace->getMooc()->getWorkGroup();
+    		
+    		return $this->render(
+    				'ClarolineCoreBundle:Tool\workspace\workgroup:workgroup.html.twig',
+    				array(
+    						"workspace" => $workspace,
+    						"workgroup" => $workgroup
+    						
+    				)
+    		);
+    	} else {
+    		throw new NotFoundHttpException();
+    	}
+    }
+    
+    /**
      * Generate tabs on any mooc (onglet Apprendre, Discuter, etc) if the resource is set
      *
      * @ParamConverter("workspace",
@@ -416,6 +444,22 @@ class MoocController extends Controller
         $session = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user);
         $currentUrl = $_SERVER['REQUEST_URI'];
         
+
+        if ( $workspace->isMooc() ) {
+        	$mooc = $workspace->getMooc();
+        	$blogRes = $mooc->getBlog();
+        	if ($blogRes != null) {
+        		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
+        		$url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
+        		$solerniTabs['solerniTabs'][] = array(
+        				'name' => 'S\'informer',
+        				'url' => $url,
+        				'title' => 'Accéder au blog',
+        				'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
+        		);
+        	}
+        }
+        
         
         if ( $session ) {
             //get the mooc lesson
@@ -434,10 +478,7 @@ class MoocController extends Controller
                     );
                 }
             }
-        }
-        
-        //get the session forum (only the last one)
-        if ( $session ) {
+            // Get forum
             $forum = $this->getDoctrine()
                     ->getRepository( 'ClarolineForumBundle:Forum' )
                     ->findOneByResourceNode( $session->getForum() );
@@ -455,6 +496,8 @@ class MoocController extends Controller
             }
         }
         
+        
+        
         // Generate tab for resource manager
         $showResourceManager = true;
         if ($workspace->isMooc() && !$workspace->getMooc()->isShowResourceManager()) {
@@ -469,20 +512,15 @@ class MoocController extends Controller
                 'isSelected' => !(strpos(  $currentUrl, $url ) === false)
             );
         }
-
-        if ( $workspace->isMooc() ) {
-        	$mooc = $workspace->getMooc();
-        	$blogRes = $mooc->getBlog();
-        	if ($blogRes != null) {
-        		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
-        		$url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
-        		$solerniTabs['solerniTabs'][] = array(
-        				'name' => 'S\'informer',
-        				'url' => $url,
-        				'title' => 'Accéder au blog',
-        				'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
-        		);
-        	}
+        
+        if ($workspace->isMooc() && $workspace->getMooc()->isShowWorkGroup()) {
+        	$url = $router->generate('claro_show_work_group', array('workspaceId' => $workspace->getId()));
+        	$solerniTabs['solerniTabs'][] = array(
+        		'name'	=> $this->translator->trans('workgroup', array(), 'platform'),
+        		'url'	=> $url,
+        		'title' => 'Accéder au groupe de travail',
+        		'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)	
+        	);
         }
         
         $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'my_badges'));
