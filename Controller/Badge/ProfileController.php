@@ -153,7 +153,7 @@ class ProfileController extends Controller
         $badgesPerMoocs = array('nomooc' => 
                                         array(
                                             'mooc'=>null, 
-                                            'badges' => array()
+                                            'userBadges' => array()
                                         )
                                 );
         $hashPerMoocs  = array('nomooc' => 
