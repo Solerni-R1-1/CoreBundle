@@ -37,6 +37,11 @@
                                 </div>
                                 <div class="checkbox">
                                     <label>
+                                        {{ form_widget(form.display_optional_information) }}{{ 'optional_information'|trans({}, 'platform')|raw }}
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
                                         {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
                                     </label>
                                 </div>

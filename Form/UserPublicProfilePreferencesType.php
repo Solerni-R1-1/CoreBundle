@@ -51,14 +51,19 @@ class UserPublicProfilePreferencesType extends AbstractType
                 }
 
                 $form
-                    ->add('display_base_informations', 'checkbox' , array(
-                        'required' => false,
-                        'mapped'   => false,
-                        'attr'     => array(
-                            'checked'  => $baseInformationsIsChecked,
-                            'disabled' => $baseInformationsIsDisabled
-                        )
-                    ));
+	                ->add('display_base_informations', 'checkbox' , array(
+	                		'required' => false,
+	                		'mapped'   => false,
+	                		'attr'     => array(
+	                				'checked'  => $baseInformationsIsChecked,
+	                				'disabled' => $baseInformationsIsDisabled
+	                		)
+	                ));
+
+                $form
+	                ->add('display_optional_information', 'checkbox' , array(
+	                		'required' => false
+	                ));
             }
 
         });

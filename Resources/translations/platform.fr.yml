@@ -123,7 +123,8 @@ back: Retour
 back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
-base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription'
+base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription, nombre de messages postés, nombre de messages votés, nombre de badges obtenus, liste des moocs suivis'
+optional_information: 'Les champs optionnels que vous avez remplis dans votre profil :<br />Sexe, age, ville, pays, réseaux sociaux'
 by: par
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
@@ -535,6 +536,16 @@ public_registration: 'Inscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
+profile_description_title: En savoir plus sur moi
+profile_form_gender: Sexe
+profile_form_city: Ville
+profile_form_country: Pays
+profile_form_birthdate: Age
+profile_form_website: Site web
+profile_form_twitter: Twitter
+profile_form_facebook: Facebook
+profile_form_linkedIn: LinkedIn
+profile_form_googlePlus: Google +
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
 register: Inscription

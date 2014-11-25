@@ -357,7 +357,55 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var array
      */
     protected $givenUpExercises;
+    
+    
+    const GENDER_UNKNOWN = 0;
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $gender = self::GENDER_UNKNOWN;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $country;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $city;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $birthdate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $website;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $facebook;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $twitter;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $linkedIn;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $googlePlus;
 
     public function __construct()
     {
@@ -1150,5 +1198,60 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     		}
     	}
     	return false;
+    }
+    
+    public function getGender() { return $this->gender; }
+    
+    public function getCountry() { return $this->country; }
+    
+    public function getCity() { return $this->city; }
+    
+    public function getBirthdate() { return $this->birthdate; }
+    
+    public function getWebsite() { return $this->website; }
+    
+    public function getFacebook() { return $this->facebook; }
+    
+    public function getTwitter() { return $this->twitter; }
+    
+    public function getLinkedIn() { return $this->linkedIn; }
+    
+    public function getGooglePlus() { return $this->googlePlus; }
+    
+    public function setGender($gender) { $this->gender = $gender; }
+    
+    public function setCountry($country) { $this->country = $country; }
+    
+    public function setCity($city) { $this->city = $city; }
+    
+    public function setBirthdate($birthdate) { $this->birthdate = $birthdate; }
+    
+    public function setWebsite($website) { $this->website = $website; }
+    
+    public function setFacebook($facebook) { $this->facebook = $facebook; }
+    
+    public function setTwitter($twitter) { $this->twitter = $twitter; }
+    
+    public function setLinkedIn($linkedIn) { $this->linkedIn = $linkedIn; }
+    
+    public function setGooglePlus($googlePlus) { $this->googlePlus = $googlePlus; }
+    
+    public function getAge() {
+    	if ($this->birthdate != null) {
+	    	$now = new \DateTime();
+	    	return $this->birthdate->diff($now)->y;
+    	} else {
+    		return 0;
+    	}
+    }
+    
+    public function getGenderLabel() {
+    	if (self::GENDER_FEMALE == $this->gender) {
+    		return "Femme";
+    	} else if (self::GENDER_MALE == $this->gender) {
+    		return "Homme";
+    	} else {
+    		return "";
+    	}
     }
 }

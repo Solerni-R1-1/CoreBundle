@@ -8,7 +8,7 @@
 {% endif %}
 {% if isEditProfilePage is defined or ( isEditProfilePage is not defined and true == isProfilShared ) %}
  <div class="slrn-profile-details clearfix profil_visible{% if false == isProfilShared and false != isEditProfilePage %} hidden{% endif %}">
-        <aside class="profile_aside slrn-profile-aside pull-left" role="complementary">
+        <aside class="profile_aside slrn-profile-aside col-md-3" role="complementary">
             <div class="avatar slrn-profile-avatar">
                 {% if user.getPicture() != "" %}
                     <img src="{{ image( 'uploads/pictures/' ~  user.getPicture() ).zoomCrop(150,150) }}" 
@@ -22,8 +22,45 @@
                          >
                 {% endif %}
             </div>
+            <p class="text-muted">
+                {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+            </p>
+            {% if publicProfilePreferences.isDisplayOptionalInformation() %}
+            <ul class="slrn-profile-social">
+            	{% if user.getTwitter() != null %}
+            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-twitter"></i>
+            	<a href="//twitter.com/{{ user.getTwitter() }}" class="pink_link slrn-profile-social-link">
+            		{{ user.getTwitter() }}
+            	</a></li>
+            	{% endif %}
+            	{% if user.getFacebook() != null %}
+            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-facebook"></i>
+            	<a href="//facebook.com/{{ user.getFacebook() }}" class="pink_link slrn-profile-social-link">
+            		{{ user.getFacebook() }}
+            	</a></li>
+            	{% endif %}
+            	{% if user.getLinkedIn() != null %}
+            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-linkedin"></i>
+            	<a href="//linkedin.com/pub/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link">
+            		{{ user.getLinkedIn() }}
+            	</a></li>
+            	{% endif %}
+            	{% if user.getGooglePlus() != null %}
+            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-googleplus"></i>
+            	<a href="//plus.google.com/{{ user.getGooglePlus() }}" class="pink_link slrn-profile-social-link">
+            		{{ user.getGooglePlus() }}
+            	</a></li>
+            	{% endif %}
+            	{% if user.getWebsite() != null %}
+            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-website"></i>
+            	<a href="//{{ user.getWebsite() }}" class="pink_link slrn-profile-social-link">
+            		{{ user.getWebsite() }}
+            	</a></li>
+            	{% endif %}	
+            </ul>
+           	{% endif %}
         </aside>
-        <div class="profile_informations slrn-profile_informations pull-left">
+        <div class="profile_informations slrn-profile_informations col-md-9">
             <ul class="slrn-profile-details-list">
                 <li>{{'First name' | trans({}, 'platform') }}: <span class="slrn-bold">{{ user.getFirstName() }}</span></li>
                 <li> {{'Last name' | trans({}, 'platform') }}: <span class="slrn-bold">{{ user.getLastName() }}</span></li>
@@ -45,19 +82,54 @@
                            data-toggle="tooltip" title="{{ 'send_message'|trans({}, 'platform') }}"></a>
                     </li>
                 {% endif %}
+                {% if ( isEditProfilePage is defined ) or (publicProfilePreferences.isDisplayOptionalInformation()) %}
+                	<li{% if not publicProfilePreferences.isDisplayOptionalInformation() %} class="hidden"{% endif %} id="display_optional_information">{{ user.getGenderLabel() }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} ans{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry() }}</li>
+                {% endif %}
             </ul>
+            <hr />
+            <ul class="slrn-profile-counters">
+	            <li class="slrn-profile-counters-li">
+	            	<i class="slrn-icon-profile-post"></i>
+	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} messages postés</p>
+	            </li>
+	            <li class="slrn-profile-counters-li">
+	            	<i class="slrn-icon-profile-vote"></i>
+	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} messages votés par la communauté</p>
+	            </li>
+	            <li class="slrn-profile-counters-li">
+	            	<i class="slrn-icon-profile-badge"></i>
+	            	<p class="slrn-profile-counter">{{ nbBadges }} badges</p>
+	            </li>
+            </ul>
+	        <hr />
+            <div class="slrn-profile-moocs">
+            	<p class="slrn-profile-moocs-title">Moocs suivis</p>
+            	{% set imageSize = { 'width': 118, 'height': 85 } %}
+            	{% for i, moocSession in user.getMoocSessions() %}
+            	<a href="{{ path('mooc_view', {"moocId":moocSession.getMooc().getId(), "moocName":moocSession.getMooc().getTitle()}) }}" class="slrn-profile-mooc">
+            		<img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
+		                 src="{{ image( moocSession.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
+		                 alt="{{ moocSession.getMooc().getTitle() }}" 
+		                 width="{{ imageSize.width }}" 
+		                 height="{{ imageSize.height }}" >
+			        <div class="slrn-profile-mooc-info col-md-7">
+		            	<p class="srln-profile-mooc-title">{{ moocSession.getMooc().getTitle() }}</p>
+		            	<p class="srln-profile-mooc-date">{{ moocSession.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
+	            	</div>
+            	</a>
+            	{% endfor %}
+            </div>
+            <hr />
              <div class="informations">
-                 {% if '' != user.getDescription() %}
+            {% if '' != user.getDescription() %}
                 <div class="description_block">
+            	<p class='slrn-profile-description-title'>{{ 'profile_description_title'|trans({}, 'platform') }}</p>
                     <div class="description">
                         {{ user.getDescription() |raw }}
                     </div>
                 </div>
             {% endif %}
-                <p class="text-muted">
-                    {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
-                </p>
             </div>
         </div>
-     {% endif %}
+{% endif %}
 </div>
