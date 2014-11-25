@@ -18,9 +18,13 @@
             <div class="panel-heading">
 
                 <select class='form-control mooc_select pull-right' id="mooc_select">
-                    <option value='all'>Tous les moocs</option>
+                    <option value='all'>{{ 'badges_tous'|trans({}, 'platform') }}</option>
                     {% for moocname, badgesPerMooc in badgesPerMoocs %}
-                        <option value='m_{{hashPerMoocs[moocname]}}'>{{moocname}}</option>
+                        {% if moocname == 'nomooc' %}
+                             <option value='m_{{hashPerMoocs[moocname]}}'>{{ 'badges_nomooc'|trans({}, 'platform') }}</option>
+                        {% else %}
+                             <option value='m_{{hashPerMoocs[moocname]}}'>{{moocname}}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
 
@@ -42,7 +46,7 @@
                         <div class='mooc_wrapper' id='m_{{hashPerMoocs[moocname]}}'>
                             <h3>
                             {% if moocname == 'nomooc' %}
-                                Badges Solerni
+                                {{ 'badges_nomooc'|trans({}, 'platform') }}
                             {% else %}
                                 {{moocname}} <img class='pull-right' src='{{ asset(mooc.illustrationWebPath) }}' height=37 width=37 />
                             {% endif %}
@@ -59,7 +63,7 @@
                                         <p class="badge_name" data-toggle="modal" data-target="#myModal{{badge.id}}">{{ badge.name }}</p>
                                     </div>
 
-                                    <div class="modal fade" id="myModal{{badge.id}}" tabindex="-1" role="dialog" aria-labelledby="Voir le détail du badge" aria-hidden="true">
+                                    <div class="modal fade" id="myModal{{badge.id}}" tabindex="-1" role="dialog" aria-labelledby="{{ 'badges_voir_details'|trans({}, 'platform') }}" aria-hidden="true">
                                       <div class="modal-dialog">
                                         <div class="modal-content">
 
@@ -72,13 +76,13 @@
                                                 <div class="col-xs-9">
                                                     
                                                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                                    <h4>Badge &laquo; {{ badge.name }} &raquo;</h4>
-                                                    <p><strong>Attribué le</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }} par {{userBadge.issuer.lastname}}</p>
-                                                    <p><strong>Nom :</strong> {{ badge.name }}</p>
-                                                    <p><strong>Version :</strong> {{ badge.version }}</p>
-                                                    <p><strong>Description :</strong> {{ badge.description }}</p>
-                                                    <p><strong>Critère d'obtention :</strong> {{ badge.criteria|raw }}</p>
-                                                    <p><strong>Action qui ont mené à l'attribution de ce badge :</strong></p>
+                                                    <h4>{{ 'badges_badge'|trans({}, 'platform') }} &laquo; {{ badge.name }} &raquo;</h4>
+                                                    <p><strong>{{ 'badges_attribue_le'|trans({}, 'platform') }}</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }} {{ 'badges_by'|trans({}, 'platform') }} {{userBadge.issuer.lastname}}</p>
+                                                    <p><strong>{{ 'badges_name'|trans({}, 'platform') }} :</strong> {{ badge.name }}</p>
+                                                    <p><strong>{{ 'badges_version'|trans({}, 'platform') }} :</strong> {{ badge.version }}</p>
+                                                    <p><strong>{{ 'badges_description'|trans({}, 'platform') }} :</strong> {{ badge.description }}</p>
+                                                    <p><strong>{{ 'badges_critere'|trans({}, 'platform') }} :</strong> {{ badge.criteria|raw }}</p>
+                                                    <p><strong>{{ 'badges_actions'|trans({}, 'platform') }} :</strong></p>
                                                     {% set nbRules = badge.rules|length %}
                                                     {% if 0 < nbRules %}                                
                                                         {% set validatedRules = validatedRulesPerBadges[badge.id] %}                                

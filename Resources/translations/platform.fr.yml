@@ -1202,3 +1202,25 @@ contact_success : Votre message a bien été envoyé.
 #Page contact
 
 message_send : Votre message a bien été envoyé.
+
+#Page mes badges
+badges_tous : Tous les moocs
+badges_nomooc : Badges Solerni
+badges_voir_details : Voir le détail du badge
+badges_badge : Badge
+badges_attribue_le : Attribué le
+badges_by : par
+badges_name : Nom
+badges_version : Version
+badges_description : Description
+badges_critere : Critère d'obtention
+badges_actions : Action qui ont mené à l'attribution de ce badge
+#Page mes badges
+
+
+
+
+
+
+
+
