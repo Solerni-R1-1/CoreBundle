@@ -114,7 +114,6 @@ class ContactController extends Controller
         $civilite = array(
                     $this->translator->trans('contact_form_civil_monsieur', array(), 'platform'),
                     $this->translator->trans('contact_form_civil_madame', array(), 'platform'),
-                    $this->translator->trans('contact_form_civil_mademoiselle', array(), 'platform'),
                 );
         
     	$form = $this->formFactory->create(FormFactory::TYPE_CONTACT, array($this->translator, $contacts, $civilite, $loggedUser));
