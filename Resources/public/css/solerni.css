@@ -2333,24 +2333,13 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 	width: 20%;
 }
 
-.slrn-profile-mandatory-char, .slrn-profile-mandatory-char-hidden, .slrn-profile-mandatory-char-inline {
+.slrn-profile-mandatory-char-inline {
 	width: 1.7%;
 	padding: 0 0 0 15px;
 	color: #FF004F;
 	font-size: 1.3em;
-}
-
-.slrn-profile-mandatory-char-hidden {
-	visibility: hidden;
-}
-
-.slrn-profile-mandatory-char-inline {
 	padding: 0px;
-}
-
-.slrn-profile-edit-field {
-	width: 73.3%;
-	padding-left: 8px; 
+	font-weight: bold;
 }
 
 
@@ -2359,7 +2348,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-profile-edit-field--social input {
-	padding-left: 29%;
+	padding-left: calc(29% + 15px);
 	border-left: 0px solid #000;
 }
 
@@ -2367,24 +2356,25 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 	content:"";
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: 15px;
 	bottom: 0;
 	width: 28%;
 	border: 3px solid #999;
-	border-right: 0;
+	border-right: 1px solid #cfcdce;
 	border-top-left-radius: 4px;
 	border-bottom-left-radius: 4px;
 	line-height: 2.1;
 	background-color: #eeeeee;
-	padding-left: 35px;
+	padding-left: 40px;
 	color: black;
+	border-radius:4px;
 }
 
 .slrn-profile-edit-field--social:after {
 	content: "";
 	position: absolute;
 	top: 4px;
-	left: 8px;
+	left: 27px;
 	bottom: 4px;
 	width: 24px;
 		
@@ -2400,7 +2390,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 
 .slrn-website input {
-	padding-left: 6%;
+	padding-left: calc(6% + 15px);
 }
 .slrn-website:before {
 	content:"";
@@ -2434,6 +2424,15 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-googlePlus:after {
     background:	transparent url(../images/sprites_solerni.png) no-repeat -208px -824px scroll;
+}
+
+.slrn-profile-edit-field--mandatory:before {
+	content: "*";
+	position: absolute;
+	left: 5px;
+	color: #FF004F;
+	font-size: 1.3em;
+	font-weight: bold;
 }
 
 

@@ -26,13 +26,12 @@
             	<!-- Empty block -->
             	</div>
             	<div class="col-md-9 col-xs-9">
-            		Les champs marqués d'une étoile <span class="slrn-profile-mandatory-char-inline">*</span> sont obligatoires
+            		Les champs marqués d'une étoile <span class="slrn-profile-mandatory-char-inline">*</span>&nbsp; sont obligatoires
             	</div>
                 {# FIRST NAME #}
                 <div class="form-group row">
                     {{ form_label(form.firstName) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char">*</span>
-                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.firstName, {'attr': { 
 								'data-validation': 'alphanumeric required', 
 								'data-validation-allowing': '-éèöàñïîêôâ ',
@@ -45,8 +44,7 @@
                 {# LAST  NAME #}
                 <div class="form-group row">
                     {{ form_label(form.lastName) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char">*</span>
-                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.lastName, {'attr': { 
 								'data-validation': 'alphanumeric required', 
 								'data-validation-allowing': '-éèöàñïîêôâ ',
@@ -59,8 +57,7 @@
                 {# USERNAME #}
                 <div class="form-group row">
                     {{ form_label(form.username) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char">*</span>
-                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.username, {'attr': {
 								'data-validation': 'custom length',
                                 'data-validation-regexp': '^([a-zA-Z0-9._]+)$',
@@ -74,7 +71,6 @@
                 {# PUBLIC PROFILE URL (DISPLAY IF NOT VALID) #}
                 <div class="form-group row{% if user.isPublicUrlValid() and not is_granted('ROLE_ADMIN') %} hide{% endif%}">
                     {{ form_label(form.publicUrl) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.publicUrl, {'attr': {
                                 'data-validation': 'custom length',
@@ -90,7 +86,6 @@
                 {# MAIL  #}
                 <div class="form-group row">
                     {{ form_label(form.mail) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.mail, {'attr': {
 								'data-validation': 'email', 
@@ -104,7 +99,6 @@
                 {% if form.picture.vars.value %}
                     <div class="form-group row hide">
                     {{ form_label(form.picture) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.picture) }}
                     </div>
@@ -113,7 +107,6 @@
                         <label class="control-label col-md-3">
                             {{ 'current_picture_profile'|trans({}, 'platform')}}
                         </label>
-                    	<span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                         <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                             <img src="{{ image( 'uploads/pictures/' ~ form.picture.vars.value ).zoomCrop( 150, 150 ) }}" width="150" height="150">
                         </div>
@@ -122,7 +115,6 @@
                 {# PICTURE INPUT #}
                 <div class="form-group row hide">
                     {{ form_label(form.pictureFile) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.pictureFile) }}
                     </div>
@@ -131,7 +123,6 @@
                 {% if form.pictureFile.vars.errors|length %}
                     <div class="form-group row">
                         <label class="control-label col-md-3"></label>
-                    	<span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                         <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                             {{ form_errors(form.pictureFile) }}
                         </div>
@@ -140,7 +131,6 @@
                 {# UPLOAD PICTURE HELPER MESSAGE #}
                 <div class="form-group row">
                     <label class="control-label col-md-3"></label>
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                         <i class="small">Merci d'utiliser une image au format JPG, GIF ou PNG, de 2048px par 2048px maximum et de 6Mo au plus.</i>
                     </div>
@@ -150,7 +140,6 @@
                     <label class="control-label col-md-3">
                         {{ 'picture_profile'|trans({}, 'platform')}}
                     </label>
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                         <a id="js-upload-file" class="btn btn-gris">{{ 'edit_profile_upload'|trans({}, 'platform')}}</a>
                         <span class="slrn-upload-file-name">
@@ -181,7 +170,6 @@
                 {# DESCRIPTION #}
                 <div class="form-group row">
                     {{ form_label(form.gender) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.gender) }}
                         {{ form_errors(form.gender) }} 
@@ -189,7 +177,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.city) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.city) }}
                         {{ form_errors(form.city) }} 
@@ -197,7 +184,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.country) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.country) }}
                         {{ form_errors(form.country) }} 
@@ -205,7 +191,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.birthdate) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.birthdate) }}
                         {{ form_errors(form.birthdate) }} 
@@ -213,10 +198,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.website) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
-                    <div class="slrn-profile-edit-inner-label">
-                    	WEBSITE
-                    </div>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-website">
                         {{ form_widget(form.website) }}
                         {{ form_errors(form.website) }} 
@@ -224,7 +205,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.twitter) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-twitter">
                         {{ form_widget(form.twitter) }}
                         {{ form_errors(form.twitter) }} 
@@ -232,7 +212,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.facebook) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-facebook">
                         {{ form_widget(form.facebook) }}
                         {{ form_errors(form.facebook) }} 
@@ -240,7 +219,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.linkedIn) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-linkedIn">
                         {{ form_widget(form.linkedIn) }}
                         {{ form_errors(form.linkedIn) }} 
@@ -248,7 +226,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.googlePlus) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-googlePlus">
                         {{ form_widget(form.googlePlus) }}
                         {{ form_errors(form.googlePlus) }} 
@@ -256,7 +233,6 @@
                 </div>
                 <div class="form-group row">
                     {{ form_label(form.description) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.description) }}
                         {{ form_errors(form.description) }} 
@@ -266,7 +242,6 @@
                 {% if form.accepted_com_terms is defined %}
                 <div class="form-group row">
                     <label class="control-label col-md-3 ">Autorisation d'exploitation</label>
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.accepted_com_terms) }}
                         <label for="profile_form_accepted_com_terms" style="font-weight: normal">{{ form.accepted_com_terms.vars.label|trans({}, 'platform') }}</label>
@@ -300,7 +275,6 @@
                 {% if form.platformRoles is defined %}
                     <div class="form-group row">
                         {{ form_label(form.platformRoles, label|default(null) ) }}
-                    	<span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                         <div class="col-md-3 col-xs-3">
                            {{ form_widget(form.platformRoles) }}
                         </div>
@@ -309,7 +283,6 @@
                 {# CACHE : TOKEN #}                 
                 <div class="form-group row hide">
                     {{ form_label(form._token, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                     <div class="col-md-9 col-xs-9 slrn-accepted-terms slrn-profile-edit-field">
                         {{ form_widget(form._token, {'attr': { 'class' : 'hide' } } ) }}
                     </div>
@@ -326,7 +299,6 @@
             </div>
             <div class="form-group row slrn-form-group-button">
                 <div class="col-md-3 col-xs-3"></div>
-                    <span class="col-md-1 col-xs-1 slrn-profile-mandatory-char-hidden ">*</span>
                 <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     <a href="{{ path('claro_profile_view') }}" class="btn btn-gris" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
