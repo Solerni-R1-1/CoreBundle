@@ -150,17 +150,9 @@ class ProfileController extends Controller
         $doctrine->getManager()->getFilters()->disable('softdeleteable');
         $userBadges = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
 
-        $badgesPerMoocs = array('nomooc' => 
-                                        array(
-                                            'mooc'=>null, 
-                                            'userBadges' => array()
-                                        )
-                                );
-        $hashPerMoocs  = array('nomooc' => 
-                                        md5('nomooc')
-                                );
-
         $validatedRulesPerBadges = array();
+        $badgesPerMoocs = array();
+        $hashPerMoocs = array();
 
         foreach ($userBadges as $userBadge) {
             $badge =  $userBadge->getBadge();
@@ -169,32 +161,26 @@ class ProfileController extends Controller
             $validatedRulesPerBadges[$badge->getId()] = $this->getValidatedRules($badge, $user);
 
             if($w == null || $w->getMooc() == null){
-
-                $badgesPerMoocs['nomooc']['userBadges'][] = $userBadge;
+                $mooc = null;
+                $moocName = 'nomooc';
             } else {
                 $mooc = $w->getMooc();
                 $moocName = $mooc->getTitle();
-                if(!isset($badgesPerMoocs[$moocName])){
-                    $badgesPerMoocs[$moocName] = array(
-                                                    'mooc'=>$mooc, 
-                                                    'userBadges' => array()
-                                                );
-                    $hashPerMoocs[$moocName] = md5($moocName);
-                }
-                $badgesPerMoocs[$moocName]['userBadges'][] = $userBadge;
+                
             }
+
+            if(!isset($badgesPerMoocs[$moocName])){
+                $badgesPerMoocs[$moocName] = array('mooc'=>$mooc, 'userBadges' => array());
+            }
+
+            $hashPerMoocs[$moocName] = md5($moocName);
+            $badgesPerMoocs[$moocName]['userBadges'][] = $userBadge;
         }
 
-        //$badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
-        //$badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
-
         return array(
-            //'userBadges'       => $userBadges,
             'badgesPerMoocs'   => $badgesPerMoocs,
             'hashPerMoocs'     => $hashPerMoocs,
             'validatedRulesPerBadges' => $validatedRulesPerBadges
-           // 'badgeClaims'      => $badgeClaims,
-           // 'badgeCollections' => $badgeCollections
         );
     }
 }
