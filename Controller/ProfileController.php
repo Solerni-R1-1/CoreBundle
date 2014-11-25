@@ -117,10 +117,9 @@ class ProfileController extends Controller
 //         }
     	// If user share base information, fetch the data about forum messages, badges and followed moocs
     	$nbBadges = $loggedUser->getBadges()->count();
-    	$nbPostedMessages = 0;
-    	$nbVotedMessages = 0;
     	$messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
     	$nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);
     	foreach ($loggedUser->getMoocSessions() as $moocSession) {
     		/* @var $moocSession MoocSession */    		
     		$moocSession->getStartDate();
@@ -179,10 +178,9 @@ class ProfileController extends Controller
         }
 
         $nbBadges = $loggedUser->getBadges()->count();
-        $nbPostedMessages = 0;
-        $nbVotedMessages = 0;
         $messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
         $nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);
         
         return array(
             'form' => $form->createView(),
@@ -225,9 +223,9 @@ class ProfileController extends Controller
         } else {
         	// If user share base information, fetch the data about forum messages, badges and followed moocs
         	$nbBadges = $user->getBadges()->count();
-        	$nbVotedMessages = 0;
         	$messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
-        	$nbPostedMessages = $messageRepository->countUserMessages($user);
+	    	$nbPostedMessages = $messageRepository->countUserMessages($user);
+	    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($user);
         	$response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array(
         			'user' => $user,
         			'publicProfilePreferences' => $userPublicProfilePreferences,
