@@ -190,17 +190,17 @@ class MessageManager
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
 
-            if ($filteredUser->isMailNotified()) {
-                $mailNotifiedUsers[] = $filteredUser;
-            }
+//             if ($filteredUser->isMailNotified()) {
+//                 $mailNotifiedUsers[] = $filteredUser;
+//             }
         }
 
-        $this->mailManager->send(
-            $message->getObject(),
-            $message->getContent(),
-            $mailNotifiedUsers,
-            $message->getSender()
-        );
+//         $this->mailManager->send(
+//             $message->getObject(),
+//             $message->getContent(),
+//             $mailNotifiedUsers,
+//             $message->getSender()
+//         );
         $this->om->flush();
 
         return $message;
