@@ -40,10 +40,10 @@
     {% else %}
         {# if the mooc is redoable, ask for notification #}
         {% if session.getMooc().getPostEndAction() == 1 %}
-        	{% if user.getNotifyWorkspaces().contains(session.getMooc().getWorkspace()) %}
-            <a href="{{ path( 'claro_workspace_unregister_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-gris longText">{{ 'dont_get_warned_next_session'|trans({}, 'platform') }}</a>
+        	{% if user != 'anon.' and user.getNotifyWorkspaces().contains(session.getMooc().getWorkspace()) %}
+                <a href="{{ path( 'claro_workspace_unregister_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-gris longText">{{ 'dont_get_warned_next_session'|trans({}, 'platform') }}</a>
         	{% else %}
-            <a href="{{ path( 'claro_workspace_register_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-primary longText">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
+                <a href="{{ path( 'claro_workspace_register_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-primary longText">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
         	{% endif %}
         {% else %}
             {# otherwise just display invisible button for spacing #}
