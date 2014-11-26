@@ -115,7 +115,7 @@ class Badge extends Rulable
      * @var UploadedFile
      *
      * @Assert\Image(
-     *     maxSize = "256k",
+     *     maxSize = "1024k",
      *     minWidth = 64,
      *     minHeight = 64
      * )

@@ -81,7 +81,7 @@ class BadgeHandler
 
                 $userBadges = $badge->getUserBadges();
 
-                if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
+                if (0 < count($userBadges) && ! $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
                     /** @var \Doctrine\ORM\UnitOfWork $unitOfWork */
                    // $unitOfWork = $this->entityManager->getUnitOfWork();
 
@@ -94,8 +94,8 @@ class BadgeHandler
                     //$badge->setDeletedAt(new \DateTime());
 
                     //$this->entityManager->persist($badge);
-                }
-                else {
+                } else {
+                    
                     // Compute which rules was deleted
                     foreach ($badgeRules as $rule) {
                         if ($originalRules->contains($rule)) {
