@@ -33,9 +33,13 @@ trait IndexableResourceNodeTrait
         $doc->wks_id = $this->getResourceNode()->getWorkspace()->getId();
         $doc->creation_date = $this->getResourceNode()->getCreationDate();
         $doc->modification_date = $this->getResourceNode()->getModificationDate();
+
         $doc->owner_id = $this->getResourceNode()->getCreator()->getId();
         $doc->owner_name = $this->getResourceNode()->getCreator()->getFirstName() . ' ' .
                            $this->getResourceNode()->getCreator()->getLastName();
+        $doc->owner_profil_url = $this->get('router')->generate('claro_public_profile_view', array(
+            'publicUrl' => $this->getResourceNode()->getCreator()->getPublicUrl()
+        ));
         return $doc;
     }
     
