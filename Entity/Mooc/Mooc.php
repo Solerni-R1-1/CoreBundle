@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity\Mooc;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContext;
 
 /**
  * Mooc
@@ -116,6 +117,7 @@ class Mooc
      * @var string
      *
      * @ORM\Column(name="language", type="string", length=10, nullable=true)
+	 * @Assert\NotBlank(groups={"language_required"})
      */
     private $language;
 

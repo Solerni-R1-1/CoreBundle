@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Form\Mooc;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormInterface;
 
 class MoocType extends AbstractType
 {
@@ -78,12 +79,12 @@ class MoocType extends AbstractType
             ->add('gratis', 'checkbox', array( 'required' => false ) )
             ->add('cost', 'integer', array('required' => false))
             ->add('language', 'choice', array(
+            		'empty_value' => 'choose_language_mooc',
                     'choices' => array(
-                        'empty_value' => 'choose_language_mooc',
                         'fr_FR' => 'fr_FR',
                         'en_EN' => 'en_EN'
                     ), 
-                    'required' => true
+                    'required' => false
                 ))
             ->add('hasVideo', 'checkbox', array('required' => false))
             ->add('hasSubtitle', 'checkbox', array('required' => false))
@@ -141,7 +142,16 @@ class MoocType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Claroline\CoreBundle\Entity\Mooc\Mooc',
             'translation_domain' => 'platform',
-            'language' => 'fr'
+            'language' => 'fr',
+        	'validation_groups' => function(FormInterface $form) {
+        		$data = $form->getData();
+        		if($data->getHasSubtitle()) {
+        			return array('Default', 'language_required');
+        		}
+        		else {
+        			return array('Default');
+        		}
+        	}
         ));
     }
 
