@@ -6,6 +6,7 @@
         {{ 'user_public_profile_not_visible'|trans({}, 'platform')|raw }}
     </p>
 {% endif %}
+
 {% if isEditProfilePage is defined or ( isEditProfilePage is not defined and true == isProfilShared ) %}
  <div class="slrn-profile-details clearfix profil_visible{% if false == isProfilShared and false != isEditProfilePage %} hidden{% endif %}">
         <aside class="profile_aside slrn-profile-aside col-md-3" role="complementary">
@@ -25,8 +26,8 @@
             <p class="text-muted">
                 {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
             </p>
-            {% if publicProfilePreferences.isDisplayOptionalInformation() %}
-            <ul class="slrn-profile-social">
+            {% if isEditProfilePage is defined or publicProfilePreferences.isDisplayOptionalInformation() %}
+            <ul class="slrn-profile-social {% if not publicProfilePreferences.isDisplayOptionalInformation() and isEditProfilePage %}hidden{% endif %}" id="display_optional_information">
             	{% if user.getTwitter() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-twitter"></i>
             	<a href="//twitter.com/{{ user.getTwitter() }}" class="pink_link slrn-profile-social-link">
@@ -66,7 +67,7 @@
                 <li> {{'Last name' | trans({}, 'platform') }}: <span class="slrn-bold">{{ user.getLastName() }}</span></li>
                 <li> {{'user_form_username' | trans({}, 'platform') }}: <span class="slrn-bold">{{ user.username() }}</span></li>
                 {% if ( isEditProfilePage is defined ) or ( isEditProfilePage is not defined and true == publicProfilePreferences.displayEmail ) %}
-                    <li  {% if false == publicProfilePreferences.displayEmail %}class="hidden"{% endif %} id="display_email">
+                    <li  {% if false == publicProfilePreferences.displayEmail and isEditProfilePage %}class="hidden"{% endif %} id="display_email">
                         <a class="pink_link" href="mailto://{{ user.getMail }}">
                             {{ user.getMail }}
                         </a>
@@ -76,7 +77,7 @@
                     </li>
                 {% endif %}
                 {% if ( isEditProfilePage is defined ) or ( isEditProfilePage is not defined and true == publicProfilePreferences.allowMessageSending ) %}
-                    <li  {% if false == publicProfilePreferences.allowMessageSending %}class="hidden"{% endif %} id="allow_message_sending">
+                    <li  {% if false == publicProfilePreferences.allowMessageSending and isEditProfilePage %}class="hidden"{% endif %} id="allow_message_sending">
                         <a class="slrn-icon-profile--message slrn-icon-profile" 
                            href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}" 
                            data-toggle="tooltip" title="{{ 'send_message'|trans({}, 'platform') }}"></a>
