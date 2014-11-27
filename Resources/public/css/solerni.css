@@ -388,7 +388,7 @@ body.subnavbar-fixed {
 .slrn-subnavbar .slrn-subnavbar__item { 
     display:    inline-block; 
     position:   relative; 
-    margin:     0 .8em; 
+    margin:     0 .6em; 
 }
 
 .slrn-subnavbar .slrn-subnavbar__item:first-child { 
