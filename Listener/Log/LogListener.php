@@ -23,8 +23,6 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
-use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
 
 /**
  * @DI\Service
@@ -35,30 +33,26 @@ class LogListener
     private $securityContext;
     private $container;
     private $roleManager;
-    private $notificationManager;
 
     /**
      * @DI\InjectParams({
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "context"                = @DI\Inject("security.context"),
      *     "container"              = @DI\Inject("service_container"),
-     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "notificationManager"    = @DI\Inject("icap.notification.manager")
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
         SecurityContextInterface $context,
         $container,
-        RoleManager $roleManager,
-        NotificationManager $notificationManager
+        RoleManager $roleManager
     )
     {
         $this->om = $om;
         $this->securityContext = $context;
         $this->container = $container;
         $this->roleManager = $roleManager;
-        $this->notificationManager = $notificationManager;
     }
 
     private function createLog(LogGenericEvent $event)
@@ -259,11 +253,5 @@ class LogListener
         if (!($event instanceof LogNotRepeatableInterface) or !$this->isARepeat($event)) {
             $this->createLog($event);
         }
-
-//         if ($event instanceof NotifiableInterface) {
-//             if ($event->isAllowedToNotify()) {
-//                 $this->notificationManager->createNotificationAndNotify($event);
-//             }
-//         }
     }
 }
