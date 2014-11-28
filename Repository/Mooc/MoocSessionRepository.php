@@ -118,8 +118,10 @@ class MoocSessionRepository extends EntityRepository
 	 */
 	public function getActiveMoocSessionForUser( $mooc, $user ) {
         
+        $result= array();
+        
         if( $user ) {
-            // Get the firest active mooc where the user is in
+            // Get the first active mooc where the user is in
             $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms 
                     WHERE (:user MEMBER OF ms.users 
                 		OR EXISTS (

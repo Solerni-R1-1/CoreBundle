@@ -14,6 +14,7 @@ class UserPublicProfileUrlType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('username', 'text', array('required' => false, 'label' => 'user_form_username', 'error_bubbling' => true ))
             ->add('public_url', 'text', array(
                 'required' => true,
                 'attr'     => array(

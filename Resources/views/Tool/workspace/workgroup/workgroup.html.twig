@@ -1,5 +1,20 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-
+{% block title %}{{ parent() ~ ' - ' ~ "workgroup" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block bodyClasses %}{{ parent() }} body-resource-manager{% endblock %}
 {% block section_content %}
-    workgroup
+	<div class="col-xs-3 col-md-3">
+            {# MOOC  WIDGET #}
+            {% render controller(
+                'ClarolineCoreBundle:Mooc\\Mooc:getWorkspacePresentationWidget',
+                { 'workspaceId': workspace.getId(), 'renderProgression': false  }
+            ) %}
+    </div>
+    
+    <div class="col-xs-9 col-md-9 slrn-resource-manager-main">
+    	<h2 class="slrn-content-main-title">
+            {{ "workgroup_title" | trans({}, "platform") }}
+            <span></span>
+        </h2>
+    	{{ workgroup|raw }}
+    </div>
 {% endblock %}

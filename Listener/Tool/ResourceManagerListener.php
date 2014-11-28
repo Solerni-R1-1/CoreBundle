@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 
 /**
  * @DI\Service()
@@ -34,6 +35,8 @@ class ResourceManagerListener
     private $rightsManager;
     private $workspaceManager;
     private $maskManager;
+    private $roleManager;
+    private $utils;
 
     /**
      * @DI\InjectParams({
@@ -47,23 +50,25 @@ class ResourceManagerListener
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "maskManager"            = @DI\Inject("claroline.manager.mask_manager")
+     *     "maskManager"            = @DI\Inject("claroline.manager.mask_manager"),
+     *     "utils"              	= @DI\Inject("claroline.security.utilities"),
+     *     "roleManager"        	= @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
-        $em,
-        StrictDispatcher $ed,
-        $templating,
-        $manager,
-        $sc,
-        RequestStack $requestStack,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        WorkspaceManager $workspaceManager,
-        WorkspaceTagManager $workspaceTagManager,
-        MaskManager $maskManager
-    )
-    {
+	        $em,
+	        StrictDispatcher $ed,
+	        $templating,
+	        $manager,
+	        $sc,
+	        RequestStack $requestStack,
+	        ResourceManager $resourceManager,
+	        RightsManager $rightsManager,
+	        WorkspaceManager $workspaceManager,
+	        WorkspaceTagManager $workspaceTagManager,
+	        MaskManager $maskManager,
+	    	RoleManager $roleManager,
+	    	$utils) {
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
@@ -75,6 +80,8 @@ class ResourceManagerListener
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
         $this->maskManager = $maskManager;
+        $this->roleManager = $roleManager;
+        $this->utils = $utils;
     }
 
     /**
@@ -121,7 +128,6 @@ class ResourceManagerListener
         if (!$this->request) {
             throw new NoHttpRequestException();
         }
-
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
 
         if ($breadcrumbsIds != null) {
@@ -146,6 +152,27 @@ class ResourceManagerListener
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
 
+        // Shall we display resource manager ?
+        $showResourceManager = true;
+        if ($workspace->isMooc() && !$workspace->getMooc()->isShowResourceManager()) {
+        	$showResourceManager = false;
+        	if ($this->sc->isGranted('ROLE_ADMIN') || $this->sc->isGranted('ROLE_WS_CREATOR') ) {
+        		$showResourceManager = true;
+        	} else {
+        		$managerRole = $this->roleManager->getManagerRole($workspace);
+        	$currentRoles = $this->utils->getRoles($this->sc->getToken());
+	        	foreach ($currentRoles as $role) {
+	        		if ($managerRole->getName() === $role) {
+	        			$showResourceManager = true;
+	        		}
+	        	}
+        	}
+        	
+        }
+        
+        if (!$showResourceManager) {
+        	throw new AccessDeniedException();
+        }
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
                 'workspace' => $workspace,

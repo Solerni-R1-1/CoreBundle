@@ -85,15 +85,44 @@
 
             ga('create', 'UA-55983670-1', 'auto'); /* beware: for local test only */
             ga('require', 'linkid', 'linkid.js');
-            
+            ga('require', 'displayfeatures');
+            {% if app.user|default %}
+                ga('set', '&uid', '{{ app.user.id }}');
+            {% endif %}
             {% if workspace|default and workspace.isMooc() %}
-                
                 {% if workspace.getMooc().getOwner().getName()|default %}
                     ga('set', 'dimension1', '{{ workspace.getMooc().getOwner().getName()|escape('js') }}');
                 {% endif %}
                 {% if workspace.getMooc().getTitle()|default %}
                     ga('set', 'dimension2', '{{ workspace.getMooc().getTitle()|escape('js') }}');
                 {% endif %}
+            {% endif %}
+            {% set roleFound = false %}   
+            {% if is_granted('ADMIN') %}
+                {% set roleFound = true %}
+                ga('set', 'dimension4', 'is_admin');
+            {% elseif workspace|default and workspace.isMooc() and workspace.isDisplayable() and app.user|default %} {# displayable = not personnal workspace #}
+                {% set workspaceRoles, userRoles = workspace.getRoles(), app.user.getRoles() %}
+                {% for workspaceRole in workspaceRoles if workspaceRole.getName() starts with 'ROLE_WS_MANAGER' %}
+                    {% if workspaceRole.getName() in userRoles %}
+                        {% set roleFound = true %}
+                        ga('set', 'dimension4', 'is_manager');
+                    {% endif %}
+                {% endfor %}
+                {% if roleFound == false %}
+                    {% for workspaceRole in workspaceRoles if workspaceRole.getName() starts with 'ROLE_WS_COLLABORATOR' %}
+                        {% if workspaceRole.getName() in userRoles %} 
+                            {% set roleFound = true %}
+                            ga('set', 'dimension4', 'is_registered');
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if roleFound == false %}
+                    {% set roleFound = true %}
+                    ga('set', 'dimension4', 'is_not_registered');
+                {% endif %}
+            {% elseif workspace|default and workspace.isMooc() and workspace.isDisplayable() and roleFound == false %}
+                ga('set', 'dimension4', 'anonymous');
             {% endif %}
             
             ga('send', 'pageview');

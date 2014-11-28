@@ -22,6 +22,10 @@
 
                 <h2 class='slrn-content-main-title'>Messagerie</h2>
 
+                <div id="flashbox">
+                    {{ macros.flashBox() }}
+                </div>
+
                 {% if 'claro_message_show' != app.request.get('_route') %}
                 <div class="row">
   <div class='col-xs-9 col-md-9'>

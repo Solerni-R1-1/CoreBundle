@@ -173,8 +173,14 @@ class MessageController
                 $message->setSender($sender);
                 $message->setRoot($message); //pointer on itself
                 $message = $this->messageManager->send($message);
-                $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
 
+                $this->request->getSession()
+                    ->getFlashBag()
+                    ->add('success', $this->translator->trans('message_send', array(), 'platform'));
+
+                /*$url = $this->router->generate('claro_message_show', array('message' => $message->getId()));*/
+
+                $url = $this->router->generate('claro_message_list_received', array());
                 return new RedirectResponse($url);
             }
 
@@ -199,12 +205,16 @@ class MessageController
                 $message->setObject($root->getObject());
                 $message->setTo(implode(";", $receiversUsername));
                 $message = $this->messageManager->send($message);
-                $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
 
+                $this->request->getSession()
+                    ->getFlashBag()
+                    ->add('success', $this->translator->trans('message_send', array(), 'platform'));
+
+                /*$url = $this->router->generate('claro_message_show', array('message' => $message->getId()));*/
+                $url = $this->router->generate('claro_message_list_received', array());
                 return new RedirectResponse($url);
             } 
         }
-        
 
         
 
@@ -330,7 +340,7 @@ class MessageController
      * @EXT\ParamConverter(
      *      "receivers",
      *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true}
+     *      options={"multipleIds" = true, "name"="ids"}
      * )
      * @EXT\ParamConverter(
      *      "workspaces",
@@ -368,6 +378,36 @@ class MessageController
         Message $message = null
     )
     {
+        
+        $initialDestinaters = array();
+        if($receivers){
+            $strUsers = array();
+            foreach ($receivers as $value) {
+                $strUsers[] = $value->getUsername();
+            }
+            $initialDestinaters[] = implode(';', $strUsers);
+        }
+        if($workspaces){
+            $strWorkspace = array();
+            foreach ($workspaces as $value) {
+                $strWorkspace[] = '['.$value->getCode().']';
+            }
+            $initialDestinaters[] = implode(';', $strWorkspace);
+        }
+        if($groups){
+            $strGroups = array();
+            foreach ($groups as $value) {
+                $strGroups[] = '{'.$value->getCode().'}';
+            }
+            $initialDestinaters[] = implode(';', $strGroups);
+        }
+
+        $initialdest = '';
+        if(count($initialDestinaters) > 0){
+            $initialdest = implode(';', $initialDestinaters);    
+        }
+        
+
         if ($message) {
             //Get all conversation, even message with ID > current id asked
             $disqus = $this->messageManager->getConversation($message);
@@ -380,9 +420,8 @@ class MessageController
             $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE_SIMPLE, array($this->translator)); 
         } else {
             $disqus = array();
-            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array(null, null, $this->translator));
+            $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($initialdest, null, $this->translator));
         }
-        
 
         return array(
             'disqus' => $disqus,
@@ -522,17 +561,17 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/contactable/users/page/{page}",
+     *     "/contactable/users/page/{page}/{orderfield}/{orderby}",
      *     name="claro_message_contactable_users",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "orderfield"="id", "orderby" = "ASC"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/contactable/users/page/{page}/search/{search}",
+     *     "/contactable/users/page/{page}/{orderfield}/{orderby}/search/{search}",
      *     name="claro_message_contactable_users_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "orderfield"="id", "orderby" = "ASC"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -545,35 +584,59 @@ class MessageController
      * @param integer $page
      * @param string  $search
      * @param User    $user
+     * @param string  $orderfield can be id / username / lastname / firstname
+     * @param string  $orderby  can be asc or desc
      *
      * @return Response
      */
-    public function contactableUsersListAction(User $user, $page, $search)
+    public function contactableUsersListAction(User $user, $page, $search, $orderfield, $orderby)
     {
+        if($orderfield !== 'id' and $orderfield !== 'username' and $orderfield !== 'lastName' and $orderfield !== 'firstName'){
+            $orderfield = 'id';
+        }
+
+        if($orderby !== 'ASC' and $orderby !== 'DESC'){
+            $orderby = 'ASC';
+        }
+
+        $maxPerPage = 20;
+        
         $trimmedSearch = trim($search);
 
         if ($user->hasRole('ROLE_ADMIN')) {
             if ($trimmedSearch === '') {
-                $users = $this->userManager->getAllUsers($page);
+                $users = $this->userManager->getAllUsers($page, $maxPerPage, $orderfield, $orderby);
             } else {
                 $users = $this->userManager
-                    ->getAllUsersBySearch($page, $trimmedSearch);
+                    ->getAllUsersBySearch($page, $trimmedSearch, $maxPerPage, $orderfield, $orderby);
             }
         } else {
             $users = array();
             $token = $this->securityContext->getToken();
             $roles = $this->utils->getRoles($token);
-            $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+
+            //FIXME getOpenable ou mooc actuellement inscrit ? ?
+            //$workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+            $workspaces = array();
+            foreach ($user->getMoocSessions() as $moocSessions) {
+                $w = $moocSessions->getMooc()->getWorkspace();
+                $workspaces[$w->getId()] = $w;
+                
+            }
+            $workspaces = array_values($workspaces);
 
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
                     $users = $this->userManager
-                        ->getUsersByWorkspaces($workspaces, $page);
+                        ->getUsersByWorkspaces($workspaces, $page, $maxPerPage, $orderfield, $orderby);
                 } else {
                     $users = $this->userManager->getUsersByWorkspacesAndSearch(
                         $workspaces,
                         $page,
-                        $search
+                        $trimmedSearch, 
+                        $maxPerPage, 
+                        $orderfield, 
+                        $orderby
                     );
                 }
             }

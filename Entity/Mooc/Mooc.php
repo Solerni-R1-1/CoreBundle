@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity\Mooc;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContext;
 
 /**
  * Mooc
@@ -116,6 +117,7 @@ class Mooc
      * @var string
      *
      * @ORM\Column(name="language", type="string", length=10, nullable=true)
+	 * @Assert\NotBlank(groups={"language_required"})
      */
     private $language;
 
@@ -256,6 +258,11 @@ class Mooc
     private $blog;
     
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $showResourceManager;
+    
+    /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
      * 
      * @ORM\ManyToOne(
@@ -278,6 +285,16 @@ class Mooc
      * @ORM\JoinTable(name="claro_mooc_constraints_to_moocs")
      */
     private $accessConstraints;
+    
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $showWorkGroup;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $workGroup;
     
     /**
      * Get id
@@ -1002,5 +1019,29 @@ class Mooc
     
     public function setKnowledgeBadgesUrl($knowledgeBadgesUrl) {
     	$this->knowledgeBadgesUrl = $knowledgeBadgesUrl;
+    }
+    
+    public function isShowResourceManager() {
+    	return $this->showResourceManager;
+    }
+    
+    public function setShowResourceManager($showResourceManager) {
+    	$this->showResourceManager = $showResourceManager;
+    }
+    
+    public function setWorkGroup($workGroup) {
+    	$this->workGroup = $workGroup;
+    }
+    
+    public function getWorkGroup() {
+    	return $this->workGroup;
+    }
+    
+    public function setShowWorkGroup($showWorkGroup) {
+    	$this->showWorkGroup = $showWorkGroup;
+    }
+    
+    public function isShowWorkGroup() {
+    	return $this->showWorkGroup;
     }
 }

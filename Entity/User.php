@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -348,7 +349,63 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     protected $notifyWorkspaces;
+    
+    /**
+     * @ORM\OneToMany(
+     * 		targetEntity="UJM\ExoBundle\Entity\ExerciseUser",
+     * 		mappedBy="user")
+     * @var array
+     */
+    protected $givenUpExercises;
+    
+    
+    const GENDER_UNKNOWN = 0;
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $gender = self::GENDER_UNKNOWN;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $country;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $city;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $birthdate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $website;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $facebook;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $twitter;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $linkedIn;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $googlePlus;
 
     public function __construct()
     {
@@ -1033,11 +1090,25 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $this;
     }
 
-    public function isPublicUrlValid(ExecutionContextInterface $context)
+    public function isPublicUrlValid(ExecutionContextInterface $context = null)
     {
         // Search for whitespaces
-        if (!preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
+        if ( $context && ! preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
+        } elseif ( !preg_match(USER::$patternUrlPublic, $this->getPublicUrl()) )  {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+        public function isUserNameValid()
+    {
+        // Alphanumeric + dot
+        if ( !preg_match(USER::$patternUrlPublic, $this->getUsername()) )  {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -1117,5 +1188,70 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     
     public function getNotifyWorkspaces() {
     	return $this->notifyWorkspaces;
+    }
+    
+    public function hasGivenUpExercise(Exercise $exercise) {
+    	foreach ($this->givenUpExercises as $exerciseUser) {
+    		if ($exerciseUser->isGivenUp()
+    				&& $exerciseUser->getExercise()->getId() == $exercise->getId()) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public function getGender() { return $this->gender; }
+    
+    public function getCountry() { return $this->country; }
+    
+    public function getCity() { return $this->city; }
+    
+    public function getBirthdate() { return $this->birthdate; }
+    
+    public function getWebsite() { return $this->website; }
+    
+    public function getFacebook() { return $this->facebook; }
+    
+    public function getTwitter() { return $this->twitter; }
+    
+    public function getLinkedIn() { return $this->linkedIn; }
+    
+    public function getGooglePlus() { return $this->googlePlus; }
+    
+    public function setGender($gender) { $this->gender = $gender; }
+    
+    public function setCountry($country) { $this->country = $country; }
+    
+    public function setCity($city) { $this->city = $city; }
+    
+    public function setBirthdate($birthdate) { $this->birthdate = $birthdate; }
+    
+    public function setWebsite($website) { $this->website = $website; }
+    
+    public function setFacebook($facebook) { $this->facebook = $facebook; }
+    
+    public function setTwitter($twitter) { $this->twitter = $twitter; }
+    
+    public function setLinkedIn($linkedIn) { $this->linkedIn = $linkedIn; }
+    
+    public function setGooglePlus($googlePlus) { $this->googlePlus = $googlePlus; }
+    
+    public function getAge() {
+    	if ($this->birthdate != null) {
+	    	$now = new \DateTime();
+	    	return $this->birthdate->diff($now)->y;
+    	} else {
+    		return 0;
+    	}
+    }
+    
+    public function getGenderLabel() {
+    	if (self::GENDER_FEMALE == $this->gender) {
+    		return "Femme";
+    	} else if (self::GENDER_MALE == $this->gender) {
+    		return "Homme";
+    	} else {
+    		return "";
+    	}
     }
 }

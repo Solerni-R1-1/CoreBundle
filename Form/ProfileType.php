@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraints\Image;
+use Claroline\CoreBundle\Entity\User;
 
 class ProfileType extends AbstractType
 {
@@ -50,26 +51,29 @@ class ProfileType extends AbstractType
 
         $builder
             ->add('firstName', 'text', array('label' => 'First name'))
-            ->add('lastName', 'text', array('label' => 'Last name'));
+            ->add('lastName', 'text', array('label' => 'Last name'))
+            ->add('username', 'text', array('label' => 'user_form_username'))
+            ->add('administrativeCode', 'text', array(
+            		'required' => false,
+            		'read_only' => true,
+            		'disabled' => true,
+            		'label' => 'administrative_code')
+            )
+            ->add('publicUrl','text', array('label' => 'user_form_public_url' ))
+            ->add('mail', 'email', array('read_only' => true, 'disabled' => true, 'required' => false, 'label' => 'email'))
+            ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
         if (!$this->isAdmin) {
-            $builder
-                ->add('username', 'text', array('label' => 'user_form_username'))
-                ->add(
-                    'administrativeCode',
-                    'text',
-                    array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
-                )
-                ->add('mail', 'email', array('read_only' => true, 'disabled' => true, 'required' => false, 'label' => 'email'))
-                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+            $builder->add(
+                    'accepted_com_terms', 
+                    'checkbox', 
+                    array(
+                        'label' => 'I agree that my personal information be used for commercial purposes',
+                        'required' => false
+                ));
         } else {
-            $builder->add('username', 'text', array('label' => 'user_form_username'))
-                ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
-                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
-                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
-                ->add(
+            $builder->add(
                     'platformRoles',
                     'entity',
                     array(
@@ -104,20 +108,31 @@ class ProfileType extends AbstractType
                 'label' => 'picture_profile'
             )
         )
-        ->add('picture','text', array('label' => 'picture'))
+	        ->add('picture','text', array('label' => 'picture'))
+	        ->add('gender', 'choice', array(
+	        	'choices' => array(
+	        			User::GENDER_FEMALE => "Féminin",
+	        			User::GENDER_MALE => "Masculin",
+	        			User::GENDER_UNKNOWN => "Je ne veux pas le dire"
+	        		),
+	        	'expanded' => true
+	        	)
+	        )
+        	->add('city', 'text', array('required' => false))
+        	->add('country', 'country', array('required' => false))
+        	->add('birthdate', 'date', array('required' => false, 'widget' => 'single_text'))
+        	->add('website', 'text', array('required' => false))
+        	->add('twitter', 'text', array('required' => false))
+        	->add('facebook', 'text', array('required' => false))
+        	->add('linkedIn', 'text', array('required' => false))
+        	->add('googlePlus', 'text', array('required' => false))
 
-        ->add(
-            'description',
-            'tinymce',
-            array('required' => false, 'label' => 'description')
-        )
-        ->add(
-            'accepted_com_terms', 
-            'checkbox', 
-            array(
-                'label' => 'I agree that my personal information be used for commercial purposes',
-                'required' => false
-        ));
+	        ->add(
+	            'description',
+	            'tinymce',
+	            array('required' => false, 'label' => 'description')
+	        );
+
     }
 
     public function getName()

@@ -224,8 +224,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 LEFT JOIN r.workspace rws
                 LEFT JOIN u.publicProfilePreferences up
                 WHERE u.isEnabled = true
-                ORDER BY u.{$orderedBy}
-                ".$order
+                ORDER BY u.{$orderedBy} {$order}
+                "
 
             ;
             // the join on role is required because this method is only called in the administration
@@ -243,19 +243,22 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]
      */
-    public function findAllUserBySearch($search)
+    public function findAllUserBySearch($search, $orderedBy = 'id', $order = null)
     {
         $upperSearch = strtoupper(trim($search));
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
 
         if ($search !== '') {
-            $dql = '
+            $dql = "
                 SELECT u
                 FROM Claroline\CoreBundle\Entity\User u
                 WHERE UPPER(u.firstName) LIKE :search
                 OR UPPER(u.lastName) LIKE :search
                 OR UPPER(u.username) LIKE :search
                 AND u.isEnabled = true
-            ';
+                ORDER BY u.{$orderedBy} {$order}
+                "
+            ;
 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('search', "%{$upperSearch}%");
@@ -402,19 +405,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]|Query
      */
-    public function findUsersByWorkspaces(array $workspaces,$executeQuery = true)
+    public function findUsersByWorkspaces(array $workspaces,$executeQuery = true, $orderedBy = 'id', $order = null)
     {
-        $dql = '
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
+        $dql = "
             SELECT DISTINCT u from Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = " . Role::WS_ROLE . "
             )
             LEFT JOIN wr.workspace w
             LEFT JOIN u.personalWorkspace ws
             WHERE w IN (:workspaces)
             AND u.isEnabled = true
-            ORDER BY u.id
-        ';
+            ORDER BY u.{$orderedBy} {$order}
+            "
+        ;
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
 
@@ -430,16 +435,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]
      */
-    public function findUsersByWorkspacesAndSearch(array $workspaces, $search)
+    public function findUsersByWorkspacesAndSearch(array $workspaces, $search, $orderedBy = 'id', $order = null)
     {
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $upperSearch = strtoupper(trim($search));
 
-        $dql = '
+        $dql = "
             SELECT DISTINCT u from Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr WITH wr IN (
                 SELECT pr
                 FROM Claroline\CoreBundle\Entity\Role pr
-                WHERE pr.type = ' . Role::WS_ROLE . '
+                WHERE pr.type = " . Role::WS_ROLE . "
             )
             LEFT JOIN wr.workspace w
             LEFT JOIN u.personalWorkspace ws
@@ -450,8 +456,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 OR UPPER(u.username) LIKE :search
             )
             AND u.isEnabled = true
-            ORDER BY u.id
-        ';
+            ORDER BY u.{$orderedBy} {$order}
+            "
+        ;
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
         $query->setParameter('search', "%{$upperSearch}%");

@@ -36,6 +36,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 /**
  * Controller of the user profile.
@@ -102,22 +103,34 @@ class ProfileController extends Controller
      */
     public function viewAction(User $loggedUser, $page = 1)
     {
-        $doctrine = $this->getDoctrine();
-        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+//         $doctrine = $this->getDoctrine();
+//         $doctrine->getManager()->getFilters()->disable('softdeleteable');
 
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($loggedUser, false);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+//         $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($loggedUser, false);
+//         $adapter = new DoctrineORMAdapter($query);
+//         $pager   = new Pagerfanta($adapter);
 
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
-        }
-
+//         try {
+//             $pager->setCurrentPage($page);
+//         } catch (NotValidCurrentPageException $exception) {
+//             throw new NotFoundHttpException();
+//         }
+    	// If user share base information, fetch the data about forum messages, badges and followed moocs
+    	$nbBadges = $loggedUser->getBadges()->count();
+    	$messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
+    	$nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);
+    	foreach ($loggedUser->getMoocSessions() as $moocSession) {
+    		/* @var $moocSession MoocSession */    		
+    		$moocSession->getStartDate();
+    		$moocSession->getTitle();
+    	}
         return array(
             'user'  => $loggedUser,
-			'pager'    => $pager
+// 			'pager'    => $pager,
+        	'nbBadges' => $nbBadges,
+        	'nbPostedMessages' => $nbPostedMessages,
+        	'nbVotedMessages' => $nbVotedMessages
         );
     }
 
@@ -164,9 +177,17 @@ class ProfileController extends Controller
             }
         }
 
+        $nbBadges = $loggedUser->getBadges()->count();
+        $messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
+        $nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);
+        
         return array(
             'form' => $form->createView(),
-            'user' => $loggedUser
+            'user' => $loggedUser,
+        	'nbBadges' => $nbBadges,
+        	'nbPostedMessages' => $nbPostedMessages,
+        	'nbVotedMessages' => $nbVotedMessages
         );
     }
 
@@ -179,7 +200,7 @@ class ProfileController extends Controller
      */
     public function publicProfileAction($publicUrl)
     {
-        /** @var \Claroline\CoreBundle\Entity\User $user */
+        /* @var $user User */
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
         if (null === $user) {
@@ -193,15 +214,25 @@ class ProfileController extends Controller
             $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
         }
 
-        $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user, 'publicProfilePreferences' => $userPublicProfilePreferences)));
-
-
         if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
         }
         else if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER === $userPublicProfilePreferences->getSharePolicy()
                  && null === $this->getUser()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
+        } else {
+        	// If user share base information, fetch the data about forum messages, badges and followed moocs
+        	$nbBadges = $user->getBadges()->count();
+        	$messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
+	    	$nbPostedMessages = $messageRepository->countUserMessages($user);
+	    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($user);
+        	$response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array(
+        			'user' => $user,
+        			'publicProfilePreferences' => $userPublicProfilePreferences,
+        			'nbBadges' => $nbBadges,
+        			'nbPostedMessages' => $nbPostedMessages,
+        			'nbVotedMessages' => $nbVotedMessages
+        	)));        	
         }
 
         return $response;

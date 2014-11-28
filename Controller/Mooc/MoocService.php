@@ -172,18 +172,31 @@ class MoocService extends Controller
     
     /**
      * 
-     * Return the URL of the lesson associated to active lesson
+     * Return the URL of the blog or the lesson associated to active lesson
+     * Or #
      * 
      * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function getBackMoocUrl( $workspace, $user ) {
+        
+        if (  ! $workspace->isMooc() ) {
+            return "#";
+        }
+        
+        /*$blogRes = $workspace->getMooc()->getBlog();
+        if ( $blogRes ) {
+            $blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
+            return $this->get('router')->generate('icap_blog_view', array('blogId' => $blog->getId()));
+        }*/
+        
     	$lesson =  $this->getLessonFromWorkspace( $workspace, $user );
     	if ($lesson != null) {
         	return $this->getRouteToTheLastChapter( $lesson, $user );
-    	} else {
-    		return "#";
-    	}
+    	} 
+        
+        return "#";
+
     }
 
     /**

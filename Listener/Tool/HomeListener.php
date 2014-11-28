@@ -136,34 +136,8 @@ class HomeListener
      */
     public function desktopHome()
     {
-        $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByUser($user);
-        $visibleAdminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
-        $userHomeTabConfigs = $this->homeTabManager
-            ->getVisibleDesktopHomeTabConfigsByUser($user);
-        $tabId = 0;
-
-        $firstAdminHomeTab = reset($visibleAdminHomeTabConfigs);
-
-        if ($firstAdminHomeTab) {
-            $tabId = $firstAdminHomeTab->getHomeTab()->getId();
-        } else {
-            $firstHomeTab = reset($userHomeTabConfigs);
-
-            if ($firstHomeTab) {
-                $tabId = $firstHomeTab->getHomeTab()->getId();
-            }
-        }
-
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig',
-            array(
-                'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
-                'userHomeTabConfigs' => $userHomeTabConfigs,
-                'tabId' => $tabId
-            )
+            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig'
         );
     }
 }

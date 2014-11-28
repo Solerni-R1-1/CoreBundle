@@ -87,6 +87,23 @@ class ProfileController extends Controller
      */
     public function badgeAction(Badge $badge, User $user)
     {
+   
+        $validatedRules = $this->getValidatedRules($badge, $user);
+
+        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
+
+        if (null === $userBadge) {
+            throw $this->createNotFoundException("User don't have this badge.");
+        }
+
+        return array(
+            'userBadge'      => $userBadge,
+            'badge'          => $badge,
+            'validatedRules' => $validatedRules
+        );
+    }
+
+    private function getValidatedRules(Badge $badge, User $user){
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
         $validatedRules       = $badgeRuleValidator->validate($badge, $user);
@@ -119,18 +136,7 @@ class ProfileController extends Controller
                 }
             }
         }
-
-        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
-
-        if (null === $userBadge) {
-            throw $this->createNotFoundException("User don't have this badge.");
-        }
-
-        return array(
-            'userBadge'      => $userBadge,
-            'badge'          => $badge,
-            'validatedRules' => $validatedRules
-        );
+        return $validatedRules;
     }
 
     /**
@@ -142,14 +148,39 @@ class ProfileController extends Controller
     {
         $doctrine = $this->getDoctrine();
         $doctrine->getManager()->getFilters()->disable('softdeleteable');
-        $userBadges       = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
-        $badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
-        $badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
+        $userBadges = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
+
+        $validatedRulesPerBadges = array();
+        $badgesPerMoocs = array();
+        $hashPerMoocs = array();
+
+        foreach ($userBadges as $userBadge) {
+            $badge =  $userBadge->getBadge();
+            $w = $badge->getWorkspace();
+
+            $validatedRulesPerBadges[$badge->getId()] = $this->getValidatedRules($badge, $user);
+
+            if($w == null || $w->getMooc() == null){
+                $mooc = null;
+                $moocName = 'nomooc';
+            } else {
+                $mooc = $w->getMooc();
+                $moocName = $mooc->getTitle();
+                
+            }
+
+            if(!isset($badgesPerMoocs[$moocName])){
+                $badgesPerMoocs[$moocName] = array('mooc'=>$mooc, 'userBadges' => array());
+            }
+
+            $hashPerMoocs[$moocName] = md5($moocName);
+            $badgesPerMoocs[$moocName]['userBadges'][] = $userBadge;
+        }
 
         return array(
-            'userBadges'       => $userBadges,
-            'badgeClaims'      => $badgeClaims,
-            'badgeCollections' => $badgeCollections
+            'badgesPerMoocs'   => $badgesPerMoocs,
+            'hashPerMoocs'     => $hashPerMoocs,
+            'validatedRulesPerBadges' => $validatedRulesPerBadges
         );
     }
 }

@@ -18,13 +18,20 @@
         {% set lastNameInvalidMsg %}{{ 'user_form_lastName_invalid'|trans({}, 'platform') }}{% endset %}
         {% set usernameInvalidMsg %}{{ 'user_form_username_invalid'|trans({}, 'platform') }}{% endset %}
         {% set mailInvalidMsg %}{{ 'mail_invalid'|trans({}, 'platform') }}{% endset %}
+        {% set publicUrlInvalidMsg %}{{ 'user_form_publicUrl_invalid'|trans({}, 'platform') }}{% endset %}
         {{ macros.flashBox() }}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body slrn-profile-form">
+            	<div class="col-md-3 col-xs-3">
+            	<!-- Empty block -->
+            	</div>
+            	<div class="col-md-9 col-xs-9">
+            		Les champs marqués d'une étoile <span class="slrn-profile-mandatory-char-inline">*</span>&nbsp; sont obligatoires
+            	</div>
                 {# FIRST NAME #}
                 <div class="form-group row">
                     {{ form_label(form.firstName) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.firstName, {'attr': { 
 								'data-validation': 'alphanumeric required', 
 								'data-validation-allowing': '-éèöàñïîêôâ ',
@@ -37,7 +44,7 @@
                 {# LAST  NAME #}
                 <div class="form-group row">
                     {{ form_label(form.lastName) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.lastName, {'attr': { 
 								'data-validation': 'alphanumeric required', 
 								'data-validation-allowing': '-éèöàñïîêôâ ',
@@ -50,9 +57,10 @@
                 {# USERNAME #}
                 <div class="form-group row">
                     {{ form_label(form.username) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.username, {'attr': {
-								'data-validation': 'alphanumeric length',
+								'data-validation': 'custom length',
+                                'data-validation-regexp': '^([a-zA-Z0-9._]+)$',
 								'data-validation-length': 'min3',
 								'data-validation-error-msg' : usernameInvalidMsg}
 														 })
@@ -60,10 +68,25 @@
                         {{ form_errors(form.username) }} 
                     </div>
                 </div>
+                {# PUBLIC PROFILE URL (DISPLAY IF NOT VALID) #}
+                <div class="form-group row{% if user.isPublicUrlValid() and not is_granted('ROLE_ADMIN') %} hide{% endif%}">
+                    {{ form_label(form.publicUrl) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.publicUrl, {'attr': {
+                                'data-validation': 'custom length',
+                                'data-validation-regexp': '^([a-z0-9._]+)$',
+                                'data-validation-length': 'min3',
+                                'data-validation-error-msg' : publicUrlInvalidMsg}
+                                                         })
+                         }}
+                        {{ form_errors(form.publicUrl) }} 
+                    </div>
+                </div>
+
                 {# MAIL  #}
                 <div class="form-group row">
                     {{ form_label(form.mail) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.mail, {'attr': {
 								'data-validation': 'email', 
 								'data-validation-error-msg' : mailInvalidMsg}
@@ -76,7 +99,7 @@
                 {% if form.picture.vars.value %}
                     <div class="form-group row hide">
                     {{ form_label(form.picture) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.picture) }}
                     </div>
                     </div>
@@ -84,7 +107,7 @@
                         <label class="control-label col-md-3">
                             {{ 'current_picture_profile'|trans({}, 'platform')}}
                         </label>
-                        <div class="cold-md-9 col-xs-9">
+                        <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                             <img src="{{ image( 'uploads/pictures/' ~ form.picture.vars.value ).zoomCrop( 150, 150 ) }}" width="150" height="150">
                         </div>
                     </div>
@@ -92,7 +115,7 @@
                 {# PICTURE INPUT #}
                 <div class="form-group row hide">
                     {{ form_label(form.pictureFile) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.pictureFile) }}
                     </div>
                 </div>
@@ -100,7 +123,7 @@
                 {% if form.pictureFile.vars.errors|length %}
                     <div class="form-group row">
                         <label class="control-label col-md-3"></label>
-                        <div class="cold-md-9 col-xs-9">
+                        <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                             {{ form_errors(form.pictureFile) }}
                         </div>
                     </div>
@@ -108,7 +131,7 @@
                 {# UPLOAD PICTURE HELPER MESSAGE #}
                 <div class="form-group row">
                     <label class="control-label col-md-3"></label>
-                    <div class="cold-md-9 col-xs-9">
+                    <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                         <i class="small">Merci d'utiliser une image au format JPG, GIF ou PNG, de 2048px par 2048px maximum et de 6Mo au plus.</i>
                     </div>
                 </div>
@@ -117,7 +140,7 @@
                     <label class="control-label col-md-3">
                         {{ 'picture_profile'|trans({}, 'platform')}}
                     </label>
-                    <div class="cold-md-9 col-xs-9">
+                    <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                         <a id="js-upload-file" class="btn btn-gris">{{ 'edit_profile_upload'|trans({}, 'platform')}}</a>
                         <span class="slrn-upload-file-name">
                             {% if form.picture.vars.value %}
@@ -146,19 +169,83 @@
                 </script>
                 {# DESCRIPTION #}
                 <div class="form-group row">
+                    {{ form_label(form.gender) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.gender) }}
+                        {{ form_errors(form.gender) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.city) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.city) }}
+                        {{ form_errors(form.city) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.country) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.country) }}
+                        {{ form_errors(form.country) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.birthdate) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.birthdate) }}
+                        {{ form_errors(form.birthdate) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.website) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-website">
+                        {{ form_widget(form.website) }}
+                        {{ form_errors(form.website) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.twitter) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-twitter">
+                        {{ form_widget(form.twitter) }}
+                        {{ form_errors(form.twitter) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.facebook) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-facebook">
+                        {{ form_widget(form.facebook) }}
+                        {{ form_errors(form.facebook) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.linkedIn) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-linkedIn">
+                        {{ form_widget(form.linkedIn) }}
+                        {{ form_errors(form.linkedIn) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_label(form.googlePlus) }}
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--social slrn-googlePlus">
+                        {{ form_widget(form.googlePlus) }}
+                        {{ form_errors(form.googlePlus) }} 
+                    </div>
+                </div>
+                <div class="form-group row">
                     {{ form_label(form.description) }}
-                    <div class="col-md-9 col-xs-9">
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.description) }}
                         {{ form_errors(form.description) }} 
                     </div>
                 </div>
                 {# OPTIN #}
-                {% if profile_form.accepted_com_terms is defined %}
+                {% if form.accepted_com_terms is defined %}
                 <div class="form-group row">
-                    {{ form_label(form.accepted_com_terms) }}
-                    <div class="col-md-9 col-xs-9">
+                    <label class="control-label col-md-3 ">Autorisation d'exploitation</label>
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.accepted_com_terms) }}
-                        {{ form_errors(form.accepted_com_terms) }} 
+                        <label for="profile_form_accepted_com_terms" style="font-weight: normal">{{ form.accepted_com_terms.vars.label|trans({}, 'platform') }}</label>
+                        {{ form_errors(form.accepted_com_terms) }}
                     </div>
                 </div>
                 {% endif %}
@@ -196,19 +283,29 @@
                 {# CACHE : TOKEN #}                 
                 <div class="form-group row hide">
                     {{ form_label(form._token, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
-                    <div class="col-md-9 col-xs-9 slrn-accepted-terms">
+                    <div class="col-md-9 col-xs-9 slrn-accepted-terms slrn-profile-edit-field">
                         {{ form_widget(form._token, {'attr': { 'class' : 'hide' } } ) }}
                     </div>
                 </div>
+                {# Error bubbling from other field not submited #}
+                {% if not form.vars.valid %}
+                    <div class="form-group row">
+                        <label class="control-label col-md-3"></label>
+                        <div class="cold-md-9 col-xs-9">
+                            {{ form_errors(form) }}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="form-group row slrn-form-group-button">
                 <div class="col-md-3 col-xs-3"></div>
-                <div class="col-md-9 col-xs-9">
+                <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     <a href="{{ path('claro_profile_view') }}" class="btn btn-gris" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
                 </div>
             </div>
         </form>
+        
     </div>
     <hr class="slrn-hr--lightgrey">
     <div class="slrn-unsubscribe">

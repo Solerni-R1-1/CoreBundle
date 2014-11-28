@@ -60,7 +60,9 @@
 .essentiels__subscribers { background-position: -207px -299px; }
 
 .sider__content .longText{
-	font-size: 0.95em;
+	font-size:      0.95em;
+    white-space:    normal;
+    max-width:      85%;
 }
 
 .content_center{

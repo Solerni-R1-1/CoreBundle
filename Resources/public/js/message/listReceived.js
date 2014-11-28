@@ -3,6 +3,7 @@
 
     var translator = window.Translator;
 
+
     $('#check-notifications').on('change', function () {
         var val = ($('#check-notifications').attr('checked')) ? 1: 0;
         $.ajax({
@@ -19,3 +20,9 @@
         });
     });
 })();
+
+
+$( document ).ready(function() {
+    //Autoclose message
+    $("#flashbox").fadeOut(3000);
+});

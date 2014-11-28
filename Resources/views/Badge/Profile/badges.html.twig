@@ -16,191 +16,137 @@
         ) %}    
         <div class="col-xs-9 col-md-9">
             <div class="panel-heading">
+            {% if badgesPerMoocs is not empty %}
+                <select class='form-control mooc_select pull-right' id="mooc_select">
+                    <option value='all'>{{ 'badges_tous'|trans({}, 'platform') }}</option>
+                    {% for moocname, badgesPerMooc in badgesPerMoocs %}
+                        {% if moocname == 'nomooc' %}
+                             <option value='m_{{hashPerMoocs[moocname]}}'>{{ 'badges_nomooc'|trans({}, 'platform') }}</option>
+                        {% else %}
+                             <option value='m_{{hashPerMoocs[moocname]}}'>{{moocname}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            {% endif %}
                 <h2 class="slrn-content-main-title">
                     {{ 'my_badges'|trans({}, 'platform') }}
-                    {#<a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs">{{ 'claim_badge'|trans }}</a>#}
                 </h2>
-                <hr>
             </div>
-            {#<div class="panel-body">#}
-                {#{% if 0 < badgeClaims|length %}
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
-                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
-                        </a>
-                    </div>
-                    <div id="claimedBadges" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                {% for badgeClaim in badgeClaims %}
-                                    <li class="list-group-item">
-                                        <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug}) }}"
-                                           title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
-                                        {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        </div>
-                    </div>
-                {% endif %}
-                #}
+            <hr/>
                 <div class="badge_management_container">
-                    {#<div class="col-md-3 collections_container">
-                        <h3>
-                            {{ 'my_collections'|trans }}<br/>
-                            <small>{{ 'organize_badges_the_way_you_want'|trans }}</small>
 
-                    </h3>
-                    <hr/>
-                    <div class="text-center">
-                        <button type="button" class="btn btn-xs btn-success" id="add_collection"
-                                data-loading-text="{{ 'add_collection_in_progress'|trans }}">{{ 'add_collection'|trans }}</button>
-                    </div>
-                    {% set loadingState = '<img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" />' %}
-                    {% set sharedState = '<span class="icon-unlock-alt publish_collection"></span> ' ~ 'shared'|trans %}
-                    {% set privateState = '<span class="icon-lock publish_collection"></span> ' ~ 'private'|trans %}
-                    {% set collectionTemplate = '<li class="collection well editing" data-id="__collectionId__" style="display: none">
-                            <header>
-                                <div class="btn-group btn-group-xs pull-right">
-                                    <button type="button" class="btn btn-success btn-edit" data-loading-text="..."
-                                            data-toggle="tooltip" data-placement="top" data-container="body"
-                                            data-title="' ~ 'edit'|trans({}, 'platform') ~ '">
-                                        <span class="icon-pencil"></span>
-                                            </button>
-                                    <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip"
-                                            data-placement="top" data-container="body"
-                                            data-title="' ~ 'delete'|trans({}, 'platform') ~ '"
-                                            data-confirm-title="' ~ 'badge_collection_delete_confirm_title'|trans ~ '"
-                                            data-confirm-message="' ~ 'badge_collection_delete_confirm_message'|trans ~ '"
-                                            data-confirm-ok="' ~ 'delete'|trans({}, 'platform') ~ '"
-                                            data-confirm-cancel="' ~ 'cancel'|trans({}, 'platform') ~ '"
-                                            data-confirm-style="danger" style="display: none">
-                                        <span class="icon-trash"></span>
-                                    </button>
-                                    <button type="button" class="btn btn-default btn-edit-cancel" data-toggle="tooltip"
-                                            data-placement="top" data-container="body"
-                                            data-title="' ~ 'cancel'|trans({}, 'platform') ~ '">
-                                        <span class="icon-remove"></span>
-                                    </button>
-                                </div>
-                                <h4 class="collection_title" style="display: none">' ~ 'collection_name'|trans ~ '</h4>
-                                <input type="text" class="form-control collection_title_input" name="badge_collection_form[name]" value="' ~ 'collection_name'|trans ~ '" />
-                            </header>
-                            <ul class="list-inline badges">
-                                <li class="loading_badge" style="display: none"><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" /></li>
-                                <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
-                            </ul>
-                            <footer>
-                                <div class="dropdown">
-                                    <a href="" title="' ~ 'see_shared_collection'|trans ~ '" data-title="' ~ 'see_shared_collection'|trans ~ '"
-                                        data-toggle="tooltip" data-placement="top" data-container="body"
-                                        class="pull-right share_collection" style="display: none">
-                                            <span class="icon-share-alt"></span>
-                                    </a>
-                                    <a data-toggle="dropdown" href="#" title="' ~ 'private'|trans ~ '"
-                                        data-title="' ~ 'private'|trans ~ '" data-toggle="tooltip"
-                                        data-placement="top" data-container="body"  class="shared_toggle"
-                                        data-loading-state="' ~ loadingState|escape ~ '" data-shared-state="' ~ sharedState|escape ~ '" data-private-state="' ~ privateState|escape ~ '">
-                                            ' ~ privateState|raw ~ '
-                                    </a>
-                                    <ul class="dropdown-menu sharedoptions" role="menu">
-                                        <li role="presentation" class="active">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </footer>
-                        </li>' %}
-                    {% set deleteCollectionBadgeTemplate = '<li class="deleting_collection_badge well" id="deleting_collection_badge"><p class="text-center"><span class="icon-trash"></span><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" style="display: none"/></p></li>' %}
-                    <ul class="list-unstyled collections_list" id="collections_list"
-                        data-collection-template="{{ collectionTemplate }}"
-                        data-delete-collection-badge-template="{{ deleteCollectionBadgeTemplate }}"
-                        data-action-url="{{ path('claro_badge_collection_add') }}">
-                        {% for collection in badgeCollections %}
-                            <li class="collection well" data-id="{{ collection.id }}">
-                                <header>
-                                    <div class="btn-group btn-group-xs pull-right">
-                                        <button type="button" class="btn btn-primary btn-edit" data-loading-text="..."
-                                                data-toggle="tooltip" data-placement="top" data-container="body"
-                                                data-title="{{ 'edit'|trans({}, 'platform') }}">
-                                            <span class="icon-pencil"></span>
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip"
-                                                data-placement="top" data-container="body"
-                                                data-title="{{ 'delete'|trans({}, 'platform') }}"
-                                                data-confirm-title="{{ 'badge_collection_delete_confirm_title'|trans }}"
-                                                data-confirm-message="{{ 'badge_collection_delete_confirm_message'|trans }}"
-                                                data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
-                                                data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
-                                                data-confirm-style="danger">
-                                            <span class="icon-trash"></span>
-                                        </button>
-                                        <button type="button" class="btn btn-default btn-edit-cancel" data-toggle="tooltip"
-                                                data-placement="top" data-container="body"
-                                                data-title="{{ 'cancel'|trans({}, 'platform') }}" style="display: none">
-                                            <span class="icon-remove"></span>
-                                        </button>
-                                    </div>
-                                    <h4 class="collection_title">{{ collection.name }}</h4>
-                                    <input type="text" class="form-control collection_title_input" style="display: none" name="badge_collection_form[name]" value="{{ collection.name }}"/>
-                                </header>
-                                <ul class="list-inline badges">
-                                    {% for badge in collection.badges %}
-                                        <li class="clarobadge" data-id="{{ badge.id }}" data-collection-id="{{ collection.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" /></li>
-                                    {% endfor %}
-                                    <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
-                                    <li class="no_badge"{% if 0 < collection.badges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
-                                </ul>
-                                <footer>
-                                    <div class="dropdown">
-                                        {% set isCollectionShared = collection.isShared %}
-
-                                        <a href="{{ path('claro_badge_collection_share_view', {'slug': collection.slug}) }}"
-                                           title="{{ 'see_shared_collection'|trans }}" data-title="{{ 'see_shared_collection'|trans }}"
-                                           data-toggle="tooltip" data-placement="top" data-container="body"
-                                           class="pull-right share_collection"{% if false == isCollectionShared %} style="display: none"{% endif %}>
-                                            <span class="icon-share-alt"></span>
-                                        </a>
-                                        <a data-toggle="dropdown" href="#" title="{% if isCollectionShared %}{{ 'shared'|trans }}{% else %}{{ 'private'|trans }}{% endif %}"
-                                           data-title="{% if isCollectionShared %}{{ 'shared'|trans }}{% else %}{{ 'private'|trans }}{% endif %}" data-toggle="tooltip"
-                                           data-placement="top" data-container="body" class="shared_toggle"
-                                           data-loading-state="{{ loadingState }}" data-shared-state="{{ sharedState }}" data-private-state="{{ privateState }}">
-                                            {% if isCollectionShared %}
-                                                {{ sharedState|raw }}
-                                            {% else %}
-                                                {{ privateState|raw }}
-                                            {% endif %}
-                                        </a>
-                                        <ul class="dropdown-menu sharedoptions" role="menu">
-                                            <li role="presentation" class="{% if false == isCollectionShared %} active{% endif %}">
-                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
-                                            </li>
-                                            <li role="presentation" class="{% if isCollectionShared %} active{% endif %}">
-                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> {{ 'share'|trans }}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </footer>
-                            </li>
-                        {% endfor %}
-                        <li class="no_collection well"{% if 0 < badgeCollections|length %} style="display: none"{% endif %} id="no_collection">
-                            <p class="collection_title text-center">{{ 'no_collection'|trans }}</p>
-                        </li>
-                        <li class="deleting_collection well" id="deleting_collection" style="display: none">
-                            <p class="text-center"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-9">#}
                     <div class="alert alert-danger" id="error_container" style="display: none">
                         <button type="button" class="close" aria-hidden="true">&times;</button>
                         <p></p>
                     </div>
+
+                    {% if badgesPerMoocs is empty %}
+                        {{ 'no_badges'|trans({'%url%' : path( 'solerni_static_page', { 'name': 'cms_faq' } )}, 'badge') | raw }}
+                    {% endif %}
+
+                    {% for moocname, badgesPerMooc in badgesPerMoocs %}
+                        {% set mooc = badgesPerMooc.mooc %}
+                        {% set userBadges2 = badgesPerMooc.userBadges %}
+                        <div class='mooc_wrapper' id='m_{{hashPerMoocs[moocname]}}'>
+                            <h3>
+                            {% if moocname == 'nomooc' %}
+                                {{ 'badges_nomooc'|trans({}, 'platform') }}
+                            {% else %}
+                                {{moocname}} <img class='pull-right' src='{{ asset(mooc.illustrationWebPath) }}' height=37 width=37 />
+                            {% endif %}
+                            </h3>
+                            <hr/>
+
+                            <div class="row">
+                                {% for userBadge in userBadges2 %}
+                                    {% set badge = userBadge.badge %}
+                                    <div class="col-xs-3 text-center slrn-mesbadges-badge badge-type-{% if badge.isSkillBadge %}competence {% elseif badge.isKnowledgeBadge %}connaissance{% else %}solerni{% endif %}">
+                                        <span class="badge_span_image" data-toggle="modal" data-target="#myModal{{badge.id}}">
+                                            <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" data-toggle="tooltip" data-placement="top" title="<strong>{{ badge.name }}</strong><br/>BADGE {% if badge.isSkillBadge %}DE COMPETENCE {% elseif badge.isKnowledgeBadge %}DE CONNAISSANCE{% else %}SOLERNI{% endif %}" data-html='true' />
+                                        </span>
+                                        <p class="badge_name" data-toggle="modal" data-target="#myModal{{badge.id}}">{{ badge.name }}</p>
+                                    </div>
+
+                                    <div class="modal fade" id="myModal{{badge.id}}" tabindex="-1" role="dialog" aria-labelledby="{{ 'badges_voir_details'|trans({}, 'platform') }}" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                          <div class="modal-body">
+                                            <div class='row'>
+                                                <div class="col-xs-3">
+                                                    <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                                                </div>
+
+                                                <div class="col-xs-9">
+                                                    
+                                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                    <h4>{{ 'badges_badge'|trans({}, 'platform') }} &laquo; {{ badge.name }} &raquo;</h4>
+                                                    <p><strong>{{ 'badges_attribue_le'|trans({}, 'platform') }}</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }} {{ 'badges_by'|trans({}, 'platform') }} {{userBadge.issuer.lastname}}</p>
+                                                    <p><strong>{{ 'badges_name'|trans({}, 'platform') }} :</strong> {{ badge.name }}</p>
+                                                    <p><strong>{{ 'badges_version'|trans({}, 'platform') }} :</strong> {{ badge.version }}</p>
+                                                    <p><strong>{{ 'badges_description'|trans({}, 'platform') }} :</strong> {{ badge.description }}</p>
+                                                    <p><strong>{{ 'badges_critere'|trans({}, 'platform') }} :</strong> {{ badge.criteria|raw }}</p>
+                                                    <p><strong>{{ 'badges_actions'|trans({}, 'platform') }} :</strong></p>
+                                                    {% set nbRules = badge.rules|length %}
+                                                    {% if 0 < nbRules %}                                
+                                                        {% set validatedRules = validatedRulesPerBadges[badge.id] %}                                
+                                                        
+                                                        {% if 0 == validatedRules.validRules %}
+                                                            <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
+                                                        {% elseif validatedRules.validRules < nbRules %}
+                                                            <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'badge') }}.</div>
+                                                        {% else %}
+
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>{{ 'action'|trans({}, 'platform') }}</th>
+                                                                        <th>{{ 'date'|trans({}, 'platform') }}</th>
+                                                                        <th>{{ 'resource'|trans({}, 'platform') }}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for validatedRule in validatedRules.rules %}
+                                                                    {% for validatedLog in validatedRule.logs %}
+                                                                        {% set log    = validatedLog.log %}
+                                                                        {% set action = 'log_' ~ log.action ~ '_title' %}
+                                                                        <tr>
+                                                                            <td>{{ action|trans({}, 'log') }}</td>
+                                                                            <td>{{ log.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
+                                                                            <td>
+                                                                                {% if validatedLog.url is not null %}
+                                                                                    {{ validatedLog.url | raw }}
+                                                                                {% else %}
+                                                                                    {% if log.resourceNode != null %}
+                                                                                        <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">{{ log.resourceNode.path }}</a>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    
+                                                </div>
+                                            </div>
+                                          </div>
+                                          
+                                        </div><!-- /.modal-content -->
+                                      </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->  
+
+                                {% endfor %}
+                            </div>
+                            <hr/>
+                        </div>
+                    {% endfor %}
+
+{#
+
                     {%  if userBadges is not empty %}
                     <ul class="nodes badge_list list-unstyled well">
                         {% for userBadge in userBadges %}
@@ -217,10 +163,10 @@
                                 </a>
                             </li>
                         {% endfor %}
-                    </ul>
+                    </ul> 
                     {% else %}
                     {{ 'no_badges'|trans({'%url%' : path( 'solerni_static_page', { 'name': 'cms_faq' } )}, 'badge') | raw }}
-                    {% endif %}
+                    {% endif %}#}
                 </div>
             </div>
         </div>

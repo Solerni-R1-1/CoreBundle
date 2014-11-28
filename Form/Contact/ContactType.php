@@ -24,9 +24,16 @@ class ContactType extends AbstractType
 	
     private $contacts = array();
 
-    public function __construct(TranslatorInterface $translator, $contacts) {
+    private $civilite = array();
+
+    private $user = array();
+
+    public function __construct(TranslatorInterface $translator, $contacts, $civilite, $user) {
         $this->translator = $translator;
+        asort($contacts);
         $this->contacts = $contacts;
+        $this->civilite = $civilite;
+        $this->user = $user;
 
     }
 
@@ -34,34 +41,100 @@ class ContactType extends AbstractType
 
         $builder->add('contact', 'choice', 
         		array(
-        			'empty_value' => 'Choisissez un destinataire',
+        			'empty_value' => $this->translator->trans('contact_form_demande', array(), 'platform'),
 				    'choices'   => $this->contacts,
 				    'required'  => true,
 				)
-        	)
-        	->add(
-	            'replyTo',
-	            'email',
-	            array(
-	            	'attr' => array('placeholder' => $this->translator->trans('contact_form_replyTo', array(), 'plateform')),
-	                'required' => true,
-	                'constraints' => new Email()
-	            )
-	        )
-            ->add(
-                'object',
+        	)->add('civilite', 'choice', 
+                array(
+                    'empty_value' => $this->translator->trans('contact_form_civil', array(), 'platform'),
+                    'choices'   => $this->civilite,
+                    'required'  => false,
+                )
+            );
+
+        if($this->user == 'anon.' ) {
+            $builder->add(
+                'prenom',
                 'text',
                 array(
-                    'attr' => array('placeholder' => $this->translator->trans('contact_form_object', array(), 'plateform')),
-                    //'data' => $this->object, 
-                    'required' => true
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_prenom', array(), 'platform')),
+                    'required'  => true,
+                )
+            )->add(
+                'nom',
+                'text',
+                array(
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_nom', array(), 'platform')),
+                    'required'  => true,
+                )
+            )->add(
+                'replyTo',
+                'email',
+                array(
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_replyTo', array(), 'platform')),
+                    'required' => true,
+                    'constraints' => new Email()
+                )
+            );
+
+        } else {
+            $builder->add(
+                'prenom',
+                'text',
+                array(
+                    'attr' => array(),
+                    'data' => $this->user->getFirstName(),
+                    'read_only' => true
+                )
+            )->add(
+                'nom',
+                'text',
+                array(
+                    'attr' => array(),
+                    'data' => $this->user->getLastName(),
+                    'read_only' => true
+                )
+            )->add(
+                'replyTo',
+                'email',
+                array(
+                    'attr' => array(),
+                    'constraints' => new Email(),
+                    'data' => $this->user->getMail(),
+                    'read_only' => true
+                )
+            );
+
+        }
+        
+        $builder->add(
+                'societe',
+                'text',
+                array(
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_societe', array(), 'platform')),
+                    'required'  => false,
+                )
+            )->add(
+                'telephone',
+                'text',
+                array(
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_telephone', array(), 'platform')),
+                    'required'  => false,
+                )
+            )->add(
+                'fonction',
+                'text',
+                array(
+                    'attr' => array('placeholder' => $this->translator->trans('contact_form_fonction', array(), 'platform')),
+                    'required'  => false,
                 )
             )
             ->add(
                 'content',
-                'tinymce',
+                'textarea',
                 array(
-                    'attr' => array(),
+                    'attr' => array('class' => 'contact_text'),
                     'required' => true
                 )
             );

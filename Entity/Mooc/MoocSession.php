@@ -411,9 +411,14 @@ class MoocSession extends AbstractIndexable
        $doc->mooc_alias             	= $mooc->getAlias();
        $doc->mooc_description_t			= $mooc->getDescription();
        $doc->mooc_about_description_t	= $mooc->getAboutPageDescription();
-       $doc->content_t					= strip_tags( $mooc->getDescription() ).'<br>'.
-               								$mooc->getTitle().'<br>'.
-               								strip_tags( $mooc->getAboutPageDescription() );
+       $doc->content_t					= strip_tags( $mooc->getDescription() )
+                                            .'<br>'
+               								.$mooc->getTitle()
+                                            .'<br>'
+               								.strip_tags( $mooc->getAboutPageDescription() )
+                                            .'<br>'
+                                            .$mooc->getOwner()->getName()
+                                            ;
        
        $doc->mooc_is_public_b       	= $mooc->isPublic();
        $doc->mooc_duration_i        	= $mooc->getDuration();

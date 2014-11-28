@@ -192,15 +192,38 @@ body.subnavbar-fixed {
     pointer-events: none;
 }
 
+.navbar-inverse .navbar-nav .slrn-topbar--messages a,
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a{
+    display: block;
+    margin-top:3px;
+    height: 43px;
+    width: 41px;
+    background: url('../images/sprites_solerni.png') no-repeat -109px -212px scroll;
+    font-size: 0em;
+    color: transparent;
+}
+.navbar-inverse .navbar-nav .slrn-topbar--messages a:hover{
+    background-position: -150px -212px;
+}
+
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a{
+    background-position: -109px -169px;
+}
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a:hover{
+    background-position: -150px -169px;
+}
+
+/*
 .slrn-topbar--messages:hover:before,
 .slrn-topbar--messages.active:before { background-color: #FFF; }
 .slrn-topbar--messages:hover i,
 .slrn-topbar--messages.active i { color: #4B667C; }
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:before,
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a { color: #C9D200; border-color: #C9D200; }
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:hover:before,
-.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages.active:before { background-color: #C9D200; }
 
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:before,
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages a { color: #ee2553; border-color: #FFF; }
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:hover:before,
+.navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages.active:before { color: #FFF; border-color: #ee2553;background-color: #ee2553; }
+*/
 /* BOOTSTRAP */
 .please-wait { z-index: 1100; }
 
@@ -365,7 +388,7 @@ body.subnavbar-fixed {
 .slrn-subnavbar .slrn-subnavbar__item { 
     display:    inline-block; 
     position:   relative; 
-    margin:     0 .8em; 
+    margin:     0 .6em; 
 }
 
 .slrn-subnavbar .slrn-subnavbar__item:first-child { 
@@ -422,7 +445,7 @@ body.subnavbar-fixed {
 .slrn-subnavbar__subblock--badges {
     float:          right;
     padding:        .9em .5em .5em 3.4em;
-    width:          15em;
+    width:          12em;
     position:       relative; 
     background:     #A5B2BD url('../images/sprites_solerni.png') no-repeat 10px -319px scroll;
     line-height:    1.2;
@@ -454,6 +477,10 @@ body.subnavbar-fixed {
 
 .slrn-inner-text {
     font-size:      .9em;
+}
+
+.slrn-inner-text--badges {
+    font-size:      .8em;
 }
 
 /* CONTENT */
@@ -793,11 +820,11 @@ body.dsk .alert { display: none; }
 .dsk__menu__link.active {
     background-color: #4B667C;
     color: #FFF;
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 
 .dsk__menu__link.active:hover {
-    text-decoration: none;    
+   /* text-decoration: none;  */  
 }
 
 .dsk_menu__link--disabled {
@@ -890,7 +917,7 @@ body.dsk .alert { display: none; }
 	background-position: 0 -262px;
 }
 .ico__messagerie_actif {
-	background-position: -48px -168px;
+	background-position: -48px -167px;
 }
 .ico__badge_actif {
 	background-position: -48px -215px;
@@ -1981,6 +2008,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-profile_informations {
     padding: 0 2em;
+    width: 80%;
 }
 
 .slrn-profile_informations .description_block {
@@ -2165,3 +2193,257 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     font-weight:    bold;
     font-size:      1.3em;
 }
+
+.slrn-required{
+    border-color: #900;
+}
+
+.slrn-profile-counters {
+	padding: 0px;
+}
+
+.slrn-profile-counters-li {
+	list-style: none outside none;
+	display: inline-block;
+}
+
+.slrn-profile-counter {
+	display: inline-block;
+	text-align: center;
+	margin-left: 34px;
+	margin-right: 20px;
+	margin-bottom: 0px;
+    line-height: 28px;
+}
+
+.slrn-profile-social-link {
+	margin-left: 28px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: block;
+}
+.slrn-profile-moocs {
+}
+
+.slrn-profile-social {
+	padding: 0px;
+}
+
+.slrn-profile-social-li {
+	list-style: none outside none;
+	margin-bottom: 15px;
+	line-height: 24px;
+}
+
+.slrn-profile-mooc-info {
+	display:inline-block;;
+	
+}
+
+.slrn-profile-mooc-image {
+	padding: 0;
+}
+
+.slrn-profile-moocs-title {
+	font-weight: bold;
+	color: black;
+}
+
+.slrn-profile-description-title {
+	font-weight: bold;
+	color: black;
+}
+
+.slrn-profile-mooc {
+	width: 47%;
+	display: inline-block;
+	background-color: #fdfdfd;
+	border: 1px #efeef0 solid;
+	margin-right: 15px;
+	margin-bottom: 15px;
+	color: #5a7387;
+	height: 85px;
+	overflow: hidden;
+}
+
+.srln-profile-mooc-title {
+	font-weight: bold;
+	height: 40px;
+	overflow: hidden;
+}
+
+.slrn-icon-profile-badge {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -256px -822px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		28px;
+}
+
+.slrn-icon-profile-vote {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -232px -791px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		28px;
+}
+
+.slrn-icon-profile-post {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -208px -793px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		28px;
+}
+
+.slrn-icon-profile-twitter {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -184px -794px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		26px;
+}
+
+.slrn-icon-profile-facebook {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -232px -824px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		26px;
+}
+
+.slrn-icon-profile-linkedin {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -184px -824px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		26px;
+}
+
+.slrn-icon-profile-googleplus {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -208px -824px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		26px;
+}
+
+.slrn-icon-profile-website {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -256px -793px scroll;
+    position:	absolute;
+    width:		24px;
+    height:		26px;
+}
+
+.slrn-profile-aside {
+	width: 20%;
+}
+
+.slrn-profile-mandatory-char-inline {
+	width: 1.7%;
+	padding: 0 0 0 15px;
+	color: #FF004F;
+	font-size: 1.3em;
+	padding: 0px;
+	font-weight: bold;
+}
+
+
+.slrn-twitter {
+	position: relative;
+}
+
+.slrn-profile-edit-field--social input {
+	padding-left: calc(29% + 15px);
+	border-left: 0px solid #000;
+}
+
+.slrn-profile-edit-field--social:before {
+	content:"";
+	position: absolute;
+	top: 0;
+	left: 15px;
+	bottom: 0;
+	width: 28%;
+	border: 3px solid #999;
+	border-right: 1px solid #cfcdce;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	line-height: 2.1;
+	background-color: #eeeeee;
+	padding-left: 40px;
+	color: black;
+	border-radius:4px;
+}
+
+.slrn-profile-edit-field--social:after {
+	content: "";
+	position: absolute;
+	top: 4px;
+	left: 27px;
+	bottom: 4px;
+	width: 24px;
+		
+}
+
+.slrn-twitter:after {
+	background:	transparent url(../images/sprites_solerni.png) no-repeat -184px -794px scroll;
+}
+
+.slrn-twitter:before {
+	content:"http://twitter.com/";
+}
+
+
+.slrn-website input {
+	padding-left: calc(6% + 15px);
+}
+.slrn-website:before {
+	content:"";
+	width: 5%;
+}
+
+.slrn-linkedIn:before {
+	content:"http://linkedin.com/pub/";
+}
+
+.slrn-facebook:before {
+	content:"http://facebook.com/";
+}
+
+.slrn-googlePlus:before {
+	content:"http://plus.google.com/";
+}
+
+
+.slrn-website:after {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -256px -793px scroll;
+}
+
+.slrn-linkedIn:after {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -184px -824px scroll;
+}
+
+.slrn-facebook:after {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -232px -824px scroll;
+}
+
+.slrn-googlePlus:after {
+    background:	transparent url(../images/sprites_solerni.png) no-repeat -208px -824px scroll;
+}
+
+.slrn-profile-edit-field--mandatory:before {
+	content: "*";
+	position: absolute;
+	left: 5px;
+	color: #FF004F;
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+
+/**************** Sticky bar ******************/
+.headroom {
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}
+/**************** Sticky bar ******************/

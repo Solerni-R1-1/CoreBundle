@@ -513,21 +513,23 @@ class UserManager
     {
         $query = $this->userRepo->findAll(false, $orderedBy, $order);
 
-        return $this->pagerFactory->createPager($query, $page, $max);
+        return $this->pagerFactory->createPager($query, $page, $max, true, false);
     }
 
     /**
      * @param string  $search
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getAllUsersBySearch($page, $search, $max = 20)
+    public function getAllUsersBySearch($page, $search, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $users = $this->userRepo->findAllUserBySearch($search);
+        $users = $this->userRepo->findAllUserBySearch($search, $orderedBy, $order);
 
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max, true, false);
     }
 
     /**
@@ -604,7 +606,7 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspace(AbstractWorkspace $workspace, $page, $max = 20)
+    public function getUsersByWorkspace(AbstractWorkspace $workspace, $page, $max = 20, $orderedBy = 'id')
     {
         $query = $this->userRepo->findByWorkspace($workspace, false);
 
@@ -615,14 +617,16 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
      * @param integer                                                    $page
      * @param integer                                                    $max
+     * @param string                                                     $orderedBy
+     * @param string                                                     $order
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20)
+    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false, $orderedBy, $order);
 
-        return $this->pagerFactory->createPager($query, $page, $max);
+        return $this->pagerFactory->createPager($query, $page, $max, true, false);
     }
 
     /**
@@ -630,6 +634,8 @@ class UserManager
      * @param integer                                                    $page
      * @param string                                                     $search
      * @param integer                                                    $max
+     * @param string                                                     $orderedBy
+     * @param string                                                     $order
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -637,13 +643,15 @@ class UserManager
         array $workspaces,
         $page,
         $search,
-        $max = 20
+        $max = 20, 
+        $orderedBy = 'id', 
+        $order = null
     )
     {
         $users = $this->userRepo
-            ->findUsersByWorkspacesAndSearch($workspaces, $search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+            ->findUsersByWorkspacesAndSearch($workspaces, $search, $orderedBy, $order);
+            
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max, true, false);
     }
 
     /**
