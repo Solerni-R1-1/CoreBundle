@@ -52,7 +52,7 @@
                             {% if moocname == 'nomooc' %}
                                 {{ 'badges_nomooc'|trans({}, 'platform') }}
                             {% else %}
-                                {{moocname}} <img class='pull-right' src='{{ asset(mooc.illustrationWebPath) }}' height=37 width=37 />
+                                {{moocname}} <img class='pull-right' src='{{ asset(mooc.owner.logoWebPath) }}' height=37 width=37 />
                             {% endif %}
                             </h3>
                             <hr/>
@@ -183,3 +183,7 @@
     <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/profile.js') }}'></script>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/slrn_badges.css') }}" screen="media" />
+{% endblock %}
