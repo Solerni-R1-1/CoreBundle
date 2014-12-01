@@ -432,8 +432,8 @@ class AnalyticsManager
     	return $contributions;
     }
     
-    public function getForumStats(MoocSession $session) {
-    	return $this->analyticsUserMoocStatsRepo->countForumMessagesForSessionByUsers($session);
+    public function getForumStats(MoocSession $session, array $userIds, $limit = 0) {
+    	return $this->analyticsUserMoocStatsRepo->countForumMessagesForSessionByUsers($session, $userIds, $limit);
     }
     
    public function getBadgesRate(MoocSession $session, $filteredRoles, $skillBadges, $knowledgeBadges) {
@@ -624,8 +624,8 @@ class AnalyticsManager
     	}
     }
     
-    public function getMostActiveUsers(MoocSession $moocSession) {
-    	return $this->analyticsUserMoocStatsRepo->getUsersActivity($moocSession);
+    public function getMostActiveUsers(MoocSession $moocSession, array $userIds, $limit = 0) {
+    	return $this->analyticsUserMoocStatsRepo->getUsersActivity($moocSession, $userIds, $limit);
     }
     
     public function getAnalyticsMoocKeyNumbers(MoocSession $session, User $user) {

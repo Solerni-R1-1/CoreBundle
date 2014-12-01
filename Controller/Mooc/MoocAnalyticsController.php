@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Claroline\CoreBundle\Manager\UserManager;
 
 /**
  * Description of StaticController
@@ -51,6 +52,7 @@ class MoocAnalyticsController extends Controller
     private $moocService;
     private $analyticsManager;
     private $roleManager;
+    private $userManager;
     
     /**
      * @DI\InjectParams({
@@ -61,7 +63,8 @@ class MoocAnalyticsController extends Controller
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
      *     "moocService"        = @DI\Inject("orange.mooc.service"),
      *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager")
+     *     "roleManager"  		= @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"   		= @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct( 
@@ -72,8 +75,8 @@ class MoocAnalyticsController extends Controller
             MailManager $mailManager,
             MoocService $moocService,
             AnalyticsManager $analyticsManager,
-    		RoleManager $roleManager
-        ) {
+    		RoleManager $roleManager,
+    		UserManager $userManager) {
         $this->translator = $translator;
         $this->security = $security;
         $this->router = $router;
@@ -82,6 +85,7 @@ class MoocAnalyticsController extends Controller
         $this->moocService = $moocService;
         $this->analyticsManager = $analyticsManager;
         $this->roleManager = $roleManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -114,7 +118,8 @@ class MoocAnalyticsController extends Controller
         $connectionMean = $this->analyticsManager->getMeanNumberConnectionsDaily($session, $excludeRoles);
         
         // Most active users table
-		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($session);
+        $userIds = $this->userManager->getWorkspaceUserIds($workspace, $this->getExcludeRoles($workspace));
+		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($session, $userIds, 10);
         $mostActiveUsersWithHeader = $mostActiveUsers;
         $row = array();
  		$row[] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
@@ -125,7 +130,7 @@ class MoocAnalyticsController extends Controller
  		array_unshift($mostActiveUsersWithHeader, $row);
         
         // Most active forum publishers table
-        $forumPublishers = $this->analyticsManager->getForumStats($session);
+        $forumPublishers = $this->analyticsManager->getForumStats($session, $userIds, 10);
         $forumPublishersHeaders = array();
 		$forumPublishersHeaders[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
 		$forumPublishersHeaders[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');

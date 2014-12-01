@@ -175,10 +175,15 @@ class AnalyticsPreparationManager
 	    		$dateString = $date->format("Y-m-d");
 
 	    		$moocConn = null;
-	    		foreach ($existMoocStats as $existing) {
+	    		foreach ($existMoocStats as $index => $existing) {
 	    			if ($existing->getDate() == $date) {
-	    				$moocConn = $existing;
-	    				break;
+	    				if ($moocConn != null) {
+	    					$this->om->remove($existing);
+	    					unset($existMoocStats[$index]);
+	    					echo "Deleted doublon at date $dateString... \n";
+	    				} else {
+	    					$moocConn = $existing;
+	    				}
 	    			}
 	    		}
 	    		

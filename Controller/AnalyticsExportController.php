@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use UJM\ExoBundle\Repository\ExerciseRepository;
+use Claroline\CoreBundle\Manager\UserManager;
 
 
 /**
@@ -71,6 +72,8 @@ class AnalyticsExportController extends Controller {
 	
 	/** @var RoleManager */
 	private $roleManager;
+	
+	private $userManager;
 
 	/**
 	 * @DI\InjectParams({
@@ -78,7 +81,8 @@ class AnalyticsExportController extends Controller {
 	 *     "moocService"			 = @DI\Inject("orange.mooc.service"),
 	 *     "container"				 = @DI\Inject("service_container"),
 	 *     "analyticsManager"		 = @DI\Inject("claroline.manager.analytics_manager"),
-	 *     "roleManager"			 = @DI\Inject("claroline.manager.role_manager")
+	 *     "roleManager"			 = @DI\Inject("claroline.manager.role_manager"),
+	 *     "userManager"			 = @DI\Inject("claroline.manager.user_manager")
 	 *     })
 	 */
 	public function _construct(
@@ -86,13 +90,15 @@ class AnalyticsExportController extends Controller {
 			BadgeManager $badgeManager,
 			MoocService $moocService, 
 			AnalyticsManager $analyticsManager,
-			RoleManager $roleManager) {
+			RoleManager $roleManager,
+			UserManager $userManager) {
 		$this->setContainer($container);
 		
 		$this->badgeManager = $badgeManager;
 		$this->moocService = $moocService;
 		$this->analyticsManager = $analyticsManager;
 		$this->roleManager = $roleManager;
+		$this->userManager = $userManager;
 		
 		$this->logRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
 		$this->messageRepository = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
@@ -598,7 +604,8 @@ class AnalyticsExportController extends Controller {
 		$headerCSV[5] = "Subscription time";
 		$rowsCSV[] = $headerCSV;
 		
-		$data = $this->logRepository->getSubscriptionsForWorkspace($workspace, $excludeRoles);
+		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+		$data = $this->logRepository->getSubscriptionsForWorkspace($workspace, $userIds);
 		$orderedData = array();
 		foreach ($data as $datum) {
 			$mail = $datum['mail'];
@@ -609,7 +616,7 @@ class AnalyticsExportController extends Controller {
 				$date2 = $orderedData[$mail]['subscriptionDate'];
 				$time2 = $orderedData[$mail]['subscriptionTime'];
 				
-				if (($date1 > $date2) || ($date1 == $date2 && $time1 > $time2)) {
+				if (($date1 < $date2) || ($date1 == $date2 && $time1 < $time2)) {
 					$orderedData[$mail] = $datum;					
 				}
 			} else {
@@ -642,7 +649,6 @@ class AnalyticsExportController extends Controller {
 		
 
 		$content = $this->createCSVFromArray($rowsCSV);
-		
 		return new Response($content, 200, array(
 				'Content-Type' => 'application/force-download',
 				'Content-Disposition' => 'attachment; filename="export.csv"'
@@ -681,11 +687,18 @@ class AnalyticsExportController extends Controller {
 			$headerCSV[4] = "Subscription date";
 			$headerCSV[5] = "Last connection date";
 			
-			$rowsCSV = $this->logRepository->getLastConnectionAndSubscriptionForWorkspace($workspace, $excludeRoles);
-			
-			array_unshift($rowsCSV, $headerCSV);
 
-			$content = $this->createCSVFromArray($rowsCSV);
+			$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+			$rowsCSV = $this->logRepository->getLastConnectionAndSubscriptionForWorkspace($workspace, $userIds);
+			
+			$filteredRowsCSV = array();
+			foreach ($rowsCSV as $rowCSV) {
+				$filteredRowsCSV[$rowCSV['mail']] = $rowCSV;
+			}
+			
+			array_unshift($filteredRowsCSV, $headerCSV);
+
+			$content = $this->createCSVFromArray($filteredRowsCSV);
 	
 			return new Response($content, 200, array(
 					'Content-Type' => 'application/force-download',
@@ -728,9 +741,16 @@ class AnalyticsExportController extends Controller {
 		$header[4] = $this->translator->trans('mooc_analytics_publisher_nb_pub', array(), 'platform');
 		
 		$headerCSV[] = $header;
-		 
 
-		$data = $this->analyticsManager->getForumStats($currentSession);
+		// Init the roles to filter the stats.
+		$excludeRoles = array();
+		$managerRole = $this->roleManager->getManagerRole($workspace);
+		$excludeRoles[] = $managerRole->getName();
+		$excludeRoles[] = "ROLE_ADMIN";
+		$excludeRoles[] = "ROLE_WS_CREATOR";
+		
+		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+		$data = $this->analyticsManager->getForumStats($currentSession, $userIds);
 		
 		$rowsCSV = array_merge($headerCSV, $data);
 		$content = $this->createCSVFromArray($rowsCSV);
@@ -779,8 +799,9 @@ class AnalyticsExportController extends Controller {
         if (  ! $currentSession ) {
             throw new NotFoundHttpException();
         }
-        
-		$data = $this->analyticsManager->getMostActiveUsers($currentSession);
+
+        $userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+		$data = $this->analyticsManager->getMostActiveUsers($currentSession, $userIds);
 	
 		$rowsCSV = array_merge($headerCSV, $data);
 		$content = $this->createCSVFromArray($rowsCSV);

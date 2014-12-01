@@ -732,14 +732,7 @@ class LogRepository extends EntityRepository
     
 
 
-    public function getLastConnectionAndSubscriptionForWorkspace(AbstractWorkspace $workspace, array $excludeRoles) {
-    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
-    			JOIN u.roles r
-    			WHERE r.name IN (:roles)";
-    	$query = $this->_em->createQuery($dql);
-    	$query->setParameter("roles", $excludeRoles);
-    	$excludeUsers = $query->getResult();
-
+    public function getLastConnectionAndSubscriptionForWorkspace(AbstractWorkspace $workspace, array $userIds) {
     	$dql = "SELECT u.lastName,
     				u.firstName,
     				u.username,
@@ -755,12 +748,12 @@ class LogRepository extends EntityRepository
     				WITH l2.workspace = :workspace
     				AND l2.doer = u
     				AND l2.action = 'workspace-enter'
-    			WHERE u.id NOT IN (:excludeUsers)
+    			WHERE u.id IN (:userIds)
     			GROUP BY u.id";
     	
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
-    	$query->setParameter("excludeUsers", $excludeUsers);
+    	$query->setParameter("userIds", $userIds);
     	
     	$result = $query->getScalarResult();
 
@@ -780,12 +773,12 @@ class LogRepository extends EntityRepository
     				WITH l2.workspace = :workspace
     				AND l2.doer = u
     				AND l2.action = 'workspace-enter'
-    			WHERE u.id NOT IN (:excludeUsers)
+    			WHERE u.id IN (:userIds)
     			GROUP BY u.id";
 
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
-    	$query->setParameter("excludeUsers", $excludeUsers);
+    	$query->setParameter("userIds", $userIds);
     	 
     	$result = array_merge($result, $query->getScalarResult());
     	
@@ -823,6 +816,14 @@ class LogRepository extends EntityRepository
     
     public function countLogsByDay(
     		AbstractWorkspace $workspace, $from, $to, $excludeRoles = array()) {
+    	// Get excluded user ids
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    				JOIN u.roles as r
+    				WHERE r.name IN (:roles)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("roles", $excludeRoles);
+    	$exludedIds = $query->getResult();
+    	
     	$parameters = array(
     		"from" => $from,
     		"to" => $to,
@@ -842,27 +843,18 @@ class LogRepository extends EntityRepository
     			AND l.workspace = :workspace
     			AND (
 	    				(l.receiverGroup IS NOT NULL
-	    				AND u NOT IN ( 
-	    					SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
-	    					JOIN u2.roles as r
-	    					WHERE r.name IN (:roles)))
+	    				AND u.id NOT IN (:excludeIds))
     				OR 
     					(l.receiver IS NOT NULL
-    					AND l.receiver NOT IN (
-		   					SELECT u3 FROM Claroline\CoreBundle\Entity\User u3
-		   					JOIN u3.roles as r2
-		   					WHERE r2.name IN (:roles)))
+    					AND l.receiver NOT IN (:excludeIds))
     				OR 
     					(l.receiver IS NULL AND l.receiverGroup IS NULL
-    					AND l.doer NOT IN(
-		   					SELECT u4 FROM Claroline\CoreBundle\Entity\User u4
-		   					JOIN u4.roles as r3
-		   					WHERE r3.name IN (:roles)))
+    					AND l.doer NOT IN(:excludeIds))
     				)
     				
     			GROUP BY l.shortDateLog, l.action, hour
     			ORDER BY l.shortDateLog";
-    	$parameters['roles'] = $excludeRoles;
+    	$parameters['excludeIds'] = $exludedIds;
 
     	$query = $this->_em->createQuery($dql);
     	$query->setParameters($parameters);
@@ -925,14 +917,7 @@ class LogRepository extends EntityRepository
     	return $query->getOneOrNullResult();
     }
     
-	public function getSubscriptionsForWorkspace(AbstractWorkspace $workspace, array $excludeRoles) {
-    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
-    			JOIN u.roles r
-    			WHERE r.name IN (:roles)";
-    	$query = $this->_em->createQuery($dql);
-    	$query->setParameter("roles", $excludeRoles);
-    	$excludeUsers = $query->getResult();
-
+	public function getSubscriptionsForWorkspace(AbstractWorkspace $workspace, array $userIds) {
     	$dql = "SELECT u.lastName,
     				u.firstName,
     				u.username,
@@ -944,12 +929,12 @@ class LogRepository extends EntityRepository
     				WITH l.workspace = :workspace
     				AND l.receiver = u
     				AND l.action = 'workspace-role-subscribe_user'
-    			WHERE u.id NOT IN (:excludeUsers)
+    			WHERE u.id IN (:usersIds)
     			GROUP BY u.id";
     	
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
-    	$query->setParameter("excludeUsers", $excludeUsers);
+    	$query->setParameter("usersIds", $userIds);
     	
     	$result = $query->getScalarResult();
 
@@ -965,12 +950,12 @@ class LogRepository extends EntityRepository
     				WITH l.workspace = :workspace
     				AND l.receiverGroup = g
     				AND l.action = 'workspace-role-subscribe_group'
-    			WHERE u.id NOT IN (:excludeUsers)
+    			WHERE u.id IN (:usersIds)
     			GROUP BY u.id";
 
     	$query = $this->_em->createQuery($dql);
     	$query->setParameter("workspace", $workspace);
-    	$query->setParameter("excludeUsers", $excludeUsers);
+    	$query->setParameter("usersIds", $userIds);
     	 
     	$result = array_merge($result, $query->getScalarResult());
     	

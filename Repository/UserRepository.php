@@ -1314,4 +1314,46 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     	return $result;
     }
+    
+    public function getWorkspaceUserIds(AbstractWorkspace $workspace, array $excludeRoles) {
+    	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles r
+    			WHERE r.name IN (:roles)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("roles", $excludeRoles);
+    	$excludeUsers = $query->getResult();
+    	
+    	$dql = "SELECT u.id
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.roles AS r
+    			JOIN r.workspace AS ws
+    			JOIN ws.mooc AS m
+    			JOIN m.moocSessions AS ms
+    			JOIN ms.users AS u2
+    			WHERE ws = :workspace
+    			AND u2 = u
+    			AND u.id NOT IN (:excludeIds)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeIds", $excludeUsers);
+    	$usersAlone = $query->getScalarResult();
+    	 
+    	$dql = "SELECT u.id
+    			FROM Claroline\CoreBundle\Entity\User u
+    			JOIN u.groups AS g
+    			JOIN g.roles AS r
+    			JOIN r.workspace AS ws
+    			JOIN ws.mooc AS m
+    			JOIN m.moocSessions AS ms
+    			JOIN ms.groups AS g2
+    			WHERE ws = :workspace
+    			AND g2 = g
+    			AND u.id NOT IN (:excludeIds)";
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter("workspace", $workspace);
+    	$query->setParameter("excludeIds", $excludeUsers);
+    	$usersGroup = $query->getScalarResult();
+    	 
+    	return array_merge($usersAlone, $usersGroup);
+    }
 }
