@@ -1210,6 +1210,7 @@ Contactez_nous_edition : Edition de la liste des services
 contact_name : Label du service
 contact_mail : Email du service
 contact_success : Votre message a bien été envoyé.
+remove_contact_confirm_message : Êtes-vous sûr de vouloir supprimer ce service
 #Page contact
 
 message_send : Votre message a bien été envoyé.

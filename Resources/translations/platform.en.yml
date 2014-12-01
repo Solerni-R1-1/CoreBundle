@@ -1186,6 +1186,7 @@ Contactez_nous_edition : Edition of services
 contact_name : Label of service
 contact_mail : Mail of service
 contact_success : Your message has been send with success
+remove_contact_confirm_message : Are you sure you want to delete this service
 #Page contact
 
 message_send : Your message has been send with success
