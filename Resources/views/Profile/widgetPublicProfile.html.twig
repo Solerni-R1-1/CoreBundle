@@ -104,21 +104,43 @@
             </ul>
 	        <hr />
             <div class="slrn-profile-moocs">
-            	<p class="slrn-profile-moocs-title">Moocs suivis</p>
-            	{% set imageSize = { 'width': 118, 'height': 85 } %}
-            	{% for i, moocSession in user.getMoocSessions() %}
-            	<a href="{{ path('mooc_view', {"moocId":moocSession.getMooc().getId(), "moocName":moocSession.getMooc().getTitle()}) }}" class="slrn-profile-mooc">
-            		<img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
-		                 src="{{ image( moocSession.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
-		                 alt="{{ moocSession.getMooc().getTitle() }}" 
-		                 width="{{ imageSize.width }}" 
-		                 height="{{ imageSize.height }}" >
-			        <div class="slrn-profile-mooc-info col-md-7">
-		            	<p class="srln-profile-mooc-title">{{ moocSession.getMooc().getTitle() }}</p>
-		            	<p class="srln-profile-mooc-date">{{ moocSession.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
-	            	</div>
-            	</a>
-            	{% endfor %}
+            <p class="slrn-profile-moocs-title">Moocs suivis</p>
+            {% set imageSize = { 'width': 118, 'height': 85 } %}
+            {% if ( isEditProfilePage is defined ) %}
+                {% for userMoocPreferences in user.getUserMoocPreferences() %}
+                    <a href="{{ path('mooc_view', {"moocId":userMoocPreferences.getMooc().getId(), "moocName":userMoocPreferences.getMooc().getTitle()}) }}" 
+                       class="slrn-profile-mooc {{ 'userMoocPreferences_form_visibility_' ~ loop.index0 }}{% if userMoocPreferences.visibility == 0 %} hide{% endif %}">
+                        <img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
+                             src="{{ image( userMoocPreferences.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
+                             alt="{{ userMoocPreferences.getMooc().getTitle() }}" 
+                             width="{{ imageSize.width }}" 
+                             height="{{ imageSize.height }}" >
+                        <div class="slrn-profile-mooc-info col-md-7">
+                            <p class="srln-profile-mooc-title">{{ userMoocPreferences.getMooc().getTitle() }}</p>
+                            {# Get first session of the Mooc #}
+                            <p class="srln-profile-mooc-date">{{ userMoocPreferences.getMooc().getMoocSessions()[0].getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+                 <p class="no_mooc_visible hide">{{ 'no_mooc_followed'|trans({}, 'platform') }}</p>
+            {% else %}
+                {% for userMoocPreferences in user.getUserMoocPreferences() if userMoocPreferences.getVisibility() == 1 %}
+                    <a href="{{ path('mooc_view', {"moocId":userMoocPreferences.getMooc().getId(), "moocName":userMoocPreferences.getMooc().getTitle()}) }}" class="slrn-profile-mooc">
+                        <img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
+                             src="{{ image( userMoocPreferences.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
+                             alt="{{ userMoocPreferences.getMooc().getTitle() }}" 
+                             width="{{ imageSize.width }}" 
+                             height="{{ imageSize.height }}" >
+                        <div class="slrn-profile-mooc-info col-md-7">
+                            <p class="srln-profile-mooc-title">{{ userMoocPreferences.getMooc().getTitle() }}</p>
+                            {# Get first session of the Mooc #}
+                            <p class="srln-profile-mooc-date">{{ userMoocPreferences.getMooc().getMoocSessions()[0].getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
+                        </div>
+                    </a>
+                {% else %}
+                    <p>{{ 'no_mooc_followed'|trans({}, 'platform') }}</p>
+                {% endfor %}
+            {% endif %}
             </div>
             <hr />
              <div class="informations">

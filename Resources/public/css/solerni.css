@@ -2435,6 +2435,17 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 	font-weight: bold;
 }
 
+.srln-profile-mooc-title--select {
+    position: relative;
+}
+
+.srln-profile-mooc-title--select:before {
+    
+}
+
+.slrn-profile-moocs .faded {
+    opacity: .3;
+}
 
 /**************** Sticky bar ******************/
 .headroom {
@@ -2447,3 +2458,5 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
     transform: translateY(-100%);
 }
 /**************** Sticky bar ******************/
+
+
