@@ -186,4 +186,9 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		
 		return $query->getResult();
 	}
+	
+	public function cleanTable(AbstractWorkspace $workspace) {
+		$dql = "DELETE Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums WHERE aums.workspace = :workspace";
+		$this->_em->createQuery($dql)->execute(array("workspace" => $workspace));
+	}
 }

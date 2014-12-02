@@ -271,6 +271,7 @@ class AnalyticsPreparationManager
 				"workspace-role-unsubscribe_group");
 
 		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+		
     	$logs = $this->logRepository->getPreparationForUserAnalytics($workspace, $start, $end, $actions, $userIds);
     	if ($moocSession->getForum() != null) {
     		$forumsData = $this->messageRepository->getPreparationForUserAnalytics($moocSession->getForum(), $start, $end, $excludeRoles);
@@ -314,6 +315,8 @@ class AnalyticsPreparationManager
     		
     		$combinedData[$date][$user->getId()]["nbActivity"] = $nbActivity;
     	}
+    	$this->userMoocStatsRepo->cleanTable($workspace);
+    	$this->om->flush();
     	
     	foreach ($combinedData as $userData) {
     		foreach ($userData as $data) {
@@ -322,13 +325,13 @@ class AnalyticsPreparationManager
     			$nbActivity = (array_key_exists("nbActivity", $data) ? $data["nbActivity"] : 0);
     			$nbPublicationsForum = (array_key_exists("forumMessages", $data) ? $data["forumMessages"] : 0);
     			
-    			$stat = $this->userMoocStatsRepo->findOneBy(array("workspace" => $workspace, "date" => $date, "user" => $user));
-    			if ($stat == null) {
+    			//$stat = $this->userMoocStatsRepo->findOneBy(array("workspace" => $workspace, "date" => $date, "user" => $user));
+    			//if ($stat == null) {
     				$stat = new AnalyticsUserMoocStats();
     				$stat->setWorkspace($workspace);
     				$stat->setDate($date);
     				$stat->setUser($user);
-    			}
+    			//}
     			
     			$stat->setNbActivity($nbActivity);
     			$stat->setNbPublicationsForum($nbPublicationsForum);
