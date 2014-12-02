@@ -66,6 +66,8 @@ class AnalyticsPreparationManager
     private $badgeManager;
     /** @var AnalyticsLastPreparationRepository */
     private $lastPrepRepo;
+    /** @var UserManager */
+    private $userManager;
     private $userMoocStatsRepo;
     private $moocStatsRepo;
     private $houlryMoocStatsRepo;
@@ -79,7 +81,8 @@ class AnalyticsPreparationManager
      *     "moocService"   = @DI\Inject("orange.mooc.service"),
      *     "badgeManager"  = @DI\Inject("claroline.manager.badge"),
      *     "translator"    = @DI\Inject("translator"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager")
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
@@ -87,10 +90,12 @@ class AnalyticsPreparationManager
     		MoocService $moocService,
     		BadgeManager $badgeManager,
     		TranslatorInterface $translator,
-    		RoleManager $roleManager) {
+    		RoleManager $roleManager,
+    		UserManager $userManager) {
         $this->om            	= $objectManager;
         $this->moocService 		= $moocService;
         $this->badgeManager		= $badgeManager;
+        $this->userManager		= $userManager;
         $this->resourceRepo  	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceTypeRepo	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->userRepo      	= $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -264,8 +269,9 @@ class AnalyticsPreparationManager
 				"workspace-role-subscribe_group",
 				"workspace-role-unsubscribe_user",
 				"workspace-role-unsubscribe_group");
-    	
-    	$logs = $this->logRepository->getPreparationForUserAnalytics($workspace, $start, $end, $actions, $excludeRoles);
+
+		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+    	$logs = $this->logRepository->getPreparationForUserAnalytics($workspace, $start, $end, $actions, $userIds);
     	if ($moocSession->getForum() != null) {
     		$forumsData = $this->messageRepository->getPreparationForUserAnalytics($moocSession->getForum(), $start, $end, $excludeRoles);
     	} else {

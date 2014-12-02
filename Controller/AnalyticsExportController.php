@@ -693,7 +693,41 @@ class AnalyticsExportController extends Controller {
 			
 			$filteredRowsCSV = array();
 			foreach ($rowsCSV as $rowCSV) {
-				$filteredRowsCSV[$rowCSV['mail']] = $rowCSV;
+				if (array_key_exists($rowCSV['mail'], $filteredRowsCSV)) {
+					$rowCSV2 = $filteredRowsCSV[$rowCSV['mail']];
+					
+					$newRow = array();
+					$newRow['lastName'] = $rowCSV['lastName'];
+					$newRow['firstName'] = $rowCSV['firstName'];
+					$newRow['username'] = $rowCSV['username'];
+					$newRow['mail'] = $rowCSV['mail'];
+					if ($rowCSV['subscriptionDate'] == "N/A") {
+						$newRow['subscriptionDate'] = $rowCSV2['subscriptionDate'];
+					} else if ($rowCSV2['subscriptionDate'] == "N/A") {
+						$newRow['subscriptionDate'] = $rowCSV2['subscriptionDate'];
+					} else {
+						if ($rowCSV2['subscriptionDate'] < $rowCSV['subscriptionDate']) {
+							$newRow['subscriptionDate'] = $rowCSV2['subscriptionDate'];
+						} else {
+							$newRow['subscriptionDate'] = $rowCSV['subscriptionDate'];
+						}
+					}
+
+					if ($rowCSV['connectionDate'] == "N/A") {
+						$newRow['connectionDate'] = $rowCSV2['connectionDate'];
+					} else if ($rowCSV2['connectionDate'] == "N/A") {
+						$newRow['connectionDate'] = $rowCSV2['connectionDate'];
+					} else {
+						if ($rowCSV['connectionDate'] == "N/A" || $rowCSV2['connectionDate'] < $rowCSV['connectionDate']) {
+							$newRow['connectionDate'] = $rowCSV2['connectionDate'];
+						} else {
+							$newRow['connectionDate'] = $rowCSV['connectionDate'];
+						}
+					}
+					$filteredRowsCSV[$newRow['mail']] = $newRow;	
+				} else {
+					$filteredRowsCSV[$rowCSV['mail']] = $rowCSV;
+				}
 			}
 			
 			array_unshift($filteredRowsCSV, $headerCSV);

@@ -738,7 +738,7 @@ class LogRepository extends EntityRepository
     				u.username,
     				u.mail,
     				l1.shortDateLog AS subscriptionDate,
-    				CASE WHEN l2 IS NOT NULL THEN MAX(l2.shortDateLog) ELSE 'N/A' END AS connectionDate
+    				MAX(CASE WHEN l2 IS NOT NULL THEN l2.shortDateLog ELSE 'N/A' END) AS connectionDate
     			FROM Claroline\CoreBundle\Entity\User u
     			JOIN Claroline\CoreBundle\Entity\Log\Log l1
     				WITH l1.workspace = :workspace
@@ -747,7 +747,7 @@ class LogRepository extends EntityRepository
     			LEFT JOIN Claroline\CoreBundle\Entity\Log\Log l2
     				WITH l2.workspace = :workspace
     				AND l2.doer = u
-    				AND l2.action = 'workspace-enter'
+    				AND l2.action NOT IN ('workspace-role-subscribe_user', 'workspace-role-unsubscribe_user', 'workspace-role-subscribe_group', 'workspace-role-unsubscribe_group') 
     			WHERE u.id IN (:userIds)
     			GROUP BY u.id";
     	
@@ -772,7 +772,7 @@ class LogRepository extends EntityRepository
     			LEFT JOIN Claroline\CoreBundle\Entity\Log\Log l2
     				WITH l2.workspace = :workspace
     				AND l2.doer = u
-    				AND l2.action = 'workspace-enter'
+    				AND l2.action NOT IN ('workspace-role-subscribe_user', 'workspace-role-unsubscribe_user', 'workspace-role-subscribe_group', 'workspace-role-unsubscribe_group')
     			WHERE u.id IN (:userIds)
     			GROUP BY u.id";
 
@@ -780,8 +780,9 @@ class LogRepository extends EntityRepository
     	$query->setParameter("workspace", $workspace);
     	$query->setParameter("userIds", $userIds);
     	 
-    	$result = array_merge($result, $query->getScalarResult());
+    	$result2 = $query->getScalarResult();
     	
+    	$result = array_merge($result, $result2);
     	return $result;
     }
 
@@ -868,7 +869,7 @@ class LogRepository extends EntityRepository
     	return $query->getResult();
     }
     
-    public function getPreparationForUserAnalytics(AbstractWorkspace $workspace, $from, $to, $action, $excludeRoles = array()) {
+    public function getPreparationForUserAnalytics(AbstractWorkspace $workspace, $from, $to, $action, array $userIds) {
     	$dql = "SELECT u AS doer,
     				l.shortDateLog AS date,
     				COUNT(l.id) AS nbActivity
@@ -878,18 +879,14 @@ class LogRepository extends EntityRepository
     			WHERE l.workspace = :workspace
     			AND l.dateLog >= :from
     			AND l.dateLog <= :to
-    			AND (l.doer IS NOT NULL
-    					AND l.doer NOT IN (
-		   					SELECT u3 FROM Claroline\CoreBundle\Entity\User u3
-		   					JOIN u3.roles as r2
-		   					WHERE r2.name IN (:roles)))
+    			AND l.doer IN (:userIds)
     			AND l.action NOT IN (:action)
     			GROUP BY l.doer, l.shortDateLog";
     	$parameters = array(
     		"from" 		=> $from,
     		"to" 		=> $to,
     		"workspace" => $workspace,
-    		"roles"		=> $excludeRoles,
+    		"userIds"	=> $userIds,
     		"action"	=> $action
     	);
 
