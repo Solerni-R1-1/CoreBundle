@@ -1131,9 +1131,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     	if ($extra != null && array_key_exists("workspaceId", $extra)) {
     		$workspaceId = $extra['workspaceId'];
     		$joinWorkspace = "
-	    			JOIN u.roles r
-	    			JOIN r.workspace rws ";
-    		$whereWorkspace = " AND rws.id = $workspaceId";
+	    			LEFT JOIN u.roles r
+	    			LEFT JOIN r.workspace rws
+    				LEFT JOIN u.groups g
+    				LEFT JOIN g.roles gr
+    				LEFT JOIN gr.workspace grws ";
+    		$whereWorkspace = " AND (rws.id = $workspaceId OR grws.id = $workspaceId)";
     	} else {
     		$joinWorkspace = "";
     		$whereWorkspace = "";
