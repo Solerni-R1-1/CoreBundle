@@ -1,8 +1,3 @@
-{% stylesheets
-    debug=false
-    filter="lessphp, cssmin"
-    output="bundles/clarolinecore/css/tinymce/tinymce.css"
-    "@ClarolineCoreBundle/Resources/views/less/tinymce-content/common.less"
-%}
-    <link href="{{ asset_url }}" rel="stylesheet" media="screen">
+{% stylesheets %}
+    <link href="{{ asset('bundles/clarolinecore/css/tinymce/tinymce.css') }}" rel="stylesheet" media="screen">
 {% endstylesheets %}
