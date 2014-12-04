@@ -164,11 +164,8 @@ class SolerniExtension extends \Twig_Extension
      * @param ObjectDate | String $date 
      * @return string
      */
-    public function solerniWidgetForumDate( $date, $locale="fr" )
+    public function solerniWidgetForumDate( $date, $locale = "fr" )
     {
-        if ( $locale == "fr" ) {
-            setlocale( LC_TIME, 'fr_FR.utf8','fra' ); 
-        }
         
         if (is_string($date)) {
             $messageTimestamp = strtotime($date);
