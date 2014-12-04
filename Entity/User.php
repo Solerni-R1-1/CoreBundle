@@ -243,7 +243,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $picture;
 
     /**
-     * @Assert\File(maxSize="6000000")
+     * @Assert\File(maxSize="6M", maxSizeMessage="maxSizeMessage")
      */
     protected $pictureFile;
 
