@@ -260,7 +260,7 @@ class Mooc
     /**
      * @ORM\Column(type="boolean")
      */
-    private $showResourceManager;
+    private $showResourceManager = true;
     
     /**
      * @var Claroline\CoreBundle\Entity\Mooc\MoocOwner
@@ -289,7 +289,7 @@ class Mooc
     /**
      * @ORM\Column(type="boolean")
      */
-    private $showWorkGroup;
+    private $showWorkGroup = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
