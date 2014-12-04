@@ -104,7 +104,10 @@
 
         function updateFieldVisibility(field, visibility) {
             //console.log(field+"-"+visibility);
-            var block = $('#' + field);
+            var block = $('.' + field);
+            if ( ! block.length ) {
+                block = $('#' + field);
+            }
             if (visibility) {
                 block.removeClass('hidden');
                 currentUserPublicProfilePreferences[field] = 'checked';
