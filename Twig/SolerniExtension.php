@@ -47,8 +47,9 @@ class SolerniExtension extends \Twig_Extension
             'widgetForumDate' => new \Twig_Filter_Method( $this, 'solerniWidgetForumDate' ),
             'textTruncate' => new \Twig_Filter_Method( $this, 'TwigTruncateFilter' ),
             'minsToHoursMins' => new \Twig_Filter_Method( $this, 'solerniMinsToHoursMins' ),
-            'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' )
-,        );
+            'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' ),
+            'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' ))
+        );
     }
     /**
      * Twig function
@@ -682,6 +683,12 @@ class SolerniExtension extends \Twig_Extension
         $string = strtolower($string);
 
         return trim($string, $separator);
+    }
+    
+    public function countryName($countryCode, $locale = 'fr') {
+        $c = \Symfony\Component\Locale\Locale::getDisplayCountries($locale);
+        
+        return array_key_exists( $countryCode, $c ) ? $c[$countryCode] : $countryCode;
     }
     
     

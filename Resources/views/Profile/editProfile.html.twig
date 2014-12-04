@@ -192,7 +192,7 @@
                 <div class="form-group row">
                     {{ form_label(form.birthdate) }}
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
-                        {{ form_widget(form.birthdate) }}
+                        {{ form_widget(form.birthdate, {'attr': {'placeholder': 'slrn_date_format'|trans({}, 'platform') } }) }}
                         {{ form_errors(form.birthdate) }} 
                     </div>
                 </div>
@@ -328,5 +328,8 @@
 	        addSuggestions: false,
 	        validateOnBlur: true
 	    });
+        
+        jQuery('.slrn-date').datepicker({'format': 'dd/mm/yyyy'});
     </script>
+    
 {% endblock %}

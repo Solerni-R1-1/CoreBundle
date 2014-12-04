@@ -120,7 +120,12 @@ class ProfileType extends AbstractType
 	        )
         	->add('city', 'text', array('required' => false))
         	->add('country', 'country', array('required' => false))
-        	->add('birthdate', 'date', array('required' => false, 'widget' => 'single_text'))
+        	->add('birthdate', 'date', array(
+                'required' => false,
+                'widget' => 'single_text',
+                'widget' => 'single_text',
+                'attr' => array( 'class' => 'slrn-date', 'placeholder' => 'jj/mm/aaaa'), 
+                'format' => 'dd/MM/yyyy'))
         	->add('website', 'text', array('required' => false))
         	->add('twitter', 'text', array('required' => false))
         	->add('facebook', 'text', array('required' => false))

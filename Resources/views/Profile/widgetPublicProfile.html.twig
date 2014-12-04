@@ -84,7 +84,7 @@
                     </li>
                 {% endif %}
                 {% if ( isEditProfilePage is defined ) or (publicProfilePreferences.isDisplayOptionalInformation()) %}
-                	<li{% if not publicProfilePreferences.isDisplayOptionalInformation() %} class="hidden"{% endif %} id="display_optional_information">{{ user.getGenderLabel() }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} ans{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry() }}</li>
+                	<li{% if not publicProfilePreferences.isDisplayOptionalInformation() %} class="hidden"{% endif %} id="display_optional_information">{{ user.getGenderLabel() }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} ans{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry()|countryName(app.request.locale) }}</li>
                 {% endif %}
             </ul>
             <hr />

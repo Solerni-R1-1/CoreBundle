@@ -191,6 +191,7 @@ date: Date
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
+slrn_date_format: jj/mm/aaaa
 date_range.apply: Appliquer
 date_range.clear: Effacer
 date_range.custom_range: 'Plage personnalisée'
