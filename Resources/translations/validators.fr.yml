@@ -12,3 +12,4 @@ special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les
 public_profile_url_not_valid: 'L''URL de votre profil public n''est pas valide.'
 name_required: Nom requis.
 role_already_exists: Ce rôle existe déjà.
+maxSizeMessage: 'Le fichier est trop volumineux ({{ size }} Mo). Sa taille ne doit pas dépasser {{ limit }} Mo.'

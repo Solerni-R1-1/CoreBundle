@@ -13,8 +13,6 @@
      <div class="slrn-header">
         <div class="container slrn-header_w">
             <div class="slrn-header__body">
-               {# <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/registration_title.png') }}" alt="" width="" height="" />
-                <h1 class="slrn-header__content" >Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs</h1>#}
             </div>
         </div>
         <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/registration_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
@@ -75,7 +73,7 @@
 
 		        {% for contact in contacts %}
 		        	<a class="btn btn-gris js-submit-button contact-edit" href="#" data-value='{{contact.id}}'>Editer le Contact</a> 
-		        	<a class="btn btn-primary" href="{{path('contact_delete_services',{'id': contact.id })}}">Supprimer le Contact</a>
+		        	<a class="btn btn-primary contact-delete" href="{{path('contact_delete_services',{'id': contact.id })}}">Supprimer le Contact</a>
 		        	{{ contact.name }} <br/><br/>
 		        {% endfor %} 
 		        <a class="btn btn-gris js-submit-button contact-edit" href="#" data-value='-1'>Nouveau Contact</a> 
@@ -118,8 +116,43 @@
         <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
     <![endif]-->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
+    
+    {% javascripts
+        debug=false
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/Contact/removeContactConfirm.html.twigjs"
+        filter="twig_js"
+    %}
+        <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     <script type="text/javascript">
+
+
     	$( document ).ready(function() {
+    		function createValidationBox() {
+                var html = Twig.render(
+                    ModalWindow,
+                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeContactConfirm)}
+                );
+                $('body').append(html);
+            }
+
+            createValidationBox();
+            var tmpRoute = '';
+            var tmpEl = undefined;
+
+        	$('body').on('click', '.contact-delete', function(event) {
+		        event.preventDefault();
+		        $('#confirm-modal').modal('show');
+		        tmpRoute = event.currentTarget.href;
+		        tmpEl = event.currentTarget;
+		    });
+		    $('body').on('click', '#modal-valid-button', function () {
+                $('#confirm-modal').modal('hide');
+                $(location).attr('href',tmpRoute);
+            });
+
     		$(".contact-close").click(function(e){
             	$(".contact-form").hide();
         	});

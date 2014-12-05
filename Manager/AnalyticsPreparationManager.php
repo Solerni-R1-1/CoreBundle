@@ -66,6 +66,8 @@ class AnalyticsPreparationManager
     private $badgeManager;
     /** @var AnalyticsLastPreparationRepository */
     private $lastPrepRepo;
+    /** @var UserManager */
+    private $userManager;
     private $userMoocStatsRepo;
     private $moocStatsRepo;
     private $houlryMoocStatsRepo;
@@ -79,7 +81,8 @@ class AnalyticsPreparationManager
      *     "moocService"   = @DI\Inject("orange.mooc.service"),
      *     "badgeManager"  = @DI\Inject("claroline.manager.badge"),
      *     "translator"    = @DI\Inject("translator"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager")
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
@@ -87,10 +90,12 @@ class AnalyticsPreparationManager
     		MoocService $moocService,
     		BadgeManager $badgeManager,
     		TranslatorInterface $translator,
-    		RoleManager $roleManager) {
+    		RoleManager $roleManager,
+    		UserManager $userManager) {
         $this->om            	= $objectManager;
         $this->moocService 		= $moocService;
         $this->badgeManager		= $badgeManager;
+        $this->userManager		= $userManager;
         $this->resourceRepo  	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceTypeRepo	= $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->userRepo      	= $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -175,10 +180,15 @@ class AnalyticsPreparationManager
 	    		$dateString = $date->format("Y-m-d");
 
 	    		$moocConn = null;
-	    		foreach ($existMoocStats as $existing) {
+	    		foreach ($existMoocStats as $index => $existing) {
 	    			if ($existing->getDate() == $date) {
-	    				$moocConn = $existing;
-	    				break;
+	    				if ($moocConn != null) {
+	    					$this->om->remove($existing);
+	    					unset($existMoocStats[$index]);
+	    					echo "Deleted doublon at date $dateString... \n";
+	    				} else {
+	    					$moocConn = $existing;
+	    				}
 	    			}
 	    		}
 	    		
@@ -259,8 +269,10 @@ class AnalyticsPreparationManager
 				"workspace-role-subscribe_group",
 				"workspace-role-unsubscribe_user",
 				"workspace-role-unsubscribe_group");
-    	
-    	$logs = $this->logRepository->getPreparationForUserAnalytics($workspace, $start, $end, $actions, $excludeRoles);
+
+		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
+		
+    	$logs = $this->logRepository->getPreparationForUserAnalytics($workspace, $start, $end, $actions, $userIds);
     	if ($moocSession->getForum() != null) {
     		$forumsData = $this->messageRepository->getPreparationForUserAnalytics($moocSession->getForum(), $start, $end, $excludeRoles);
     	} else {
@@ -303,6 +315,8 @@ class AnalyticsPreparationManager
     		
     		$combinedData[$date][$user->getId()]["nbActivity"] = $nbActivity;
     	}
+    	$this->userMoocStatsRepo->cleanTable($workspace);
+    	$this->om->flush();
     	
     	foreach ($combinedData as $userData) {
     		foreach ($userData as $data) {
@@ -311,13 +325,13 @@ class AnalyticsPreparationManager
     			$nbActivity = (array_key_exists("nbActivity", $data) ? $data["nbActivity"] : 0);
     			$nbPublicationsForum = (array_key_exists("forumMessages", $data) ? $data["forumMessages"] : 0);
     			
-    			$stat = $this->userMoocStatsRepo->findOneBy(array("workspace" => $workspace, "date" => $date, "user" => $user));
-    			if ($stat == null) {
+    			//$stat = $this->userMoocStatsRepo->findOneBy(array("workspace" => $workspace, "date" => $date, "user" => $user));
+    			//if ($stat == null) {
     				$stat = new AnalyticsUserMoocStats();
     				$stat->setWorkspace($workspace);
     				$stat->setDate($date);
     				$stat->setUser($user);
-    			}
+    			//}
     			
     			$stat->setNbActivity($nbActivity);
     			$stat->setNbPublicationsForum($nbPublicationsForum);

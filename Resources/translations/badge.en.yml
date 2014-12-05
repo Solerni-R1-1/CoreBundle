@@ -123,7 +123,7 @@ month: month
 my_collections: 'My collections'
 no_badge_claim: 'No claim for badge.'
 no_badge_in_collection: 'There is no badge in this collection.'
-no_badges: 'No badge.'
+no_badges: 'You don''t have yet any badge.<br /><a href="%url%" class="pink_link">Take a look inside the FAQ</a> to learn about the functions of badges.'
 no_badges_create_to_motivate: 'No badge currently, you can <a href="%url%">create</a> some to motivate you user.'
 no_collection: 'No collection.'
 no_rule: 'No rule'

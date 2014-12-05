@@ -28,6 +28,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use UJM\ExoBundle\Entity\Exercise;
+use Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -241,7 +243,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $picture;
 
     /**
-     * @Assert\File(maxSize="6000000")
+     * @Assert\File(maxSize="6M", maxSizeMessage="maxSizeMessage")
      */
     protected $pictureFile;
 
@@ -348,7 +350,73 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     protected $notifyWorkspaces;
+    
+    /**
+     * @ORM\OneToMany(
+     * 		targetEntity="UJM\ExoBundle\Entity\ExerciseUser",
+     * 		mappedBy="user")
+     * @var array
+     */
+    protected $givenUpExercises;
+    
+    
+    const GENDER_UNKNOWN = 0;
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $gender = self::GENDER_UNKNOWN;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $country;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $city;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $birthdate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $website;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $facebook;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $twitter;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $linkedIn;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $googlePlus;
+    
+        /**
+     * @var $userMoocPreferences[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences", 
+     *      mappedBy="user", 
+     *      cascade={"all"}
+     * )
+     */
+    protected $userMoocPreferences;
 
     public function __construct()
     {
@@ -365,6 +433,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->moocSessions      = new ArrayCollection();
         $this->sessionsByUsers   = new ArrayCollection();
         $this->keyValidate       = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->userMoocPreferences = new ArrayCollection();
     }
 
     /**
@@ -1131,5 +1200,80 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     
     public function getNotifyWorkspaces() {
     	return $this->notifyWorkspaces;
+    }
+    
+    public function hasGivenUpExercise(Exercise $exercise) {
+    	foreach ($this->givenUpExercises as $exerciseUser) {
+    		if ($exerciseUser->isGivenUp()
+    				&& $exerciseUser->getExercise()->getId() == $exercise->getId()) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public function getGender() { return $this->gender; }
+    
+    public function getCountry() { return $this->country; }
+    
+    public function getCity() { return $this->city; }
+    
+    public function getBirthdate() { return $this->birthdate; }
+    
+    public function getWebsite() { return $this->website; }
+    
+    public function getFacebook() { return $this->facebook; }
+    
+    public function getTwitter() { return $this->twitter; }
+    
+    public function getLinkedIn() { return $this->linkedIn; }
+    
+    public function getGooglePlus() { return $this->googlePlus; }
+    
+    public function setGender($gender) { $this->gender = $gender; }
+    
+    public function setCountry($country) { $this->country = $country; }
+    
+    public function setCity($city) { $this->city = $city; }
+    
+    public function setBirthdate($birthdate) { $this->birthdate = $birthdate; }
+    
+    public function setWebsite($website) { $this->website = $website; }
+    
+    public function setFacebook($facebook) { $this->facebook = $facebook; }
+    
+    public function setTwitter($twitter) { $this->twitter = $twitter; }
+    
+    public function setLinkedIn($linkedIn) { $this->linkedIn = $linkedIn; }
+    
+    public function setGooglePlus($googlePlus) { $this->googlePlus = $googlePlus; }
+    
+    public function getAge() {
+    	if ($this->birthdate != null) {
+	    	$now = new \DateTime();
+	    	return $this->birthdate->diff($now)->y;
+    	} else {
+    		return 0;
+    	}
+    }
+    
+    public function getGenderLabel() {
+    	if (self::GENDER_FEMALE == $this->gender) {
+    		return "Femme";
+    	} else if (self::GENDER_MALE == $this->gender) {
+    		return "Homme";
+    	} else {
+    		return "";
+    	}
+    }
+    
+    public function setUserMoocPreferences(ArrayCollection $userMoocPreferences)
+    {
+        $this->userMoocPreferences = $userMoocPreferences;
+    }
+    
+    public function getUserMoocPreferences() {
+        
+        return $this->userMoocPreferences;
     }
 }

@@ -37,6 +37,7 @@ class SolerniExtension extends \Twig_Extension
             'isCurrentPage' => new \Twig_Function_Method( $this, 'solerniCompareRoute' ),
             'isCurrentLoginPage' => new \Twig_Function_Method( $this, 'solerniCompareLoginRoute' ),
             'checkChapterLevel' => new \Twig_Function_Method( $this, 'solerniCheckChapterLevel' ),
+            'checkChapterLevelId' => new \Twig_Function_Method( $this, 'solerniCheckChapterLevelId' ),
         );
     }
     
@@ -46,8 +47,9 @@ class SolerniExtension extends \Twig_Extension
             'widgetForumDate' => new \Twig_Filter_Method( $this, 'solerniWidgetForumDate' ),
             'textTruncate' => new \Twig_Filter_Method( $this, 'TwigTruncateFilter' ),
             'minsToHoursMins' => new \Twig_Filter_Method( $this, 'solerniMinsToHoursMins' ),
-            'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' )
-,        );
+            'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' ),
+            'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' ))
+        );
     }
     /**
      * Twig function
@@ -97,7 +99,6 @@ class SolerniExtension extends \Twig_Extension
      */
     public function solerniCheckChapterLevel( $tree, $slug )
     {        
-
         if ( ! $slug  )
         {
             return -1;
@@ -124,16 +125,48 @@ class SolerniExtension extends \Twig_Extension
     }
     
     /*
+     * Check current chapter level for provided slug
+     *
+     * @param array $tree
+     * @param string $slug
+     *
+     * @return int
+     */
+    public function solerniCheckChapterLevelId( $tree, $id )
+    {
+
+    	if ( ! $id  )
+    	{
+    		return -1;
+    	}
+    	if ( $id == $tree['id'])
+    	{    		
+    		return $tree['level'];
+    	}
+    
+    	if ( count ( $tree['__children'] ) > 0 )
+    	{
+    
+    		foreach ( $tree['__children'] as $children )
+    		{
+    			$return = $this->solerniCheckChapterLevelId( $children, $id );
+    			if( $return >= 0 )
+    			{
+    				return $return;
+    			}
+    		}
+    	}
+    	return -1;
+    }
+    
+    /*
      * Transform date object to string
      * 
      * @param ObjectDate | String $date 
      * @return string
      */
-    public function solerniWidgetForumDate( $date, $locale="fr" )
+    public function solerniWidgetForumDate( $date, $locale = "fr" )
     {
-        if ( $locale == "fr" ) {
-            setlocale( LC_TIME, 'fr_FR.utf8','fra' ); 
-        }
         
         if (is_string($date)) {
             $messageTimestamp = strtotime($date);
@@ -650,6 +683,12 @@ class SolerniExtension extends \Twig_Extension
         $string = strtolower($string);
 
         return trim($string, $separator);
+    }
+    
+    public function countryName($countryCode, $locale = 'fr') {
+        $c = \Symfony\Component\Locale\Locale::getDisplayCountries($locale);
+        
+        return array_key_exists( $countryCode, $c ) ? $c[$countryCode] : $countryCode;
     }
     
     

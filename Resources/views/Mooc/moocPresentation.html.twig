@@ -49,7 +49,7 @@
                         <i class='essentiels-icon essentiels__date'></i>
                         {% if session.getStartDate() is not empty %}
                             Date de début : <span class="slrn-bold">
-                                {{ session.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
+                                {{ session.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr') ) }}
                             </span>
                         {% endif %}
                         {% if session.getStartDate() is not empty or session.getEndDate() is not empty %}<br/>{% endif %}

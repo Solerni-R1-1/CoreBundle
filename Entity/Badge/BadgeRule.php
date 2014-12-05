@@ -26,7 +26,7 @@ class BadgeRule extends Rule
      * @var Badge
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge", inversedBy="badgeRules")
-     * @ORM\JoinColumn(name="associated_badge", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="associated_badge", referencedColumnName="id", nullable=false)
      */
     protected $associatedBadge;
 

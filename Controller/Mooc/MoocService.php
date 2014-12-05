@@ -184,11 +184,11 @@ class MoocService extends Controller
             return "#";
         }
         
-        $blogRes = $workspace->getMooc()->getBlog();
+        /*$blogRes = $workspace->getMooc()->getBlog();
         if ( $blogRes ) {
             $blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
             return $this->get('router')->generate('icap_blog_view', array('blogId' => $blog->getId()));
-        }
+        }*/
         
     	$lesson =  $this->getLessonFromWorkspace( $workspace, $user );
     	if ($lesson != null) {

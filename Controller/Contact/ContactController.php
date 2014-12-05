@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Entity\Contact\Contact;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Contact\ContactManager;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Security\Utilities;
 
 
 /**
@@ -46,6 +47,7 @@ class ContactController extends Controller
     private $mailManager;
     private $contactManager;
     private $formFactory;
+    private $utils;
     
     
     /**
@@ -57,6 +59,7 @@ class ContactController extends Controller
      *     "translator"         = @DI\Inject("translator"),
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
      *     "contactManager"     = @DI\Inject("claroline.manager.contactManager"),
+     *     "utils"              = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct( 
@@ -66,7 +69,8 @@ class ContactController extends Controller
         	FormFactory $formFactory,
             TranslatorInterface $translator,
             MailManager $mailManager,
-            ContactManager $contactManager
+            ContactManager $contactManager,
+            Utilities $utils
         ) {
         $this->request = $request;
         $this->translator = $translator;
@@ -75,13 +79,22 @@ class ContactController extends Controller
         $this->formFactory = $formFactory;
         $this->mailManager = $mailManager;
         $this->contactManager = $contactManager;
+        $this->utils = $utils;
     }
 
 
     /**
      * @Route("/contact", name="contact_show")
      */
-    public function showAction( ) {
+    public function showAction() {
+        $token = $this->security->getToken();
+        $loggedUser = $token->getUser();
+        $roles = $this->utils->getRoles($token);
+
+        $isLogged = false;
+        if (!in_array('ROLE_ANONYMOUS', $roles)) {
+            $isLogged = true;
+        }
 
     	$defaultServiceName = 'contact_general';
 
@@ -101,10 +114,9 @@ class ContactController extends Controller
         $civilite = array(
                     $this->translator->trans('contact_form_civil_monsieur', array(), 'platform'),
                     $this->translator->trans('contact_form_civil_madame', array(), 'platform'),
-                    $this->translator->trans('contact_form_civil_mademoiselle', array(), 'platform'),
                 );
         
-    	$form = $this->formFactory->create(FormFactory::TYPE_CONTACT, array($this->translator, $contacts, $civilite));
+    	$form = $this->formFactory->create(FormFactory::TYPE_CONTACT, array($this->translator, $contacts, $civilite, $loggedUser));
         $form->handleRequest($this->request);
         $message = null;
         $formView = null;
@@ -112,6 +124,13 @@ class ContactController extends Controller
         // Formulaire complété
         if ($form->isValid()) {
         	$data = $form->getData();
+
+            //Pour sécurité
+            if($isLogged){
+                $data['replyTo'] = $loggedUser->getMail();
+                $data['prenom'] = $loggedUser->getFirstName();
+                $data['nom'] = $loggedUser->getLastName();
+            }
 
         	$contactId = $data['contact'];
         	$replyTo = $data['replyTo'];

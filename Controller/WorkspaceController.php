@@ -1210,17 +1210,36 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function registerUserToNotifyList(AbstractWorkspace $workspace, User $user) {
+    public function registerUserToNotifyList(AbstractWorkspace $workspace, $user) {
+        
+        // Nothing to do here if this is not mooc
+        if ( ! $workspace->getMooc() ) {
+            throw new \Symfony\Component\Security\Core\Exception();
+        }
+        
+        // If anon. -> register route in session and redirect to login
+        if ( ! $user instanceof User ) {
+            $router = $this->get( 'router' );
+            $route = $router->generate( 'claro_workspace_register_notify', array(
+                'workspaceId' => $workspace->getId()
+            ) );
+            $this->get('session')->set('moocNotification', $route );
+            
+            return $this->redirect( $this->get('router')->generate('claro_security_login', array () ) );
+        }
+        
+        // Add user to notification table
     	$workspace->addNotifyUser($user);
     	$om = $this->getDoctrine()->getManager();
     	$om->persist($workspace);
     	$om->flush();
         
+        // Redirect to sessions page
         return $this->redirect( $this->get('router')
-                                        ->generate('mooc_view', array( 
-                                            'moocId' => $workspace->getMooc()->getId(), 
-                                            'moocName' => $workspace->getMooc()->getTitle()))
-        );
+            ->generate('mooc_view', array( 
+                'moocId' => $workspace->getMooc()->getId(), 
+                'moocName' => $workspace->getMooc()->getTitle()))
+            );
     }
     
     /**
@@ -1235,7 +1254,7 @@ class WorkspaceController extends Controller
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Removes a workspace to the notification list.
      *

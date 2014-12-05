@@ -14,6 +14,7 @@
         var form                                = $('#public_profile_preferences');
         var formName                            = 'user_public_profile_preferences_form';
         var basicInformationPublicProfile       = $('#user_public_profile_preferences_form_display_base_informations', form);
+        var optionalInformationPublicProfile    = $('#user_public_profile_preferences_form_display_optional_information', form);
         var userPublicProfileNotVisibleBlock    = $('#user_public_profile_not_visible');
         var userPublicProfileVisibleBlocks      = $(".profil_visible");
         var preferencesField                    = $('.preferences input[type=checkbox][name!="user_public_profile_preferences_form[display_base_informations]"]');
@@ -100,9 +101,13 @@
             }
         }
 
+
         function updateFieldVisibility(field, visibility) {
             //console.log(field+"-"+visibility);
-            var block = $('#' + field);
+            var block = $('.' + field);
+            if ( ! block.length ) {
+                block = $('#' + field);
+            }
             if (visibility) {
                 block.removeClass('hidden');
                 currentUserPublicProfilePreferences[field] = 'checked';
@@ -128,7 +133,31 @@
         }
 
         function parseFieldName(name) {
-            return name.substring(formName.length + 1, name.length - 1)
+            return name.substring(formName.length + 1, name.length - 1);
         }
+        
+        var moocCheckboxes = jQuery('.mooc_preferences input[type=checkbox]');
+        
+        function hideOrShowMooc(trigger, target) {
+            if ( trigger.prop('checked') ) {
+                target.removeClass('hide');
+            } else {
+                target.addClass('hide');
+            }
+                        
+            if ( jQuery('.slrn-profile-mooc').not('.hide').length == 0 ) {
+                jQuery('.no_mooc_visible').removeClass('hide');
+            } else {
+                jQuery('.no_mooc_visible').addClass('hide')
+            }
+        }
+        
+        moocCheckboxes
+                .each( function() {
+                    hideOrShowMooc(jQuery(this), jQuery('.' + jQuery(this).attr('id') ));
+                })
+                .on( 'click', function() {
+                    hideOrShowMooc(jQuery(this), jQuery('.' + jQuery(this).attr('id') ));
+                });
     });
 })(jQuery);

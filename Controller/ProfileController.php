@@ -36,6 +36,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 /**
  * Controller of the user profile.
@@ -102,22 +103,30 @@ class ProfileController extends Controller
      */
     public function viewAction(User $loggedUser, $page = 1)
     {
-        $doctrine = $this->getDoctrine();
-        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+//         $doctrine = $this->getDoctrine();
+//         $doctrine->getManager()->getFilters()->disable('softdeleteable');
 
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($loggedUser, false);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+//         $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($loggedUser, false);
+//         $adapter = new DoctrineORMAdapter($query);
+//         $pager   = new Pagerfanta($adapter);
 
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
-        }
+//         try {
+//             $pager->setCurrentPage($page);
+//         } catch (NotValidCurrentPageException $exception) {
+//             throw new NotFoundHttpException();
+//         }
+    	// If user share base information, fetch the data about forum messages, badges and followed moocs
+    	$nbBadges = $loggedUser->getBadges()->count();
+    	$messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
+    	$nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);
 
         return array(
             'user'  => $loggedUser,
-			'pager'    => $pager
+// 			'pager'    => $pager,
+        	'nbBadges' => $nbBadges,
+        	'nbPostedMessages' => $nbPostedMessages,
+        	'nbVotedMessages' => $nbVotedMessages
         );
     }
 
@@ -133,9 +142,42 @@ class ProfileController extends Controller
     public function editPublicProfilePreferencesAction(User $loggedUser)
     {
         $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
+        
+        // create also forms for each userMoocPreferences (right now, the only pref. is visibility)
+        $formMooc = array();
+        $userMoocPreferencesRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\UserMoocPreferences');
+        // create new forms for each userMoocPreferences entity
+        foreach ($loggedUser->getMoocSessions() as $moocSession ) {
+            $mooc = $moocSession->getMooc();
+            $userMoocPreferenceEntity = $userMoocPreferencesRepository->findOneBy( array('mooc' => $mooc, 'user' => $loggedUser ) );
+            // New empty entity
+            if ( ! $userMoocPreferenceEntity ) {
+                $userMoocPreferenceEntity = new \Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences();
+                $userMoocPreferenceEntity->setMooc($mooc)->setUser($loggedUser);
+            }
+            // We need a name identifier different for each formType
+            $formType = new \Claroline\CoreBundle\Form\Mooc\userMoocPreferencesType( $mooc->getId() );
+            
+            // Create array of form with mooc object and create form object
+            $userMoocPreferencesArray[] = array( 'mooc' => $mooc, 'userMoocPreferencesForm' => $this->createForm( $formType, $userMoocPreferenceEntity ));
+        }
 
+        // Form submit
         if ($this->request->isMethod('POST')) {
+            // prepare entity manager
+            $entityManager = $this->get('doctrine.orm.entity_manager');
+            // handle requests
             $form->handleRequest($this->request);
+            
+            // For each userMoocPreferences persist entity
+            foreach ( $userMoocPreferencesArray as $userMoocPreferences ) {
+                $userMoocPreferencesForm = $userMoocPreferences['userMoocPreferencesForm'];
+                $userMoocPreferencesForm->handleRequest($this->request);
+                if ( $userMoocPreferencesForm->isValid() ) {
+                    $userMoocPreferenceEntity = $userMoocPreferencesForm->getData();
+                    $entityManager->persist($userMoocPreferenceEntity);               
+                }
+            }
 
             if ($form->isValid()) {
                 /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
@@ -151,7 +193,6 @@ class ProfileController extends Controller
                         throw new \Exception();
                     }
 
-                    $entityManager = $this->get('doctrine.orm.entity_manager');
                     $entityManager->persist($userPublicProfilePreferences);
                     $entityManager->flush();
 
@@ -159,14 +200,23 @@ class ProfileController extends Controller
                 } catch(\Exception $exception){
                     $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
                 }
-
+                
                 return $this->redirect($this->generateUrl('claro_profile_view'));
             }
         }
 
+        $nbBadges = $loggedUser->getBadges()->count();
+        $messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
+        $nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);  
+        
         return array(
             'form' => $form->createView(),
-            'user' => $loggedUser
+            'userMoocPreferencesArray' => $userMoocPreferencesArray,
+            'user' => $loggedUser,
+        	'nbBadges' => $nbBadges,
+        	'nbPostedMessages' => $nbPostedMessages,
+        	'nbVotedMessages' => $nbVotedMessages
         );
     }
 
@@ -179,7 +229,7 @@ class ProfileController extends Controller
      */
     public function publicProfileAction($publicUrl)
     {
-        /** @var \Claroline\CoreBundle\Entity\User $user */
+        /* @var $user User */
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
         if (null === $user) {
@@ -193,15 +243,25 @@ class ProfileController extends Controller
             $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
         }
 
-        $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user, 'publicProfilePreferences' => $userPublicProfilePreferences)));
-
-
         if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
         }
         else if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER === $userPublicProfilePreferences->getSharePolicy()
                  && null === $this->getUser()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
+        } else {
+        	// If user share base information, fetch the data about forum messages, badges and followed moocs
+        	$nbBadges = $user->getBadges()->count();
+        	$messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
+	    	$nbPostedMessages = $messageRepository->countUserMessages($user);
+	    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($user);
+        	$response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array(
+        			'user' => $user,
+        			'publicProfilePreferences' => $userPublicProfilePreferences,
+        			'nbBadges' => $nbBadges,
+        			'nbPostedMessages' => $nbPostedMessages,
+        			'nbVotedMessages' => $nbVotedMessages
+        	)));        	
         }
 
         return $response;

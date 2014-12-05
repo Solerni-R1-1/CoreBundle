@@ -1,0 +1,23 @@
+.mooc_select{
+	width: auto;
+}
+.slrn-mesbadges-badge{
+	cursor: pointer;
+}
+.badge-type-connaissance{
+	color:#668ba5;
+}
+.badge-type-competence{
+	color:#aac044;
+}
+
+.badge_image{
+	width: 100px;
+	height: 100px;
+}
+
+.badge_name{
+	font-size: 1.3em;
+	margin: 10px 0;
+	margin: 10px 0;
+} 

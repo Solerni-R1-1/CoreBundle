@@ -33,6 +33,7 @@ use Symfony\Component\Validator\ValidatorInterface;
 use Doctrine\ORM\UnitOfWork;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
+use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -1037,5 +1038,12 @@ class UserManager
             ->setDisplayPhoneNumber(true);
 
         return $userPublicProfilePreferences;
+    }
+    
+    public function getWorkspaceUserIds(AbstractWorkspace $workspace, array $excludeRoles) {
+    	$ids = $this->userRepo->getWorkspaceUserIds($workspace, $excludeRoles);
+    	
+    	$ids = array_unique(array_map('current', $ids));
+    	return $ids;
     }
 }

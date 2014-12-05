@@ -123,7 +123,8 @@ back: Retour
 back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
-base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription'
+base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription, nombre de messages postés, nombre de messages votés, nombre de badges obtenus, liste des moocs suivis'
+optional_information: 'Les champs optionnels que vous avez remplis dans votre profil :<br />Sexe, age, ville, pays, réseaux sociaux'
 by: par
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
@@ -190,6 +191,7 @@ date: Date
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
+slrn_date_format: jj/mm/aaaa
 date_range.apply: Appliquer
 date_range.clear: Effacer
 date_range.custom_range: 'Plage personnalisée'
@@ -535,6 +537,16 @@ public_registration: 'Inscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
+profile_description_title: En savoir plus sur moi
+profile_form_gender: Sexe
+profile_form_city: Ville
+profile_form_country: Pays
+profile_form_birthdate: Date de naissance
+profile_form_website: Site web
+profile_form_twitter: Twitter
+profile_form_facebook: Facebook
+profile_form_linkedIn: LinkedIn
+profile_form_googlePlus: Google +
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
 register: Inscription
@@ -866,7 +878,7 @@ solerni_homepage: 'Retour à l''accueil'
 solerni_hello: 'Bonjour'
 my_account: 'Mon profil'
 profile_parameters: 'Paramètres'
-competence_badges: 'Obtenez des badges de compétences'
+competence_badges: 'Badges<br/>de compétences'
 knowledge_badges: 'Badges de connaissances'
 my_progress: 'Ma progression'
 badge_knowledge_short: 'Connaissances'
@@ -889,6 +901,8 @@ my_library: 'Ma bibliothèque'
 mooc_resources: 'Les ressources du MOOC'
 read_faq: 'Consulter les FAQ'
 more_about_badges: 'En savoir plus sur les badges'
+workgroup: 'Collaborer'
+workgroup_title: 'Le groupe de travail du MOOC'
 
 my_badge_details: 'Consulter mon badge en détail'
 go_to_evaluation: 'Aller dans mon espace d''évaluation'
@@ -935,6 +949,9 @@ claroline_corebundle_moocs : 'Moocs'
 claroline_corebundle_mooc_certificationType : 'Certification'
 claroline_corebundle_mooc_gratis: 'Mooc Gratuit'
 claroline_corebundle_mooc_blog: Blog du Mooc
+claroline_corebundle_mooc_showResourceManager: 'Onglet "Partager"'
+claroline_corebundle_mooc_showWorkGroup: 'Onglet "Collaborer"'
+claroline_corebundle_mooc_workGroup: 'Contenu de l''onglet "Collaborer"'
 choose_blog_mooc: -- Choisir un blog pour le mooc --
 
 
@@ -1088,8 +1105,8 @@ mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active"
 mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum"
 mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour"
 
-mooc_analytics_theme_name: Nom du thème 
-mooc_analytics_theme_nb_posts: Nombre de publications dans le thème
+mooc_analytics_theme_name: Nom du sujet 
+mooc_analytics_theme_nb_posts: Nombre de publications dans le sujet
 
 mooc_analytics_export: Exportez les données du MOOC
 export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances
@@ -1152,8 +1169,8 @@ forumPublishers: Top des meilleurs contributeurs
 forumPublishersDescription: Les meilleurs contributeurs sont les utilisateurs publiant le plus de messages sur le forum
 forumContributions: Niveau d'activité générale
 forumContributionsDescription: Mesurez le niveau d'activité générale du forum
-forumMostActiveSubjects: Top des thèmes les plus actifs
-forumMostActiveSubjectsDescription: Découvrez quels sont les thèmes les plus actifs (nombre de publications cumulées)
+forumMostActiveSubjects: Top des sujets les plus actifs
+forumMostActiveSubjectsDescription: Découvrez quels sont les sujets les plus actifs (nombre de publications cumulées)
 analytics_no_data: Pas de données sur cet onglet
 SuccessRateBadge: Taux de réussite au badge
 SuccessRateDescription: identifiez les participants les plus talentueux
@@ -1194,6 +1211,24 @@ Contactez_nous_edition : Edition de la liste des services
 contact_name : Label du service
 contact_mail : Email du service
 contact_success : Votre message a bien été envoyé.
+remove_contact_confirm_message : Êtes-vous sûr de vouloir supprimer ce service
 #Page contact
 
 message_send : Votre message a bien été envoyé.
+
+#Page mes badges
+badges_tous : Tous les moocs
+badges_nomooc : Badges Solerni
+badges_voir_details : Voir le détail du badge
+badges_badge : Badge
+badges_attribue_le : Attribué le
+badges_by : par
+badges_name : Nom
+badges_version : Version
+badges_description : Description
+badges_critere : Critère d'obtention
+badges_actions : Actions qui ont mené à l'attribution de ce badge
+#Page mes badges
+
+no_mooc_followed: Aucun mooc à afficher
+

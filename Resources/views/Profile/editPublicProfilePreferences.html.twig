@@ -37,6 +37,11 @@
                                 </div>
                                 <div class="checkbox">
                                     <label>
+                                        {{ form_widget(form.display_optional_information) }}{{ 'optional_information'|trans({}, 'platform')|raw }}
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
                                         {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
                                     </label>
                                 </div>
@@ -56,6 +61,24 @@
                                     </label>
                                 </div> 
                             </div>
+                            <div class="mooc_preferences">
+                                <p class="slrn-bold slrn-margin-top-40">Visibilité des moocs auquels vous participez</p>
+                                {% if userMoocPreferencesArray|default %}
+                                    {% for userMoocPreferences in userMoocPreferencesArray %}
+                                        {% set formView = userMoocPreferences['userMoocPreferencesForm'].createView() %}
+                                        <div class="row col-md-12">
+                                            <div class="col-md-4">
+                                                {{ form_widget( formView.visibility, { 'id': 'userMoocPreferences_form_visibility_' ~ loop.index0  } ) }}
+                                                <label for="userMoocPreferences_form_visibility_{{ loop.index0 }}">{{ userMoocPreferences['mooc'].getTitle() }}</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form_rest( formView ) }}
+                                                {{ form_errors( formView ) }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                             {{ form_rest(form) }}
                         </div>
                         <div class="panel-footer slrn-form-group-button">
@@ -65,6 +88,7 @@
                             </a>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

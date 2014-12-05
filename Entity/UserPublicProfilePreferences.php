@@ -73,6 +73,20 @@ class UserPublicProfilePreferences
     protected $allowMessageSending = true;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $displayOptionalInformation = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $displayBaseInformation = false;
+
+    /**
      * @return int
      */
     public function getId()
@@ -227,5 +241,21 @@ class UserPublicProfilePreferences
     public function getAllowMessageSending()
     {
         return $this->allowMessageSending;
+    }
+    
+    public function isDisplayOptionalInformation() {
+    	return $this->displayOptionalInformation;
+    }
+    
+    public function setDisplayOptionalInformation($display) {
+    	$this->displayOptionalInformation = $display;
+    }
+    
+    public function isDisplayBaseInformation() {
+    	return $this->displayBaseInformation;
+    }
+    
+    public function setDisplayBaseInformation($display) {
+    	$this->displayBaseInformation = $display;
     }
 }

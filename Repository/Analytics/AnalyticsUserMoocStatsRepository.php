@@ -36,7 +36,7 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		return $query->getSingleScalarResult();
 	}
 	
-	public function getUsersActivity(MoocSession $moocSession) {
+	public function getUsersActivity(MoocSession $moocSession, array $userIds, $limit = 0) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
 		$from = $moocSession->getStartDate();
 		$to = $moocSession->getEndDate();
@@ -46,15 +46,18 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 					u.lastName as lastname,
 					u.username as username,
 					u.mail as mail, 
-					SUM(aums.nbActivity) as nbLogs
+					SUM(CASE WHEN
+								aums IS NOT NULL
+							AND aums.workspace = :workspace
+							AND aums.date >= :from
+							AND aums.date <= :to
+						THEN aums.nbActivity
+						ELSE 0 END) as nbLogs
 				FROM Claroline\CoreBundle\Entity\User u
-				JOIN Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums
-					WITH aums.user = u
-				WHERE (
-					aums IS NULL 
-					OR (aums.workspace = :workspace
-						AND aums.date >= :from
-						AND aums.date <= :to))
+				LEFT JOIN Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums
+					WITH aums.user = u 
+				WHERE 
+					u.id IN (:userIds)
 				GROUP BY u
 				ORDER BY nbLogs DESC";
 		
@@ -62,8 +65,13 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		$query->setParameters(array(
 				"workspace" => $workspace,
 				"from"		=> $from,
-				"to"		=> $to
+				"to"		=> $to,
+				"userIds"	=> $userIds
 		));
+		
+		if ($limit != 0) {
+			$query->setMaxResults($limit);
+		}
 		
 		return $query->getResult();
 	}
@@ -139,7 +147,7 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		return $query->getResult();
 	}
 
-	public function countForumMessagesForSessionByUsers(MoocSession $moocSession) {
+	public function countForumMessagesForSessionByUsers(MoocSession $moocSession, array $userIds, $limit = 0) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
 		$from = $moocSession->getStartDate();
 		$to = $moocSession->getEndDate();
@@ -149,15 +157,18 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 					u.lastName as lastname,
 					u.username as username,
 					u.mail as mail,
-					SUM(aums.nbPublicationsForum) as nbPublicationsForum
+					SUM(CASE WHEN
+							aums IS NOT NULL
+							AND aums.workspace = :workspace
+							AND aums.date >= :from
+							AND aums.date <= :to
+						THEN aums.nbPublicationsForum
+						ELSE 0 END) as nbPublicationsForum
 				FROM Claroline\CoreBundle\Entity\User u
-				JOIN Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums
+				LEFT JOIN Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums
 					WITH aums.user = u
-				WHERE (
-					aums IS NULL 
-					OR (aums.workspace = :workspace
-						AND aums.date >= :from
-						AND aums.date <= :to))
+				WHERE
+					u IN (:userIds)
 				GROUP BY u
 				ORDER BY nbPublicationsForum DESC";
 		
@@ -165,9 +176,19 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		$query->setParameters(array(
 				"workspace" => $workspace,
 				"from"		=> $from,
-				"to"		=> $to
+				"to"		=> $to,
+				"userIds"	=> $userIds
 		));
 		
+		if ($limit > 0) {
+			$query->setMaxResults($limit);
+		}
+		
 		return $query->getResult();
+	}
+	
+	public function cleanTable(AbstractWorkspace $workspace) {
+		$dql = "DELETE Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums WHERE aums.workspace = :workspace";
+		$this->_em->createQuery($dql)->execute(array("workspace" => $workspace));
 	}
 }

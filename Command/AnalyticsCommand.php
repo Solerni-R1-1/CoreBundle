@@ -35,6 +35,7 @@ protected function configure() {
 		$prepManager = $this->getContainer()->get('claroline.manager.analytics_preparation_manager');
 		$wsRepo = $this->getContainer()->get('doctrine')->getRepository("ClarolineCoreBundle:Workspace\AbstractWorkspace");
 		$wsArr = $wsRepo->findAllMoocWorkspaces();
+		//$wsArr = array($wsRepo->find(13302));
 		foreach ($wsArr as $ws) {
 			/* @var $ws AbstractWorkspace */
 			if ($ws->getMooc() != null && count($ws->getMooc()->getMoocSessions()) > 0) {

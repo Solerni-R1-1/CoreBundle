@@ -26,11 +26,14 @@ class ContactType extends AbstractType
 
     private $civilite = array();
 
-    public function __construct(TranslatorInterface $translator, $contacts, $civilite) {
+    private $user = array();
+
+    public function __construct(TranslatorInterface $translator, $contacts, $civilite, $user) {
         $this->translator = $translator;
         asort($contacts);
         $this->contacts = $contacts;
         $this->civilite = $civilite;
+        $this->user = $user;
 
     }
 
@@ -48,7 +51,10 @@ class ContactType extends AbstractType
                     'choices'   => $this->civilite,
                     'required'  => false,
                 )
-            )->add(
+            );
+
+        if($this->user == 'anon.' ) {
+            $builder->add(
                 'prenom',
                 'text',
                 array(
@@ -70,7 +76,39 @@ class ContactType extends AbstractType
                     'required' => true,
                     'constraints' => new Email()
                 )
+            );
+
+        } else {
+            $builder->add(
+                'prenom',
+                'text',
+                array(
+                    'attr' => array(),
+                    'data' => $this->user->getFirstName(),
+                    'read_only' => true
+                )
             )->add(
+                'nom',
+                'text',
+                array(
+                    'attr' => array(),
+                    'data' => $this->user->getLastName(),
+                    'read_only' => true
+                )
+            )->add(
+                'replyTo',
+                'email',
+                array(
+                    'attr' => array(),
+                    'constraints' => new Email(),
+                    'data' => $this->user->getMail(),
+                    'read_only' => true
+                )
+            );
+
+        }
+        
+        $builder->add(
                 'societe',
                 'text',
                 array(
