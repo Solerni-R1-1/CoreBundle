@@ -53,10 +53,16 @@
             	</a></li>
             	{% endif %}
             	{% if user.getWebsite() != null %}
-            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-website"></i>
-            	<a href="//{{ user.getWebsite() }}" class="pink_link slrn-profile-social-link">
-            		{{ user.getWebsite() }}
-            	</a></li>
+                    <li class="slrn-profile-social-li"><i class="slrn-icon-profile-website"></i>
+                    {% if user.getWebsite() matches '#(^http.*)#' %}
+                        {% set userWebsite = user.getWebsite() %}
+                    {% else %}
+                        {% set userWebsite = 'http://' ~ user.getWebsite() %}
+                    {% endif %}
+                    <a href="{{ userWebsite }}" class="pink_link slrn-profile-social-link">
+                        {{ userWebsite }}
+                    </a>
+                </li>
             	{% endif %}	
             </ul>
            	{% endif %}
