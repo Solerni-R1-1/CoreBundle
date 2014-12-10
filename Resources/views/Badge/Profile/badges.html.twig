@@ -17,16 +17,31 @@
         <div class="col-xs-9 col-md-9">
             <div class="panel-heading">
             {% if badgesPerMoocs is not empty %}
-                <select class='form-control mooc_select pull-right' id="mooc_select">
-                    <option value='all'>{{ 'badges_tous'|trans({}, 'platform') }}</option>
-                    {% for moocname, badgesPerMooc in badgesPerMoocs %}
-                        {% if moocname == 'nomooc' %}
-                             <option value='m_{{hashPerMoocs[moocname]}}'>{{ 'badges_nomooc'|trans({}, 'platform') }}</option>
-                        {% else %}
-                             <option value='m_{{hashPerMoocs[moocname]}}'>{{moocname}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                <div class="dropdown pull-right">
+                    <a data-toggle="dropdown" href="#" class="btn btn-gris slrn-profile-button" role="button">
+                        <p id="mooc_select_header">{{ 'badges_tous'|trans({}, 'platform') }}</p><i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                    	 <li role="presentation">
+                    	 	<a role="menuitem" class="mooc_select" value="all">
+								{{ 'badges_tous'|trans({}, 'platform') }}
+		                 	</a>
+                    	 </li>
+	                    {% for moocname, badgesPerMooc in badgesPerMoocs %}
+		                     <li role="presentation" >
+			                    {% if moocname == 'nomooc' %}
+				                    <a role="menuitem" class="mooc_select" value="m_{{hashPerMoocs[moocname]}}">
+		                                {{ 'badges_nomooc'|trans({}, 'platform') }}
+		                            </a>
+		                        {% else %}
+				                    <a role="menuitem" class="mooc_select" value="m_{{hashPerMoocs[moocname]}}">
+		                                {{moocname}}
+		                            </a>
+		                        {% endif %}
+	                        </li>
+	                    {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
                 <h2 class="slrn-content-main-title">
                     {{ 'my_badges'|trans({}, 'platform') }}

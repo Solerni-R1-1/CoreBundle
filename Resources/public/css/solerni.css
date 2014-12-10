@@ -2460,3 +2460,10 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 /**************** Sticky bar ******************/
 
 
+#mooc_select_header {
+    width:      	150px;
+	text-overflow:	ellipsis;
+	overflow:		hidden;
+	white-space:	nowrap;
+	margin:			0;
+}
