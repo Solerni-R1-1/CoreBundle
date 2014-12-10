@@ -74,7 +74,7 @@
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.publicUrl, {'attr': {
                                 'data-validation': 'custom length',
-                                'data-validation-regexp': '^([a-z0-9._]+)$',
+                                'data-validation-regexp': '^([a-zA-Z0-9._]+)$',
                                 'data-validation-length': 'min3',
                                 'data-validation-error-msg' : publicUrlInvalidMsg}
                                                          })

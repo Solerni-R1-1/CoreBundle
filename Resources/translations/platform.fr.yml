@@ -868,7 +868,7 @@ user_form_plainPassword_first: 'Mot de passe'
 user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères au minimum'
 user_form_plainPassword_second: 'Vérification du mot de passe'
 user_form_public_url: Url de profil public
-user_form_publicUrl_invalid: L'URL publique ne peut contenir que des lettres en minuscules, des chiffres, des points ou des underscores
+user_form_publicUrl_invalid: L'URL publique ne peut contenir que des lettres, des chiffres, des points ou des underscores
 password_mismatch : 'Les mots de passe ne correspondent pas'
 account_created: 'Votre compte utilisateur a été crée'
 what_is_solerni: 'A propos'
