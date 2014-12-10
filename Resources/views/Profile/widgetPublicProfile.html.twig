@@ -30,25 +30,25 @@
             <ul class="slrn-profile-social display_optional_information{% if not publicProfilePreferences.isDisplayOptionalInformation() and isEditProfilePage %} hidden{% endif %}">
             	{% if user.getTwitter() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-twitter"></i>
-            	<a href="//twitter.com/{{ user.getTwitter() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//twitter.com/{{ user.getTwitter() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getTwitter() }}
             	</a></li>
             	{% endif %}
             	{% if user.getFacebook() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-facebook"></i>
-            	<a href="//facebook.com/{{ user.getFacebook() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//facebook.com/{{ user.getFacebook() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getFacebook() }}
             	</a></li>
             	{% endif %}
             	{% if user.getLinkedIn() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-linkedin"></i>
-            	<a href="//linkedin.com/pub/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//linkedin.com/pub/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getLinkedIn() }}
             	</a></li>
             	{% endif %}
             	{% if user.getGooglePlus() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-googleplus"></i>
-            	<a href="//plus.google.com/{{ user.getGooglePlus() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//plus.google.com/{{ user.getGooglePlus() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getGooglePlus() }}
             	</a></li>
             	{% endif %}
@@ -59,7 +59,7 @@
                     {% else %}
                         {% set userWebsite = 'http://' ~ user.getWebsite() %}
                     {% endif %}
-                    <a href="{{ userWebsite }}" class="pink_link slrn-profile-social-link">
+                    <a href="{{ userWebsite }}" class="pink_link slrn-profile-social-link" target="_blank">
                         {{ userWebsite }}
                     </a>
                 </li>
