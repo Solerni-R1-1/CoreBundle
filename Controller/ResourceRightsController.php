@@ -245,6 +245,7 @@ class ResourceRightsController
     {
         $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->getCurrentRequest()->request->get('roles');
+        if ($roles == null) $roles = array();
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
         $data = array();
 
