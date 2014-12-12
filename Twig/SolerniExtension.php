@@ -48,7 +48,8 @@ class SolerniExtension extends \Twig_Extension
             'textTruncate' => new \Twig_Filter_Method( $this, 'TwigTruncateFilter' ),
             'minsToHoursMins' => new \Twig_Filter_Method( $this, 'solerniMinsToHoursMins' ),
             'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' ),
-            'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' ))
+            'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' )),
+            'removeBlockquote' => new \Twig_Filter_Method($this, 'removeBlockquote')
         );
     }
     /**
@@ -689,6 +690,18 @@ class SolerniExtension extends \Twig_Extension
         $c = \Symfony\Component\Locale\Locale::getDisplayCountries($locale);
         
         return array_key_exists( $countryCode, $c ) ? $c[$countryCode] : $countryCode;
+    }
+    
+    public function removeBlockquote( $content ) {
+        
+        $dom = new \DOMDocument;
+        $dom->loadHTML( $content );
+        
+        foreach ($dom->getElementsByTagName('blockquote') as $quote ) {
+            $quote->parentNode->removeChild($quote);
+        }
+        
+        return $dom->saveHTML();
     }
     
     
