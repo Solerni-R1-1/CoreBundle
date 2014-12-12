@@ -49,7 +49,7 @@ class SolerniExtension extends \Twig_Extension
             'minsToHoursMins' => new \Twig_Filter_Method( $this, 'solerniMinsToHoursMins' ),
             'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' ),
             'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' )),
-            'removeBlockquote' => new \Twig_Filter_Method($this, 'removeBlockquote')
+            'removeTag' => new \Twig_Filter_Method($this, 'removeTag')
         );
     }
     /**
@@ -692,15 +692,20 @@ class SolerniExtension extends \Twig_Extension
         return array_key_exists( $countryCode, $c ) ? $c[$countryCode] : $countryCode;
     }
     
-    public function removeBlockquote( $content ) {
+    public function removeTag( $content, $tag ) {
         
         libxml_use_internal_errors(true);
         
         $dom = new \DOMDocument;
-        @$dom->loadHTML( $content );
+        $dom->loadHTML( $content );
         
-        foreach ($dom->getElementsByTagName('blockquote') as $quote ) {
-            $quote->parentNode->removeChild($quote);
+        $quotes = $dom->getElementsByTagName($tag);
+        
+        for ( $i = $quotes->length; $i >= 0 ; $i-- ) {
+            $quote = $quotes->item($i);
+            if ( $quote ) {
+                $quote->parentNode->removeChild($quote);
+            }
         }
         
         libxml_clear_errors();
