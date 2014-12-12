@@ -694,12 +694,16 @@ class SolerniExtension extends \Twig_Extension
     
     public function removeBlockquote( $content ) {
         
+        libxml_use_internal_errors(true);
+        
         $dom = new \DOMDocument;
-        $dom->loadHTML( $content );
+        @$dom->loadHTML( $content );
         
         foreach ($dom->getElementsByTagName('blockquote') as $quote ) {
             $quote->parentNode->removeChild($quote);
         }
+        
+        libxml_clear_errors();
         
         return $dom->saveHTML();
     }
