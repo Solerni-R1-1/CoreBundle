@@ -441,21 +441,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $upperSearch = strtoupper(trim($search));
 
         $dql = "
-            SELECT DISTINCT u from Claroline\CoreBundle\Entity\User u
-            JOIN u.roles wr WITH wr IN (
-                SELECT pr
-                FROM Claroline\CoreBundle\Entity\Role pr
-                WHERE pr.type = " . Role::WS_ROLE . "
-            )
+            SELECT
+        		DISTINCT u
+        	FROM Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.roles wr
+        		WITH wr.type = " . Role::WS_ROLE . "
             LEFT JOIN wr.workspace w
-            LEFT JOIN u.personalWorkspace ws
-            WHERE w IN (:workspaces)
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+	        	WITH gr.type = " . Role::WS_ROLE . "
+            LEFT JOIN gr.workspace gw
+            WHERE u.isEnabled = true
+            AND ((gw IS NULL AND w IN (:workspaces))
+            	OR w IS NULL and gw IN (:workspaces))
             AND  (
                 UPPER(u.firstName) LIKE :search
                 OR UPPER(u.lastName) LIKE :search
                 OR UPPER(u.username) LIKE :search
             )
-            AND u.isEnabled = true
             ORDER BY u.{$orderedBy} {$order}
             "
         ;

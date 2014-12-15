@@ -414,17 +414,16 @@
             }
         }
     });
+    
+    $('.mooc_select').on('click', function () {
 
-
-    $('#mooc_select').on('change', function () {
-
-        if( $( '#mooc_select' ).val() == 'all') {
+        if( $(this).attr('value') == 'all') {
             $(".mooc_wrapper").show();
         } else {
             $(".mooc_wrapper").hide();
-            $("#" + $( '#mooc_select' ).val()).show();
+            $("#" + $( this ).attr('value')).show();
         }
-        
+        $('#mooc_select_header').text($(this).text());
     });
 
 

@@ -48,7 +48,8 @@ class SolerniExtension extends \Twig_Extension
             'textTruncate' => new \Twig_Filter_Method( $this, 'TwigTruncateFilter' ),
             'minsToHoursMins' => new \Twig_Filter_Method( $this, 'solerniMinsToHoursMins' ),
             'slugify' => new \Twig_Filter_Method( $this, 'solerniSlugify' ),
-            'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' ))
+            'countryName' => new \Twig_SimpleFilter('countryName', array( $this, 'countryName' )),
+            'removeTag' => new \Twig_Filter_Method($this, 'removeTag')
         );
     }
     /**
@@ -689,6 +690,27 @@ class SolerniExtension extends \Twig_Extension
         $c = \Symfony\Component\Locale\Locale::getDisplayCountries($locale);
         
         return array_key_exists( $countryCode, $c ) ? $c[$countryCode] : $countryCode;
+    }
+    
+    public function removeTag( $content, $tag ) {
+        
+        libxml_use_internal_errors(true);
+        
+        $dom = new \DOMDocument;
+        $dom->loadHTML( $content );
+        
+        $quotes = $dom->getElementsByTagName($tag);
+        
+        for ( $i = $quotes->length; $i >= 0 ; $i-- ) {
+            $quote = $quotes->item($i);
+            if ( $quote ) {
+                $quote->parentNode->removeChild($quote);
+            }
+        }
+        
+        libxml_clear_errors();
+        
+        return $dom->saveHTML();
     }
     
     
