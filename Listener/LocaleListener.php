@@ -18,6 +18,9 @@ class LocaleListener extends TranslatableListener
 {
     public function postLoad(EventArgs $args)
     {
+        
+        //var_dump($this->getDefaultLocale());die();
+
         $this->setLocale();
         $ea = $this->getEventAdapter($args);
         $om = $ea->getObjectManager();

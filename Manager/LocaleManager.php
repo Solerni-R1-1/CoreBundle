@@ -105,7 +105,7 @@ class LocaleManager
         $locales = $this->getAvailableLocales();
         $locale = $this->defaultLocale;
         $preferred = explode('_', $request->getPreferredLanguage());
-
+        
         switch (true) {
             case ($locale = $request->attributes->get('_locale')): break;
             case (($user = $this->getCurrentUser()) and ($locale = $user->getLocale()) !== ''): break;
@@ -128,5 +128,10 @@ class LocaleManager
         if (is_object($token = $this->context->getToken()) and is_object($user = $token->getUser())) {
             return $user;
         }
+    }
+    
+    /* Default locale is App Config Setting */
+    public function getDefaultLocale() {
+        return $this->defaultLocale;
     }
 }
