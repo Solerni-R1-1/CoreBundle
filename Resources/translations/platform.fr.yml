@@ -1193,7 +1193,7 @@ export_csv: 'Exporter en CSV'
 export_mail: 'Exporter les adresses mail'
 
 #Page contact
-contact_general : Général
+contact_general: Général
 contact : Nous contacter
 Contactez_nous : Nous contacter
 contact_form_demande : Votre demande concerne
@@ -1232,4 +1232,17 @@ badges_actions : Actions qui ont mené à l'attribution de ce badge
 #Page mes badges
 
 no_mooc_followed: Aucun mooc à afficher
-
+connect_with_facebook: Je me connecte avec Facebook
+all_fields_mandatory: Tous les champs sont obligatoires
+already_registered: J'ai déjà un compte, je me connecte
+not_registered: Je n'ai pas de compte, je m'inscris
+connect_now: je me connecte maintenant
+tagline_header: Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs
+i_register: Je m'inscris
+solerni_question: Vous avez déjà un compte Solerni ?
+please_connect: Connectez-vous avec votre email ou avec Facebook
+connect: Je me connecte
+i_connect_now: Je me connecte maintenant
+no_account: Je n'ai pas de compte, je m'inscris
+solerni_question_reverse: Vous n'avez pas de compte Solerni ?
+create_account: Créez un compte à partir de votre email ou inscrivez-vous avec Facebook

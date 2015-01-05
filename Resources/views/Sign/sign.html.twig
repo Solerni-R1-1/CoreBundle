@@ -13,7 +13,7 @@
         <h1 class="slrn-section-title">{% block formTitle %}{% endblock %}</h1>
         {% if is_facebook_available() %}
             <button onclick="fb_login();" disabled="disabled" class="slrn-facebook-connect">
-                Je me connecte avec Facebook
+                {{ 'connect_with_facebook'|trans({}, 'platform')}}
             </button>
             <script>
                 function fb_login() {
@@ -33,7 +33,7 @@
             <div class="slrn-hr"/><span class="slrn-hr__inner">{{ 'ou'|trans({}, 'platform' )}}</span></div>
         {% endif %}
         {% block signinForm %}{% endblock %}
-        <p class="small slrn-mention">* Tous les champs sont obligatoires</p>
+        <p class="small slrn-mention">* {{'all_fields_mandatory'|trans({}, 'platform')}}</p>
     </div>
     <div class="col-md-1 cold-xd-1"></div>
     <div class="col-md-5 slrn-md-5 slrn-md-5--signin col-xs-5">

@@ -57,8 +57,12 @@ class LocaleSetter
         $token = $this->container->get('security.context')->getToken();
         
         if ( $token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken ) {
-            /* If anon. user, serve the default application locale */
-            $request->setLocale( $this->localeManager->getDefaultLocale() );
+            /* If anon. user, either serve the browser langage or if not applicable, the platform langage */
+            if ( $request->getPreferredLanguage( $this->localeManager->getAvailableLocales() ) ) {
+                $request->setLocale( $request->getPreferredLanguage( $this->localeManager->getAvailableLocales() ) );
+            } else {
+                $request->setLocale( $this->localeManager->getDefaultLocale() );
+            }
             return;
         }
         

@@ -241,6 +241,7 @@ body.subnavbar-fixed {
     min-width:  1110px;
     min-height: 224px;
 }
+
 .slrn-header_w {
     position: absolute;
     top: 0;
@@ -249,19 +250,28 @@ body.subnavbar-fixed {
     right: 0;
     text-align:left;
 }
+
 .slrn-header__body {
-    margin-top: 5em;
-    display: inline-block;
-    width: 80%;
-    height: 6em;
+    margin-top: 6em;
+    display:    inline-block;
+    width:      81%;
+    height:     6em;
 
 }
+
 .slrn-header__tagimage {
-    float: left;
-    height: 100%;
-    width: auto;
-    margin-right: 6%;
+    float:          left;
+    height:         100%;
+    width:          300px;
+    margin-right:   6%;
+    color:          #FFF;
+    font-size:      3em;
+    line-height:    1;
+    text-transform: uppercase;
+    text-align:     right;
+    text-shadow:    2px 2px #333;
 }
+
 .slrn-header__content {
     color: #FFF;
     font-size: 1.6em;
