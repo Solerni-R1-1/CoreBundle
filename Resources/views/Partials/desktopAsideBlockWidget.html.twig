@@ -4,7 +4,7 @@
         <div class="row dsk__avatar__wrapper">
             <div class="dsk__avatar">
             {% if userThumbnailSrc is not null %}
-                <img 
+                <img
                     class="dsk__avatar__thumb" 
                     src="{{ image( 'thumbnails/' ~ userThumbnailSrc ).scaleResize(66,66)}}"
                     alt="{{ 'avatar'|trans({}, 'platform') }} {{ user.getFirstName() }} {{ user.getLastName() }}"
@@ -13,10 +13,10 @@
                  >
             {% endif %}
             </div>
-            <div class="dsk__hello">Bonjour {{ user.getFirstName() }} {{ user.getLastName() }}</div>
+            <div class="dsk__hello">{{ 'solerni_hello'|trans({}, 'platform' ) }} {{ user.getFirstName() }} {{ user.getLastName() }}</div>
             <div class="dsk__profil">
-                <a class='dsk__profil__link' 
-                   href='{{ path( 'claro_profile_view', { 'userId': user.getId() } ) }}'>Voir Mon profil
+                <a class='dsk__profil__link'
+                   href='{{ path( 'claro_profile_view', { 'userId': user.getId() } ) }}'>{{ 'see_my_profil'|trans({}, 'platform' ) }}
                 </a>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 <li class="dsk__menu__item">
                     <span class='dsk__menu__span'>
                         <a class='{% if badgesIsActive is defined %}{{ badgesIsActive }}{% endif %}dsk__menu__link' 
-                           href="{{ path('claro_profile_view_badges') }}">Mes badges
+                           href="{{ path('claro_profile_view_badges') }}">{{ 'my_badges' | trans({}, 'platform') }}
                         </a>
                     </span>
                 </li>
@@ -54,7 +54,7 @@
                 <li class="dsk__menu__item">
                     <span class='dsk__menu__span'>
                         <a class='{% if myBadgesIsActive is defined %}{{ myBadgesIsActive }}{% endif %}dsk__menu__link' 
-                           href="{{ path( 'solerni_user_evaluations', {} ) }}">Mes évaluations
+                           href="{{ path( 'solerni_user_evaluations', {} ) }}">{{ 'my_evals' | trans({}, 'platform') }}
                         </a>
                     </span>
                 </li>
@@ -77,7 +77,7 @@
                          href="{{ path('claro_message_list_received', {} ) }}">
                             {% if nbMessages != 0 %} 
                                 <span class='dsk__menu__span__right'>{{ nbMessages }}</span> 
-                            {% endif %}Ma messagerie
+                            {% endif %}{{ 'my_mailsystem' | trans({}, 'platform') }}
                       </a>
                    </span>
                 </li>

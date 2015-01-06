@@ -182,7 +182,7 @@ curl_facebook_application_validation_error: 'Extension php curl manquante.#GB'
 current_category: 'Catégorie courante#GB'
 cut: Couper#GB
 mes moocs: 'Mes Moocs#GB'
-dashboard: 'Dashboard'
+dashboard: 'Dashboard#GB'
 data_col: 'Colonne des données#GB'
 database: 'Base de données#GB'
 database_connection_failed: 'La connexion à la base de données à échoué.#GB'
@@ -856,11 +856,11 @@ user_rules_password: 'You have to enter your password (4 letters minimum)#GB'
 user_form_plainPassword_second: 'Re-enter password#GB'
 password_mismatch : 'Passwords are different#GB'
 account_created: 'Your account is created#GB'
-what_is_solerni: 'About'
+what_is_solerni: 'About#GB'
 catalogue: 'Catalogue#GB'
 no_message: 'Pas de nouveaux message#GB'
 solerni_homepage: 'Retour à l''accueil#GB'
-solerni_hello: 'Bonjour#GB'
+solerni_hello: 'Hello#GB'
 my_account: 'Mon profil#GB'
 profile_parameters: 'Paramètres#GB'
 competence_badges: 'Obtenez des badges de compétences#GB'
@@ -1220,3 +1220,24 @@ i_connect_now: I connect now#GB
 no_account: I do not have an account, I register#GB
 solerni_question_reverse: Don't you have a Solerni account ?#GB
 create_account: Create a account from your email or use Facebook !#GB
+
+discover_solerni: Découvrez Solerni#GB
+discover_catalogue: Découvrez Le catalogue Solerni#GB
+moocs: Moocs#GB
+powered_orange: powered by Orange#GB
+facebook: Facebook#GB
+twitter: Twitter#GB
+blog: Blog#GB
+about_solerni: A propos de Solerni#GB
+partners: Partenaires#GB
+legals: Mentions légales#GB
+cgu: CGU / Charte#GB
+faq: FAQ#GB
+
+start_on: Début le#GB
+end_on: Fin le#GB
+badgeant: Badgeant#GB
+free_mooc: Mooc gratuit#GB
+
+see_my_profil: Voir mon profil#GB
+my_mailsystem: Ma messagerie#GB
