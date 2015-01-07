@@ -1241,3 +1241,7 @@ free_mooc: Mooc gratuit#GB
 
 see_my_profil: Voir mon profil#GB
 my_mailsystem: Ma messagerie#GB
+
+badge: Badge#GB
+still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obtenir#GB
+gain_on: Obtenu le#GB

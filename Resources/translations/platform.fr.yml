@@ -1268,3 +1268,9 @@ available_on: Disponible le
 
 see_my_profil: Voir mon profil
 my_mailsystem: Ma messagerie
+
+badge: Badge
+still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obtenir
+gain_on: Obtenu le
+ongoing_badge: Badge en cours d'acquisition
+free_price: prix gratuit
