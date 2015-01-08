@@ -58,7 +58,7 @@ class ResetPasswordType extends AbstractType
                 'first_options' => array('label' => 'new_password', 
                                             'attr' => array (
                                                 'data-name' => 'pass_confirmation',
-                                                'placeholder' => 'Mot de passe',
+                                                'placeholder' => $this->translator->trans('password'),
                                                 'class' => 'plainPasswordFirstClasses',
                                                 'data-validation' => 'length',
                                                 'data-validation-length' => 'min4',
@@ -67,7 +67,7 @@ class ResetPasswordType extends AbstractType
                 'second_options' => array('label' => 'repeat_password',
                                             'attr' => array (
                                                 'data-name' => 'pass',
-                                                'placeholder' => 'Répétez le mot de passe',
+                                                'placeholder' => $this->translator->trans('repeat_password'),
                                                 'class' => 'plainPasswordFirstClasses',
                                                 'data-validation' => 'confirmation',
                                                 'data-validation-error-msg' => $this->translator->trans('password_mismatch', array(), 'platform')
