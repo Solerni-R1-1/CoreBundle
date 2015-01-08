@@ -5,7 +5,7 @@
         </a>
     
         <div class="footer_social">
-            <span class="footer_social__text">Suivez nous sur</span>
+            <span class="footer_social__text">{{ 'follow_us_on'|trans({}, 'platform') }}</span>
             <a href="{{ path( 'solerni_static_page', { 'name': 'social_facebook' } ) }}" class="footer_social_link" target="_blank">
                 <span class="footer_social_link__tooltip">{{ 'facebook'|trans({}, 'platform') }}</span>
                 <span class="footer_social_link__icon social_facebook">{{ 'facebook'|trans({}, 'platform') }}</span>

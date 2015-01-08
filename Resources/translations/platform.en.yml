@@ -13,7 +13,7 @@
 'First name': Prénom#GB
 'Google HTML tag validation': 'Balise HTML de validation Google#GB'
 'I accept the terms of service': 'J''accepte les conditions d''utilisation#GB'
-'I agree that my personal information be used for commercial purposes' : 'I agree that my personal informations could be used for commercial purposes#GB'
+'I agree that my personal information be used for commercial purposes' : 'J''accepte que mes informations personnelles soient utilisées à des fins commerciales #GB'
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions#GB'
 'Last name': Nom#GB
 'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources#GB'
@@ -123,7 +123,8 @@ back: Retour#GB
 back_to_profile: 'Retour au profil#GB'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.#GB'
 badges_management: 'Gestion des badges#GB'
-base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription#GB'
+base_informations: 'Informations de base : Nom, prénom, pseudo, date d''inscription, nombre de messages postés, nombre de messages votés, nombre de badges obtenus, liste des moocs suivis#GB'
+optional_information: 'Les champs optionnels que vous avez remplis dans votre profil :<br />Sexe, age, ville, pays, réseaux sociaux#GB'
 by: par#GB
 by_workspace: 'Par espace#GB'
 canCopy: 'Droit de copier#GB'
@@ -190,6 +191,7 @@ date: Date#GB
 date_form_format: dd/MM/yyyy#GB
 date_form_placeholder: jj/mm/aaaa#GB
 date_format: d/m/Y#GB
+slrn_date_format: jj/mm/aaaa#GB
 date_range.apply: Appliquer#GB
 date_range.clear: Effacer#GB
 date_range.custom_range: 'Plage personnalisée#GB'
@@ -351,7 +353,7 @@ invalid_url: 'Cette url n''est pas valide#GB'
 is_already_in_category: 'est déjà dans la catégorie#GB'
 is_mail_displayed: 'Afficher l''email ?#GB'
 jqplot_date_output_format: '%d-%m-%Y#GB'
-keep_me_logged_in: 'Remember me#GB'
+keep_me_logged_in: 'Se souvenir de moi#GB'
 lastName: Nom#GB
 last_30_days_activity: 'Activités des 30 derniers jours#GB'
 last_name: Nom#GB
@@ -463,6 +465,7 @@ note: Note#GB
 notification_activated: 'Notifications activées.#GB'
 notification_deactivated: 'Notifications désactivées.#GB'
 notifications: 'Notifications#GB'
+notify_user_list: 'Utilisateurs à notifier#GB'
 oauth: Oauth#GB
 object: Objet#GB
 ok: Ok#GB
@@ -534,6 +537,16 @@ public_registration: 'Inscription publique#GB'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.#GB'
 public_empty: 'Il n''y a aucun espace d''activités public.#GB'
 public_workspaces: 'Espaces d''activités publics#GB'
+profile_description_title: En savoir plus sur moi#GB
+profile_form_gender: Sexe#GB
+profile_form_city: Ville#GB
+profile_form_country: Pays#GB
+profile_form_birthdate: Date de naissance#GB
+profile_form_website: Site web#GB
+profile_form_twitter: Twitter#GB
+profile_form_facebook: Facebook#GB
+profile_form_linkedIn: LinkedIn#GB
+profile_form_googlePlus: Google +#GB
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires#GB'
 redirect_after_login: 'Rediriger vers la dernière page visitée#GB'
 register: Inscription#GB
@@ -605,8 +618,8 @@ roles_management: 'Gestion des rôles#GB'
 save: Sauvegarder#GB
 save_as_template: 'Sauvegarder comme modèle#GB'
 save_as_template: 'Sauvegarde de l''espace d''activités comme modèle#GB'
-search: Search
-search_maj: SEARCH
+search: Rechercher#GB
+search_maj: RECHERCHER#GB
 search_group: 'Rechercher un groupe#GB'
 search_user: 'Rechercher un utilisateur#GB'
 search_workspace: 'Rechercher un espace d''activités#GB'
@@ -835,27 +848,29 @@ uncompress_file: Décompresser le fichier si possible#GB
 your_username: 'Votre nom d''utilisateur est #GB'
 #GB
 #Custom Solerni#GB
-connect_with_mail: 'Connect with your email address#GB'
-register_with_mail: 'I register with my email address#GB'
-must_use_password: 'You must enter your password#GB'
-login_failure: 'Your login has failed. Please try again#GB'
-login_register_mooc: 'Subscribe to <strong>%moocName%</strong>#GB'
-btn_connect_message: 'I log in#GB'
-forgot_password: 'I forgot my password#GB'
-user_form_mail: 'email address#GB'
-user_form_firstName: 'First Name#GB'
-user_form_lastName: 'Last Name#GB'
-user_form_firstName_invalid: 'Your first name cannot have special caracters.#GB'
-user_form_lastName_invalid: 'Your last name cannot have special caracters.#GB'
-user_form_username: 'Username#GB'
-user_form_username_invalid: 'Your username can only have numbers, regular letters and contains at least three caracters#GB'
-mail: 'Email address#GB'
-mail_invalid: 'Please enter a valid email adress#GB'
-user_form_plainPassword_first: 'Password#GB'
-user_rules_password: 'You have to enter your password (4 letters minimum)#GB'
-user_form_plainPassword_second: 'Re-enter password#GB'
-password_mismatch : 'Passwords are different#GB'
-account_created: 'Your account is created#GB'
+connect_with_mail: 'Je me connecte avec mon email#GB'
+register_with_mail: 'Je m''inscris avec mon email#GB'
+must_use_password: 'Vous devez saisir votre mot de passe#GB'
+login_failure: 'Vos identifiants sont incorrects. Merci de réessayer#GB'
+login_register_mooc: 'S''inscrire à <strong>%moocName%</strong>#GB'
+btn_connect_message: 'Je me connecte#GB'
+forgot_password: 'J''ai oublié mon mot de passe#GB'
+user_form_mail: 'Adresse email#GB'
+user_form_firstName: 'Prénom#GB'
+user_form_lastName: 'Nom#GB'
+user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux.#GB'
+user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux.#GB'
+user_form_username: 'Pseudo#GB'
+user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres, des points et des underscores, et posséder au minimum 3 caractères#GB'
+mail: 'Email#GB'
+mail_invalid: 'Vous devez saisir une adresse email valide#GB'
+user_form_plainPassword_first: 'Mot de passe#GB'
+user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères au minimum#GB'
+user_form_plainPassword_second: 'Vérification du mot de passe#GB'
+user_form_public_url: Url de profil public#GB
+user_form_publicUrl_invalid: L'URL publique ne peut contenir que des lettres, des chiffres, des points ou des underscores#GB
+password_mismatch : 'Les mots de passe ne correspondent pas#GB'
+account_created: 'Votre compte utilisateur a été crée#GB'
 what_is_solerni: 'About#GB'
 catalogue: 'Catalogue#GB'
 no_message: 'Pas de nouveaux message#GB'
@@ -863,7 +878,8 @@ solerni_homepage: 'Retour à l''accueil#GB'
 solerni_hello: 'Hello#GB'
 my_account: 'Mon profil#GB'
 profile_parameters: 'Paramètres#GB'
-competence_badges: 'Obtenez des badges de compétences#GB'
+competence_badges: 'Badges de compétences#GB'
+competence_badges_cr: 'Badges<br/>de compétences#GB'
 knowledge_badges: 'Badges de connaissances#GB'
 my_progress: 'Ma progression#GB'
 badge_knowledge_short: 'Connaissances#GB'
@@ -873,12 +889,12 @@ previous_lesson: 'Sujet ou activité précédent#GB'
 next_lesson: 'Sujet ou activité suivant#GB'
 lesson_button_done_tooltip: 'Cliquez pour valider cette étape#GB'
 lesson_button_undone_tooltip: 'Cliquez si vous ne souhaitez pas valider cette étape#GB'
-cgu_terms_label: 'I have read and understood the General Terms of Service#GB'
-cgu_terms_invalid: 'You need to accept our General Terms of Service #GB'
-cgu_terms_label_partial: 'I have read and understood the #GB'
-cgu_terms_link: 'General Terms of Service#GB'
+cgu_terms_label: 'J''ai lu et j''accepte les conditions générales d''utilisation#GB'
+cgu_terms_invalid: 'Vous devez accepter les conditions générales d''utilisation#GB'
+cgu_terms_label_partial: 'J''ai lu et j''accepte les #GB'
+cgu_terms_link: 'conditions générales d''utilisation#GB'
 page_my_badges: 'Obtenir des badges#GB'
-ou: 'or#GB'
+ou: 'ou#GB'
 add_file: 'Ajouter un fichier#GB'
 add_file_tooltip: 'Ajouter un fichier avec le Resource Picker#GB'
 add_new_tooltip: 'Nouvelle ressource ou fichier#GB'
@@ -886,13 +902,15 @@ my_library: 'Ma bibliothèque#GB'
 mooc_resources: 'Les ressources du MOOC#GB'
 read_faq: 'Consulter les FAQ#GB'
 more_about_badges: 'En savoir plus sur les badges#GB'
+workgroup: 'Collaborer#GB'
+workgroup_title: 'Le groupe de travail du MOOC#GB'
 #GB
-my_badge_details: 'See my badges details#GB'
-go_to_evaluation: 'Go to my evaluation space#GB'
-get_this_badge: 'Get this badge#GB'
-my_evals: 'My evaluations#GB'
-get_more_badges: 'Get more badges#GB'
-show_my_evals: Show my evaluations#GB
+my_badge_details: 'Consulter mon badge en détail#GB'
+go_to_evaluation: 'Aller dans mon espace d''évaluation#GB'
+get_this_badge: 'Obtenir ce badge#GB'
+my_evals: 'Mes évaluations#GB'
+get_more_badges: 'Obtenir plus de badges#GB'
+show_my_evals: Afficher mes évaluations#GB
 #GB
 back_to_parameters: 'Retour à l''administration#GB'
 #GB
@@ -932,6 +950,9 @@ claroline_corebundle_moocs : 'Moocs#GB'
 claroline_corebundle_mooc_certificationType : 'Certification#GB'
 claroline_corebundle_mooc_gratis: 'Mooc Gratuit#GB'
 claroline_corebundle_mooc_blog: Blog du Mooc#GB
+claroline_corebundle_mooc_showResourceManager: 'Onglet "Partager"#GB'
+claroline_corebundle_mooc_showWorkGroup: 'Onglet "Collaborer"#GB'
+claroline_corebundle_mooc_workGroup: 'Contenu de l''onglet "Collaborer"#GB'
 choose_blog_mooc: -- Choisir un blog pour le mooc --#GB
 #GB
 #GB
@@ -998,6 +1019,7 @@ proposed_by: Proposé par#GB
 know_more: En savoir +#GB
 mooc_archives: Accéder aux archives du cours#GB
 get_warned_next_session: M'avertir de la prochaine session#GB
+dont_get_warned_next_session: Ne pas m'avertir de la prochaine session#GB
 mooc_is_over: Mooc terminé#GB
 go_to_mooc: Accéder au mooc#GB
 subscribe_to_mooc: S'inscrire au mooc#GB
@@ -1074,18 +1096,18 @@ mooc_analytics_publisher_nb_pub: Nombre de publications#GB
 mooc_analytics_users_nb_logs: Activité#GB
 mooc_analytics_users_nb_published_posts: Nombre de messages publiés#GB
 #GB
-mooc_analytics_keynumbers_connections_today: Nombre de connections du jour#GB
-mooc_analytics_keynumbers_mean_connections_daily: Nombre moyen de connections par jour#GB
-mooc_analytics_keynumbers_subscriptions_today: Nombre d'inscrits du jour#GB
-mooc_analytics_keynumbers_subscriptions_total: Nombre total d'inscrits#GB
-mooc_analytics_keynumbers_active_users: Nombre d'utilisateurs actifs (1)#GB
-mooc_analytics_keynumbers_connection_hour: Plage horaire moyenne la plus connectée#GB
-mooc_analytics_keynumbers_activity_hour: Plage horaire moyenne la plus active#GB
-mooc_analytics_keynumbers_forum_publications_total: Nombre total de publications sur le forum#GB
-mooc_analytics_keynumbers_forum_publications_daily_mean: Nombre moyen de publications par jour#GB
+mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour#GB"
+mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour#GB"
+mooc_analytics_keynumbers_subscriptions_today: "Nombre d'inscrits du jour#GB"
+mooc_analytics_keynumbers_subscriptions_total: "Nombre total d'inscrits#GB"
+mooc_analytics_keynumbers_active_users: "Nombre d'utilisateurs actifs (1)#GB"
+mooc_analytics_keynumbers_connection_hour: "Plage horaire moyenne la plus connectée#GB"
+mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active#GB"
+mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum#GB"
+mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour#GB"
 #GB
-mooc_analytics_theme_name: Nom du thème#GB
-mooc_analytics_theme_nb_posts: Nombre de publications dans le thème#GB
+mooc_analytics_theme_name: Nom du sujet#GB
+mooc_analytics_theme_nb_posts: Nombre de publications dans le sujet#GB
 #GB
 mooc_analytics_export: Exportez les données du MOOC#GB
 export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances#GB
@@ -1148,8 +1170,8 @@ forumPublishers: Top des meilleurs contributeurs#GB
 forumPublishersDescription: Les meilleurs contributeurs sont les utilisateurs publiant le plus de messages sur le forum#GB
 forumContributions: Niveau d'activité générale#GB
 forumContributionsDescription: Mesurez le niveau d'activité générale du forum#GB
-forumMostActiveSubjects: Top des thèmes les plus actifs#GB
-forumMostActiveSubjectsDescription: Découvrez quels sont les thèmes les plus actifs (nombre de publications cumulées)#GB
+forumMostActiveSubjects: Top des sujets les plus actifs#GB
+forumMostActiveSubjectsDescription: Découvrez quels sont les sujets les plus actifs (nombre de publications cumulées)#GB
 analytics_no_data: Pas de données sur cet onglet#GB
 SuccessRateBadge: Taux de réussite au badge#GB
 SuccessRateDescription: identifiez les participants les plus talentueux#GB
@@ -1167,60 +1189,64 @@ to_workspace_members: aux collaborateurs du workspace#GB
 currentPassword: Mot de passe actuel#GB
 edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à votre mot de passe actuel.#GB
 #GB
+export_csv: 'Exporter en CSV#GB'
+export_mail: 'Exporter les adresses mail#GB'
+#GB
 #Page contact#GB
-contact_general : General#GB
-contact : Contact us#GB
-Contactez_nous : Contact us#GB
+contact_general: Général#GB
+contact : Nous contacter#GB
+Contactez_nous : Nous contacter#GB
 contact_form_demande : Votre demande concerne#GB
 contact_form_civil : Civilité#GB
 contact_form_civil_monsieur : Monsieur#GB
 contact_form_civil_madame : Madame#GB
 contact_form_civil_mademoiselle : Mademoiselle#GB
-contact_form_prenom : First Name#GB
-contact_form_nom : Last Name#GB
-contact_form_replyTo : Mail#GB
-contact_form_societe : Company#GB
-contact_form_telephone : Phone#GB
-contact_form_fonction : Founction#GB
-Contactez_nous_edition : Edition of services#GB
-contact_name : Label of service#GB
-contact_mail : Mail of service#GB
-contact_success : Your message has been send with success#GB
-remove_contact_confirm_message : Are you sure you want to delete this service#GB
+contact_form_prenom : Prénom#GB
+contact_form_nom : Nom#GB
+contact_form_replyTo : Email#GB
+contact_form_societe : Société#GB
+contact_form_telephone : Téléphone#GB
+contact_form_fonction : Fonction#GB
+contact_form_content : Contenu#GB
+Contactez_nous_edition : Edition de la liste des services#GB
+contact_name : Label du service#GB
+contact_mail : Email du service#GB
+contact_success : Votre message a bien été envoyé.#GB
+remove_contact_confirm_message : Êtes-vous sûr de vouloir supprimer ce service#GB
 #Page contact#GB
 #GB
-message_send : Your message has been send with success#GB
+message_send : Votre message a bien été envoyé.#GB
 #GB
 #Page mes badges#GB
-badges_tous : All the moocs#GB
-badges_nomooc : Solerni's Badges#GB
-badges_voir_details : See the details#GB
+badges_tous : Tous les moocs#GB
+badges_nomooc : Badges Solerni#GB
+badges_voir_details : Voir le détail du badge#GB
 badges_badge : Badge#GB
-badges_attribue_le : Given the#GB
-badges_by : by#GB
-badges_name : Name#GB
+badges_attribue_le : Attribué le#GB
+badges_by : par#GB
+badges_name : Nom#GB
 badges_version : Version#GB
 badges_description : Description#GB
-badges_critere : Criteria#GB
+badges_critere : Critère d'obtention#GB
 badges_actions : Actions qui ont mené à l'attribution de ce badge#GB
 #Page mes badges#GB
 #GB
 no_mooc_followed: Aucun mooc à afficher#GB
-connect_with_facebook: Log in with Facebook#GB
-all_fields_mandatory: All fields are mandatory#GB
-already_registered: I already have subscribed, I log in#GB
-not_registered: I am not registered, I create a account#GB
-connect_now: log in now#GB
-tagline_header: Train and acquire new skills by following moocs at your rythm#GB
-i_register: I register#GB
-solerni_question: Do you already have a Solerni account ?#GB
-please_connect: Connect with your email or Facebook !#GB
-connect: Log in#GB
-i_connect_now: I connect now#GB
-no_account: I do not have an account, I register#GB
-solerni_question_reverse: Don't you have a Solerni account ?#GB
-create_account: Create a account from your email or use Facebook !#GB
-
+connect_with_facebook: Je me connecte avec Facebook#GB
+all_fields_mandatory: Tous les champs sont obligatoires#GB
+already_registered: J'ai déjà un compte, je me connecte#GB
+not_registered: Je n'ai pas de compte, je m'inscris#GB
+connect_now: je me connecte maintenant#GB
+tagline_header: Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs#GB
+i_register: Je m'inscris#GB
+solerni_question: Vous avez déjà un compte Solerni ?#GB
+please_connect: Connectez-vous avec votre email ou avec Facebook#GB
+connect: Je me connecte#GB
+i_connect_now: Je me connecte maintenant#GB
+no_account: Je n'ai pas de compte, je m'inscris#GB
+solerni_question_reverse: Vous n'avez pas de compte Solerni ?#GB
+create_account: Créez un compte à partir de votre email ou inscrivez-vous avec Facebook#GB
+#GB
 discover_solerni: Découvrez Solerni#GB
 discover_catalogue: Découvrez Le catalogue Solerni#GB
 moocs: Moocs#GB
@@ -1233,15 +1259,45 @@ partners: Partenaires#GB
 legals: Mentions légales#GB
 cgu: CGU / Charte#GB
 faq: FAQ#GB
-
+#GB
 start_on: Début le#GB
 end_on: Fin le#GB
 badgeant: Badgeant#GB
 free_mooc: Mooc gratuit#GB
-
+available_on: Disponible le#GB
+#GB
 see_my_profil: Voir mon profil#GB
 my_mailsystem: Ma messagerie#GB
-
+#GB
 badge: Badge#GB
 still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obtenir#GB
 gain_on: Obtenu le#GB
+ongoing_badge: Badge en cours d'acquisition#GB
+follow_us_on: Suivez-nous sur#GB
+consult_catalog: Consulter le catalogue#GB
+discover_solerni_moocs: Découvrez les moocs<br>proposés par Solerni#GB
+still_no_moocs: Vous n'avez pas rejoint de MOOC ? Solerni vous propose#GB
+
+'Accéder au cours': Accéder au cours#GB
+'En savoir +': En savoir +#GB
+my_progression: Ma progression#GB
+activities: Activités#GB
+Homme: Homme#GB
+Femme: Femme#GB
+years_old: ans#GB
+posted_messages: messages postés#GB
+community_votes: messages votés par la communauté#GB
+badges_number: badge%plural%#GB
+followed_moocs: Moocs suivis#GB
+mandatory_fields: Les champs marqués d'une étoile %symbol% sont obligatoires#GB
+format_use: Merci d'utiliser une image au format JPG, GIF ou PNG, de 2048px par 2048px maximum et de 6Mo au plus.#GB
+female: Féminin#GB
+male: Masculin#GB
+no_tell: Je ne veux pas le dire#GB
+your_moocs_visibility: Visibilité des moocs auquels vous participez#GB
+
+indexer_admin: Administration des entités indexées#GB
+select_indexable_entities: Sélectionner les entités à indexer#GB
+form_requeue_all: Vider l'index pour le recréer#GB
+private_masculin: privé#GB
+Session: Session#GB

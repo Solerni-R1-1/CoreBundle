@@ -26,7 +26,8 @@
             	<!-- Empty block -->
             	</div>
             	<div class="col-md-9 col-xs-9">
-            		Les champs marqués d'une étoile <span class="slrn-profile-mandatory-char-inline">*</span>&nbsp; sont obligatoires
+                    {% set symbol = '<span class="slrn-profile-mandatory-char-inline">*</span>' %}
+                    {{ 'mandatory_fields'|trans({'%symbol%': symbol}, 'platform')|raw }}
             	</div>
                 {# FIRST NAME #}
                 <div class="form-group row">
@@ -132,7 +133,7 @@
                 <div class="form-group row">
                     <label class="control-label col-md-3"></label>
                     <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
-                        <i class="small">Merci d'utiliser une image au format JPG, GIF ou PNG, de 2048px par 2048px maximum et de 6Mo au plus.</i>
+                        <i class="small">{{'format_use'|trans({}, 'platform')}}</i>
                     </div>
                 </div>
                 {# UPLOAD BUTTON #}

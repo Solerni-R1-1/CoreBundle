@@ -1274,3 +1274,31 @@ still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obte
 gain_on: Obtenu le
 ongoing_badge: Badge en cours d'acquisition
 free_price: prix gratuit
+follow_us_on: Suivez-nous sur
+consult_catalog: Consulter le catalogue
+discover_solerni_moocs: Découvrez les moocs<br>proposés par Solerni
+still_no_moocs: Vous n'avez pas rejoint de MOOC ? Solerni vous propose
+
+'Accéder au cours': Accéder au cours
+'En savoir +': En savoir +
+my_progression: Ma progression
+activities: Activités
+Homme: Homme
+Femme: Femme
+years_old: ans
+posted_messages: messages postés
+community_votes: messages votés par la communauté
+badges_number: badge%plural%
+followed_moocs: Moocs suivis
+mandatory_fields: Les champs marqués d'une étoile %symbol% sont obligatoires
+format_use: Merci d'utiliser une image au format JPG, GIF ou PNG, de 2048px par 2048px maximum et de 6Mo au plus.
+female: Féminin
+male: Masculin
+no_tell: Je ne veux pas le dire
+your_moocs_visibility: Visibilité des moocs auquels vous participez
+
+indexer_admin: Administration des entités indexées
+select_indexable_entities: Sélectionner les entités à indexer
+form_requeue_all: Vider l'index pour le recréer
+private_masculin: privé
+Session: Session

@@ -145,7 +145,20 @@ body.subnavbar-fixed {
 }
 
 #top_bar .navbar-nav { display: inline-block; }
-#top_bar .slrn-topbar { float: none; }
+
+#top_bar .navbar-nav.slrn-top-right { 
+    display: inline-block; 
+    max-width: 380px;
+    max-height: 50px;
+}
+
+#top_bar .slrn-topbar { 
+    float: none;
+    max-width: 395px;
+    overflow: hidden;
+    max-height: 50px;
+}
+
 #top_bar .slrn-top-header { 
     position: relative;
     text-align: justify;
@@ -1940,7 +1953,8 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 .slrn-profile-button {
     position:   relative;
     width:      200px;
-    text-align: left; 
+    text-align: left;
+    cursor:     pointer;
 }
 
 .slrn-profile-button:hover,
@@ -1981,6 +1995,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-profile-button + .dropdown-menu > li:hover a {
     background-color: #606060;
+    cursor:     pointer;
 }
 
 .slrn-profile-button + .dropdown-menu > li > a {
@@ -2043,8 +2058,10 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 
 .slrn-profile-form label {
     height:         2em;
-    line-height:    2em;
+    line-height:    1.1em;
     color:          #606060;
+    padding-top:    .2em;
+    text-align:     right;
 }
 
 .slrn-profile-form input {

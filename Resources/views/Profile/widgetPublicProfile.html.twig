@@ -90,27 +90,29 @@
                     </li>
                 {% endif %}
                 {% if ( isEditProfilePage is defined ) or (publicProfilePreferences.isDisplayOptionalInformation()) %}
-                	<li class="display_optional_information{% if not publicProfilePreferences.isDisplayOptionalInformation() %} hidden{% endif %}">{{ user.getGenderLabel() }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} ans{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry()|countryName(app.request.locale) }}</li>
+                	<li class="display_optional_information{% if not publicProfilePreferences.isDisplayOptionalInformation() %} hidden{% endif %}">
+                        {{ user.getGenderLabel()|trans({}, 'platform') }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} {{'years_old'|trans({}, 'platform')}}{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry()|countryName(app.request.locale) }}</li>
                 {% endif %}
             </ul>
             <hr />
             <ul class="slrn-profile-counters">
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-post"></i>
-	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} messages postés</p>
+	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} {{'posted_messages'|trans({}, 'platform')}}</p>
 	            </li>
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-vote"></i>
-	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} messages votés par la communauté</p>
+	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} {{'community_votes'|trans({}, 'platform')}}</p>
 	            </li>
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-badge"></i>
-	            	<p class="slrn-profile-counter">{{ nbBadges }} badges</p>
+                    {% if nbBadges > 1 %}{% set plural = 's' %}{% else %}{% set plural = '' %}{% endif %}
+	            	<p class="slrn-profile-counter">{{ nbBadges }} {{ 'badges_number'|trans({'%plural%': plural}, 'platform') }}</p>
 	            </li>
             </ul>
 	        <hr />
             <div class="slrn-profile-moocs">
-            <p class="slrn-profile-moocs-title">Moocs suivis</p>
+            <p class="slrn-profile-moocs-title">{{'followed_moocs' |trans({}, 'platform')}}</p>
             {% set imageSize = { 'width': 118, 'height': 85 } %}
             {% if ( isEditProfilePage is defined ) %}
                 {% for moocSession in user.getMoocSessions() %}
@@ -124,7 +126,7 @@
                         <div class="slrn-profile-mooc-info col-md-7">
                             <p class="srln-profile-mooc-title">{{ moocSession.getMooc().getTitle() }}</p>
                             {# Get first session of the Mooc #}
-                            <p class="srln-profile-mooc-date">{{ moocSession.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
+                            <p class="srln-profile-mooc-date">{{ moocSession.getStartDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y') }}</p>
                         </div>
                     </a>
                 {% else %}
@@ -141,7 +143,9 @@
                         <div class="slrn-profile-mooc-info col-md-7">
                             <p class="srln-profile-mooc-title">{{ userMoocPreferences.getMooc().getTitle() }}</p>
                             {# Get first session of the Mooc #}
-                            <p class="srln-profile-mooc-date">{{ userMoocPreferences.getMooc().getMoocSessions()[0].getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
+                            <p class="srln-profile-mooc-date">
+                                {{ userMoocPreferences.getMooc().getMoocSessions()[0].getStartDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y') }}
+                            </p>
                         </div>
                     </a>
                 {% else %}
