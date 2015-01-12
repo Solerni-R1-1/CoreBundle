@@ -1253,6 +1253,8 @@ moocs: Moocs
 powered_orange: powered by Orange
 facebook: Facebook
 twitter: Twitter
+gplus: Google +
+linkedin: Linkedin
 blog: Blog
 about_solerni: A propos de Solerni
 partners: Partenaires
@@ -1309,3 +1311,45 @@ get_back_message: Vous pouvez revenir à <a href="javascript:history.back()">la 
 wrong_request: La syntaxe de votre requête est erronée.
 forbidden_url: Vous n'avez pas l'autorisation d'accéder à cette page.
 page_not_found: La page que vous souhaitez afficher n'existe pas.
+
+sinformer: S'informer
+sinformer_title: Accéder au blog
+workgroup_title: Accéder au groupe de travail
+apprendre: Apprendre
+apprendre_title: Suivre les cours
+discuter: Discuter
+discuter_title: Participer au forum
+partager: Partager
+partager_title: Accéder au gestionnaire de ressources
+
+essentials: Les essentiels
+start_date: Date de début
+end_date: Date de fin
+no_planification: Aucune date de prévue
+duration: Durée
+weeks: semaines
+weekly_duration: Temps de travail hebdomadaire
+cost: Tarif
+optional_certif: Certification en option
+pro_certif: Formation professionnelle
+certification: Certification
+mooc_langage: Langue du cours
+videos: Vidéos
+videos_sub: Sous-Titrées
+on: en
+subscriptions: Inscriptions
+open_to_all: Ouvertes à tous
+limited_to: Limitées au
+first_subs: premier
+subscriber: inscrit
+from_date: du
+to_date: au
+private: Privées
+authorized_by: Vous êtes autorisé à vous inscrire par
+in_limited_session: dans une session limitée au
+subs_count: Nombre d'inscrits
+subs_count_today: inscrits à ce jour
+prerequisite: Pré-requis
+no_prerequisite: Aucun pré-requis
+school_team: Equipe pédagogique
+share: Partager

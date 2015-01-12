@@ -727,7 +727,6 @@ body.dsk .alert { display: none; }
   padding: .5em .8em .6em;
   position: absolute;
   text-align: center;
-  width: 7em;
   color: #FFF;
 }
 .footer_social_link:hover .footer_social_link__tooltip{ display:block; }

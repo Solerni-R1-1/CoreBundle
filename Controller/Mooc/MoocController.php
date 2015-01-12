@@ -452,9 +452,9 @@ class MoocController extends Controller
         		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
         		$url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
         		$solerniTabs['solerniTabs'][] = array(
-        				'name' => 'S\'informer',
+        				'name' => $this->translator->trans('sinformer', array(), 'platform'),
         				'url' => $url,
-        				'title' => 'Accéder au blog',
+        				'title' => $this->translator->trans('sinformer_title', array(), 'platform'),
         				'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
         		);
         	}
@@ -471,9 +471,9 @@ class MoocController extends Controller
                     // generate tab
                     $url = $this->moocService->getRouteToTheLastChapter($lesson, $user);
                     $solerniTabs['solerniTabs'][] = array(
-                        'name' => 'Apprendre',
+                        'name' => $this->translator->trans('apprendre', array(), 'platform'),
                         'url' => $url,
-                        'title' => 'Suivre les cours',
+                        'title' => $this->translator->trans('apprendre_title', array(), 'platform'),
                     	'isSelected' => !(strpos(  $url, dirname($currentUrl) ) === false)
                     );
                 }
@@ -488,9 +488,9 @@ class MoocController extends Controller
                 $forumUrl = dirname(dirname($this ->get('router')->generate('claro_forum_categories', array('forum' => $forum->getId()))));
                 $url = $router->generate('claro_forum_categories', array('forum' => $forum->getId()));
                 $solerniTabs['solerniTabs'][] = array(
-                    'name' => 'Discuter',
+                    'name' => $this->translator->trans('discuter', array(), 'platform'),
                     'url' => $url,
-                    'title' => 'Participer au forum',
+                    'title' => $this->translator->trans('discuter_title', array(), 'platform'),
                    	'isSelected' => !(strpos(  dirname( $currentUrl ), $forumUrl ) === false)
                 );
             }
@@ -506,9 +506,9 @@ class MoocController extends Controller
         if ( $session && $showResourceManager ) {
             $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
             $solerniTabs['solerniTabs'][] = array(
-                'name' => 'Partager',
+                'name' => $this->translator->trans('partager', array(), 'platform'),
                 'url' => $url,
-                'title' => 'Accéder au gestionnaire de ressources',
+                'title' => $this->translator->trans('partager_title', array(), 'platform'),
                 'isSelected' => !(strpos(  $currentUrl, $url ) === false)
             );
         }
@@ -518,7 +518,7 @@ class MoocController extends Controller
         	$solerniTabs['solerniTabs'][] = array(
         		'name'	=> $this->translator->trans('workgroup', array(), 'platform'),
         		'url'	=> $url,
-        		'title' => 'Accéder au groupe de travail',
+        		'title' => $this->translator->trans('workgroup_title', array(), 'platform'),
         		'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)	
         	);
         }
