@@ -1352,3 +1352,38 @@ prerequisite: Pré-requis#GB
 no_prerequisite: Aucun pré-requis#GB
 school_team: Equipe pédagogique#GB
 share: Partager#GB
+
+success: Succès#GB
+failure: Echec#GB
+in_progress: En cours#GB
+available: Disponible#GB
+time_day: Heure de la journée#GB
+connections_count: Nombre de connections#GB
+activity_in_mooc: Activité sur le cours#GB
+inscriptions_total: Inscriptions totales#GB
+publications: Publications#GB
+publications_forum: Publications forum#GB
+participation_percent: Pourcentage de participation#GB
+participation_total: Total de participations#GB
+participation_number: Nombre de participants#GB
+participation: Participations#GB
+active_users: Utilisateurs actifs#GB
+non_active_users: Utilisateurs non actifs#GB
+inscriptions_number: Nombre d'inscriptions#GB
+inscriptions_cumulated: Inscriptions cumulées#GB
+inscriptions_daily: Inscriptions quotidiennes#GB
+mooc_connections: Connections au MOOC#GB
+download_report: Télécharger le rapport#GB
+key_data_active_users: %activeUsers1% inscrits au MOOC.<br>%activeUsers0% utilisateurs actifs au cours des 7 derniers jours.<br>%inactiveUsers% utilisateurs inactifs au cours des 7 derniers jours.#GB
+mooc_entering: Entrées dans le MOOC#GB
+mooc_interactions: Interactions dans le MOOC#GB
+event_number: Nombre d'évènements#GB
+contributions_number: Nombre de contributions#GB
+forum_contributions: Contributions dans le forum#GB
+key_data_badge: %totalBadgeUsers% participants au badge.<br>%badgeSuccessRates1% utilisateurs ont réussi.<br>%badgeSuccessRates2% utilisateurs ont échoués.<br>%badgeSuccessRates3% n'ont pas terminés.#GB
+successful: Réussite#GB
+participation_number_cumulated: Nombre cumulé de participants au badge#GB
+users_with_first_condition: Nombre d'utilisateurs remplissant la première condition pour obtenir le badge#GB
+user_trying_badge: utilisateurs participant au badge#GB
+user_not_trying_badge: utilisateurs ne participant pas au badge#GB
+key_data_badge_rate: %$totalUsers% utilisateurs inscrits au MOOC.<br>%totalBadgeUsers% participent au badge.<br>%totalNonBadgeUsers% ne participent pas.#GB

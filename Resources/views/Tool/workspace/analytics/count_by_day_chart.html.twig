@@ -61,13 +61,13 @@
     });
 
     {% if forumContributions is defined and forumContributions %}
-    var chartData4 = $.map({{ forumContributions[0]|json_encode|raw }}, function(value, index) {
-		return [value];
-    });
-	var forumsContributionMean = {{ forumContributions[1] }};
+        var chartData4 = $.map({{ forumContributions[0]|json_encode|raw }}, function(value, index) {
+            return [value];
+        });
+        var forumsContributionMean = {{ forumContributions[1] }};
     {% else %}
-    var chartData4 = {};
-    var forumsContributionMean = 0;
+        var chartData4 = {};
+        var forumsContributionMean = 0;
     {% endif %}
 
 
@@ -156,17 +156,17 @@
                     },
                     axes: {
                         xaxis: {                            
-                            label: "Heure de la journée",
+                            label: "{{'time_day'|trans({}, 'platform')}}",
                             pad: 0
                         },
                         yaxis: {
-                        	label: "Nombre de connections",
+                        	label: "{{'connections_count'|trans({}, 'platform')}}",
                             min:0,
                             showTickMarks: true,
                             numberTicks: 5
                         },
                         y2axis: {
-							label: "Activité sur le cours",
+							label: "{{'activity_in_mooc'|trans({}, 'platform')}}",
 	                        min:0,
                             showTickMarks: true,
                             numberTicks: 5
@@ -199,8 +199,8 @@
                         rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
                     },
                     series: [
-                        {yaxis:'yaxis', label:'Nombre de connections'},
-                        {yaxis:'y2axis', label:'Activité sur le cours'}
+                        {yaxis:'yaxis', label:'{{'connections_count'|trans({}, 'platform')}}'},
+                        {yaxis:'y2axis', label:'{{'activity_in_mooc'|trans({}, 'platform')}}'}
                     ],
                     legend: {
 						show: true,
@@ -240,7 +240,7 @@
                                 pad: 0
                             },
                             yaxis: {
-                            	label: "Inscriptions",
+                            	label: "{{'subscriptions'|trans({}, 'platform')}}",
                                 min:0,
                                 showTickMarks: true,
                                 numberTicks: 5
@@ -273,8 +273,8 @@
                             rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
                         },
                         series: [
-                            {yaxis:'yaxis', label:'Inscriptions totales'},
-                            {yaxis:'yaxis', label:'Inscriptions'}
+                            {yaxis:'yaxis', label:'{{'inscriptions_total'|trans({}, 'platform')}}'},
+                            {yaxis:'yaxis', label:'{{'subscriptions'|trans({}, 'platform')}}'}
                         ],
                         legend: {
     						show: true,
@@ -314,7 +314,7 @@
                                 pad: 0
                             },
                             yaxis: {
-                            	label: "Publications",
+                            	label: "{{ 'publications'|trans({}, 'platform') }}",
                                 min:0,
                                 showTickMarks: true,
                                 numberTicks: 5
@@ -347,7 +347,7 @@
                             rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
                         },
                         series: [
-                            {yaxis:'yaxis', label:'Publications forum'},
+                            {yaxis:'yaxis', label:'{{ 'publications_forum'|trans({}, 'platform') }}'},
                         ],
                         legend: {
     						show: true,

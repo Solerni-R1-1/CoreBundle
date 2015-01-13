@@ -22,11 +22,11 @@
         <h2 class="panel-title">{{ 'mooc_analytics'|trans({}, 'platform') }} : {{ workspace.getMooc().getTitle() }}</h2>
     </div>
     <div class="panel-body" id="workspace-list-div">
-        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analytics_navbar.html.twig'%}
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:analytics_navbar.html.twig' %}
     </div>
     <div class="panel-body logs-container">
         {% set chartHeight = 400 %}
-        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:moocAnalyticsFiles.html.twig'%}
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\analytics\\includes:moocAnalyticsFiles.html.twig' %}
 
         <div class="slrn-statistic-wrapper">
             <legend>{{ 'mooc_badges_knowledge_chart'|trans({}, 'platform') }}</legend>
@@ -154,7 +154,7 @@
                                 legend:{
                                     location: 's',
                                     border:'none',
-                                    labels: ["Success", "Failure", "inProgress", "Available"],
+                                    labels: [ "{{'success'|trans({}, 'platform')}}", "{{'failure'|trans({}, 'platform')}}", "{{'in_progress'|trans({}, 'platform')}}", "{{'available'|trans({}, 'platform')}}"],
                                     renderer: $.jqplot.CavasTextRenderer,
                                     show:true,
                                     showMarker:true,

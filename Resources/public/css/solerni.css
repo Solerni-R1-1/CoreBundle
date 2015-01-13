@@ -406,6 +406,9 @@ body.subnavbar-fixed {
     padding-left:   18.9em; 
     margin-bottom:  0;
     display:        inline-block;
+    max-width:      785px;
+    height:         132px;
+    overflow:       hidden;
 }
 
 .slrn-subnavbar .slrn-subnavbar__item { 

@@ -1353,3 +1353,38 @@ prerequisite: Pré-requis
 no_prerequisite: Aucun pré-requis
 school_team: Equipe pédagogique
 share: Partager
+
+success: Succès
+failure: Echec
+in_progress: En cours
+available: Disponible
+time_day: Heure de la journée
+connections_count: Nombre de connections
+activity_in_mooc: Activité sur le cours
+inscriptions_total: Inscriptions totales
+publications: Publications
+publications_forum: Publications forum
+participation_percent: Pourcentage de participation
+participation_total: Total de participations
+participation_number: Nombre de participants
+participation: Participations
+active_users: Utilisateurs actifs
+non_active_users: Utilisateurs non actifs
+inscriptions_number: Nombre d'inscriptions
+inscriptions_cumulated: Inscriptions cumulées
+inscriptions_daily: Inscriptions quotidiennes
+mooc_connections: Connections au MOOC
+download_report: Télécharger le rapport
+key_data_active_users: %activeUsers1% inscrits au MOOC.<br>%activeUsers0% utilisateurs actifs au cours des 7 derniers jours.<br>%inactiveUsers% utilisateurs inactifs au cours des 7 derniers jours.
+mooc_entering: Entrées dans le MOOC
+mooc_interactions: Interactions dans le MOOC
+event_number: Nombre d'évènements
+contributions_number: Nombre de contributions
+forum_contributions: Contributions dans le forum
+key_data_badge: %totalBadgeUsers% participants au badge.<br>%badgeSuccessRates1% utilisateurs ont réussi.<br>%badgeSuccessRates2% utilisateurs ont échoués.<br>%badgeSuccessRates3% n'ont pas terminés.
+successful: Réussite
+participation_number_cumulated: Nombre cumulé de participants au badge
+users_with_first_condition: Nombre d'utilisateurs remplissant la première condition pour obtenir le badge
+user_trying_badge: utilisateurs participant au badge
+user_not_trying_badge: utilisateurs ne participant pas au badge
+key_data_badge_rate: %$totalUsers% utilisateurs inscrits au MOOC.<br>%totalBadgeUsers% participent au badge.<br>%totalNonBadgeUsers% ne participent pas.
