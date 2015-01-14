@@ -5,12 +5,12 @@
     {% if loop.first %}
         {% if loop.length == 1 %}
             <li class="active">
-               Les ressources du mooc « {{ node.name }} »
+               {{'mooc_resources'|trans({}, 'platform')}} « {{ node.name }} »
             </li>
         {% else %}
             <li>
                 <a href="#" data-node-id="{{ node.id }}">
-                    Les ressources du mooc « {{ node.name }} »
+                    {{'mooc_resources'|trans({}, 'platform')}} « {{ node.name }} »
                 </a>
             </li>
         {% endif %}

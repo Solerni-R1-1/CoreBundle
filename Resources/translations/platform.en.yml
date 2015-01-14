@@ -1389,3 +1389,6 @@ user_not_trying_badge: utilisateurs ne participant pas au badge#GB
 key_data_badge_rate: %$totalUsers% utilisateurs inscrits au MOOC.<br>%totalBadgeUsers% participent au badge.<br>%totalNonBadgeUsers% ne participent pas.#GB
 pseudo: pseudo#GB
 x_selected: %number% sélectionné%plural%#GB
+user_ws_not_exists: L'utilisateur, le groupe ou le workspace {{ name }} n'existe pas.#GB
+#sent
+no_mooc_today: Vous ne suivez aucun Mooc en ce moment#GB

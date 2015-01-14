@@ -12,3 +12,5 @@ special_char_not_allowed: 'Special characters are not allowed (allowed character
 public_profile_url_not_valid: 'Your public profile URL is not valid.'
 name_required: Name required.
 role_already_exists: This role already exists.
+maxSizeMessage: 'Le fichier est trop volumineux ({{ size }} Mo). Sa taille ne doit pas dépasser {{ limit }} Mo.#GB'
+user_ws_not_exists: L'utilisateur, le groupe ou le workspace {{ name }} n'existe pas.#GB

@@ -1390,3 +1390,5 @@ user_not_trying_badge: utilisateurs ne participant pas au badge
 key_data_badge_rate: %$totalUsers% utilisateurs inscrits au MOOC.<br>%totalBadgeUsers% participent au badge.<br>%totalNonBadgeUsers% ne participent pas.
 pseudo: pseudo
 x_selected: %number% sélectionné%plural%
+#sent
+no_mooc_today: Vous ne suivez aucun Mooc en ce moment

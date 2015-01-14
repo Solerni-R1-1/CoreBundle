@@ -13,3 +13,4 @@ public_profile_url_not_valid: 'L''URL de votre profil public n''est pas valide.'
 name_required: Nom requis.
 role_already_exists: Ce rôle existe déjà.
 maxSizeMessage: 'Le fichier est trop volumineux ({{ size }} Mo). Sa taille ne doit pas dépasser {{ limit }} Mo.'
+user_ws_not_exists: L'utilisateur, le groupe ou le workspace {{ name }} n'existe pas.#GB
