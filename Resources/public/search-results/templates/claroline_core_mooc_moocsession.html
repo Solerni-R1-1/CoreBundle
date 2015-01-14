@@ -15,7 +15,7 @@
             {{document.mooc_title_t | truncate:30}}
         </h2>
         <span class="presentation__mooc__text__subtitle">
-            Proposé par 
+            {{ 'proposed_by'|trans }} 
             <a href="{{ document.mooc_owner_cat_url | path }}">
                 {{document.mooc_owner_name}}
             </a>
@@ -26,23 +26,23 @@
         <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description_t | truncate:85" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') == -1 && document.mooc_about_description_t.indexOf('<mark>') == -1"></div>
         <div class="presentation__mooc__text__button">
             <a href="{{ document.mooc_view_url | path }}" class="btn btn-primary">
-                En savoir plus
+                {{ 'know_more'|trans }}
             </a>
         </div>
     </div>
     <div class="presentation__mooc__block presentation__mooc__meta">
         <div class="presentation__mooc__meta__date">
-            <p>Début le {{document.start_date | date : 'dd.MM.yyyy'}}</p>
-            <p>Fin le {{document.end_date | date : 'dd.MM.yyyy'}}</p>
+            <p>{{ 'start_on'|trans }} {{document.start_date | date : 'dd.MM.yyyy'}}</p>
+            <p>{{ 'end_on'|trans }} {{document.end_date | date : 'dd.MM.yyyy'}}</p>
         </div>
         <span class="presentation__mooc__meta__badge">
-            Badgeant
+            {{ 'badgeant'|trans }}
         </span>
         <span class="presentation__mooc__meta__price">
-            Mooc gratuit
+           {{ 'free_mooc'|trans }}
         </span>
     </div>
     <div ng-if="!document.mooc_is_public_b" class="mooc_private_layer">
-         Mooc Privé
+         {{ 'mooc_private'|trans }}
     </div>
 </div>
