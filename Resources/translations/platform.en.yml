@@ -1387,3 +1387,5 @@ users_with_first_condition: Nombre d'utilisateurs remplissant la première condi
 user_trying_badge: utilisateurs participant au badge#GB
 user_not_trying_badge: utilisateurs ne participant pas au badge#GB
 key_data_badge_rate: %$totalUsers% utilisateurs inscrits au MOOC.<br>%totalBadgeUsers% participent au badge.<br>%totalNonBadgeUsers% ne participent pas.#GB
+pseudo: pseudo#GB
+x_selected: %number% sélectionné%plural%#GB
