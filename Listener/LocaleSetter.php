@@ -18,6 +18,7 @@ use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,19 +30,23 @@ class LocaleSetter
 {
     private $localeManager;
     private $container;  
+    private $request;
     /**
      * @InjectParams({
      *     "localeManager"  = @Inject("claroline.common.locale_manager"),
-     *     "container"      = @DI\Inject("service_container")
+     *     "container"      = @DI\Inject("service_container"),
+     *     "requestStack"   = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
             LocaleManager $localeManager, 
-            ContainerInterface $container
+            ContainerInterface $container,
+            RequestStack $requestStack
             )
     {
         $this->localeManager = $localeManager;
         $this->container = $container;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
@@ -55,6 +60,13 @@ class LocaleSetter
     {
         $request = $event->getRequest();
         $token = $this->container->get('security.context')->getToken();
+        
+        $lang = $request->query->get('lang');
+        
+        if ( $lang && in_array( $lang, $this->localeManager->getAvailableLocales() )) {
+            $request->setLocale($lang);
+            return;
+        }
         
         if ( $token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken ) {
             /* If anon. user, either serve the browser langage or if not applicable, the platform langage */
