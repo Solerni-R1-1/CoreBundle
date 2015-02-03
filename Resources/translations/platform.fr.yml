@@ -608,7 +608,6 @@ results_for_search_on: 'Résultats de la recherche sur'
 right: Droit
 rights: Droits
 rights_management: 'Gestion des droits'
-
 role: Rôle
 role_creation: 'Création d''un rôle'
 role_edition: 'Modification d''un rôle'
@@ -624,7 +623,6 @@ search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
 see: Voir
-
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select_all: 'Tout sélectionner'
@@ -661,7 +659,7 @@ show: Voir
 show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
-show_profile: 'Voir le profile'
+show_profile: 'Voir le profil'
 simple: Simple
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
@@ -741,7 +739,6 @@ upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
 url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
-
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
@@ -823,7 +820,6 @@ workspace_resource: Ressources
 workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
-
 workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
 workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_template_form_name: Nom
@@ -846,7 +842,6 @@ manage_tools: Gérer les outils
 create_role: Créer un rôle
 uncompress_file: Décompresser le fichier si possible
 your_username: 'Votre nom d''utilisateur est '
-
 #Custom Solerni
 connect_with_mail: 'Je me connecte avec mon email'
 register_with_mail: 'Je m''inscris avec mon email'
@@ -904,16 +899,13 @@ read_faq: 'Consulter les FAQ'
 more_about_badges: 'En savoir plus sur les badges'
 workgroup: 'Collaborer'
 workgroup_title: 'Le groupe de travail du MOOC'
-
 my_badge_details: 'Consulter mon badge en détail'
 go_to_evaluation: 'Aller dans mon espace d''évaluation'
 get_this_badge: 'Obtenir ce badge'
 my_evals: 'Mes évaluations'
 get_more_badges: 'Obtenir plus de badges'
 show_my_evals: Afficher mes évaluations
-
 back_to_parameters: 'Retour à l''administration'
-
 #Mooc Form Edit
 workspace_form_isMooc: 'Mooc'
 claroline_corebundle_mooc: 'Formulaire d''édition du MOOC'
@@ -955,14 +947,12 @@ claroline_corebundle_mooc_showWorkGroup: 'Onglet "Collaborer"'
 claroline_corebundle_mooc_workGroup: 'Contenu de l''onglet "Collaborer"'
 choose_blog_mooc: -- Choisir un blog pour le mooc --
 
-
 workspace_edit: 'Paramètres du workspace'
 mooc_edit: 'Paramètres du MOOC'
 sessions_edit: 'Gestion des sessions du MOOC'
 add_session: 'Créer une nouvelle session'
 delete_session: 'Supprimer la session'
 #categories
-
 mooc_categories: 'Catégories des MOOCs'
 mooc_categories_create: 'Créer une catégorie'
 mooc_categories_list: 'Liste des catégories'
@@ -973,7 +963,6 @@ mooc_category_edit: 'Nom de la catégorie'
 mooc_category_create: 'Nom de la catégorie'
 delete_category_confirm_message: Supprimer une catégorie
 delete_category_confirm_title: Supprimer cette catégorie
-
 mooc_owners: 'Propriétaires de MOOCs'
 mooc_owner_create: 'Créer un propriétaire'
 mooc_owner_list: 'Liste des propriétaires'
@@ -982,14 +971,12 @@ mooc_owner_edit: 'Propriétaire à éditer'
 mooc_owner_create: 'Créer un propriétaire'
 delete_owner_confirm_message: Supprimer un propriétaire
 delete_owner_confirm_title: Supprimer ce propriétaire
-
 claroline_corebundle_mooc_owner_name: 'Nom du propriétaire'
 claroline_corebundle_mooc_owner_description: 'Slogan ou description'
 claroline_corebundle_mooc_owner_logoPath: 'Logo'
 claroline_corebundle_mooc_owner_logoFile: 'Choisir un logo'
 claroline_corebundle_mooc_owner_dressingPath: 'Image d''habillage'
 claroline_corebundle_mooc_owner_dressingFile: 'Choisir une image d''habillage'
-
 mooc_accessconstraints: 'Règles d''accès aux MOOCs'
 mooc_accessconstraints_create: 'Créer un ensemble de règles d''accès'
 mooc_accessconstraints_list: 'Liste des règles d''accès'
@@ -997,12 +984,10 @@ mooc_accessconstraints_list_empty: 'Aucun ensemble de règles d''accès'
 mooc_accessconstraints_edit: 'Modifier une Règle d''accès'
 delete_accessConstraint_confirm_message: Supprimer une règle d'accès
 delete_accessConstraint_confirm_title: Supprimer cette règle d'accès
-
 claroline_corebundle_mooc_accessconstraints_name: 'Nom de l''ensemble de règles'
 claroline_corebundle_mooc_accessconstraints_whitelist: 'Liste blanche'
 claroline_corebundle_mooc_accessconstraints_patterns: 'Patterns'
 claroline_corebundle_mooc_accessconstraints_moocOwner: 'Propriétaire'
-
 
 create_mooc: Créer un mooc
 search_engine: Moteur de recherche
@@ -1013,7 +998,6 @@ mooc_list: Liste des MOOCs
 mooc_parameters: Editer le MOOC
 entity_cannot_be_deleted: 'Cette entité ne peut pas supprimée car associée aux MOOCs suivants :'
 workspace_parameters: 'Paramètres du workspace'
-
 mooc_by_entreprise: Les Moocs proposés par %entreprise%
 proposed_by: Proposé par
 know_more: En savoir +
@@ -1035,26 +1019,20 @@ to_come: A venir
 over: Terminé
 no_moocs_owner: Pas de Mooc disponible pour cette entreprise
 no_evals_yet: <p>Vous n'avez pas d'évaluations en cours.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
-
 new message: Nouveau message
 add_destinataires : Ajouter le(s) destinataire(s)
-
 mailsystem: Messagerie
 dashboard_widget_message_default_text: Retrouvez votre dernier message dans cet espace
 show_mailsystem: Afficher ma messagerie
 last_message: 'Dernier message :'
 @at: à
-
 no_badges: Aucun badge obtenu
 dashboard_widget_badges_default_text: Rejoignez un Mooc et tentez d'obtenir des badges !
 show_badges: Afficher mes badges
 last_badge: 'Dernier badge obtenu :'
-
 no_evals: Aucune évaluation en cours
 dashboard_widget_evals_default_text: Rejoignez un Mooc et passez un badge de compétences
-
 in_progress_badges: %number% évaluation%plural% en cours
-
 choose_lesson_mooc: -- Choisir un cours pour le mooc --
 choose_language_mooc: -- Choisir une langue --
 fr_FR: Français
@@ -1065,7 +1043,6 @@ choose_replay_mooc: -- Choisir une action --
 mooc_can_replay: Rejouable
 mooc_cannot_replay: Non rejouable
 mooc_choose_owner: -- Choisir un propriétaire pour ce MOOC --
-
 session_start_date: Début de session
 session_end_date: Fin de session
 session_start_subscription: Début pour l'inscription
@@ -1076,7 +1053,6 @@ session_choose_forum: -- Choisir un forum de session --
 constraint_whitelist: Liste blanche<br><span style="font-weight:normal">(1 adresse email par ligne)</span>
 constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@domaine.ext, 1 par ligne)</span>
 constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
-
 
 fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
 see_all_owner_moocs: Voir tous les moocs
@@ -1095,7 +1071,6 @@ mooc_analytics_user_mail: Adresse e-mail
 mooc_analytics_publisher_nb_pub: Nombre de publications
 mooc_analytics_users_nb_logs: Activité
 mooc_analytics_users_nb_published_posts: Nombre de messages publiés
-
 mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
 mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
 mooc_analytics_keynumbers_subscriptions_today: "Nombre d'inscrits du jour"
@@ -1105,10 +1080,8 @@ mooc_analytics_keynumbers_connection_hour: "Plage horaire moyenne la plus connec
 mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active"
 mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum"
 mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour"
-
 mooc_analytics_theme_name: Nom du sujet 
 mooc_analytics_theme_nb_posts: Nombre de publications dans le sujet
-
 mooc_analytics_export: Exportez les données du MOOC
 export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances
 export_badge_skill: Classement des utilisateurs participant aux badges de compétences
@@ -1119,7 +1092,6 @@ export_users_validations_stats: Liste des comptes validés
 export_active_users: Liste des utilisateurs actifs/inactifs
 export_users_activity: Classement des utilisateurs par nombre d'activités
 export_forum_stats: Classement des utilisateurs par nombre de publications
-
 subscriptionStats: Suivi des inscriptions
 hourlyAudience: Connexions et activités par heure
 mooc_forum_publication: Publication dans le forum
@@ -1128,39 +1100,32 @@ mooc_badges_knowledge_piechart: Répartition des badges de connaissances par sta
 mooc_badges_skill_piechart: Répartition des badges de compétences par statut
 mooc_badges_knowledge_chart: Répartition cumulée des badges de connaissances
 mooc_badges_skill_chart: Répartition cumulée des badges de compétences
-
 mooc_register_modal_title: '<b>Bienvenue</b>,'
 mooc_register_modal_mooc_name: 'Vous vous êtes inscrit au MOOC "%moocName%".'
 mooc_register_modal_mooc_date: 'Le cours n''a pas commencé : <strong>il débutera le %moocDate% prochain.</strong>'
 mooc_register_modal_text: 'Nous vous enverrons une notification quelques jours avant le début des cours afin de vous rappeler la date de début du MOOC.'
 mooc_register_modal_text2: 'A très bientôt.'
-
 mooc_register_modal_text_started: 'Le cours est ouvert : vous pouvez y accéder dès à présent.'
 mooc_register_modal_text2_started: 'Bon MOOC !'
-
 
 user_wish_to_unsubscribe: Vous souhaitez vous désinscrire de Solerni ?
 unsubscribe_self: se désinscrire
 back_to_profile: Retour au profil
-
 slrn_public_profile_undiscoverable: Profil privé
 slrn_public_profile_undiscoverable_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
 public_profile_undiscoverable_anonymously: Profil privé
 public_profile_undiscoverable_anonymously_text: Désolé, le profil de <span class="slrn-bold">%first_name% %last_name%</span> n'est pas disponible
 profile_options_personalize: Options de personnalisation
 slrn_edit_public_profile: Gérer les préférences du profil public
-
 slrn_my_public_profile: Mon profil public
 slrn_unsubscribe_me: Se désinscrire de Solerni
 slrn_solerni_unsubscribe_intro: Etes-vous sûr de vouloir vous désinscrire de Solerni ?
 slrn_solerni_unsubscribe_text: Une fois que vous serez désinscrit, vous ne pourrez plus consulter votre parcours au sein des moocs auxquels vous êtes inscrit.
 yes_unsubscribe_me: Oui, me désinscrire de Solerni
 no_unsubscription: Non, conservez mon compte
-
 analytics_keynumbers_footnote: '(1) Nombre d''utilisateurs actifs : nombre d''apprenants s''étant connectés au moins 1 fois durant les 7 derniers jours'
 subscriptions_connections: Inscriptions et connexions
 forum: Forum
-
 subscriptionStatsDescription: Suivez l'évolution des inscriptions au MOOC
 activeUsersDescription: Un utilisateur actif est un utilisateur qui s'est connecté au moins une fois au cours des 7 derniers jours
 hourlyAudienceDescription: Découvrez quelle est la plage horaire la plus active (nombre d'actions enregistrées en simultané) et quelle est la plage horaire la plus connectée (nombre de connexions enregsitrées en simultané)
@@ -1185,13 +1150,10 @@ ParticipationRateBadge: Taux de participation au badge
 ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge
 isvalid: Statut
 to_workspace_members: aux collaborateurs du workspace
-
 currentPassword: Mot de passe actuel
 edit_password_error_current : Le mot de passe actuel saisit ne correspond pas à votre mot de passe actuel.
-
 export_csv: 'Exporter en CSV'
 export_mail: 'Exporter les adresses mail'
-
 #Page contact
 contact_general: Général
 contact : Nous contacter
@@ -1214,9 +1176,7 @@ contact_mail : Email du service
 contact_success : Votre message a bien été envoyé.
 remove_contact_confirm_message : Êtes-vous sûr de vouloir supprimer ce service
 #Page contact
-
 message_send : Votre message a bien été envoyé.
-
 #Page mes badges
 badges_tous : Tous les moocs
 badges_nomooc : Badges Solerni
@@ -1230,7 +1190,6 @@ badges_description : Description
 badges_critere : Critère d'obtention
 badges_actions : Actions qui ont mené à l'attribution de ce badge
 #Page mes badges
-
 no_mooc_followed: Aucun mooc à afficher
 connect_with_facebook: Je me connecte avec Facebook
 all_fields_mandatory: Tous les champs sont obligatoires
@@ -1246,7 +1205,6 @@ i_connect_now: Je me connecte maintenant
 no_account: Je n'ai pas de compte, je m'inscris
 solerni_question_reverse: Vous n'avez pas de compte Solerni ?
 create_account: Créez un compte à partir de votre email ou inscrivez-vous avec Facebook
-
 discover_solerni: Découvrez Solerni
 discover_catalogue: Découvrez Le catalogue Solerni
 moocs: Moocs
@@ -1261,16 +1219,13 @@ partners: Partenaires
 legals: Mentions légales
 cgu: CGU / Charte
 faq: FAQ
-
 start_on: Début le
 end_on: Fin le
 badgeant: Badgeant
 free_mooc: Mooc gratuit
 available_on: Disponible le
-
 see_my_profil: Voir mon profil
 my_mailsystem: Ma messagerie
-
 badge: Badge
 still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obtenir
 gain_on: Obtenu le
@@ -1280,7 +1235,6 @@ follow_us_on: Suivez-nous sur
 consult_catalog: Consulter le catalogue
 discover_solerni_moocs: Découvrez les moocs<br>proposés par Solerni
 still_no_moocs: Vous n'avez pas rejoint de MOOC ? Solerni vous propose
-
 'Accéder au cours': Accéder au cours
 'En savoir +': En savoir +
 my_progression: Ma progression
@@ -1298,20 +1252,17 @@ female: Féminin
 male: Masculin
 no_tell: Je ne veux pas le dire
 your_moocs_visibility: Visibilité des moocs auquels vous participez
-
 indexer_admin: Administration des entités indexées
 select_indexable_entities: Sélectionner les entités à indexer
 form_requeue_all: Vider l'index pour le recréer
 private_masculin: privé
 Session: Session
-
 sorry: Désolé
 internal_server_error: Erreur interne du serveur.
 get_back_message: Vous pouvez revenir à <a href="javascript:history.back()">la page précédente</a> ou à <a href="/">l'accueil.</a>
 wrong_request: La syntaxe de votre requête est erronée.
 forbidden_url: Vous n'avez pas l'autorisation d'accéder à cette page.
 page_not_found: La page que vous souhaitez afficher n'existe pas.
-
 sinformer: S'informer
 sinformer_title: Accéder au blog
 workgroup_title: Accéder au groupe de travail
@@ -1321,7 +1272,6 @@ discuter: Discuter
 discuter_title: Participer au forum
 partager: Partager
 partager_title: Accéder au gestionnaire de ressources
-
 essentials: Les essentiels
 start_date: Date de début
 end_date: Date de fin
@@ -1353,7 +1303,6 @@ prerequisite: Pré-requis
 no_prerequisite: Aucun pré-requis
 school_team: Equipe pédagogique
 share: Partager
-
 success: Succès
 failure: Echec
 in_progress: En cours
@@ -1390,5 +1339,3 @@ user_not_trying_badge: utilisateurs ne participant pas au badge
 key_data_badge_rate: %$totalUsers% utilisateurs inscrits au MOOC.<br>%totalBadgeUsers% participent au badge.<br>%totalNonBadgeUsers% ne participent pas.
 pseudo: pseudo
 x_selected: %number% sélectionné%plural%
-#sent
-no_mooc_today: Vous ne suivez aucun Mooc en ce moment
