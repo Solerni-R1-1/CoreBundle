@@ -249,7 +249,7 @@
                 {# OPTIN #}
                 {% if form.accepted_com_terms is defined %}
                 <div class="form-group row">
-                    <label class="control-label col-md-3 ">Autorisation d'exploitation</label>
+                    <label class="control-label col-md-3 ">{{'authorize_exploitation'|trans({}, 'platform')}}</label>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.accepted_com_terms) }}
                         <label for="profile_form_accepted_com_terms" style="font-weight: normal">{{ form.accepted_com_terms.vars.label|trans({}, 'platform') }}</label>

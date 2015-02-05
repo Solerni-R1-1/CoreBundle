@@ -1,6 +1,6 @@
 'Action List': 'Actions list'
 'Actions per day': 'Number of actions per day'
-'Activate the terms of service in the platform': 'Activate the terms and conditions of use on the platform'
+'Activate the terms of service in the platform': 'Activate the terms of use on the platform'
 'Add a logo': 'Add a logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check that the file size does not exceed the authorised size'
 'Audience/user visits': 'Audience/User visits'
@@ -12,7 +12,7 @@
 'Filter actions': 'Filter the actions'
 'First name': First name
 'Google HTML tag validation': 'HTML tag for Google validation'
-'I accept the terms of service': 'I accept the terms and conditions of use'
+'I accept the terms of service': 'I accept the terms of use'
 'I agree that my personal information be used for commercial purposes' : 'I accept that my personal information can be used for commercial purposes '
 'Last action': '{1} Last action|[1,Inf] %logAmount% Last actions'
 'Last name': Surname
@@ -84,13 +84,13 @@ add_roles_confirm_message: 'Would you like to add the following role(s) to %coun
 add_sessions_confirm_message: 'As well as add the selected element(s) to the session(s):'
 add_subcategory: 'Add a sub-category'
 add_tag: 'Add a Tag'
-add_tag_to_workspace: 'Add a Tag to the activities space'
+add_tag_to_workspace: 'Add a Tag to the workspace'
 add_user: 'Add a user'
 add_user_s_confirm_message: 'user(s) added'
 add_users: 'Add users'
 modify_users: 'Change users'
 add_widget_to_home_tab: 'Add a widget to the tab'
-add_workspace: 'Add an activities space'
+add_workspace: 'Add an workspace'
 admin: Administrator
 admin_analytics: 'Platform statistics'
 admin_analytics_no_data: 'No data.'
@@ -103,9 +103,9 @@ administrative_code: 'Administrative code'
 advanced: Advanced
 agenda: Schedule
 all: All
-all_available_workspaces: 'All available activities spaces'
-all_my_workspaces: 'All my activities spaces'
-all_workspaces: 'All activities spaces (public)'
+all_available_workspaces: 'All available workspaces'
+all_my_workspaces: 'All my workspaces'
+all_workspaces: 'All workspaces (public)'
 already_existing_user: 'The user already exists.'
 an_error_occured_message: 'An error has occurred. Please contact the administrator.'
 analytics_connections: 'User visits'
@@ -118,7 +118,7 @@ appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category must be selected'
 available_widgets: 'Available widgets'
-available_workspaces: 'Available activities spaces'
+available_workspaces: 'Available workspaces'
 back: Return
 back_to_profile: 'Return to profile'
 bad_request: 'The query is incorrect. If you have arrived at this page via an internal link, please inform the platform administrator of this problem.'
@@ -135,7 +135,7 @@ canExport: 'Right to export'
 canOpen: 'Right to open'
 cancel: Cancel
 cannot_delete_unique_manager: 'It is impossible to delete the only manager.'
-cannot_unsubscribe_from_workspace: 'It is impossible to unsubscribe you from the activities space'
+cannot_unsubscribe_from_workspace: 'It is impossible to unsubscribe you from the workspace'
 captcha: Captcha
 categories: Categories
 categories_organization: 'Organisation of categories'
@@ -169,7 +169,7 @@ create_role: Create a role
 create_subcategory: 'Create a sub-category'
 create_user: 'Create a user'
 create_widget_instance: 'Create a new Widget'
-create_workspace: 'Create an activities space'
+create_workspace: 'Create an workspace'
 creation: Creation
 creation_date: 'Creation date'
 creator: Creator
@@ -287,7 +287,7 @@ file_form_shareType_0: Yes
 file_form_shareType_1: No
 files: Files
 filter: Filter
-find_workspaces: 'All public activities spaces'
+find_workspaces: 'All public workspaces'
 firstName: First name
 first_name: First name
 forgot_password: 'Forgotten password?'
@@ -314,7 +314,7 @@ groups: Groups
 groups_list: 'Groups list'
 groups_per_page: 'Groups per page'
 groups_per_page: Groups per page
-groups_registration_in_workspace: 'Group registration for the activities space'
+groups_registration_in_workspace: 'Group registration for the workspace'
 has_been_put_in_category: 'has been placed in the category'
 has_been_suscribed_with_role: 'has been registered with the role'
 has_been_suscribed_with_role_group: 'has been registered with the role'
@@ -364,9 +364,9 @@ line_number: 'Line %line%:'
 line_per_page: 'Results per page'
 link: Link
 link_outdated: 'This link is no longer valid'
-list_groups: 'List the groups'
-list_users: 'List the users'
-list_workspaces: 'All the activities spaces'
+list_groups: 'Groups list'
+list_users: 'Users list'
+list_workspaces: 'All the workspaces'
 lock: Lock
 login: Login
 login_failure: 'Connection failed. Please check that your user name and password are correct.'
@@ -432,13 +432,13 @@ my_agenda: 'My schedule'
 my_applications: 'My applications'
 my_badges: 'My badges'
 my_contacts: 'My contacts'
-my_favourite_workspaces: 'My favourite activities spaces'
+my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
 my_profile: My profile
 my_resources: 'My resources'
 my_workspace: 'Personal space'
-my_workspaces: 'My activities spaces'
+my_workspaces: 'My workspaces'
 name: Name
 new: New
 new_message: 'New message'
@@ -456,7 +456,7 @@ no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search has returned no results.'
 no_tag: 'There is no Tag'
 no_user: 'No user'
-no_workspace: 'There is no activities space'
+no_workspace: 'There is no workspace'
 no_session_choice: 'No session'
 none: None
 not_allowed_message: 'You are not authorised to perform this action.'
@@ -469,7 +469,7 @@ notify_user_list: 'Users to be notified'
 oauth: Oauth
 object: Subject
 ok: Ok
-only_for_creation: 'Only for the creation of an activities space'
+only_for_creation: 'Only for the creation of an workspace'
 open: Open
 operation_done: 'Operation successful.'
 options: Options
@@ -535,8 +535,8 @@ public_profile_undiscoverable_text: 'We have not found any profile corresponding
 public_profile_url_tuning_only_once: 'You can only personalise your public profile URL once'
 public_registration: 'Public registration'
 public_url_help: 'Note :'
-public_empty: 'There is no public activities space'
-public_workspaces: 'Public activities spaces'
+public_empty: 'There is no public workspace'
+public_workspaces: 'Public workspaces'
 profile_description_title: Find out more about me
 profile_form_gender: Sex
 profile_form_city: Town/City
@@ -550,13 +550,13 @@ profile_form_googlePlus: Google+
 recursive_dir_action: 'Apply to directory and sub-directories content'
 redirect_after_login: 'Go back to last page visited'
 register: Registration
-register_to_a_public_workspace: 'Registration for a public activities space'
+register_to_a_public_workspace: 'Registration for a public workspace'
 register_to_a_workspace: 'Register for a space'
 registered: Registered
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration: Registration
-registration_to_workspaces: 'Registration for an activities space'
+registration_to_workspaces: 'Registration for an workspace'
 remove_group_confirm_message: 'Are you sure you wish to delete this group?'
 remove_group_s_confirm_message: 'Are you sure you wish to delete these %count% groups?'
 remove_message_confirm_message: 'Are you sure you wish to delete this message?'
@@ -564,10 +564,10 @@ remove_message_s_confirm_message: 'Are you sure you wish to delete these %count%
 remove_subcategory: 'Remove the sub-category'
 remove_user_confirm_message: 'Are you sure you wish to delete this user?'
 remove_user_s_confirm_message: 'Are you sure you wish to delete these %count% users?'
-remove_confirm: 'Are you sure you wish to delete this activities space?'
-remove_from_category_confirm_message: 'Are you sure you wish to remove this activities space from this category?'
-remove_from_category_confirm_title: 'Removing an activities space from a category'
-remove_workspaces_confirm: 'Are you sure you wish to delete these %count% activities spaces?'
+remove_confirm: 'Are you sure you wish to delete this workspace?'
+remove_from_category_confirm_message: 'Are you sure you wish to remove this workspace from this category?'
+remove_from_category_confirm_title: 'Removing an workspace from a category'
+remove_workspaces_confirm: 'Are you sure you wish to delete these %count% workspaces?'
 rename: Rename
 rename_category: 'Rename the category'
 rename_tool: 'Renaming a tool'
@@ -617,12 +617,12 @@ roles: Roles
 roles_management: 'Roles management'
 save: Save
 save_as_template: 'Save as template'
-save_as_template: 'Save activities space as template'
+save_as_template: 'Save workspace as template'
 search: Search
 search_maj: SEARCH
 search_group: 'Search for a group'
 search_user: 'Search for a user'
-search_workspace: 'Search for an activities space'
+search_workspace: 'Search for an workspace'
 see: View
 
 see_more: 'View more'
@@ -633,9 +633,9 @@ select_contacts_title: 'Select recipient(s)'
 select_groups_for_registration_to_workspace: 'Choose groups for registration'
 select_roles_to_assign: 'Select roles to be assigned'
 select_users_for_registration_to_workspace: 'Choose users for registration'
-select_workspaces_for_registration: 'Choose activities spaces for registration'
-selected_workspaces_for_registration: 'Activities spaces selected for registration'
-selected_workspaces_will_be_put_in_it: 'The selected activities spaces will be available'
+select_workspaces_for_registration: 'Choose workspaces for registration'
+selected_workspaces_for_registration: 'Workspaces selected for registration'
+selected_workspaces_will_be_put_in_it: 'The selected workspaces will be available'
 send: Send
 send_mail: 'Send an e-mail'
 send_mail_form_content: Message
@@ -686,7 +686,7 @@ text_form_name: Name
 text_form_shareType: Redistribution
 text_form_text: Text
 the_following_users_were_not_imported: 'The following users could not be imported:'
-the_workspace: 'The activities space'
+the_workspace: 'The workspace'
 this_page_requires_authentication: User authentication is required for this page. Please log in.'
 time_col: 'Duration column'
 tinymce_all_buttons: All tools
@@ -713,8 +713,8 @@ top_resources_views: 'Most viewed resource'
 top_users_connections: 'Most frequently connected user'
 top_users_workspaces_enrolled: 'User registered to the most modules'
 top_users_workspaces_owners: 'User who has created the most modules'
-top_workspaces_connections: 'Most visited activities space'
-top_workspaces_resources: 'Activities space with the most resources'
+top_workspaces_connections: 'Most visited workspace'
+top_workspaces_resources: 'Workspace with the most resources'
 total: Total
 trash: Trash
 tune: 'Personalise'
@@ -731,7 +731,7 @@ unable_to_start_transport: 'The connection with the e-mail server could not be e
 unauthorized: 'You are not authorised to visit this page.'
 under_min_length: 'This value is too short'
 unregister: Unsubscription
-unregister_from_a_workspace: 'Unsubscribe me from an activities space'
+unregister_from_a_workspace: 'Unsubscribe me from an workspace'
 unregistered: 'Not registered'
 unregistered_groups: 'Non registered groups'
 unregistered_users: 'Non registered users'
@@ -762,7 +762,7 @@ users_management: 'User management'
 users_minimum_requirement_msg: 'Users must meet these conditions:'
 users_per_page: 'Users per page'
 users_per_page: Users per page
-users_registration_in_workspace: 'User registration for the activities space'
+users_registration_in_workspace: 'User registration for the workspace'
 users_visits: 'User visits'
 validate: Submit
 verification: 'Verification'
@@ -781,15 +781,15 @@ widget_home_tab_delete_confirm_title: 'Removal of tab widgets'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widget configuration'
-workspace.create: 'Create an new activities space'
+workspace.create: 'Create an new workspace'
 workspace.name_not_blank: 'Please enter a name for this workspace.'
-workspace: 'Activities space'
+workspace: 'Workspace'
 workspace_administration: Administration
-workspace_classification: 'Classification of activities spaces'
-workspace_delete: 'Delete the activities space'
-workspace_delete_confirm_message: 'Are you sure you wish to delete this activities space?'
+workspace_classification: 'Classification of workspaces'
+workspace_delete: 'Delete the workspace'
+workspace_delete_confirm_message: 'Are you sure you wish to delete this workspace?'
 workspace_delete_confirm_title: 'Confirmation of deletion'
-workspace_delete_success_message: 'The "%workspaceName%" activities space has been deleted.'
+workspace_delete_success_message: 'The "%workspaceName%" workspace has been deleted.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Creation date'
 workspace_edit_form_creator : 'Space creator'
@@ -808,17 +808,17 @@ workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unsubscription'
 workspace_form_template: Template
 workspace_form_type: Type
-workspace_home_tab_creation: 'Tab creation for the activities spaces'
-workspace_home_tab_edition: 'Tab editing for the activities spaces'
-workspace_home_tabs: 'Tabs for the activities spaces'
-workspace_list: 'Activities spaces list'
-workspace_list: Activities spaces list
+workspace_home_tab_creation: 'Tab creation for the workspaces'
+workspace_home_tab_edition: 'Tab editing for the workspaces'
+workspace_home_tabs: 'Tabs for the workspaces'
+workspace_list: 'Workspaces list'
+workspace_list: Workspaces list
 workspace_order_tool_edit_form_name: Name
-workspace_registration_confirm_title: 'Do you want to register for the activities space?'
+workspace_registration_confirm_title: 'Do you want to register for the workspace?'
 workspace_registration_message: 'You have been registered to the %workspace_name% activity space'
 workspace_registration_message_object: 'Registration to an activity space'
-workspace_remove_from_category_confirm_message: 'Do you really want to remove the activities space from this category ?'
-workspace_remove_from_category_confirm_title: 'Removing an activities space from a category'
+workspace_remove_from_category_confirm_message: 'Do you really want to remove the workspace from this category ?'
+workspace_remove_from_category_confirm_title: 'Removing an workspace from a category'
 workspace_resource: Resources
 workspace_role_type_form_requireDir: 'Create a directory'
 workspace_role_type_form_translationKey: Name
@@ -828,15 +828,15 @@ workspace_tag_remove_confirm_message: 'Do you really want to remove this categor
 workspace_tag_remove_confirm_title: 'Removal of a category'
 workspace_template_form_name: Name
 workspace_tools: Tools
-workspace_unregistration_confirm_title: 'Do you want to unsubscribe from this activities space?'
+workspace_unregistration_confirm_title: 'Do you want to unsubscribe from this workspace?'
 workspace_welcome: Home
-workspaces: 'Activities spaces'
-workspaces_included_in_category: 'Activities spaces registered in this category'
-workspaces_management: 'Activities spaces management'
+workspaces: 'Workspaces'
+workspaces_included_in_category: 'Workspaces registered in this category'
+workspaces_management: 'Workspaces management'
 workspaces_per_page: 'Spaces per page'
 wrong_captcha : 'The code does not correspond with the image indicated'
 ws_creator: 'Spaces creator'
-ws_most_viewed: 'Most visited activities spaces'
+ws_most_viewed: 'Most visited workspaces'
 yes: yes
 yesterday_activity: 'Monitoring activity'
 your_current_url: 'Your current URL'
@@ -889,10 +889,10 @@ previous_lesson: 'Previous subject or activity'
 next_lesson: 'Next subject or activity'
 lesson_button_done_tooltip: 'Click to validate this stage'
 lesson_button_undone_tooltip: 'Click if you do not wish to validate this stage'
-cgu_terms_label: 'I have read and accept the general terms and conditions of use'
-cgu_terms_invalid: 'You must accept the general terms and conditions of use'
+cgu_terms_label: 'I have read and accept the general terms of use'
+cgu_terms_invalid: 'You must accept the general terms of use'
 cgu_terms_label_partial: 'I have read and accept the'
-cgu_terms_link: 'general terms and conditions of use'
+cgu_terms_link: 'general terms of use'
 page_my_badges: 'Obtain badges'
 ou: 'Or'
 add_file: 'Add a file'
@@ -1040,13 +1040,13 @@ add_destinataires : Add recipient(s)
 mailsystem: Inbox
 dashboard_widget_message_default_text: Find your last message in this space
 show_mailsystem: Display my inbox
-last_message: 'Last message :'
+last_message: 'Last message:'
 @at: to
 
 no_badges: No badge obtained
 dashboard_widget_badges_default_text: Join a MOOC and try to obtain badges!
 show_badges: Display my badges
-last_badge: Last badge obtained
+last_badge: 'Last badge obtained:'
 no_evals: No evaluation in progress
 dashboard_widget_evals_default_text: Join a MOOC and get a skill badge
 in_progress_badges: %number% evaluation%plural% in progress
@@ -1139,7 +1139,7 @@ slrn_solerni_unsubscribe_intro: Are you sure you want to unsubscribe from Solern
 slrn_solerni_unsubscribe_text: Once you unsubscribe, you will not be able to access the learning pathway for the MOOCs you are registered for.
 yes_unsubscribe_me: Yes, unsubscribe from Solerni
 no_unsubscription: No, keep my account
-analytics_keynumbers_footnote: '(1) Number of active users :'
+analytics_keynumbers_footnote: '(1) Number of active users : learners that have been connected at least once in the past seven days'
 subscriptions_connections: Registrations and logins
 forum: Forum
 subscriptionStatsDescription: Monitor changes to MOOC registrations
@@ -1354,3 +1354,9 @@ user_not_trying_badge: users not participating in the badge
 key_data_badge_rate: %$totalUsers% registered to the MOOC.<br>%totalBadgeUsers% participating in the badge.<br>%totalNonBadgeUsers% not participating.
 pseudo: nickname
 x_selected: %number% selected
+
+fr: Français
+en: English
+es: Español
+
+authorize_exploitation: Privacy

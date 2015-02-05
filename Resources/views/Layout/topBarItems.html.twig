@@ -25,8 +25,18 @@
     </li>
 {% endmacro %}
     
+
+{# list available languages #}
+{% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
+{% for language in app.session.get('availableLanguages') %}
+    {% if currentLocale == language.shorthand %}
+        {% set currentLocaleFull = language.fullName %}
+    {% endif %}
+{% endfor %}
+    
 {# END MACRO START RENDER #}
 {% block topBar %}
+
     
     {% block leftSide %}{% endblock leftSide %}
     
@@ -150,8 +160,35 @@
             {% set logoutPath = path('claro_security_logout') %}
         {% endif %}
         {{ topbar.item({ 'name':'logout', 'href':logoutPath, 'icon':'remove', 'route':'logout',  'css':'slrn-topbar-item__sub slrn-topbar--logout'  }) }}
-        
-
     {% endblock dropdownLogged %}
+            
+    {% block language %}      
+        {% import _self as topbar %}
+        {{ topbar.item({
+            'name': currentLocaleFull, 
+            'icon':'', 
+            'route':'', 
+            'dropdown':block('dropdownLangage'), 
+            'css':'slrn-topbar-item slrn-topbar--language' 
+        }) }}
+    {% endblock language %}
+                    
+    {% block dropdownLangage %}
+        {% import _self as topbar %}
+        {% for language in app.session.get('availableLanguages') %}
+            {% if language.shorthand == currentLocale %}
+                {% set langIcon = 'ok' %}
+            {% else %}
+                {% set langIcon = '' %}
+            {% endif %}
+            {{ topbar.item({
+                'name': language.fullName,
+                'href': '?lang=' ~ language.shorthand,
+                'icon': langIcon,
+                'route': '',
+                'css':'slrn-topbar-item__sub'
+        }) }}
+        {% endfor %}
+    {% endblock dropdownLangage %}
 
 {% endblock topBar %}

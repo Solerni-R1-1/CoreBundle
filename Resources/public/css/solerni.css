@@ -133,6 +133,19 @@ body.subnavbar-fixed {
     background-clip: padding-box;
     z-index: 1090; /* OVERRIDE ABSURDLY HIGH VALUE IN BOOTSTRAP */
 }
+
+.navbar-inverse .navbar-nav > .slrn-topbar--language a {
+    position:       relative;
+    padding-left:   2.5em;
+}
+
+.slrn-topbar--language .icon-ok {
+    position:           absolute;
+    left:               1em;
+    top:                4px;
+    text-decoration:    none;
+}
+
 .navbar-inverse .navbar-nav > .active > a,
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus { background-color: transparent; }
@@ -157,6 +170,17 @@ body.subnavbar-fixed {
     max-width: 395px;
     overflow: hidden;
     max-height: 50px;
+}
+
+/* special header when not connected */
+#top_bar .user-anon .slrn-topbar,
+#top_bar .user-anon .slrn-logo {
+    float:          left;
+    margin-right:   1em;
+}
+
+#top_bar .user-anon .slrn-top-right {
+    float: right;
 }
 
 #top_bar .slrn-top-header { 
@@ -2079,6 +2103,10 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 .slrn-profile-form .mce-edit-area {
     border: 2px solid #999 !important;
     border-radius: 4px !important;
+}
+
+#profile_form_gender label {
+    text-align: left;
 }
 
 .slrn-unsubscribe {

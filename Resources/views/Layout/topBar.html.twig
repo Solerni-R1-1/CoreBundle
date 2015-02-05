@@ -3,16 +3,11 @@
 {% block topBar %}
     <header id="top_bar" class="navbar navbar-inverse navbar-fixed-top slrn-navbar" role="navigation">
         <div class="container">
-             {# <div class="navbar-header">
-                MENU BUTTON WHEN RESIZED 
-                <button class="navbar-toggle" data-toggle="rm-collapse" data-target="rm-.navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>#}
-            <div class="rm-navbar-collapse rm-collapse slrn-top-header">
-                <a class="navbar-brand logo slrn-logo slrn-top-header__item" title="{{ 'solerni_homepage'|trans( {}, 'platform' ) }}" href="{{ path( 'solerni_static_page', { 'name': 'cms_url' } ) }}"></a>
+            <div class="rm-navbar-collapse rm-collapse slrn-top-header {% if app.user|default %}user-connected{% else %}user-anon{% endif %}">
+                <a class="navbar-brand logo slrn-logo slrn-top-header__item" 
+                    title="{{ 'solerni_homepage'|trans( {}, 'platform' ) }}" 
+                    href="{{ path( 'solerni_static_page', { 'name': 'cms_url' } ) }}">
+                </a>
                 <ul class="nav navbar-nav slrn-topbar slrn-top-header__item">
                     {{ block('whatIsSolerni') }}
                 </ul>
@@ -22,7 +17,9 @@
                         {{ block('logged') }}
                     {% else %}
                         {{ block('login') }}
+                        {{ block('language') }}
                     {% endif %}
+                    
                 </ul>
             </div>
         </div>
