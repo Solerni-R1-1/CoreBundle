@@ -24,7 +24,6 @@
         {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) %}<span class="slrn-item__marqueur"></span>{% endif %}
     </li>
 {% endmacro %}
-    
 
 {# list available languages #}
 {% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
