@@ -2,8 +2,8 @@
     <div class="container">
         <div class="col-md-4 text-cell">
             <img src="{{ asset('bundles/clarolinecore/images/logo_solerni_footer.png') }}" class="footer_logo" alt="" width="" height=""/>
-            <p class="footer_title">Apprendre, c'est toujours mieux ensemble</p>
-            <p>Solerni est une solution logicielle complète dédiée à la création et à l'hébergement de parcours d'apprentissage massifs collaboratifs</p>
+            <p class="footer_title">{{'solerni_footer_title'|trans({}, 'platform')}}</p>
+            <p>{{'solerni_footer_text'|trans({}, 'platform')}}</p>
         </div>
         <div class="col-md-2 footer-column ">
             <p class="footer_title">A propos de nous</p>
@@ -17,31 +17,31 @@
         <div class="col-md-2 footer-column ">
             <p class="footer_title">Support</p>
             <ul class="footer_cms_menu__column">
+                <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'faq'|trans({}, 'platform') }}</a></li>                
                 <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'contact_show' ) }}">{{ 'contact'|trans({}, 'platform') }}</a></li>
-                <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'faq'|trans({}, 'platform') }}</a></li>
             </ul>
         </div>
         <div class="col-md-2 footer-column ">
             <p class="footer_title">Suivez-nous</p>
             <a href="{{ path( 'solerni_static_page', { 'name': 'social_facebook' } ) }}" class="footer_social_link" target="_blank">
-                <span class="footer_social_link__icon social_facebook">{{ 'facebook'|trans({}, 'platform') }}</span>
-                <span class="footer_icon_text">{{ 'facebook'|trans({}, 'platform') }}</span>
+                <span class="footer_social_link__icon social_facebook">{{ 'facebook'|trans({}, 'platform') }}</span><!--
+                --><span class="footer_icon_text">{{ 'facebook'|trans({}, 'platform') }}</span>
             </a>
             <a href="{{ path( 'solerni_static_page', { 'name': 'social_twitter' } ) }}" class="footer_social_link" target="_blank">
-                <span class="footer_social_link__icon social_twitter">{{ 'twitter'|trans({}, 'platform') }}</span>
-                <span class="footer_icon_text">{{ 'twitter'|trans({}, 'platform') }}</span>
+                <span class="footer_social_link__icon social_twitter">{{ 'twitter'|trans({}, 'platform') }}</span><!--
+                --><span class="footer_icon_text">{{ 'twitter'|trans({}, 'platform') }}</span>
             </a>
             <a href="{{ path( 'solerni_static_page', { 'name': 'social_blog' } ) }}" class="footer_social_link">
-                <span class="footer_social_link__icon social_blog">{{ 'blog'|trans({}, 'platform') }}</span>
-                <span class="footer_icon_text">{{ 'blog'|trans({}, 'platform') }}</span>
+                <span class="footer_social_link__icon social_blog">{{ 'blog'|trans({}, 'platform') }}</span><!--
+                --><span class="footer_icon_text">{{ 'blog'|trans({}, 'platform') }}</span>
             </a>
         </div>
         <div class="col-md-2 footer-column ">
             <p class="footer_title">International</p>
             <ul class="slrn-footer-languageblock">
                 {% import 'ClarolineCoreBundle:Layout:topBarItems.html.twig' as topbar %}
+                {% use 'ClarolineCoreBundle:Partials:dropdownLanguages.html.twig' %}
                 {# list available languages #}
-                {# Duplicate code from topBarItems.html.twig. Should be a way to include it #}
                 {% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
                 {% for language in app.session.get('availableLanguages') %}
                     {% if currentLocale == language.shorthand %}
@@ -65,21 +65,3 @@
         </a>
     </div>
 </footer>
-
-{# Duplicate code from topBarItems.html.twig #}
-{% block dropdownLangage %}
-    {% for language in app.session.get('availableLanguages') %}
-        {% if language.shorthand == currentLocale %}
-            {% set langIcon = 'ok' %}
-        {% else %}
-            {% set langIcon = '' %}
-        {% endif %}
-        {{ topbar.item({
-            'name': language.fullName,
-            'href': '?lang=' ~ language.shorthand,
-            'icon': langIcon,
-            'route': '',
-            'css':'slrn-topbar-item__sub'
-    }) }}
-    {% endfor %}
-{% endblock dropdownLangage %}

@@ -24,7 +24,8 @@
         {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) %}<span class="slrn-item__marqueur"></span>{% endif %}
     </li>
 {% endmacro %}
-
+    
+    
 {# list available languages #}
 {% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
 {% for language in app.session.get('availableLanguages') %}
@@ -163,31 +164,14 @@
             
     {% block language %}      
         {% import _self as topbar %}
+        {% use 'ClarolineCoreBundle:Partials:dropdownLanguages.html.twig' %}
         {{ topbar.item({
             'name': currentLocaleFull, 
             'icon':'', 
             'route':'', 
-            'dropdown':block('dropdownLangage'), 
+            'dropdown':block('dropdownLangage'),
             'css':'slrn-topbar-item slrn-topbar--language' 
         }) }}
     {% endblock language %}
-                    
-    {% block dropdownLangage %}
-        {% import _self as topbar %}
-        {% for language in app.session.get('availableLanguages') %}
-            {% if language.shorthand == currentLocale %}
-                {% set langIcon = 'ok' %}
-            {% else %}
-                {% set langIcon = '' %}
-            {% endif %}
-            {{ topbar.item({
-                'name': language.fullName,
-                'href': '?lang=' ~ language.shorthand,
-                'icon': langIcon,
-                'route': '',
-                'css':'slrn-topbar-item__sub'
-        }) }}
-        {% endfor %}
-    {% endblock dropdownLangage %}
-
+            
 {% endblock topBar %}

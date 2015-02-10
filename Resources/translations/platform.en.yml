@@ -370,7 +370,7 @@ list_workspaces: 'All the workspaces'
 lock: Lock
 login: Login
 login_failure: 'Connection failed. Please check that your user name and password are correct.'
-logout: Log off
+logout: Sign out
 logs: monitoring
 mail: E-mail
 mail_click: 'Click on the link to reset your password'
@@ -485,7 +485,7 @@ parameters: Settings
 password: 'Password'
 password_mismatch: 'The passwords do not match.'
 password_ok: 'Your password has been changed. You can now log in.'
-paste: Place
+paste: Paste
 path: Location
 permissions: Permissions
 personal_workspace: 'Personal space - '
@@ -884,7 +884,7 @@ knowledge_badges: 'Knowledge badges'
 my_progress: 'My progress'
 badge_knowledge_short: 'Knowledge'
 badge_skill_short: 'Skills'
-lesson_button_done: 'Carried out'
+lesson_button_done: 'Mark as completed'
 previous_lesson: 'Previous subject or activity'
 next_lesson: 'Next subject or activity'
 lesson_button_done_tooltip: 'Click to validate this stage'
@@ -1131,7 +1131,7 @@ slrn_public_profile_undiscoverable: Private profile
 slrn_public_profile_undiscoverable_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
 public_profile_undiscoverable_anonymously: Private profile
 public_profile_undiscoverable_anonymously_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
-profile_options_personalize: Personalisation options
+profile_options_personalize: Personalization options
 slrn_edit_public_profile: Manage public profile preferences
 slrn_my_public_profile: My public profile
 slrn_unsubscribe_me: Unsubscribe from Solerni
@@ -1266,7 +1266,7 @@ format_use: Please use an image in JPG, GIF or PNG format, 2048px by 2048px maxi
 female: Female
 male: Male
 no_tell: I do not wish to say
-your_moocs_visibility: Visibility of the MOOCs that you are participating in
+your_moocs_visibility: Display my moocs
 indexer_admin: Administration of indexed entities
 select_indexable_entities: Select the entities to be indexed
 form_requeue_all: Empty the index to recreate it
@@ -1360,3 +1360,5 @@ en: English
 es: Español
 
 authorize_exploitation: Privacy
+solerni_footer_title: Apprendre, c'est toujours mieux ensemble #GB
+solerni_footer_text: Solerni est une solution logicielle complète dédiée à la création et à l'hébergement de parcours d'apprentissage massifs collaboratifs. #GB
