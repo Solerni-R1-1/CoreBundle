@@ -6,8 +6,6 @@
 
 
 function supports_local_storage() {
-    
-    return false;
     try {
         return 'localStorage' in window && window['localStorage'] !== null;
     } catch(e) {
@@ -37,7 +35,7 @@ if ( ! supports_local_storage() ) {
 }
 
 function rememberAcceptance() {
-    if ( ! supports_local_storage() ) {
+    if ( supports_local_storage() ) {
         cookieWarnAccepted = localStorage.setItem('cookieWarnAccepted', 1);
     } else {
         cookieWarnAccepted = setCookie( 'cookieWarnAccepted', 1, 999 );
@@ -60,9 +58,13 @@ function displayCookieWarning() {
     
     var warningCookieDOM = jQuery('<div class="cookie-warning-container-wrapper"><div class="container cookie-warning-container"><div class="row cookie-warning-ribbon">' + 
             '<div class="cookie-warning-text">'
-            + CookieWarnMessage 
+                + CookieWarnMessage 
             + '</div>'
-            + '<div class="btn-row"><a href="' + CGUUrl + '" class="btn btn-gris">' + CookieWarnButtonMore + '</a>'
+            + '<div class="btn-row"><a href="' 
+                + CGUUrl 
+                + '" class="btn btn-gris">' 
+                + CookieWarnButtonMore 
+            + '</a>'
             + '<a href="#" class="btn btn-primary js-warn-cookie-trigger">OK</div>'
             + '</div></div></div>');
     
@@ -78,7 +80,7 @@ function displayCookieWarning() {
 
 // Choose source of acceptance (browser dependant) and check existance
 function isCookieWarningAccepted() {
-    if ( ! supports_local_storage() ) {
+    if ( supports_local_storage() ) {
         cookieWarnAccepted = localStorage.getItem('cookieWarnAccepted');       
     } else {
         cookieWarnAccepted = getCookie( 'cookieWarnAccepted' );
