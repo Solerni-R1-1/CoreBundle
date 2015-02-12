@@ -1131,7 +1131,7 @@ slrn_public_profile_undiscoverable: Private profile
 slrn_public_profile_undiscoverable_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
 public_profile_undiscoverable_anonymously: Private profile
 public_profile_undiscoverable_anonymously_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
-profile_options_personalize: Personalization options
+profile_options_personalize: Customization options
 slrn_edit_public_profile: Manage public profile preferences
 slrn_my_public_profile: My public profile
 slrn_unsubscribe_me: Unsubscribe from Solerni
@@ -1209,9 +1209,9 @@ badges_actions : Actions which lead to this badge being awarded
 no_mooc_followed: No MOOC to display
 connect_with_facebook: I log in with Facebook
 all_fields_mandatory: All fields required
-already_registered: I already have an account, log in
-not_registered: I don't have an account, register
-connect_now: I am logged in
+already_registered: I log in
+not_registered: I register
+connect_now: Log in now
 tagline_header: Develop your skills in your own time by following friendly and collaborative learning pathways
 i_register: Register
 solerni_question: Do you already have a Solerni account?
