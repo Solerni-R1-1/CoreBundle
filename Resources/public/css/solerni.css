@@ -2646,8 +2646,16 @@ body.displayCookieWarning {
     padding-top: 135px;
 }
 
-body.displayCookieWarning .cookie-warning-container {
+.cookie-warning-container-wrapper {
+    display: none;
+    height: 0;
+    
+    transition: height 1s ease-in-out;
+}
 
+body.displayCookieWarning .cookie-warning-container-wrapper {
+    height:  80px;    
+    display: block;
 }
 
 body.displayCookieWarning .navbar-fixed-top {

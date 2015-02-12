@@ -45,7 +45,6 @@ function rememberAcceptance() {
 
 function removeCookieWarning() {
      jQuery('body').removeClass('displayCookieWarning');
-     jQuery('.cookie-warning-container').remove();
 }
 
 function displayCookieWarning() {
@@ -65,7 +64,7 @@ function displayCookieWarning() {
                 + '" class="btn btn-gris">' 
                 + CookieWarnButtonMore 
             + '</a>'
-            + '<a href="#" class="btn btn-primary js-warn-cookie-trigger">OK</div>'
+            + '<button class="btn btn-primary js-warn-cookie-trigger">OK</button>'
             + '</div></div></div>');
     
     jQuery('body')
