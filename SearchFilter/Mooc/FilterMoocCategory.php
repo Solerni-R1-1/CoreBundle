@@ -29,7 +29,7 @@ class FilterMoocCategory extends FilterStandard
                 $returnResultFacet ['value'] []= array(
                        'count' => $count, 
                        'value' => $value,
-                       'label' => $this->get('translator')->trans($moocCategory->getName(), array(), 'search')
+                       'label' => $this->get('translator')->trans( $moocCategory->getName(), array(), 'platform' )
                 );
             }
         }

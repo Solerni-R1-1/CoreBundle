@@ -1217,8 +1217,8 @@ i_register: Register
 solerni_question: Do you already have a Solerni account?
 please_connect: Log in with your e-mail or with Facebook
 connect: Log in
-i_connect_now: I am logged in
-no_account: I don't have an account, register
+i_connect_now: I log in
+no_account: I register
 solerni_question_reverse: Do you have a Solerni account?
 create_account: Create an account from your e-mail or register with Facebook
 discover_solerni: Discover Solerni
@@ -1362,4 +1362,11 @@ es: Español
 authorize_exploitation: Privacy
 solerni_footer_title: Apprendre, c'est toujours mieux ensemble#GB
 solerni_footer_text: Solerni est une solution logicielle complète dédiée à la création et à l'hébergement de parcours d'apprentissage massifs collaboratifs.#GB
+
 cookie_warn_message: En poursuivant votre navigation sur le site, vous acceptez l'utilisation de cookies pour vous proposer une navigation optimale et nous permettre de réaliser des statistiques de visites#GB
+
+#Core Categories
+Enseignement: Teaching
+Métiers: Jobs
+Apprentissage: Learning
+Culture: Culture
