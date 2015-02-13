@@ -23,13 +23,4 @@
     }) }}
     {% endfor %}
 
-    <script>
-        jQuery( document ).ready(function() {
-            if ( window.location.hash ) {
-                jQuery('.js-dropdown-language .slrn-topbar-item__sub a').each( function() {
-                   jQuery(this).attr('href', window.location.origin + window.location.pathname + jQuery(this).attr('href') + window.location.hash );
-                });
-            }
-        });
-    </script>
 {% endblock dropdownLangage %}

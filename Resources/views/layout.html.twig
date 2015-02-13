@@ -238,6 +238,15 @@ DEPLACE DANS base.html.twig
         $('body').tooltip({
             selector: '[data-toggle=tooltip]'
         });
+        
+        /* change URL from langage dropdown menu */
+        jQuery( document ).ready(function() {
+            if ( window.location.hash ) {
+                jQuery('.js-dropdown-language .slrn-topbar-item__sub a').each( function() {
+                   jQuery(this).attr('href', window.location.origin + window.location.pathname + jQuery(this).attr('href') + window.location.hash );
+                });
+            }
+        });
     </script>
     <!--[if IE 9 ]>
         {% javascripts debug=false filter='jsmin' 
