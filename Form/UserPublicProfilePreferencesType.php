@@ -8,9 +8,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class UserPublicProfilePreferencesType extends AbstractType
 {
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -64,9 +66,11 @@ class UserPublicProfilePreferencesType extends AbstractType
 	                ->add('display_optional_information', 'checkbox' , array(
 	                		'required' => false
 	                ));
+
             }
 
         });
+
     }
 
     public function getName()

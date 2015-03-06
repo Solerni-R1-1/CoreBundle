@@ -129,6 +129,11 @@
                 // grab an element
                 var myElement = document.querySelector(".slrn-subnavbar-container");
                 
+                // Be sure we have a element 
+                if ( ! myElement ) {
+                    return false;
+                }
+                
                 // construct an instance of Headroom, passing the element
                 var headroom  = new Headroom(myElement, {
                   "offset": 136,

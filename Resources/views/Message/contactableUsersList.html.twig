@@ -64,9 +64,9 @@
             {{ renderPager(search, users) }}
         {% endif %}
 
-            <div class='counter_b counter0'>0 sélectionné</div>
-            <div class='counter_b counter1 hide'>1 sélectionné</div>
-            <div class='counter_b counterX hide'><span class='counterValue'></span> sélectionnés</div>
+            <div class='counter_b counter0'>{{'x_selected'|trans({'%number%': 0, '%plural%': ''}, 'platform')}}</div>
+            <div class='counter_b counter1 hide'>{{'x_selected'|trans({'%number%': 1, '%plural%': ''}, 'platform')}}</div>
+            <div class='counter_b counterX hide'><span class='counterValue'></span> {{'x_selected'|trans({'%number%': '', '%plural%': 's'}, 'platform')}}</div>
             <div id='contacts_selected_wrapper'>
                 <ul id='contacts_selected'>
                   

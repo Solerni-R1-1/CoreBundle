@@ -4,7 +4,7 @@
 
     {% if sessionsAvailable|length == 0 %}
 
-      <p>Vous ne suivez aucun Mooc en ce moment</p>
+      <p>{{'no_mooc_today'|trans({}, 'platform')}}</p>
       <a class="" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}"><img src='{{ asset('bundles/clarolinecore/images/ban_catalogue.png') }}' alt='Consulter le catalogue' width='695px' height='131px'/></a> 
     {% else %}
 

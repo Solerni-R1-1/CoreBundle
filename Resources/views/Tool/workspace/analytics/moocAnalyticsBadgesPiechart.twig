@@ -75,10 +75,10 @@
     {% if badgesSuccessRates is defined %}
         {% for badge in badgesSuccessRates %}
         var badge{{ loop.index0 }}Rates = [];
-        badge{{ loop.index0 }}Rates.push(["Success", {{ badge['success'] }}]);
-        badge{{ loop.index0 }}Rates.push(["Failure", {{ badge['failure'] }}]);
-        badge{{ loop.index0 }}Rates.push(["Abandon", {{ badge['inProgress'] }}]);
-        badge{{ loop.index0 }}Rates.push(["Not started", {{ badge['available'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'success'|trans({}, 'platform')}}", {{ badge['success'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'failure'|trans({}, 'platform')}}", {{ badge['failure'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'abandon'|trans({}, 'platform')}}", {{ badge['inProgress'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'not_started'|trans({}, 'platform')}}", {{ badge['available'] }}]);
 
         var badge{{ loop.index0 }}Percentages = $.map({{ badgesParticipationRates[badge['id']]['data']['percentage']|json_encode|raw }}, function(value, index) {
         	return [value];
@@ -184,20 +184,20 @@
                                     pad: 0
                                 },
                                 yaxis: {
-                                	label: "Pourcentage de participation",
+                                	label: "{{ 'participation_percent'|trans({}, 'platform') }}",
                                     min:0,
                                     max:100,
                                     showTickMarks: true,
                                     numberTicks: 5
                                 },
                                 y2axis: {
-                                	label: "Total de participations",
+                                	label: "{{ 'participation_total'|trans({}, 'platform') }}",
                                     min:0,
                                     showTickMarks: true,
                                     numberTicks: 5
                                 },
                                 y3axis: {
-                                	label: "Participations",
+                                	label: "{{ 'participation'|trans({}, 'platform') }}",
                                     min:0,
                                     showTickMarks: true,
                                     numberTicks: 5
@@ -230,9 +230,9 @@
                                 rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
                             },
                             series: [
-                                 {yaxis:'yaxis', label:'Pourcentage de participation'},
-                                 {yaxis:'y2axis', label:'Total de participations'},
-                                 {yaxis:'y3axis', label:'Participations'}
+                                 {yaxis:'yaxis', label:'{{ 'participation_percent'|trans({}, 'platform') }}'},
+                                 {yaxis:'y2axis', label:'{{ 'participation_total'|trans({}, 'platform') }}'},
+                                 {yaxis:'y3axis', label:'{{ 'participation'|trans({}, 'platform') }}'}
                             ],
                             legend: {
             					show: true,

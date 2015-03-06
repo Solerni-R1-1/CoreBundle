@@ -65,3 +65,15 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function(jQuery) {
+            if ( jQuery('.slrn-profile-mooc').not('.hide').length == 0 ) {
+                jQuery('.no_mooc_visible').removeClass('hide');
+            } else {
+                jQuery('.no_mooc_visible').addClass('hide')
+            }
+        });
+    </script>
+{% endblock %}

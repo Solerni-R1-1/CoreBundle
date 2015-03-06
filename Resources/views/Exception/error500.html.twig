@@ -3,12 +3,12 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'internal_error' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block content %}
-    {#{'internal_error'|trans({}, 'platform')}#}
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
-            <p><b>Désolé,</b></p>
-            <p>Erreur interne du serveur.<br/>
-            Vous pouvez revenir à <a href="javascript:history.back()">la page précédente</a> ou à <a href="/">l'accueil.</a></p>
+            <p><b>{{'sorry'|trans({}, 'platform')}},</b></p>
+            <p>{{'internal_server_error'|trans({}, 'platform')}}<br/>
+                {{'get_back_message'|trans({}, 'platform')|raw}}
+            </p>
         </div>
     </div>
 {% endblock %}

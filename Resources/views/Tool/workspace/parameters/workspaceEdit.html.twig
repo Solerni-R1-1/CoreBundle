@@ -59,7 +59,7 @@
                     {% for session in form_mooc.moocSessions %}
                         <div class="slrn-mooc_sessions__item">
                             <div class="col-md-3"></div>
-                            <div class="col-md-9"><h4>Session {{loop.index}} : {{ session.title.vars.value }}</h4></div>
+                            <div class="col-md-9"><h4>{{'session'|trans({}, 'platform')}} {{loop.index}} : {{ session.title.vars.value }}</h4></div>
                             {{ form_widget(session) }}
                             <div class="form-group row">
                                 <div class="col-md-3"></div>

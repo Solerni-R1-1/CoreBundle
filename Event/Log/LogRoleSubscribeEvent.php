@@ -14,9 +14,8 @@ namespace Claroline\CoreBundle\Event\Log;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
 
-class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterface
+class LogRoleSubscribeEvent extends LogGenericEvent
 {
     const ACTION_USER = 'workspace-role-subscribe_user';
     const ACTION_GROUP = 'workspace-role-subscribe_group';

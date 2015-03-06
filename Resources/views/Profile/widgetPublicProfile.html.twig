@@ -27,36 +27,42 @@
                 {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
             </p>
             {% if isEditProfilePage is defined or publicProfilePreferences.isDisplayOptionalInformation() %}
-            <ul class="slrn-profile-social {% if not publicProfilePreferences.isDisplayOptionalInformation() and isEditProfilePage %}hidden{% endif %}" id="display_optional_information">
+            <ul class="slrn-profile-social display_optional_information{% if not publicProfilePreferences.isDisplayOptionalInformation() and isEditProfilePage %} hidden{% endif %}">
             	{% if user.getTwitter() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-twitter"></i>
-            	<a href="//twitter.com/{{ user.getTwitter() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//twitter.com/{{ user.getTwitter() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getTwitter() }}
             	</a></li>
             	{% endif %}
             	{% if user.getFacebook() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-facebook"></i>
-            	<a href="//facebook.com/{{ user.getFacebook() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//facebook.com/{{ user.getFacebook() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getFacebook() }}
             	</a></li>
             	{% endif %}
             	{% if user.getLinkedIn() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-linkedin"></i>
-            	<a href="//linkedin.com/pub/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//linkedin.com/pub/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getLinkedIn() }}
             	</a></li>
             	{% endif %}
             	{% if user.getGooglePlus() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-googleplus"></i>
-            	<a href="//plus.google.com/{{ user.getGooglePlus() }}" class="pink_link slrn-profile-social-link">
+            	<a href="//plus.google.com/{{ user.getGooglePlus() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getGooglePlus() }}
             	</a></li>
             	{% endif %}
             	{% if user.getWebsite() != null %}
-            	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-website"></i>
-            	<a href="//{{ user.getWebsite() }}" class="pink_link slrn-profile-social-link">
-            		{{ user.getWebsite() }}
-            	</a></li>
+                    <li class="slrn-profile-social-li"><i class="slrn-icon-profile-website"></i>
+                    {% if user.getWebsite() matches '#(^http.*)#' %}
+                        {% set userWebsite = user.getWebsite() %}
+                    {% else %}
+                        {% set userWebsite = 'http://' ~ user.getWebsite() %}
+                    {% endif %}
+                    <a href="{{ userWebsite }}" class="pink_link slrn-profile-social-link" target="_blank">
+                        {{ userWebsite }}
+                    </a>
+                </li>
             	{% endif %}	
             </ul>
            	{% endif %}
@@ -84,41 +90,68 @@
                     </li>
                 {% endif %}
                 {% if ( isEditProfilePage is defined ) or (publicProfilePreferences.isDisplayOptionalInformation()) %}
-                	<li{% if not publicProfilePreferences.isDisplayOptionalInformation() %} class="hidden"{% endif %} id="display_optional_information">{{ user.getGenderLabel() }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} ans{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry() }}</li>
+                	<li class="display_optional_information{% if not publicProfilePreferences.isDisplayOptionalInformation() %} hidden{% endif %}">
+                        {{ user.getGenderLabel()|trans({}, 'platform') }}{% if user.getGender() != 0 and user.getBirthdate() != null %}, {% endif %}{% if user.getBirthdate() != null %}{{ user.getAge() }} {{'years_old'|trans({}, 'platform')}}{% endif %}{% if (user.getBirthdate() != null or user.getGender() != 0) and (user.getCountry() != null or user.getCity() != null) %} - {% endif %}{{ user.getCity() }}{% if user.getCity() != null and user.getCountry() != null %}, {% endif %}{{ user.getCountry()|countryName(app.request.locale) }}</li>
                 {% endif %}
             </ul>
             <hr />
             <ul class="slrn-profile-counters">
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-post"></i>
-	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} messages postés</p>
+	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} {{'posted_messages'|trans({}, 'platform')}}</p>
 	            </li>
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-vote"></i>
-	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} messages votés par la communauté</p>
+	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} {{'community_votes'|trans({}, 'platform')}}</p>
 	            </li>
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-badge"></i>
-	            	<p class="slrn-profile-counter">{{ nbBadges }} badges</p>
+                    {% if nbBadges > 1 %}{% set plural = 's' %}{% else %}{% set plural = '' %}{% endif %}
+	            	<p class="slrn-profile-counter">{{ nbBadges }} {{ 'badges_number'|trans({'%plural%': plural}, 'platform') }}</p>
 	            </li>
             </ul>
 	        <hr />
             <div class="slrn-profile-moocs">
-            	<p class="slrn-profile-moocs-title">Moocs suivis</p>
-            	{% set imageSize = { 'width': 118, 'height': 85 } %}
-            	{% for i, moocSession in user.getMoocSessions() %}
-            	<a href="{{ path('mooc_view', {"moocId":moocSession.getMooc().getId(), "moocName":moocSession.getMooc().getTitle()}) }}" class="slrn-profile-mooc">
-            		<img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
-		                 src="{{ image( moocSession.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
-		                 alt="{{ moocSession.getMooc().getTitle() }}" 
-		                 width="{{ imageSize.width }}" 
-		                 height="{{ imageSize.height }}" >
-			        <div class="slrn-profile-mooc-info col-md-7">
-		            	<p class="srln-profile-mooc-title">{{ moocSession.getMooc().getTitle() }}</p>
-		            	<p class="srln-profile-mooc-date">{{ moocSession.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr')) }}</p>
-	            	</div>
-            	</a>
-            	{% endfor %}
+            <p class="slrn-profile-moocs-title">{{'followed_moocs' |trans({}, 'platform')}}</p>
+            {% set imageSize = { 'width': 118, 'height': 85 } %}
+            {% if ( isEditProfilePage is defined ) %}
+                {% for moocSession in user.getMoocSessions() %}
+                    <a href="{{ path('mooc_view', {"moocId":moocSession.getMooc().getId(), "moocName":moocSession.getMooc().getTitle()}) }}" 
+                       class="slrn-profile-mooc {{ 'userMoocPreferences_form_visibility_' ~ loop.index0 }}{% if isEditProfilePage == true %} hide{% endif%}">
+                        <img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
+                             src="{{ image( moocSession.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
+                             alt="{{ moocSession.getMooc().getTitle() }}" 
+                             width="{{ imageSize.width }}" 
+                             height="{{ imageSize.height }}" >
+                        <div class="slrn-profile-mooc-info col-md-7">
+                            <p class="srln-profile-mooc-title">{{ moocSession.getMooc().getTitle() }}</p>
+                            {# Get first session of the Mooc #}
+                            <p class="srln-profile-mooc-date">{{ moocSession.getStartDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y') }}</p>
+                        </div>
+                    </a>
+                {% else %}
+                    <p>{{ 'no_mooc_followed'|trans({}, 'platform') }}</p>
+                {% endfor %}
+            {% else %}
+                {% for userMoocPreferences in user.getUserMoocPreferences() if userMoocPreferences.getVisibility() == 1 %}
+                    <a href="{{ path('mooc_view', {"moocId":userMoocPreferences.getMooc().getId(), "moocName":userMoocPreferences.getMooc().getTitle()}) }}" class="slrn-profile-mooc">
+                        <img class="slrn-profile-mooc-image presentation__mooc__block__image col-md-5" 
+                             src="{{ image( userMoocPreferences.getMooc().getIllustrationWebPath() ).zoomCrop( imageSize.width, imageSize.height ) }}" 
+                             alt="{{ userMoocPreferences.getMooc().getTitle() }}" 
+                             width="{{ imageSize.width }}" 
+                             height="{{ imageSize.height }}" >
+                        <div class="slrn-profile-mooc-info col-md-7">
+                            <p class="srln-profile-mooc-title">{{ userMoocPreferences.getMooc().getTitle() }}</p>
+                            {# Get first session of the Mooc #}
+                            <p class="srln-profile-mooc-date">
+                                {{ userMoocPreferences.getMooc().getMoocSessions()[0].getStartDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y') }}
+                            </p>
+                        </div>
+                    </a>
+                {% else %}
+                    <p>{{ 'no_mooc_followed'|trans({}, 'platform') }}</p>
+                {% endfor %}
+            {% endif %}
             </div>
             <hr />
              <div class="informations">

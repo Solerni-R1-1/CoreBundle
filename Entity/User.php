@@ -29,6 +29,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
 use UJM\ExoBundle\Entity\Exercise;
+use Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -242,7 +243,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $picture;
 
     /**
-     * @Assert\File(maxSize="6000000")
+     * @Assert\File(maxSize="6M", maxSizeMessage="maxSizeMessage")
      */
     protected $pictureFile;
 
@@ -406,6 +407,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(type="string", nullable=true)
      */
     protected $googlePlus;
+    
+        /**
+     * @var $userMoocPreferences[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences", 
+     *      mappedBy="user", 
+     *      cascade={"all"}
+     * )
+     */
+    protected $userMoocPreferences;
 
     public function __construct()
     {
@@ -422,6 +433,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->moocSessions      = new ArrayCollection();
         $this->sessionsByUsers   = new ArrayCollection();
         $this->keyValidate       = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->userMoocPreferences = new ArrayCollection();
     }
 
     /**
@@ -1253,5 +1265,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     	} else {
     		return "";
     	}
+    }
+    
+    public function setUserMoocPreferences(ArrayCollection $userMoocPreferences)
+    {
+        $this->userMoocPreferences = $userMoocPreferences;
+    }
+    
+    public function getUserMoocPreferences() {
+        
+        return $this->userMoocPreferences;
     }
 }

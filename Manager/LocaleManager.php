@@ -18,6 +18,9 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @Service("claroline.common.locale_manager")
@@ -29,20 +32,32 @@ class LocaleManager
     private $locales;
     private $userManager;
     private $context;
+    private $container;
+    private $translator;
 
     /**
-     * @InjectParams({
-     *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
-     *     "userManager"    = @Inject("claroline.manager.user_manager"),
-     *     "context"        = @Inject("security.context")
+     * @DI\InjectParams({
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
+     *     "context"        = @DI\Inject("security.context"),
+     *     "container"      = @DI\Inject("service_container"),
+     *     "translator"     = @DI\Inject("translator")
      * })
      */
-    public function __construct(PlatformConfigurationHandler $configHandler, UserManager $userManager, SecurityContextInterface $context)
+    public function __construct(
+            PlatformConfigurationHandler $configHandler, 
+            UserManager $userManager, 
+            SecurityContextInterface $context,
+            ContainerInterface $container,
+            Translator $translator
+            )
     {
+        $this->container = $container;
         $this->userManager = $userManager;
         $this->defaultLocale = $configHandler->getParameter('locale_language');
         $this->finder = new Finder();
         $this->context = $context;
+        $this->translator = $translator;
     }
 
     /**
@@ -72,10 +87,10 @@ class LocaleManager
      */
     public function getAvailableLocales()
     {
-        if (!$this->locales) {
+        if ( ! $this->locales ) {
             $this->locales = $this->retriveAvailableLocales();
         }
-
+        
         return $this->locales;
     }
 
@@ -105,7 +120,7 @@ class LocaleManager
         $locales = $this->getAvailableLocales();
         $locale = $this->defaultLocale;
         $preferred = explode('_', $request->getPreferredLanguage());
-
+        
         switch (true) {
             case ($locale = $request->attributes->get('_locale')): break;
             case (($user = $this->getCurrentUser()) and ($locale = $user->getLocale()) !== ''): break;
@@ -128,5 +143,28 @@ class LocaleManager
         if (is_object($token = $this->context->getToken()) and is_object($user = $token->getUser())) {
             return $user;
         }
+    }
+    
+    /* Default locale is App Config Setting */
+    public function getDefaultLocale() {
+        return $this->defaultLocale;
+    }
+    
+    public function setSessionLanguageList( $availableLocales ) {
+        
+        // Set list of available langages for twig selection langage capability
+        $localesArray = array();
+        if ( $availableLocales ) {
+            foreach ( $availableLocales as $pflocale ) {
+                $localesArray[] = array( 
+                    'shorthand' => $pflocale, 
+                    'fullName' => $this->translator->trans( $pflocale, array(), 'platform') 
+                );
+            }
+        }
+        
+        // set list in session so we could have a langague list in any template
+        $this->container->get('session')->set('availableLanguages', $localesArray );
+        return;
     }
 }

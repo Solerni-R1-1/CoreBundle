@@ -168,7 +168,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
         			JOIN r.users u
         			WHERE u.id = :user_id
         			AND (m IS NULL
-        				OR ms IS NOT NULL)";
+        				OR ms IS NOT NULL
+        				OR r.translationKey IN ('admin', 'ws_creator', 'manager'))";
         $query = $this->_em->createQuery($dql);
         $query->setParameter("user_id", $user->getId());
         $query->setParameter("now", $now);
@@ -185,7 +186,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
         			JOIN g.users u
         			WHERE u.id = :user_id
         			AND (m IS NULL
-        				OR ms IS NOT NULL)";
+        				OR ms IS NOT NULL
+        				OR r.translationKey IN ('admin', 'ws_creator', 'manager'))";
         $query = $this->_em->createQuery($dql);
         $query->setParameter("user_id", $user->getId());
         $query->setParameter("now", $now);

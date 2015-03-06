@@ -2,17 +2,17 @@
 
 {% block title %}{{ 'register' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
-{% block formTitle %}Je n'ai pas de compte, je m'inscris{% endblock %}
+{% block formTitle %}{{'not_registered'|trans({}, 'platform')}}{% endblock %}
 
 {% block solerniHeaderImage %}
      <div class="slrn-header">
         <div class="container slrn-header_w">
             <div class="slrn-header__body">
-                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/header-inscription.png') }}" alt="" width="" height="" />
-                <h1 class="slrn-header__content" >Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs</h1>
+                <span class="slrn-header__tagimage londrina-solid">{{'connect_now'|trans({}, 'platform')}}</span>
+                <h1 class="slrn-header__content" >{{'tagline_header'|trans({}, 'platform')}}</h1>
             </div>
         </div>
-        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/logging_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/logging_header.jpg') }}" alt="" width="1171" height="221" />
     </div>
 {% endblock %}
 
@@ -28,7 +28,7 @@
                 {# Error Classes #}
                 {% set errorClasses = 'slrn-input slrn-input--error error' %}
                 {% set RegularClasses = 'slrn-input' %}
-                
+
                 {# First Name #}
                 {% if form.firstName.vars.errors %}
                     {% set firstNameClasses = errorClasses %}
@@ -37,15 +37,13 @@
                 {% endif %}
                 {# We use platform.yml langages for placeholders and error messages so updates are site-wide #}
                 {# We probably could use a macro to generate the pattern of the output #}
-                {% set firstNamePlaceholder %}{{ 'user_form_firstName'|trans({}, 'platform') }}{% endset %}
-                {% set firstNameInvalidMsg %}{{ 'user_form_firstName_invalid'|trans({}, 'platform') }}{% endset %}
                 {{ form_label( form.firstName, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                 {{ form_widget( form.firstName, {'attr': {
-                                                            'placeholder' :  firstNamePlaceholder,
-                                                            'class' : firstNameClasses, 
-                                                            'data-validation': 'alphanumeric required', 
+                                                            'placeholder' : 'user_form_firstName'|trans({}, 'platform'),
+                                                            'class' : firstNameClasses,
+                                                            'data-validation': 'alphanumeric required',
                                                             'data-validation-allowing': '-éèöàñïîêôâ ',
-                                                            'data-validation-error-msg' : firstNameInvalidMsg 
+                                                            'data-validation-error-msg' : 'user_form_firstName_invalid'|trans({}, 'platform')
                 } }) }}
                 
                 {# Last Name #}
@@ -54,15 +52,13 @@
                 {% else %}
                     {% set lastNameClasses = RegularClasses %}
                 {% endif %}
-                {% set lastNamePlaceholder %}{{ 'user_form_lastName'|trans({}, 'platform') }}{% endset %}
-                {% set lastNameInvalidMsg %}{{ 'user_form_lastName_invalid'|trans({}, 'platform') }}{% endset %}
                 {{ form_label( form.lastName, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                 {{ form_widget( form.lastName, {'attr': { 
-                                                            'placeholder' : lastNamePlaceholder, 
+                                                            'placeholder' : 'user_form_lastName'|trans({}, 'platform'), 
                                                             'class' : lastNameClasses, 
                                                             'data-validation': 'alphanumeric required',   
                                                             'data-validation-allowing': '-éèöàñïîêôâ ',
-                                                            'data-validation-error-msg' : lastNameInvalidMsg 
+                                                            'data-validation-error-msg' : 'user_form_lastName_invalid'|trans({}, 'platform') 
                 } }) }}
                
                 {# UserName #}
@@ -71,15 +67,13 @@
                 {% else %}
                     {% set usernameClasses = RegularClasses %}
                 {% endif %}
-                {% set usernamePlaceholder %}{{ 'user_form_username'|trans({}, 'platform')}}{% endset %}
-                {% set usernameInvalidMsg %}{{ 'user_form_username_invalid'|trans({}, 'platform') }}{% endset %}
                 {{ form_label( form.username, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                 {{ form_widget( form.username, {'attr': {
-                                                            'placeholder' : usernamePlaceholder,
+                                                            'placeholder' : 'user_form_username'|trans({}, 'platform'),
                                                             'class' : usernameClasses,
                                                             'data-validation': 'alphanumeric length',
                                                             'data-validation-length': 'min3',
-                                                            'data-validation-error-msg' : usernameInvalidMsg
+                                                            'data-validation-error-msg' : 'user_form_username_invalid'|trans({}, 'platform')
                 } }) }} 
                 
                 {# email  #}
@@ -88,14 +82,12 @@
                         {% else %}
                     {% set mailClasses = RegularClasses %}
                 {% endif %}
-                {% set mailPlaceholder %}{{ 'mail'|trans({}, 'platform')}}{% endset %}
-                {% set mailInvalidMsg %}{{ 'mail_invalid'|trans({}, 'platform') }}{% endset %}
                 {{ form_label( form.mail, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                 {{ form_widget( form.mail, {'attr': { 
-                                                        'placeholder' : mailPlaceholder, 
+                                                        'placeholder' : 'mail'|trans({}, 'platform'), 
                                                         'class' : mailClasses, 
                                                         'data-validation': 'email', 
-                                                        'data-validation-error-msg' : mailInvalidMsg
+                                                        'data-validation-error-msg' : 'mail_invalid'|trans({}, 'platform')
                 } }) }} 
                 
                 {# Password First #}
@@ -104,16 +96,14 @@
                 {% else %}
                         {% set plainPasswordFirstClasses = RegularClasses %}
                 {% endif %}
-                {% set plainPasswordFirstPlaceholder %}{{ 'user_form_plainPassword_first'|trans({}, 'platform')}}{% endset %}
-                {% set plainPasswordFirstInvalidMsg %}{{ 'user_rules_password'|trans({}, 'platform') }}{% endset %}
                 {{ form_label( form.plainPassword.first, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                 {{ form_widget( form.plainPassword.first, {'attr': { 
-                                                        'placeholder' : 'Mot de passe',
+                                                        'placeholder' : 'user_form_plainPassword_first'|trans({}, 'platform'),
                                                         'class' : plainPasswordFirstClasses,
                                                         'data-validation': 'length', 
                                                         'data-validation-length': 'min4', 
                                                         'data-name': 'pass_confirmation', 
-                                                        'data-validation-error-msg' : plainPasswordFirstInvalidMsg 
+                                                        'data-validation-error-msg' : 'user_rules_password'|trans({}, 'platform')
                 } }) }}
                 {# Password Second #} 
                 {% if form.plainPassword.second.vars.errors %}
@@ -121,15 +111,13 @@
                 {% else %}
                     {% set plainPasswordSecondClasses = 'slrn-input' %}
                 {% endif %}
-                {% set plainPasswordSecondPlaceholder %}{{ 'user_form_plainPassword_second'|trans({}, 'platform')}}{% endset %}
-                {% set plainPasswordSecondInvalidMsg %}{{ 'password_mismatch'|trans({}, 'platform') }}{% endset %}
                     {{ form_label( form.plainPassword.second, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
                     {{ form_widget( form.plainPassword.second, {'attr': {
-                                                        'placeholder' : plainPasswordSecondPlaceholder,
+                                                        'placeholder' : 'user_form_plainPassword_second'|trans({}, 'platform'),
                                                         'class' : plainPasswordSecondClasses,
                                                         'data-validation': 'confirmation',
                                                         'data-name': 'pass',
-                                                        'data-validation-error-msg' : plainPasswordSecondInvalidMsg
+                                                        'data-validation-error-msg' : 'password_mismatch'|trans({}, 'platform')
                 } }) }}
                 {% if form.accepted_terms is defined %}
                 <div class="slrn-checkbox-w">
@@ -180,17 +168,17 @@
             </div>
 
             <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'Je m\'inscris'|trans({}, 'platform') }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'i_register'|trans({}, 'platform') }}</button>
             </div>
         </form>
     </div>
 {% endblock %}
     
 {% block alternateText %}
-    <h2 class="slrn-section-title">J'ai déjà un compte, je me connecte</h2>
-    <p>Vous avez déjà un compte Solerni ?<br />
-    Connectez-vous avec votre email ou avec Facebook</p>
-    <p><a class="slrn-link" href="{{ path('claro_security_login') }}">Je me connecte</a></p>
+    <h2 class="slrn-section-title">{{'already_registered'|trans({}, 'platform')}}</h2>
+    <p>{{'solerni_question'|trans({}, 'platform')}}<br />
+    {{'please_connect'|trans({}, 'platform')}}</p>
+    <p><a class="slrn-link" href="{{ path('claro_security_login') }}">{{'connect'|trans({}, 'platform')}}</a></p>
 {% endblock %}
     
 {% block javascripts %}
@@ -199,7 +187,7 @@
         jQuery(document).ready(function(jQuery) {
             jQuery('.js-open').on( 'click', function(elm) {
                 elm.preventDefault();
-                cguWin = window.open( jQuery(this).attr('href'), 'cgu', 'toolbar=no,scrollbar=yes,resizable=yes,status=no,width=980,height=600,top=100,left=200' );             
+                cguWin = window.open( jQuery(this).attr('href'), 'cgu', 'toolbar=0,scrollbars=1,resizable=1,status=0,width=980,height=600,top=100,left=200' );           
             });        
         });
     </script>

@@ -37,7 +37,7 @@
 <section class="col-xs-12 col-md-12">
  <div class="col-xs-3 col-md-3 sider">
 	<img class="slrn-widget__image" src="{{ image(mooc.getIllustrationWebPath()).zoomCrop( 234,165 ) }}" alt="{{ mooc.getTitle() }}"> 
- 	<h2>Les essentiels</h2>
+ 	<h2>{{'essentials'|trans({}, 'platform')}}</h2>
 	<div class='sider__content'>
     	<ul class='essentiels'>
                 {# DATE #}
@@ -48,20 +48,19 @@
                     <li>
                         <i class='essentiels-icon essentiels__date'></i>
                         {% if session.getStartDate() is not empty %}
-                            Date de début : <span class="slrn-bold">
-                                {{ session.getStartDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
+                            {{'start_date'|trans({}, 'platform')}} : <span class="slrn-bold">
+                                {{ session.getStartDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y' ) }}
                             </span>
                         {% endif %}
                         {% if session.getStartDate() is not empty or session.getEndDate() is not empty %}<br/>{% endif %}
                         {% if session.getEndDate() is not empty %}
-                            Date de fin : <span class="slrn-bold">
-                                {{session.getEndDate() | localizeddate( "long", "none", app.request.locale|default('fr') ) }}{% endif %}
+                            {{'end_date'|trans({}, 'platform')}} : <span class="slrn-bold">
+                                {{session.getEndDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y' ) }}{% endif %}
                             </span>
-
                     </li>
                 {% else%}
                     <li>
-                        <i class='essentiels-icon essentiels__date'></i> Aucune date de prévue
+                        <i class='essentiels-icon essentiels__date'></i> {{'no_planification'|trans({}, 'platform')}}
                     </li>
                 {% endif%}
                 
@@ -70,10 +69,10 @@
                 <li>
                     <i class='essentiels-icon essentiels__duree'></i>
                     {% if mooc.getDuration() is not empty %}
-                        Durée : <span class="slrn-bold">{{mooc.getDuration() }} semaines</span>
+                        {{'duration'|trans({}, 'platform')}} : <span class="slrn-bold">{{ mooc.getDuration() }} {{'weeks'|trans({}, 'platform')}}</span>
                     {% endif %}
                     {% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}<br/>{% endif %}
-                    {% if mooc.getWeeklyTime() is not empty %}Temps de travail hebdomadaire&nbsp;: 
+                    {% if mooc.getWeeklyTime() is not empty %}{{'weekly_duration'|trans({}, 'platform')}}&nbsp;:
                         <span class="slrn-bold">{{mooc.getWeeklyTime() | minsToHoursMins('%dh%dmin')}}{% endif %}</span>
                 </li>
 			{% endif%}
@@ -81,14 +80,14 @@
 			{# COUT #}
 			<li>
                 <i class='essentiels-icon essentiels__tarif'></i> 
-                Tarif :<span class="slrn-bold">
+                {{'cost'|trans({}, 'platform')}} :<span class="slrn-bold">
                     {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
-                        Mooc gratuit
+                        {{'free_mooc'|trans({}, 'platform')}}
                     {% elseif mooc.isPublic() %}
-                        Mooc gratuit<br>
-                        Certification en option
+                        {{'free_mooc'|trans({}, 'platform')}}<br>
+                        {{'optional_certif'|trans({}, 'platform')}}
                     {% else %}
-                        Formation professionnelle
+                        {{'pro_certif'|trans({}, 'platform')}}
                     {% endif %}
                 </span>
             </li>
@@ -97,7 +96,7 @@
             {% if mooc.getCertificationType() is not empty %}
                 <li>
                     <i class='essentiels-icon essentiels__certif'></i>
-                    Certification :<br>
+                    {{'certification'|trans({}, 'platform')}} :<br>
                     <span class="slrn-bold">
                         {% for certification in mooc.getCertificationType() %}
                             {{ certification|trans({}, 'platform') }}<br>
@@ -110,7 +109,7 @@
 			{% if mooc.getLanguage() is not empty and mooc.getLanguage() != 'empty_valu' %}
                 <li>
                     <i class='essentiels-icon essentiels__lang'></i>
-                    Langue du cours : <span class="slrn-bold">
+                    {{'mooc_langage'|trans({}, 'platform')}} : <span class="slrn-bold">
                         {{ mooc.getLanguage()|trans({}, 'platform') }}
                     </span>
                 </li>
@@ -120,11 +119,11 @@
 			{% if mooc.getHasVideo() is not empty %}
 			<li>
 				<i class='essentiels-icon essentiels__video'></i>
-                Vidéos<br/>
+                {{'videos'|trans({}, 'platform')}}<br/>
 				{% if mooc.getHasSubtitle() is not empty %}
-					<span class="slrn-bold">Sous-Titrées
+					<span class="slrn-bold">{{'videos_sub'|trans({}, 'platform')}}
                         {% if mooc.getLanguage() is not empty %}
-                            en {{mooc.getLanguage()|trans({}, 'platform')}}
+                            {{'on'|trans({}, 'platform')}} {{mooc.getLanguage()|trans({}, 'platform')}}
                         {% endif %}
                     </span>
 				{% endif %}
@@ -135,31 +134,31 @@
 			{% if session is defined and session is not null %}
 			<li>
 				<i class='essentiels-icon essentiels__subscription'></i>
-                Inscriptions :<span class="slrn-bold">
+                {{'subscriptions'|trans({}, 'platform')}} :<span class="slrn-bold">
                     
                     {% if mooc.isPublic() %}
                         {% if   session.getMaxUsers() is not defined or 
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0 
                         %}
-                            Ouvertes à tous
+                            {{'open_to_all'|trans({}, 'platform')}}
                         {% else %}
-                            Limitées au{% if session.getMaxUsers() > 1 %}x{% endif %} {{ session.getMaxUsers() }} premier{% if session.getMaxUsers() > 1 %}s{% endif %} inscrit{% if session.getMaxUsers() > 1 %}s{% endif %}
+                            {{'limited_to'|trans({}, 'platform')}}{% if session.getMaxUsers() > 1 and app.request.locale == 'fr' %}x{% endif %} {{ session.getMaxUsers() }} {{'first_subs'|trans({}, 'platform')}}{% if session.getMaxUsers() > 1 %}s{% endif %} {{'subscriber'|trans({}, 'platform')}}{% if session.getMaxUsers() > 1 %}s{% endif %}
                         {% endif %}
-                        du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
-                        au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}
+                        {{'from_date'|trans({}, 'platform')}} {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y' )}} 
+                        {{'to_date'|trans({}, 'platform')}} {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y' )}}
                     {% else %}
-                        Privées<br>
+                        {{'private'|trans({}, 'platform')}}<br>
                         {% if   session.getMaxUsers() is defined    and
                                 session.getMaxUsers() is empty      or
                                 session.getMaxUsers() == 0
                         %}
-                            Vous êtes autorisé à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a>
+                            {{'authorized_by'|trans({}, 'platform')}} <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a>
                         {% else %}
-                            Vous êtes autorisé à vous inscrire par <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a> dans une session limitée au{% if session.getMaxUsers() > 1 %}x{% endif %} {{ session.getMaxUsers() }} premier{% if session.getMaxUsers() > 1 %}s{% endif %} inscrit{% if session.getMaxUsers() > 1 %}s{% endif %} 
+                            {{'authorized_by'|trans({}, 'platform')}} <a href="{{ path('solerni_owner_catalogue', {'ownerId': mooc.getOwner().getId(), 'ownerName': mooc.getOwner().getName()|slugify()|raw }) }}">{{ mooc.getOwner().getName() }}</a> {{'in_limited_session'|trans({}, 'platform')}}{% if session.getMaxUsers() > 1 and app.request.locale == 'fr' %}x{% endif %} {{ session.getMaxUsers() }} {{'first_subs'|trans({}, 'platform')}}{% if session.getMaxUsers() > 1 %}s{% endif %} {{'subscriber'|trans({}, 'platform')}}{% if session.getMaxUsers() > 1 %}s{% endif %}
                         {% endif %}
-                        du {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}} 
-                        au {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale|default('fr') )}}  
+                        {{'from_date'|trans({}, 'platform')}} {{ session.getStartInscriptionDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y' )}} 
+                        {{'to_date'|trans({}, 'platform')}} {{ session.getEndInscriptionDate() | localizeddate( "long", "none", app.request.locale, null, 'd MMMM Y' )}}  
                     {% endif %}
                 </span>
 			</li>
@@ -167,9 +166,8 @@
             {# NOMBRE INSCRITS #}
            <li>
                 <i class='essentiels-icon essentiels__subscribers'></i>
-                Nombre d'inscrits :<br>
-                <span class="slrn-bold">{{ nbUsers }} inscrits à ce jour</span>
-                
+                {{'subs_count'|trans({}, 'platform')}} :<br>
+                <span class="slrn-bold">{{ nbUsers }} {{'subs_count_today'|trans({}, 'platform')}}</span>
             </li>
             
 			{% endif %}
@@ -181,18 +179,18 @@
         </center>
 	</div>
 	
-	<h2>Pré-requis</h2>
+	<h2>{{'prerequisite'|trans({}, 'platform')}}</h2>
 	<div class='sider__content'>
 	{% if mooc.getPrerequisites() is not empty %}
 		{{ mooc.getPrerequisites() | raw }}
 	{% else %}
-		Aucun pré-requis
+		{{'no_prerequisite'|trans({}, 'platform')}}
 	{% endif %}
 	</div>
 	
 
 	{% if mooc.getTeamDescription() is not empty %}
-		<h2>Equipe pédagogique</h2>
+		<h2>{{'school_team'|trans({}, 'platform')}}</h2>
 		<div class='sider__content'>
 			{{ mooc.getTeamDescription() | raw }}
 		</div>
@@ -203,29 +201,29 @@
 			mooc.getHasGplusShare()     or
 			mooc.getHasLinkedinShare()  %}
 
-		<h2>Partager</h2>
+		<h2>{{ 'share'|trans({}, 'platform') }}Partager</h2>
 		<div class='sider__content content_center'>
 			{% if mooc.getHasFacebookShare() %}
 				<a href="#" class="sider_social_link" target="_blank">
-	                <span class="sider_social_link__icon social_facebook">Facebook</span>
+	                <span class="sider_social_link__icon social_facebook">{{ 'facebook'|trans({}, 'platform') }}</span>
 	            </a>
 			{% endif %}
 
 			{% if mooc.getHasTweeterShare() %}
 				<a href="#" class="sider_social_link" target="_blank">
-	                <span class="sider_social_link__icon social_twitter">Twitter</span>
+	                <span class="sider_social_link__icon social_twitter">{{ 'twitter'|trans({}, 'platform') }}</span>
 	            </a>
 			{% endif %}
 
 			{% if mooc.getHasGplusShare() %}
 				<a href="#" class="sider_social_link" target="_blank">
-	                <span class="sider_social_link__icon social_googlep">Google+</span>
+	                <span class="sider_social_link__icon social_googlep">{{ 'gplus'|trans({}, 'platform') }}</span>
 	            </a>
 			{% endif %}
 
 			{% if mooc.getHasLinkedinShare() %}
 				<a href="#" class="sider_social_link" target="_blank">
-	                <span class="sider_social_link__icon social_linkedin">Linkedin</span>
+	                <span class="sider_social_link__icon social_linkedin">{{ 'linkedin'|trans({}, 'platform') }}</span>
 	            </a>
 			{% endif %}
 		</div>

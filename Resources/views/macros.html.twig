@@ -96,7 +96,7 @@
     {% set workspaceElements =
         [
             {
-                'name': 'Les ressources du mooc « ' ~ workspace.getName() ~ ' »',
+                'name': 'mooc_resources'|trans({}, 'platform') ~ ' « ' ~ workspace.getName() ~ ' »',
                 'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'})
             }
         ]
