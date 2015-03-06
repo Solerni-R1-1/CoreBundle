@@ -48,14 +48,12 @@
         {# The Modernizr script MUST stay before the body tag. #}
         {% block javascripts_header %}
             <!--[if ! IE 8]><!-->
-            {% javascripts debug=false filter='jsmin'
-                    'bundles/frontend/modernizr/modernizr-2.5.3.min.js'
-                    'bundles/frontend/jquery/jquery-2.1.0.min.js'
-
-                %}<script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
+                {% javascripts debug=false filter='jsmin'
+                        'bundles/frontend/modernizr/modernizr-2.5.3.min.js'
+                        'bundles/frontend/jquery/jquery-2.1.0.min.js'
+                    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+                {% endjavascripts %}
             <!--<![endif]-->
-            {#<script src="{{ asset('bundles/frontend/modernizr/modernizr-2.5.3.min.js') }}"></script>#}
         {% endblock %}
         {# TARGETING : SPECIFIC IE8, SPECIFIC IE9, BOTH #}
         <!--[if IE 8]>
@@ -75,6 +73,7 @@
         <!--[if lte IE 9]>
             {% block forie %}{% endblock %}
         <![endif]-->
+        {# END CONDITIONNAL SCRIPTS #}
     </head>
     {% set _bodyClasses = block("bodyClasses") %}
     <body{% if _bodyClasses is not empty %} class="{% block bodyClasses %}{% endblock %}"{% endif %}> 
@@ -101,6 +100,9 @@
                 {% endif %}
                 {% if workspace.getMooc().getTitle()|default %}
                     ga('set', 'dimension2', '{{ workspace.getMooc().getTitle()|escape('js') }}');
+                {% endif %}
+                    {% if not workspace.getMooc().isPublic() and app.user|default %}
+                        ga('set', 'dimension5', '{{ app.user.id }}');
                 {% endif %}
             {% endif %}
             {% set roleFound = false %}   
