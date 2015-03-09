@@ -385,6 +385,8 @@ class MoocController extends Controller
         } else {
             $progression = null;
         }
+        
+        $nbUsers = $this->moocService->countUsersForSession($session);
 
         return $this->render(
         'ClarolineCoreBundle:Mooc:moocSessionComponent.html.twig',
@@ -392,7 +394,8 @@ class MoocController extends Controller
             'session'                   => $session,
             'user'                      => $user,
             'progression'               => $progression,
-            'sessionComponentLayout'    => $sessionComponentLayout
+            'sessionComponentLayout'    => $sessionComponentLayout,
+            'nbUsers'                   => $nbUsers
             )
         );
     }
