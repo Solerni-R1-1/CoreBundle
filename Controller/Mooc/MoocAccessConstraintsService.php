@@ -102,11 +102,11 @@ class MoocAccessConstraintsService extends Controller
     	if ($oldSessionsByUsers != null) {
 	    	foreach ($oldSessionsByUsers as $i => $oldSessionByUser) {
     			$collaboratorRole = $roleManager->getCollaboratorRole($oldSessionByUser->getMoocSession()->getMooc()->getWorkspace());
-    			$moocSession = $oldSessionByUser->getMoocSession();
+    			$oldMoocSession = $oldSessionByUser->getMoocSession();
     			$user = $oldSessionByUser->getUser();
     			
-	    		if (!in_array($moocSession, $sessions) || !in_array($user, $users)) {
-	    			if (!$user->getMoocSessions()->contains($moocSession)) {
+	    		if (!in_array($oldMoocSession, $sessions) || !in_array($user, $users)) {
+	    			if (!$user->getMoocSessions()->contains($oldMoocSession)) {
 	    				$user->removeRole($collaboratorRole);
 	    			}
 	    			unset($oldSessionsByUsers[$i]);

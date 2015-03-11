@@ -1355,3 +1355,5 @@ Enseignement: Enseignement
 Métiers: Métiers
 Apprentissage: Apprentissage
 Culture: Culture
+
+access_restricted: 'Vous ne faites pas partie de la liste des participants éligibles à ce MOOC. En cas de réclamation vous pouvez nous contacter à l''adresse suivante : <a href="mailto:help@solerni.com">help@solerni.com</a>'

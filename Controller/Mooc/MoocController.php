@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Mooc\Mooc;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
@@ -93,21 +94,23 @@ class MoocController extends Controller
      */
     public function moocPageAction(Mooc $mooc, $user ) {
         
-        if (  ! $mooc->isPublic()) {
+        $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
+        $nbUsers = $this->moocService->countUsersForSession($session);
+        
+        if (  ! $mooc->isPublic() ) {
         	/* redirect anon users to login if mooc is private */
         	if ($user == 'anon.') {
 	            $url = $this->get('router')
 	                         ->generate('claro_security_login');
+                //$this->get('session')->set('moocSession', $session);
 	            return  $this->redirect($url);
-        	} else if (!$this->roleManager->hasUserAccess($user, $mooc->getWorkspace())) {
-        		throw new AccessDeniedHttpException();
+        	} 
+            /* check righs */
+            if ( ! $this->roleManager->hasUserAccess( $user, $mooc->getWorkspace() ) ) {
+                return $this->return403ForPrivateMooc();
         	}
         }
 
-        $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
-        
-        $nbUsers = $this->moocService->countUsersForSession($session);
-		
         return $this->render(
             'ClarolineCoreBundle:Mooc:moocPresentation.html.twig',
             array(
@@ -281,52 +284,59 @@ class MoocController extends Controller
      */
     public function sessionAddUserAction( $moocSession, $user ){
 
-        /* if anon redirect to login page with query param to redirect user after login */
+        /* Register session and redirect to login if anon. */
         if ( $user == 'anon.' ) {
         	$this->get('session')->set('moocSession', $moocSession);
-            $route = $this->router->generate('claro_security_login', array () );
+            return $this->redirect( $this->router->generate('claro_security_login', array () ) );
+        }
+        
+        // If the mooc is private check rights
+        if (  ! $moocSession->getMooc()->isPublic() ) {
+            if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
+        		return $this->return403ForPrivateMooc();
+        	}
+        }
+        
+        $showmodal = false;
+        if (!$user->isRegisteredToSession($moocSession)) {
+            /* add user to workspace if not already member */
+            $workspace = $moocSession->getMooc()->getWorkspace();
+            $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
+            $isRegistered = false;
+            foreach( $userWorkspaces as $userWorkspace ) {
+                if ( $userWorkspace->getId() == $workspace->getId() ) {
+                    $isRegistered = true;
+                }
+            }
+            if ( ! $isRegistered ) {
+                $this->workspaceManager->addUserAction( $workspace, $user );
+            }
+            /* add user to moocSession */
+            $users = $moocSession->getUsers();
+            $users->add( $user );
+            $moocSession->setUsers( $users );
+            $this->getDoctrine()->getManager()->persist($moocSession);
+            $this->getDoctrine()->getManager()->flush();
+
+            //Send an email
+            if ($this->mailManager->isMailerAvailable()) {
+                $this->mailManager->sendInscriptionMoocMessage($user, $moocSession);
+            }
+            $showmodal = true;
+        }
+
+        /* redirect to lesson default page */
+        if ($showmodal) {
+            $route = $this->router->generate('mooc_view', array ( 
+                'moocId' => $moocSession->getMooc()->getId(), 
+                'moocName' => $moocSession->getMooc()->getAlias(),
+                'showmodal' => $showmodal
+                ) );
         } else {
-        	$showmodal = false;
-            if (!$user->isRegisteredToSession($moocSession)) {
-                /* add user to workspace if not already member */
-                $workspace = $moocSession->getMooc()->getWorkspace();
-                $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
-                $isRegistered = false;
-                foreach( $userWorkspaces as $userWorkspace ) {
-                    if ( $userWorkspace->getId() == $workspace->getId() ) {
-                        $isRegistered = true;
-                    }
-                }
-                if ( ! $isRegistered ) {
-                    $this->workspaceManager->addUserAction( $workspace, $user );
-                }
-                /* add user to moocSession */
-                $users = $moocSession->getUsers();
-                $users->add( $user );
-                $moocSession->setUsers( $users );
-                $this->getDoctrine()->getManager()->persist($moocSession);
-                $this->getDoctrine()->getManager()->flush();
-
-                //Send an email
-                if ($this->mailManager->isMailerAvailable()) {
-                    $this->mailManager->sendInscriptionMoocMessage($user, $moocSession);
-                }
-                $showmodal = true;
-            }
-
-            /* redirect to lesson default page */
-            if ($showmodal) {
-	            $route = $this->router->generate('mooc_view', array ( 
-	                'moocId' => $moocSession->getMooc()->getId(), 
-	                'moocName' => $moocSession->getMooc()->getAlias(),
-	            	'showmodal' => $showmodal
-	                ) );
-            } else {
-	            $route = $this->router->generate('mooc_view', array ( 
-	                'moocId' => $moocSession->getMooc()->getId(), 
-	                'moocName' => $moocSession->getMooc()->getAlias()
-	                ) );
-            }
+            $route = $this->router->generate('mooc_view', array ( 
+                'moocId' => $moocSession->getMooc()->getId(), 
+                'moocName' => $moocSession->getMooc()->getAlias()
+                ) );
         }
 
         return new RedirectResponse($route);
@@ -559,6 +569,14 @@ class MoocController extends Controller
             'progression' => $progression,
             'workspace' => $workspace
             )
+        );
+    }
+    
+    private function return403ForPrivateMooc() {
+        return $this->render(
+            'ClarolineCoreBundle:Exception:error403.html.twig',
+            array( 'custom_message' => $this->translator->trans( 'access_restricted', array(), 'platform') ),
+            new Response( '', 403 )
         );
     }
     

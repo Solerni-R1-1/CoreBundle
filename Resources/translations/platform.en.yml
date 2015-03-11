@@ -1370,3 +1370,5 @@ Enseignement: Teaching
 Métiers: Jobs
 Apprentissage: Learning
 Culture: Culture
+
+access_restricted: 'You are not part of this MOOC private list and therefore you are not authorized to access it. If you think this is a mistake, please report to us by sending an email to : <a href="mailto:help@solerni.com">help@solerni.com</a>'
