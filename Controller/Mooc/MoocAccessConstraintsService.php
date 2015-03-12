@@ -77,7 +77,7 @@ class MoocAccessConstraintsService extends Controller
     		} else {
     			$users = array();
     		}
-    		//die("a");
+            // At this point, we have all the $users that match the constraint
 	    	$this->setNewUsersForConstraint($constraint, $users);
     	}
     }
@@ -98,16 +98,18 @@ class MoocAccessConstraintsService extends Controller
 	    		}
 	    	}
     	}
-    	
-    	if ($oldSessionsByUsers != null) {
+
+        // At this point, we have the $users and all the $sessions of the mooc(s)
+        // We also have the content of the old table definition SessionsByusers
+    	if ($oldSessionsByUsers) {
 	    	foreach ($oldSessionsByUsers as $i => $oldSessionByUser) {
     			$collaboratorRole = $roleManager->getCollaboratorRole($oldSessionByUser->getMoocSession()->getMooc()->getWorkspace());
     			$oldMoocSession = $oldSessionByUser->getMoocSession();
-    			$user = $oldSessionByUser->getUser();
+    			$oldUser = $oldSessionByUser->getUser();
     			
-	    		if (!in_array($oldMoocSession, $sessions) || !in_array($user, $users)) {
-	    			if (!$user->getMoocSessions()->contains($oldMoocSession)) {
-	    				$user->removeRole($collaboratorRole);
+	    		if (!in_array($oldMoocSession, $sessions) || !in_array($oldUser, $users)) {
+	    			if (!$oldUser->getMoocSessions()->contains($oldMoocSession)) {
+	    				$oldUser->removeRole($collaboratorRole);
 	    			}
 	    			unset($oldSessionsByUsers[$i]);
 	    			$em->remove($oldSessionByUser);
@@ -119,7 +121,8 @@ class MoocAccessConstraintsService extends Controller
     		$oldSessionsByUsers = new ArrayCollection();
     		$constraint->setSessionsByUsers($oldSessionsByUsers);
     	}
-    	
+        
+            	
     	foreach ($users as $user) {
     		foreach ($sessions as $session) {
     	

@@ -20,15 +20,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class MoocAccessConstraintsListener extends ContainerAware
 {
-	private $entityManager;
-
-	/**
-	 * @DI\InjectParams({
-	 *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
-	 * })
-	 */
-	public function __construct(/*EntityManager $entityManager*/) {
-		/*$this->entityManager = $entityManager;*/
+	public function __construct() {
+		
 	}
 
     public function postUpdate(LifecycleEventArgs $args) {
