@@ -104,12 +104,17 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->securityContext->getToken()->getUser();
         
-        // Finish mooc session subscribtion
+        // Finish mooc session subscription
         if( $this->session->has('moocSession') ) {
         	$moocSession = $this->session->get('moocSession');
             $uri = $this->router->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
             $this->session->remove('moocSession');
-        // Finish mooc notification 
+        // Finish private mooc authentification 
+        } elseif ( $this->session->has('privateMoocSession') ) {  
+        	$moocSession = $this->session->get('privateMoocSession');
+            $uri = $this->router->generate('mooc_view', array ( 'moocId' => $moocSession->getMooc()->getId(), 'moocName' => $moocSession->getMooc()->getTitle() ));
+            $this->session->remove('privateMoocSession');
+        // Finish mooc notification    
         } elseif ( $this->session->has('moocNotification') ) {
             $uri = $this->session->get('moocNotification');
             $this->session->remove('moocNotification');

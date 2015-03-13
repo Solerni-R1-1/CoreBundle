@@ -100,11 +100,11 @@ class MoocController extends Controller
         if (  ! $mooc->isPublic() ) {
         	/* redirect anon users to login if mooc is private */
         	if ($user == 'anon.') {
-	            $url = $this->get('router')
-	                         ->generate('claro_security_login');
-                //$this->get('session')->set('moocSession', $session);
-	            return  $this->redirect($url);
-        	} 
+                // keep trace of the session
+                $this->get('session')->set('privateMoocSession', $session);
+                // redirect
+	            return  $this->redirect( $url = $this->get('router')->generate('claro_security_login') );
+        	}
             /* check righs */
             if ( ! $this->roleManager->hasUserAccess( $user, $mooc->getWorkspace() ) ) {
                 return $this->return403ForPrivateMooc();
