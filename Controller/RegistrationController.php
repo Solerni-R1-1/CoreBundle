@@ -272,10 +272,15 @@ class RegistrationController extends Controller
             $this->userManager->sendEmailValidationConfirmee($userDb);
             //Generate next url
             $session = $this->request->getSession();
-            if($session->has('moocSession')){
+            if ( $session->has('moocSession') ) {
             	$moocSession = $session->get('moocSession'); 
             	$nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
                 $session->remove('moocSession');
+            } elseif ( $session->has('privateMoocSession') ) {  
+                $moocSession = $session->get('privateMoocSession');
+                $nextUrl = $this->router->generate('mooc_view', array ( 'moocId' => $moocSession->getMooc()->getId(), 'moocName' => $moocSession->getMooc()->getTitle() ));
+                $session->remove('privateMoocSession');
+            // Finish mooc notification    
             } else {
                 $nextUrl = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'), true);
             }
