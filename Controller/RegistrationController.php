@@ -344,7 +344,7 @@ class RegistrationController extends Controller
             
             if ($session->has("privateMoocSession")) {
                 $moocSession = $session->get("privateMoocSession");
-                $moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+                $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
                 $data['privateMoocSession'] = $moocSession;
             }
         	
