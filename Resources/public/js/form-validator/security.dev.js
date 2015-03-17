@@ -80,7 +80,7 @@
         calculatePasswordStrength : function(password) {
 
             var score = 0;
-            var message = ["Contraintes non remplies : "];
+            var message = ["Ajoutez au minimum : "];
 
             var checkRepetition = function (pLen, str) {
                 var res = "";
@@ -113,37 +113,43 @@
 
 
             //password is just a numbers or chars
-            if (password.length > 8 ) {
+            if (password.length >= 8 ) {
                 score += 12;
             } else {
-                message.push("[ Moins de 8 caractères ]");
+                var missingCar = 8 - password.length;
+                if ( missingCar == 1 ) {
+                    numberMissing = missingCar + " caractère supplémentaire";
+                } else {
+                    numberMissing = missingCar + " caractères supplémentaires";
+                }
+                message.push( numberMissing );
             }
 
             //password has 1 numbers
             if (password.match(/(.*[0-9])/)) {
                 score += 12;
             } else {
-                message.push("[ Au moins un chiffre ]");
+                message.push("un chiffre");
             }
 
             //password has 1 symbols
             if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~])/)) {
                 score += 12;
             } else {
-                message.push("[ Au moins un symbole ]");
+                message.push("un symbole");
             }
 
             //password has Upper and Lower chars
             if (password.match(/(.*[a-z])/)) {
                 score += 12;
             } else {
-                message.push("[ Au moins une minuscule ]");
+                message.push("une minuscule");
             }
             
             if (password.match(/(.*[A-Z])/)) {
                 score += 12;
             } else {
-                message.push("[ Au moins une majuscule ]");
+                message.push("une majuscule");
             }
             
             //password has number and chars
@@ -264,7 +270,13 @@
                 var message = "";
                 if ( strength.message.length > 0 ) {
                     for ( var i = 0; i < strength.message.length; i++ ) {
-                        message += strength.message[i] + " ";
+                        endof = ", ";
+                        // Do not add comma on first and last iteration
+                        if ( i == strength.message.length - 1 || i == 0 ) {
+                            endof = "";
+                        }
+                        
+                        message += strength.message[i] + endof;
                     }
                 } else {
                     css.display = "none";

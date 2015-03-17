@@ -52,7 +52,7 @@ jQuery(document).ready(function(jQuery) {
         langage: SolerniMsg,
         onModulesLoaded: function() {
             var config = {
-                fontSize:   '1em',
+                fontSize:   '.9em',
                 padding:    '.2em',
                 bad :       'Complexité très faible',
                 weak :      'Complexité faible',
