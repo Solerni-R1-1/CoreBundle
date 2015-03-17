@@ -53,7 +53,7 @@ jQuery(document).ready(function(jQuery) {
         onModulesLoaded: function() {
             var config = {
                 fontSize:   '.9em',
-                padding:    '.2em',
+                padding:    '.5em .3em .2em .3em',
                 bad :       'Complexité très faible',
                 weak :      'Complexité faible',
                 good :      'Complexité insuffisante',
