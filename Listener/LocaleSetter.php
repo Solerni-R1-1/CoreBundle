@@ -71,7 +71,7 @@ class LocaleSetter
         $availableLocales = $this->localeManager->getAvailableLocales();
         
         // If we have query, delete language list in session and change language
-        if ( $lang && in_array( $lang, $availableLocales )) {       
+        if ( $lang && in_array( $lang, $availableLocales )) {
             if ( $session->has('availableLanguages') ) {
                $session->remove('availableLanguages');
             }

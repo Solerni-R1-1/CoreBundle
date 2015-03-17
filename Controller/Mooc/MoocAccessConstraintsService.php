@@ -77,8 +77,8 @@ class MoocAccessConstraintsService extends Controller
     		} else {
     			$users = array();
     		}
-            // At this point, we have all the $users that match the constraint
-	    	$this->setNewUsersForConstraint($constraint, $users);
+
+            $this->setNewUsersForConstraint($constraint, $users);
     	}
     }
     

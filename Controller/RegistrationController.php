@@ -276,7 +276,7 @@ class RegistrationController extends Controller
             	$moocSession = $session->get('moocSession'); 
             	$nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
                 $session->remove('moocSession');
-            } elseif ( $session->has('privateMoocSession') ) {  
+            } elseif ( $session->has('privateMoocSession') ) {
                 $moocSession = $session->get('privateMoocSession');
                 $nextUrl = $this->get('router')->generate('mooc_view', array ( 'moocId' => $moocSession->getMooc()->getId(), 'moocName' => $moocSession->getMooc()->getTitle() ));
                 $session->remove('privateMoocSession');

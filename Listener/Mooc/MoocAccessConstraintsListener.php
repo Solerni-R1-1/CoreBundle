@@ -38,7 +38,7 @@ class MoocAccessConstraintsListener extends ContainerAware
         } elseif ($entity instanceof User) {
             $uow = $this->container->get("doctrine.orm.entity_manager")->getUnitOfWork();
             $changeSet = $uow->getEntityChangeSet($entity);
-
+            // Only check Constraint if the mail changes
             if (array_key_exists("mail", $changeSet)) {
                 $service = $this->container->get('orange.moocaccesscontraints_service');
                 $service->processUpgradeUsers(array($entity));
