@@ -858,14 +858,14 @@ forgot_password: 'I have forgotten my password'
 user_form_mail: 'E-mail address'
 user_form_firstName: 'First name'
 user_form_lastName: 'Surname'
-user_form_firstName_invalid: 'Your first name cannot contain special characters.'
-user_form_lastName_invalid: 'Your surname cannot contain special characters.'
+user_form_firstName_invalid: 'Your first name cannot contain special characters nor being empty.'
+user_form_lastName_invalid: 'Your surname cannot contain special characters nor being empty.'
 user_form_username: 'Nickname'
 user_form_username_invalid: 'Your nickname must only contain letters and numbers, full stops and underscores, and must be a minimum of 3 characters'
 mail: 'E-mail'
 mail_invalid: 'You must enter a valid e-mail address'
 user_form_plainPassword_first: 'Password'
-user_rules_password: 'You must enter your password which must contain a minimum of 4 characters'
+user_rules_password: 'Your password does not match our password security policy'
 user_form_plainPassword_second: 'Password verification'
 user_form_public_url: Public profile URL
 user_form_publicUrl_invalid: The public URL can only contain letters, numbers, full stops or underscores.
@@ -1372,3 +1372,4 @@ Apprentissage: Learning
 Culture: Culture
 
 access_restricted: 'You are not part of this MOOC private list and therefore you are not authorized to access it. If you think this is a mistake, please report to us by sending an email to : <a href="mailto:help@solerni.com">help@solerni.com</a>'
+password_rules: Your password must have at least 8 characters, at least 1 number, at least 1 lowercase character, at least 1 uppercase character, at least 1 non-alphanumeric character

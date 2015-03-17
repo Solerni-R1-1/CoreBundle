@@ -50,7 +50,23 @@ jQuery(document).ready(function(jQuery) {
         addSuggestions: false,
         validateOnBlur: true,
         langage: SolerniMsg,
-        errorMessagePosition: jQuery('.slrn-errors')
+        onModulesLoaded: function() {
+            var config = {
+                fontSize:   '1em',
+                padding:    '.2em',
+                bad :       'Complexité très faible',
+                weak :      'Complexité faible',
+                good :      'Complexité insuffisante',
+                strong :    'Complexité optimale'
+            };
+            // Init Strength Display
+            if ( jQuery('#profile_form_plainPassword_first').length > 0 ) {
+                jQuery('#profile_form_plainPassword_first').displayPasswordStrength( config );
+            }
+            if ( jQuery('#reset_pwd_form_plainPassword_first').length > 0 ) {
+                jQuery('#reset_pwd_form_plainPassword_first').displayPasswordStrength( config );
+            }
+        }
     });
-    
+
 });

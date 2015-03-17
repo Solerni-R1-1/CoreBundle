@@ -638,7 +638,16 @@ body.dsk .alert { display: none; }
 .panel-body { padding: 0; }
 .label { font-weight: 400; }
 
-.slrn-input { margin: 1.5em 0; border: 3px solid #999; outline: 0; }
+.slrn-input { 
+    margin:     1.5em 0 .2em 0;
+    border:     3px solid #999; 
+    outline:    0; 
+}
+
+.slrn-input-wrapper {
+    position: relative;
+}
+
 .has-error .form-control:focus,
 .slrn-input:focus {
     border-color: #999;
@@ -648,7 +657,49 @@ body.dsk .alert { display: none; }
 .has-success .control-label { color: #606060; }
 .slrn-input:focus::-webkit-input-placeholder { color: transparent; }
 .slrn-input:focus::-moz-placeholder { color: transparent; }
-.slrn-checkbox-w { margin-bottom: .5em; overflow: hidden; }
+
+.slrn-checkboxes {
+    margin: 1.5em 0 1em;
+}
+
+.slrn-checkbox-w { 
+    margin-bottom: .5em; 
+    overflow: hidden; 
+}
+
+.password-helper {
+    font-size:  1.5em;
+    position:   absolute;
+    right:      -1.3em; 
+    top:        .3em;
+}
+
+.slrn-input-wrapper .tooltip-inner { 
+    background-color:   #999 !important; 
+    color:              #FFF;
+    width:              300px;
+}
+
+
+.slrn-input-wrapper .tooltip.right .tooltip-arrow,
+.slrn-input-wrapper .tooltip.right .tooltip-arrow:after { 
+    border-right-color: #999 !important; 
+}
+
+.slrn-input-wrapper .tooltip.in { 
+    opacity:1; 
+    filter:alpha( opacity=100 ); 
+}
+
+.strength-meter-wrapper {
+    text-align:     left;
+    margin-bottom:  .5em;
+}
+
+.slrn-reset-password {
+    margin-bottom: 1em;
+}
+
 .slrn-mention { margin-top: 1em; font-style: italic; }
 .slrn-forgot-password--link { margin: 1em 0; color: #333; display: block; }
 .slrn-forgot-password--link:hover { color: #333; } 
