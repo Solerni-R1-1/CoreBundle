@@ -78,7 +78,7 @@ class MoocSessionType extends AbstractType
                         'required' => false
                     ))
             ->add('forum', 'entity', array(
-                'label' => 'Forum',
+                'label' => 'forum',
                 'property' => 'name',
                 'empty_value' => 'session_choose_forum',
                 'class' => 'ClarolineCoreBundle:Resource\ResourceNode',

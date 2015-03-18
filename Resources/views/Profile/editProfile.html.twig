@@ -26,7 +26,8 @@
             	<!-- Empty block -->
             	</div>
             	<div class="col-md-9 col-xs-9">
-            		Les champs marqués d'une étoile <span class="slrn-profile-mandatory-char-inline">*</span>&nbsp; sont obligatoires
+                    {% set symbol = '<span class="slrn-profile-mandatory-char-inline">*</span>' %}
+                    {{ 'mandatory_fields'|trans({'%symbol%': symbol}, 'platform')|raw }}
             	</div>
                 {# FIRST NAME #}
                 <div class="form-group row">
@@ -132,7 +133,7 @@
                 <div class="form-group row">
                     <label class="control-label col-md-3"></label>
                     <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
-                        <i class="small">Merci d'utiliser une image au format JPG, GIF ou PNG, de 2048px par 2048px maximum et de 6Mo au plus.</i>
+                        <i class="small">{{'format_use'|trans({}, 'platform')}}</i>
                     </div>
                 </div>
                 {# UPLOAD BUTTON #}
@@ -189,6 +190,13 @@
                         {{ form_errors(form.country) }} 
                     </div>
                 </div>
+                {# LOCALE  #}
+                <div class="form-group row">
+                    {{ form_label(form.locale, label|default(null), { 'label_attr' : { 'class': '' } } ) }}
+                    <div class="col-md-3 col-xs-3">
+                       {{ form_widget(form.locale, {'attr': { 'class' : '' } }) }}
+                    </div>
+                </div>
                 <div class="form-group row">
                     {{ form_label(form.birthdate) }}
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
@@ -241,7 +249,7 @@
                 {# OPTIN #}
                 {% if form.accepted_com_terms is defined %}
                 <div class="form-group row">
-                    <label class="control-label col-md-3 ">Autorisation d'exploitation</label>
+                    <label class="control-label col-md-3 ">{{'authorize_exploitation'|trans({}, 'platform')}}</label>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.accepted_com_terms) }}
                         <label for="profile_form_accepted_com_terms" style="font-weight: normal">{{ form.accepted_com_terms.vars.label|trans({}, 'platform') }}</label>
@@ -263,13 +271,6 @@
                        {{ form_widget(form.phone, {'attr': { 'class' : 'hide' } }) }}
                     </div>
                 </div>
-                {# CACHE : LOCALE  #}{#
-                <div class="form-group row">
-                    {{ form_label(form.locale, label|default(null), { 'label_attr' : { 'class': '' } } ) }}
-                    <div class="col-md-3 col-xs-3">
-                       {{ form_widget(form.locale, {'attr': { 'class' : '' } }) }}
-                    </div>
-                </div>#}
                 {# CACHE : PLATFORM ROLES  #}
                 {# TODO : ALLOW ADMIN TO CHANGE ROLE #}
                 {% if form.platformRoles is defined %}

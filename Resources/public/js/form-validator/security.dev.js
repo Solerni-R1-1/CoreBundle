@@ -59,10 +59,14 @@
         name : 'strength',
         validatorFunction : function(val, $el, conf) {
             var requiredStrength = $el.valAttr('strength')
-            if(requiredStrength && requiredStrength > 3)
+            
+            if(requiredStrength && requiredStrength > 3) {
                 requiredStrength = 3;
-
-            return $.formUtils.validators.validate_strength.calculatePasswordStrength(val) >= requiredStrength;
+            }
+            
+            var strengthValue = $.formUtils.validators.validate_strength.calculatePasswordStrength(val);
+            
+            return strengthValue.score >= requiredStrength;
         },
         errorMessage : '',
         errorMessageKey: 'badStrength',
@@ -74,12 +78,10 @@
          * @return {Number}
          */
         calculatePasswordStrength : function(password) {
-
-            if (password.length < 4) {
-                return 0;
-            }
-
+            
+            var translator = window.Translator;
             var score = 0;
+            var message = [translator.get('platform:password_hint_intro')];
 
             var checkRepetition = function (pLen, str) {
                 var res = "";
@@ -104,66 +106,103 @@
             };
 
             //password length
-            score += password.length * 4;
-            score += ( checkRepetition(1, password).length - password.length ) * 1;
-            score += ( checkRepetition(2, password).length - password.length ) * 1;
-            score += ( checkRepetition(3, password).length - password.length ) * 1;
-            score += ( checkRepetition(4, password).length - password.length ) * 1;
+            //score += password.length * 4;
+            //score += ( checkRepetition(1, password).length - password.length ) * 1;
+            //score += ( checkRepetition(2, password).length - password.length ) * 1;
+            //score += ( checkRepetition(3, password).length - password.length ) * 1;
+            //score += ( checkRepetition(4, password).length - password.length ) * 1;
 
-            //password has 3 numbers
-            if (password.match(/(.*[0-9].*[0-9].*[0-9])/)) {
-                score += 5;
+
+            //password is just a numbers or chars
+            if (password.length >= 8 ) {
+                score += 12;
+            } else {
+                var missingCar = 8 - password.length;
+                if ( missingCar == 1 ) {
+                    numberMissing = missingCar + translator.get('platform:password_hint_morecar');
+                } else {
+                    numberMissing = missingCar + translator.get('platform:password_hint_morecars');
+                }
+                message.push( numberMissing );
             }
 
-            //password has 2 symbols
-            if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~].*[!,@,#,$,%,^,&,*,?,_,~])/)) {
-                score += 5;
+            //password has 1 numbers
+            if (password.match(/(.*[0-9])/)) {
+                score += 12;
+            } else {
+                message.push(translator.get('platform:password_hint_onenumber'));
+            }
+
+            //password has 1 symbols
+            if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~])/)) {
+                score += 12;
+            } else {
+                message.push(translator.get('platform:password_hint_onesymbol'));
             }
 
             //password has Upper and Lower chars
-            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) {
-                score += 10;
+            if (password.match(/(.*[a-z])/)) {
+                score += 12;
+            } else {
+                message.push(translator.get('platform:password_hint_onemin'));
             }
-
+            
+            if (password.match(/(.*[A-Z])/)) {
+                score += 12;
+            } else {
+                message.push(translator.get('platform:password_hint_onemaj'));
+            }
+            
             //password has number and chars
-            if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) {
-                score += 15;
-            }
+            //if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) {
+            //    score += 12;
+            //}
             //
             //password has number and symbol
-            if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/) && password.match(/([0-9])/)) {
-                score += 15;
-            }
+            //if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/) && password.match(/([0-9])/)) {
+            //    score += 15;
+            //}
 
             //password has char and symbol
-            if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/) && password.match(/([a-zA-Z])/)) {
-                score += 15;
-            }
+            //if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/) && password.match(/([a-zA-Z])/)) {
+            //    score += 15;
+            //}
 
             //password is just a numbers or chars
-            if (password.match(/^\w+$/) || password.match(/^\d+$/)) {
-                score -= 10;
-            }
+            //if (password.match(/^\w+$/) || password.match(/^\d+$/)) {
+            //    score -= 10;
+            //}
+            
 
             //verifying 0 < score < 100
             if (score < 0) {
                 score = 0;
             }
+            
             if (score > 100) {
                 score = 100;
             }
 
-            if (score < 20) {
-                return 0;
+            if (score < 12) {
+                score = 0;
             }
-            else if (score < 40) {
-                return 1;
+            else if (score < 36) {
+                score = 1;
             }
-            else if(score <= 60) {
-                return 2;
+            else if(score < 60) {
+                score = 2;
             }
             else {
-                return 3;
+                score = 3;
+            }
+            
+            if ( message.length == 1 ) {
+                message = ""
+            }
+            
+            return {
+                'score': score,
+                'message': message
             }
         },
 
@@ -200,11 +239,11 @@
 
                 var strength = $.formUtils.validators.validate_strength.calculatePasswordStrength(val);
                 var css = {
-                    background: 'pink',
-                    color : '#FF0000',
+                    background: 'transparent',
+                    color : 'rgb( 255, 0, 80 )',
                     fontWeight : 'bold',
-                    border : 'red solid 1px',
-                    borderWidth : '0px 0px 4px',
+                    //border : 'red solid 1px',
+                    //borderWidth : '0px 0px 4px',
                     display : 'inline-block',
                     fontSize : config.fontSize,
                     padding : config.padding
@@ -212,26 +251,41 @@
 
                 var text = config.bad;
 
-                if(strength == 1) {
-                    text = config.weak;
+                if(strength.score == 1) {
+                    //css.borderColor = 'rgb( 255, 0, 79 )';
+                    css.color = 'rgb( 255, 0, 80 )';
+                    //text = strength.message;
                 }
-                else if(strength == 2) {
-                    css.background = 'lightyellow';
-                    css.borderColor = 'yellow';
-                    css.color = 'goldenrod';
-                    text = config.good;
+                else if(strength.score == 2) {
+                    //css.background = 'lightyellow';
+                    //css.borderColor = 'goldenrod';
+                    css.color = '#FF8800';
+                    //text = config.good;
                 }
-                else if(strength >= 3) {
-                    css.background = 'lightgreen';
-                    css.borderColor = 'darkgreen';
-                    css.color = 'darkgreen';
-                    text = config.strong;
+                else if(strength.score >= 3) {
+                    //css.background = 'lightgreen';
+                    //css.borderColor = '#C9D200';
+                    css.color = '#C9D200';
+                    //text = config.strong;
                 }
-
+                var message = "";
+                if ( strength.message.length > 0 ) {
+                    for ( var i = 0; i < strength.message.length; i++ ) {
+                        endof = ", ";
+                        // Do not add comma on first and last iteration
+                        if ( i == strength.message.length - 1 || i == 0 ) {
+                            endof = "";
+                        }
+                        
+                        message += strength.message[i] + endof;
+                    }
+                } else {
+                    css.display = "none";
+                }
 
                 $displayContainer
                     .css(css)
-                    .text(text);
+                    .text(message);
             });
         }
     });

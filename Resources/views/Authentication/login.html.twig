@@ -2,17 +2,17 @@
 
 {% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}{# translation #}
 
-{% block formTitle %}J'ai déjà un compte, je me connecte{% endblock %}
+{% block formTitle %}{{'already_registered'|trans({}, 'platform')}}{% endblock %}
 
 {% block solerniHeaderImage %}
      <div class="slrn-header">
         <div class="container slrn-header_w">
             <div class="slrn-header__body">
-                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/registration_title.png') }}" alt="" width="" height="" />
-                <h1 class="slrn-header__content" >Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs</h1>
+                <span class="slrn-header__tagimage londrina-solid">{{'i_connect_now'|trans({}, 'platform')}}</span>
+                <h1 class="slrn-header__content" >{{'tagline_header'|trans({}, 'platform')}}</h1>
             </div>
         </div>
-        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/registration_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/registration_header.jpg') }}" alt="" width="1171" height="221" />
     </div>
 {% endblock %}
 
@@ -74,8 +74,8 @@
 {% endblock %}
     
 {% block alternateText %}
-    <h2 class="slrn-section-title">Je n'ai pas de compte, je m'inscris</h2>
-    <p>Vous n'avez pas de compte Solerni ?<br />
-    Créez un compte à partir de votre email ou inscrivez-vous avec Facebook</p>
-    <p><a class="slrn-link" href="{{ path('claro_registration_register_user') }}">Je m'inscris</a></p>
+    <h2 class="slrn-section-title">{{ 'no_account'|trans({}, 'platform') }}</h2>
+    <p>{{ 'solerni_question_reverse'|trans({}, 'platform') }}<br />
+    {{ 'create_account'|trans({}, 'platform') }}</p>
+    <p><a class="slrn-link" href="{{ path('claro_registration_register_user') }}">{{ 'i_register'|trans({}, 'platform') }}</a></p>
 {% endblock %}

@@ -6,9 +6,10 @@
     {#{'bad_request' | trans({}, 'platform') }#}
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
-            <p><b>Désolé,</b></p>
-            <p>La syntaxe de votre requête est erronée.<br/>
-            Vous pouvez revenir à <a href="javascript:history.back()">la page précédente</a> ou à <a href="/">l'accueil.</a></p>
+            <p><b>{{'sorry'|trans({}, 'platform')}},</b></p>
+            <p>{{'wrong_request'|trans({}, 'platform')}}<br/>
+            {{'get_back_message'|trans({}, 'platform')|raw}}
+            </p>
         </div>
     </div>
 {% endblock %}

@@ -37,7 +37,7 @@
                         </table>
                         {% if graph_datas.export is defined %}
                             <div class="slrn-analytics-export-wrapper slrn-analytics-export-wrapper--table">
-                                <span class="slrn-analytics-export-title">Télécharger le rapport</span>
+                                <span class="slrn-analytics-export-title">{{ 'download_report'|trans({}, 'platform') }}</span>
                                  {% for route, libelle in graph_datas.export %}
                                     <a class="btn btn-gris" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
                                         {{ libelle|trans({}, 'platform') }}
@@ -54,7 +54,7 @@
                         {% endif %}
                         {% if graph_datas.export is defined %}
                             <div class="slrn-analytics-export-wrapper slrn-analytics-export-wrapper--graph">
-                                <span class="slrn-analytics-export-title">Télécharger le rapport</span>
+                                <span class="slrn-analytics-export-title">{{ 'download_report'|trans({}, 'platform') }}</span>
                                  {% for route, libelle in graph_datas.export %}
                                     <a class="btn btn-gris" href="{{ path(route, { 'workspace':workspace.getId(), 'nbDays':5 }) }}">
                                         {{ libelle|trans({}, 'platform') }}

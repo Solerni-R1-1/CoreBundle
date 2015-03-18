@@ -62,7 +62,7 @@
                                 </div> 
                             </div>
                             <div class="mooc_preferences">
-                                <p class="slrn-bold slrn-margin-top-40">Visibilité des moocs auquels vous participez</p>
+                                <p class="slrn-bold slrn-margin-top-40">{{'your_moocs_visibility'|trans({}, 'platform')}}</p>
                                 {% if userMoocPreferencesArray|default %}
                                     {% for userMoocPreferences in userMoocPreferencesArray %}
                                         {% set formView = userMoocPreferences['userMoocPreferencesForm'].createView() %}

@@ -84,23 +84,17 @@
     {% if sessionComponentLayout != 'slider-small' %}
         <div class="presentation__mooc__block presentation__mooc__meta">
             <span class="presentation__mooc__meta__date">
-                <p>Début le {{ session.getStartDate|date('d.m.Y') }}</p>
-                <p>Fin le {{ session.getEndDate|date('d.m.Y') }}</p>
+                <p>{{ 'start_on'|trans({}, 'platform' )}} {{ session.getStartDate|date('d.m.Y') }}</p>
+                <p>{{ 'end_on'|trans({}, 'platform' )}} {{ session.getEndDate|date('d.m.Y') }}</p>
             </span>
-            <span class="presentation__mooc__meta__badge">
-
-                    Badgeant
-
-            </span>
+            <span class="presentation__mooc__meta__badge">{{ 'badgeant'|trans({}, 'platform' )}}</span>
             <span class="presentation__mooc__meta__price">
-
                     {% if mooc.getCost() is not defined or mooc.getCost() is empty or mooc.getCost() == 0 %}
-                        Mooc gratuit
+                        {{ 'free_mooc'|trans({}, 'platform' )}}
                     {% else %}
-                        Mooc gratuit
+                        {{ 'free_mooc'|trans({}, 'platform' )}}
                         {#{{ mooc.getCost() }}&nbsp;€#}{# use it when we need to print cost #}
                     {% endif %}
-
             </span>
         </div>
     {% endif %}

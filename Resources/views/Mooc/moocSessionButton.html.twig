@@ -47,13 +47,13 @@
         	{% endif %}
         {% else %}
             {# otherwise just display invisible button for spacing #}
-            <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
+            <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div>{# here for spacing #}
         {% endif %}
     {% endif %}
             
  {# session is not started yet #}    
 {% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() or session.getStartDate() > date() and isRegistered %}
-    <a class="btn btn-gris disabled" href="#">Disponible le {{ session.getStartDate()|date('d/m/Y') }}</a>
+    <a class="btn btn-gris disabled" href="#">{{ 'available_on'|trans({}, 'platform') }} {{ session.getStartDate()|date('d/m/Y') }}</a>
 
 {# user is not subscribed and date is over #}
 {% elseif session.getEndInscriptionDate() < date("midnight today") and not isRegistered %}

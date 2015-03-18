@@ -115,6 +115,12 @@ class AuthenticationController
         	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
         	$data['moocSession'] = $moocSession;
         }
+        
+        if ($session->has("privateMoocSession")) {
+        	$moocSession = $session->get("privateMoocSession");
+        	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+        	$data['privateMoocSession'] = $moocSession;
+        }
 
         $data['last_username'] = $lastUsername;
         $data['error'] = $error;

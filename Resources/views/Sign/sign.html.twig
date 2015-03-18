@@ -5,15 +5,22 @@
 {% block solerniHeaderImage %}{% endblock %}
 
 {% block content %}
-	{% if moocSession is defined %}<div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
-	<h2 class="slrn-login-mooc-register">{{ "login_register_mooc"|trans({"%moocName%": moocSession.getMooc().getTitle()}, "platform")|raw }}</h2>
-		<hr class="slrn-hr"/>
-	</div>{% endif %}
+    {% if privateMoocSession|default %}
+        {% set isPrivate = true %}
+    {% endif %}
+	{% if moocSession|default  %}
+        <div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
+            <h2 class="slrn-login-mooc-register">
+                {{ "login_register_mooc"|trans({"%moocName%": moocSession.getMooc().getTitle()}, "platform")|raw }}
+            </h2>
+            <hr class="slrn-hr"/>
+        </div>
+    {% endif %}
     <div class="col-md-6 col-xs-6 slrn-md-6 slrn-md-6--signin">
         <h1 class="slrn-section-title">{% block formTitle %}{% endblock %}</h1>
-        {% if is_facebook_available() %}
+        {% if is_facebook_available() and not isPrivate|default %}
             <button onclick="fb_login();" disabled="disabled" class="slrn-facebook-connect">
-                Je me connecte avec Facebook
+                {{ 'connect_with_facebook'|trans({}, 'platform')}}
             </button>
             <script>
                 function fb_login() {
@@ -33,7 +40,7 @@
             <div class="slrn-hr"/><span class="slrn-hr__inner">{{ 'ou'|trans({}, 'platform' )}}</span></div>
         {% endif %}
         {% block signinForm %}{% endblock %}
-        <p class="small slrn-mention">* Tous les champs sont obligatoires</p>
+        <p class="small slrn-mention">* {{'all_fields_mandatory'|trans({}, 'platform')}}</p>
     </div>
     <div class="col-md-1 cold-xd-1"></div>
     <div class="col-md-5 slrn-md-5 slrn-md-5--signin col-xs-5">

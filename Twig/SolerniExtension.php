@@ -696,6 +696,10 @@ class SolerniExtension extends \Twig_Extension
         
         libxml_use_internal_errors(true);
         
+        if ( ! $content ) {
+            return $content;
+        }
+        
         $dom = new \DOMDocument;
         $dom->loadHTML( $content );
         

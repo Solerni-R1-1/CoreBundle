@@ -53,14 +53,6 @@
 {% block layout %}
  <header id="top_bar" class="navbar navbar-inverse navbar-fixed-top slrn-navbar" role="navigation">
         <div class="container">
-             {# <div class="navbar-header">
-                MENU BUTTON WHEN RESIZED 
-                <button class="navbar-toggle" data-toggle="rm-collapse" data-target="rm-.navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>#}
             <div class="rm-navbar-collapse rm-collapse slrn-top-header">
                 <a class="navbar-brand logo slrn-logo slrn-top-header__item" title="{{ 'solerni_homepage'|trans( {}, 'platform' ) }}" href="{{ path( 'solerni_static_page', { 'name': 'cms_url' } ) }}"></a>
                 <ul class="nav navbar-nav slrn-topbar slrn-top-header__item">
@@ -82,54 +74,71 @@
         </div>
     </div>
    {# <div id="push"></div> #}
-    <footer id="footer" class="slrn-footer slrn-footer-fixed">
+    <footer id="footer" class="slrn-footer">
         <div class="container">
-            <a target="_blank" href="http://www.orange.com">
-                <div class="footer_powered">powered by Orange</div>
-            </a>
-
-            <div class="footer_social">
-                <span class="footer_social__text">Suivez nous sur</span>
+            <div class="col-md-4 text-cell">
+                <img src="{{ asset('bundles/clarolinecore/images/logo_solerni_footer.png') }}" class="footer_logo" alt="" width="" height=""/>
+                <p class="footer_title">{{'solerni_footer_title'|trans({}, 'platform')}}</p>
+                <p>{{'solerni_footer_text'|trans({}, 'platform')}}</p>
+            </div>
+            <div class="col-md-2 footer-column ">
+                <p class="footer_title">A propos de nous</p>
+                <ul class="footer_cms_menu__column">
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_quoi' } ) }}">{{ 'about_solerni'|trans({}, 'platform') }}</a></li>
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_partenaires' } ) }}">{{ 'partners'|trans({}, 'platform') }}</a></li>
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_legal' } ) }}">{{ 'legals'|trans({}, 'platform') }}</a></li>
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link js-link_cgu" href="{{ path( 'solerni_static_page', { 'name': 'cms_cgu' } ) }}">{{ 'cgu'|trans({}, 'platform') }}</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 footer-column ">
+                <p class="footer_title">Support</p>
+                <ul class="footer_cms_menu__column">
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'faq'|trans({}, 'platform') }}</a></li>                
+                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'contact_show' ) }}">{{ 'contact'|trans({}, 'platform') }}</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 footer-column ">
+                <p class="footer_title">Suivez-nous</p>
                 <a href="{{ path( 'solerni_static_page', { 'name': 'social_facebook' } ) }}" class="footer_social_link" target="_blank">
-                    <span class="footer_social_link__tooltip">Facebook</span>
-                    <span class="footer_social_link__icon social_facebook">Facebook</span>
+                    <span class="footer_social_link__icon social_facebook">{{ 'facebook'|trans({}, 'platform') }}</span><!--
+                    --><span class="footer_icon_text">{{ 'facebook'|trans({}, 'platform') }}</span>
                 </a>
-                {# <a href="{{ path( 'solerni_static_page', { 'name': 'social_gplus' } ) }}" class="footer_social_link">
-                    <span class="footer_social_link__tooltip">Google+</span>
-                    <span class="footer_social_link__icon social_googlep">Google Plus</span>
-                </a> #}
-                {# <a href="{{ path( 'solerni_static_page', { 'name': 'social_linkedin' } ) }}" class="footer_social_link">
-                    <span class="footer_social_link__tooltip">Linkedin</span>
-                    <span class="footer_social_link__icon social_linkedin" style="display:block;">Linkedin</span>
-                </a> #}
-                {# <a href="{{ path( 'solerni_static_page', { 'name': 'social_rss' } ) }}" class="footer_social_link">
-                    <span class="footer_social_link__tooltip">Flux RSS</span>
-                    <span class="footer_social_link__icon social_rss">Rss</span>
-                </a> #}
                 <a href="{{ path( 'solerni_static_page', { 'name': 'social_twitter' } ) }}" class="footer_social_link" target="_blank">
-                    <span class="footer_social_link__tooltip">Twitter</span>
-                    <span class="footer_social_link__icon social_twitter">Twitter</span>
+                    <span class="footer_social_link__icon social_twitter">{{ 'twitter'|trans({}, 'platform') }}</span><!--
+                    --><span class="footer_icon_text">{{ 'twitter'|trans({}, 'platform') }}</span>
                 </a>
                 <a href="{{ path( 'solerni_static_page', { 'name': 'social_blog' } ) }}" class="footer_social_link">
-                    <span class="footer_social_link__tooltip">Blog</span>
-                    <span class="footer_social_link__icon social_blog">Blog</span>
+                    <span class="footer_social_link__icon social_blog">{{ 'blog'|trans({}, 'platform') }}</span><!--
+                    --><span class="footer_icon_text">{{ 'blog'|trans({}, 'platform') }}</span>
                 </a>
             </div>
-
-            <nav class="footer_cms_menu">
-                <ul class="footer_cms_menu__column">
-                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_quoi' } ) }}">Qu'est-ce que Solerni ?</a></li>
-                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_partenaires' } ) }}">Partenaires</a></li>
+            <div class="col-md-2 footer-column ">
+                <p class="footer_title">International</p>
+                <ul class="slrn-footer-languageblock">
+                    {% import 'ClarolineCoreBundle:Layout:topBarItems.html.twig' as topbar %}
+                    {% use 'ClarolineCoreBundle:Partials:dropdownLanguages.html.twig' %}
+                    {# list available languages #}
+                    {% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
+                    {% for language in app.session.get('availableLanguages') %}
+                        {% if currentLocale == language.shorthand %}
+                            {% set currentLocaleFull = language.fullName %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ topbar.item({
+                        'name': currentLocaleFull, 
+                        'icon':'', 
+                        'route':'', 
+                        'dropdown': block('dropdownLangage'),
+                        'css':'slrn-footer--language' 
+                    }) }}
                 </ul>
-                <ul class="footer_cms_menu__column">
-                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_legal' } ) }}">Mentions légales</a></li>
-                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_cgu' } ) }}">CGU</a></li>
-                </ul>
-                <ul class="footer_cms_menu__column">
-                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="mailto:contact@solerni.com">Contact</a></li>
-                    <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">FAQ</a></li>
-                </ul>
-            </nav>
+            </div>
+        </div>
+        <div class="container">
+            <hr class="slrn-hr slrn-hr--thin">
+            <a target="_blank" href="http://www.orange.com">
+                <div class="footer_powered">{{ 'powered_orange'|trans({}, 'platform') }}</div>
+            </a>
         </div>
     </footer>
 {% endblock %}

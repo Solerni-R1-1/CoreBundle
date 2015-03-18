@@ -1,4 +1,4 @@
-'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters (separated by semicolons).'
+﻿'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters (separated by semicolons).'
 'The code {{ code }} is already assigned to another workspace.': 'The code {{ code }} is already assigned to another workspace.'
 'The name {{ name }} is already in use.': 'The name {{ name }} is already in use.'
 'The user or group {{ name }} does not exist.': 'User or group [{{ name }}] does not exist.'
@@ -6,9 +6,11 @@ badge_automatic_awarding_need_rules: 'Rules must be defined to allow automatic a
 badge_need_at_least_one_translation: 'At least one complete translation must be defined for the badge'
 badge_need_image: 'An image must be associated to the badge'
 badge_expiring_need_period_and_duration: 'The badge must have a validity period'
-google_meta_tag_error: 'The field must be a meta tag, example: <meta name="google-site-verification" content="XXX" />'
+google_meta_tag_error: 'The field must be a meta tag, example: <meta name="google-site-verification" content="XXX" />'	
 password_mismatch: 'Passwords mismatch'
-special_char_not_allowed: 'Special characters are not allowed (allowed characters are: a-z, A-Z, 0-9, _ and .)'
+special_char_not_allowed: 'Special characters are not allowed (allowed characters are: a-z, A-Z, 0-9, _ and .) '
 public_profile_url_not_valid: 'Your public profile URL is not valid.'
 name_required: Name required.
 role_already_exists: This role already exists.
+maxSizeMessage: 'The file is too large ({{ size }} MB). Its size must not exceed {{ limit }} MB.'
+user_ws_not_exists: The {{ name }} user, group or workspace does not exist.

@@ -6,10 +6,10 @@
      <div class="slrn-header slrn-header--slim">
         <div class="container slrn-header_w container">
             <div class="slrn-header__body">
-                <img class="slrn-header__tagimage" src="{{ asset('bundles/clarolinecore/images/header-catalogue.png') }}" alt="Consulter le catalogue" width="228" height="91" />
-                <h1 class="slrn-header__content" >Découvrez les moocs<br>proposés par Solerni</h1>
+                <span class="slrn-header__tagimage londrina-solid">{{'consult_catalog'|trans({}, 'platform')}}</span>
+                <h1 class="slrn-header__content" >{{'discover_solerni_moocs'|trans({}, 'platform')|raw}}</h1>
             </div>
         </div>
-        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/logging_header.jpg') }}" alt="Visuel se connecter" width="1171" height="221" />
+        <img class="slrn-header__bgimage" src="{{ asset('bundles/clarolinecore/images/logging_header.jpg') }}" alt="" width="1171" height="221" />
     </div>
 {% endblock %}

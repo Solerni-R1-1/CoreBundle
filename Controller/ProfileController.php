@@ -142,6 +142,7 @@ class ProfileController extends Controller
     public function editPublicProfilePreferencesAction(User $loggedUser)
     {
         $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
+        $userMoocPreferencesArray = array();
         
         // create also forms for each userMoocPreferences (right now, the only pref. is visibility)
         $formMooc = array();

@@ -104,7 +104,7 @@
         var forumPublications = {};
         var forumsContributionMean = 0;
     {% endif %}
-    
+
     {% if activeUsers is defined %}
         var activeUsersData = [];
         var activeUsers = {{ activeUsers[0] }};

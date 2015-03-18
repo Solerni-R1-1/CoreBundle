@@ -111,9 +111,9 @@ class ProfileType extends AbstractType
 	        ->add('picture','text', array('label' => 'picture'))
 	        ->add('gender', 'choice', array(
 	        	'choices' => array(
-	        			User::GENDER_FEMALE => "Féminin",
-	        			User::GENDER_MALE => "Masculin",
-	        			User::GENDER_UNKNOWN => "Je ne veux pas le dire"
+	        			User::GENDER_FEMALE => "female",
+	        			User::GENDER_MALE => "male",
+	        			User::GENDER_UNKNOWN => "no_tell"
 	        		),
 	        	'expanded' => true
 	        	)

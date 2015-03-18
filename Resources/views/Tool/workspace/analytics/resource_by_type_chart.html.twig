@@ -34,7 +34,7 @@
     <div id="analytics-resources-active-users-piechart" class="panel panel-default">
         <div class="panel-heading">
             <i class="icon-bar-chart"></i>
-            Utilisateurs actifs
+            {{'active_users'|trans({}, 'platform')}}
         </div>
         <div id="collapse-active-users-piechart" class="panel-body">
             <div id="container-active-users-piechart">
@@ -71,17 +71,17 @@
         var activeUsers = {{ activeUsers[0] }};
         var totalUsers = {{ activeUsers[1] }};
         var percentageActive = (activeUsers / totalUsers) * 100;
-        activeUsersData.push(["Utilisateurs actifs", percentageActive ]);
-        activeUsersData.push(["Utilisateurs non actifs", (100 - percentageActive)]);
+        activeUsersData.push(["{{'active_users'|trans({}, 'platform')}}", percentageActive ]);
+        activeUsersData.push(["{{'non_active_users'|trans({}, 'platform')}}", (100 - percentageActive)]);
     {% endif %}
 
     {% if badgesSuccessRates is defined %}
         {% for badge in badgesSuccessRates %}
         var badge{{ loop.index0 }}Rates = [];
-        badge{{ loop.index0 }}Rates.push(["Success", {{ badge['success'] }}]);
-        badge{{ loop.index0 }}Rates.push(["Failure", {{ badge['failure'] }}]);
-        badge{{ loop.index0 }}Rates.push(["In Progress", {{ badge['inProgress'] }}]);
-        badge{{ loop.index0 }}Rates.push(["Available", {{ badge['available'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'success'|trans({}, 'platform')}}", {{ badge['success'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'failure'|trans({}, 'platform')}}", {{ badge['failure'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'in_progress'|trans({}, 'platform')}}", {{ badge['inProgress'] }}]);
+        badge{{ loop.index0 }}Rates.push(["{{'available'|trans({}, 'platform')}}", {{ badge['available'] }}]);
         {% endfor %}
     {% endif %}
     

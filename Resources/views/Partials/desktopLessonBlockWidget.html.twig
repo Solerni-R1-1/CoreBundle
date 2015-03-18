@@ -1,56 +1,56 @@
 {# this is the lesson block widget on the left on the lesson (Page Apprendre) #}
 {% for lesson in lessons %}
-{% if lesson.isRegistered == false %}
-	Vous n'avez pas rejoint de MOOC ? Solerni vous propose
-{% endif %}
+    {% if lesson.isRegistered == false %}
+        {{ 'still_no_moocs'|trans({}, 'platform') }}
+    {% endif %}
 
-{% if lesson.isRegistered == true %}
-    {% set buttonText = 'Accéder au cours' %}
-{% else %}
-    {% set buttonText = 'En savoir +' %}
-{% endif %}
-        
-<div class='presentation__mooc'>
+    {% if lesson.isRegistered == true %}
+        {% set buttonText = 'Accéder au cours'|trans({}, 'platform') %}
+    {% else %}
+        {% set buttonText = 'En savoir +'|trans({}, 'platform') %}
+    {% endif %}
 
-	<div class="presentation__mooc__pic presentation__mooc__pic--2-column">
-		<span class='{% if lesson.isRegistered == true %}mooc__pic_w{% else %}mooc__pic_wf{% endif %} '>
-			{% if lesson.lessonThumbnail.src is defined %}
-			   <img class='mooc__pic' height='180px' width='230px' src='{{ lesson.lessonThumbnail.src }}' alt='{{ lesson.lessonThumbnail.alt }}' />
-			{% endif %}
-		</span>
-		{% if lesson.isRegistered == true %}
-		<span class='presentation__mooc__progression__title'>Ma progression</span>
-		<span class='presentation__mooc__progression__wrapper'>
-			<span class='presentation__mooc__progression__text londrina-solid'>{{ lesson.lessonProgression }}%</span>
-			<span class='presentation__mooc__progression__100'>
-				<span class='presentation__mooc__progression__xx' style='width:{{ lesson.lessonProgression }}%'></span>
-			</span>
-		</span>
-		{% endif %}
-	</div>
-	<div class="presentation__mooc__text">
-		{#<a href="{{ lesson.lessonUrl }}" />#}<span class="presentation__mooc__text__title">{{ lesson.lessonTitleMain }}</span>{#</a>#}
-		<span class="presentation__mooc__text__subtitle">{{ lesson.lessonTitleSub }}</span>
-		{% if lesson.isRegistered == true %}<span class="presentation__mooc__text__theme">{{ lesson.lessonTheme }}</span>{% endif %}
-		{#<a href="{{ lesson.lessonUrl }}" />#}<span class="presentation__mooc__text__desc">{{ lesson.lessonDesc }}</span>{#</a>#}
-		<div class="clearfix"></div>
-        
-		<a href="{{ lesson.lessonUrl }}" class="button__link presentation__mooc__text__link">
-			<span class="button__link__span presentation__mooc__text__link__span">
-				{{ buttonText }}
-			</span>
-		</a>
-	</div>
-	<div class="presentation__mooc__meta">
-		<span class="presentation__mooc__meta__date"><span class="valign">{{ lesson.lessonMetaDate }}</span></span>
-		<span class="presentation__mooc__meta__badge"><span class="valign">{{ lesson.lessonMetaBadges }}</span></span>
-		{% if lesson.isRegistered == true %}
-    		<span class="presentation__mooc__meta__activity"><span class="valign">
-    		  Activités
-    		</span></span>
-    	{% else %}
-    		<span class="presentation__mooc__meta__price"><span class="valign">{{ lesson.lessonMetaPrice }}</span></span>
-     	{% endif %}
-	</div>
-</div>
+    <div class='presentation__mooc'>
+
+        <div class="presentation__mooc__pic presentation__mooc__pic--2-column">
+            <span class='{% if lesson.isRegistered == true %}mooc__pic_w{% else %}mooc__pic_wf{% endif %} '>
+                {% if lesson.lessonThumbnail.src is defined %}
+                   <img class='mooc__pic' height='180px' width='230px' src='{{ lesson.lessonThumbnail.src }}' alt='{{ lesson.lessonThumbnail.alt }}' />
+                {% endif %}
+            </span>
+            {% if lesson.isRegistered == true %}
+                <span class='presentation__mooc__progression__title'>{{'my_progression'|trans({}, 'platform')}}</span>
+                <span class='presentation__mooc__progression__wrapper'>
+                    <span class='presentation__mooc__progression__text londrina-solid'>{{ lesson.lessonProgression }}%</span>
+                    <span class='presentation__mooc__progression__100'>
+                        <span class='presentation__mooc__progression__xx' style='width:{{ lesson.lessonProgression }}%'></span>
+                    </span>
+                </span>
+            {% endif %}
+        </div>
+        <div class="presentation__mooc__text">
+            {#<a href="{{ lesson.lessonUrl }}" />#}<span class="presentation__mooc__text__title">{{ lesson.lessonTitleMain }}</span>{#</a>#}
+            <span class="presentation__mooc__text__subtitle">{{ lesson.lessonTitleSub }}</span>
+            {% if lesson.isRegistered == true %}<span class="presentation__mooc__text__theme">{{ lesson.lessonTheme }}</span>{% endif %}
+            {#<a href="{{ lesson.lessonUrl }}" />#}<span class="presentation__mooc__text__desc">{{ lesson.lessonDesc }}</span>{#</a>#}
+            <div class="clearfix"></div>
+
+            <a href="{{ lesson.lessonUrl }}" class="button__link presentation__mooc__text__link">
+                <span class="button__link__span presentation__mooc__text__link__span">
+                    {{ buttonText }}
+                </span>
+            </a>
+        </div>
+        <div class="presentation__mooc__meta">
+            <span class="presentation__mooc__meta__date"><span class="valign">{{ lesson.lessonMetaDate }}</span></span>
+            <span class="presentation__mooc__meta__badge"><span class="valign">{{ lesson.lessonMetaBadges }}</span></span>
+            {% if lesson.isRegistered == true %}
+                <span class="presentation__mooc__meta__activity"><span class="valign">
+                  {{'activities'|trans({}, 'platform')}}
+                </span></span>
+            {% else %}
+                <span class="presentation__mooc__meta__price"><span class="valign">{{ lesson.lessonMetaPrice }}</span></span>
+            {% endif %}
+        </div>
+    </div>
 {% endfor %}

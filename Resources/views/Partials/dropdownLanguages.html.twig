@@ -1,0 +1,26 @@
+{% block dropdownLangage %}
+    
+    {# list available languages #}
+    {% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
+    {% for language in app.session.get('availableLanguages') %}
+        {% if currentLocale == language.shorthand %}
+            {% set currentLocaleFull = language.fullName %}
+        {% endif %}
+    {% endfor %}
+
+    {% for language in app.session.get('availableLanguages') %}
+        {% if language.shorthand == currentLocale %}
+            {% set langIcon = 'ok' %}
+        {% else %}
+            {% set langIcon = '' %}
+        {% endif %}
+        {{ topbar.item({
+            'name': language.fullName,
+            'href': '?lang=' ~ language.shorthand,
+            'icon': langIcon,
+            'route': '',
+            'css':'slrn-topbar-item__sub'
+    }) }}
+    {% endfor %}
+
+{% endblock dropdownLangage %}

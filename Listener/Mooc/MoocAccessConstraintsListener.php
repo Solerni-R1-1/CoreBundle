@@ -20,40 +20,29 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class MoocAccessConstraintsListener extends ContainerAware
 {
-	private $entityManager;
-
-	/**
-	 * @DI\InjectParams({
-	 *     "entityManager"                     = @DI\Inject("doctrine.orm.entity_manager")
-	 * })
-	 */
-	public function __construct(/*EntityManager $entityManager*/) {
-		/*$this->entityManager = $entityManager;*/
+	public function __construct() {
+		
 	}
 
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-        
+    public function postUpdate(LifecycleEventArgs $args) {
         $this->postPersist($args);
     }
 
-    public function postPersist(LifecycleEventArgs $args)
-    {
+    public function postPersist(LifecycleEventArgs $args) {
 
         $entity = $args->getEntity();
 
         if ($entity instanceof MoocAccessConstraints) {
             $service = $this->container->get('orange.moocaccesscontraints_service');
             $service->processUpgradeConstraints(array($entity));
-        } else
-        if ($entity instanceof User) {
-        	$uow = $this->container->get("doctrine.orm.entity_manager")->getUnitOfWork();
-        	$changeSet = $uow->getEntityChangeSet($entity);
-        	
-        	if (array_key_exists("mail", $changeSet)) {
-	            $service = $this->container->get('orange.moocaccesscontraints_service');
-	            $service->processUpgradeUsers(array($entity));
-        	}
+        } elseif ($entity instanceof User) {
+            $uow = $this->container->get("doctrine.orm.entity_manager")->getUnitOfWork();
+            $changeSet = $uow->getEntityChangeSet($entity);
+            // Only check Constraint if the mail changes
+            if (array_key_exists("mail", $changeSet)) {
+                $service = $this->container->get('orange.moocaccesscontraints_service');
+                $service->processUpgradeUsers(array($entity));
+            }
         }
 
         // Code moved to WorkspaceManager.createWorkspace() postUpdateListener.
