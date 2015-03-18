@@ -78,9 +78,10 @@
          * @return {Number}
          */
         calculatePasswordStrength : function(password) {
-
+            
+            var translator = window.Translator;
             var score = 0;
-            var message = ["Ajoutez au minimum : "];
+            var message = [translator.get('platform:password_hint_intro')];
 
             var checkRepetition = function (pLen, str) {
                 var res = "";
@@ -118,9 +119,9 @@
             } else {
                 var missingCar = 8 - password.length;
                 if ( missingCar == 1 ) {
-                    numberMissing = missingCar + " caractère supplémentaire";
+                    numberMissing = missingCar + translator.get('platform:password_hint_morecar');
                 } else {
-                    numberMissing = missingCar + " caractères supplémentaires";
+                    numberMissing = missingCar + translator.get('platform:password_hint_morecars');
                 }
                 message.push( numberMissing );
             }
@@ -129,27 +130,27 @@
             if (password.match(/(.*[0-9])/)) {
                 score += 12;
             } else {
-                message.push("un chiffre");
+                message.push(translator.get('platform:password_hint_onenumber'));
             }
 
             //password has 1 symbols
             if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~])/)) {
                 score += 12;
             } else {
-                message.push("un symbole");
+                message.push(translator.get('platform:password_hint_onesymbol'));
             }
 
             //password has Upper and Lower chars
             if (password.match(/(.*[a-z])/)) {
                 score += 12;
             } else {
-                message.push("une minuscule");
+                message.push(translator.get('platform:password_hint_onemin'));
             }
             
             if (password.match(/(.*[A-Z])/)) {
                 score += 12;
             } else {
-                message.push("une majuscule");
+                message.push(translator.get('platform:password_hint_onemaj'));
             }
             
             //password has number and chars
