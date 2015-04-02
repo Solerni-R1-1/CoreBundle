@@ -1264,11 +1264,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
     
     public function findByMailInOrLike(array $in, array $like) {
-    	$dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
+    	$dql = 'SELECT u.id FROM Claroline\CoreBundle\Entity\User u
     		WHERE ';
+        
      	if (count($in) > 0) {
      		$dql = $dql."u.mail IN (:in)";
      	}
+        
     	foreach ($like as $i => $l) {
      		if ($i == 0 && count($in) == 0) {
      			$dql = $dql.' u.mail LIKE :like'.$i.'';
@@ -1286,8 +1288,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     		$query->setParameter("like".$i, "%".$l);
     	}
     	
-    	$result = $query->getResult();
-    	return $result;
+    	return $query->getScalarResult();
+
     }
     
     public function getAllUsersForExport(MoocSession $session, $excludeRoles = array()) {
@@ -1362,4 +1364,5 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     	 
     	return array_merge($usersAlone, $usersGroup);
     }
+   
 }
