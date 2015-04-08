@@ -1099,6 +1099,7 @@ mooc_analytics_keynumbers_forum_publications_daily_mean: "Average number of dail
 mooc_analytics_theme_name: Subject name
 mooc_analytics_theme_nb_posts: Number of submissions in the subject
 mooc_analytics_export: Export MOOC data
+mooc_analytics_role: Role in MOOC
 export_badge_knowledge: Classification of users participating in knowledge badges
 export_badge_skill: Classification of users participating in skill badges
 export_badge_participation_knowledge: Participation in knowledge badges
@@ -1207,6 +1208,7 @@ badges_critere : Award criteria
 badges_actions : Actions which lead to this badge being awarded
 #Page mes badges	
 no_mooc_followed: No MOOC to display
+no_mooc_today: No MOOC to display
 connect_with_facebook: I log in with Facebook
 all_fields_mandatory: All fields required
 already_registered: I log in
@@ -1372,7 +1374,7 @@ Apprentissage: Learning
 Culture: Culture
 
 access_restricted: 'You are not part of this MOOC private list and therefore you are not authorized to access it. If you think this is a mistake, please report to us by sending an email to : <a href="mailto:help@solerni.com">help@solerni.com</a>'
-password_rules: Your password must have at least 8 characters, at least 1 number, at least 1 lowercase character, at least 1 uppercase character, at least 1 non-alphanumeric character
+password_rules: Your password <b>must not have any whitespace</b>, and must have :<br>-at least 8 characters<br>-at least 1 number<br>-at least 1 lowercase character<br>-at least 1 uppercase character<br>-at least 1 symbol (as @, £, & ou $...)
 password_hint_intro: 'Add at least: '
 password_hint_morecar: ' more character'
 password_hint_morecars: ' more characters'
@@ -1380,3 +1382,5 @@ password_hint_onenumber: one number
 password_hint_onesymbol: one symbol
 password_hint_onemin: one lowercase letter
 password_hint_onemaj: one uppercase letter
+password_hint_nowhitespace: Careful! Your password have at least one whitespace. Please remove it.
+reinit_password: Change your password

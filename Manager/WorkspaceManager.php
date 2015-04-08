@@ -246,23 +246,10 @@ class WorkspaceManager
      */
     public function createWorkspace(AbstractWorkspace $workspace)
     {
-        $service = $this->container->get('orange.moocaccesscontraints_service');
-        $service->refreshDeletedConstraintForWorkspace($workspace);
+        
         $this->om->persist($workspace);
         $this->om->flush();
-        
-        // Code moved from postUpdateListener.
-        // http://docs.doctrine-project.org/en/2.0.x/reference/events.html#postupdate-postremove-postpersist
-        // can't modify entity or entity relations in postUpdate of this entity...
-        if ($workspace->getMooc() != null) {
-        	$constraints = array();
-        	$accessContraints = $workspace->getMooc()->getAccessConstraints();
-        	if (!empty($accessContraints)) {
-        		$constraints = $accessContraints->toArray();
-        	}
-        	$service->processUpgradeConstraints($constraints);
-        	
-        }
+
     }
 
     /**

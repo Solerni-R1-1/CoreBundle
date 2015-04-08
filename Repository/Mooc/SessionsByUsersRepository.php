@@ -91,16 +91,30 @@ class SessionsByUsersRepository extends EntityRepository
         
     }
     
-    public function getListofUsersAlreadyPresent( $constraintId, array $usersList ) {
+    public function getListofUsersAlreadyPresent( $constraintId, array $usersList, $mooc = null ) {
         
         $dql = "SELECT IDENTITY(s.user) as user
     			FROM Claroline\CoreBundle\Entity\Mooc\SessionsByUsers s
                 WHERE s.user IN (:usersList)
                 AND s.moocAccessConstraints = (:constraintId)";
         
+        if ( $mooc ) {
+            
+            $sessions = array();
+            foreach ( $mooc->getMoocSessions() as $session ) {
+                $sessions[] = $session;
+            }
+            
+            $dql .= "AND s.moocSession IN (:moocSessions)";
+        }
+        
         $query = $this->_em->createQuery($dql);
         $query->setParameter("usersList", $usersList);
         $query->setParameter("constraintId", $constraintId);
+        
+        if ( $mooc ) {
+            $query->setParameter("moocSessions", $sessions);
+        }
         
         return  $query->getScalarResult();
         

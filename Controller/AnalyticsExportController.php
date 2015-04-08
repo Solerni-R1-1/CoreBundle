@@ -32,6 +32,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 use Claroline\CoreBundle\Manager\UserManager;
+use Doctrine\ORM\EntityManager;
 
 
 /**
@@ -73,7 +74,9 @@ class AnalyticsExportController extends Controller {
 	/** @var RoleManager */
 	private $roleManager;
 	
-	private $userManager;
+	private $userManager;   
+    private $entityManager;
+    
 
 	/**
 	 * @DI\InjectParams({
@@ -82,7 +85,8 @@ class AnalyticsExportController extends Controller {
 	 *     "container"				 = @DI\Inject("service_container"),
 	 *     "analyticsManager"		 = @DI\Inject("claroline.manager.analytics_manager"),
 	 *     "roleManager"			 = @DI\Inject("claroline.manager.role_manager"),
-	 *     "userManager"			 = @DI\Inject("claroline.manager.user_manager")
+	 *     "userManager"			 = @DI\Inject("claroline.manager.user_manager"),
+     *     "entityManager"           = @DI\Inject("doctrine.orm.entity_manager")
 	 *     })
 	 */
 	public function _construct(
@@ -91,23 +95,22 @@ class AnalyticsExportController extends Controller {
 			MoocService $moocService, 
 			AnalyticsManager $analyticsManager,
 			RoleManager $roleManager,
-			UserManager $userManager) {
+			UserManager $userManager,
+            EntityManager $entityManager) {
+        
 		$this->setContainer($container);
-		
-		$this->badgeManager = $badgeManager;
-		$this->moocService = $moocService;
-		$this->analyticsManager = $analyticsManager;
-		$this->roleManager = $roleManager;
-		$this->userManager = $userManager;
-		
-		$this->logRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
-		$this->messageRepository = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
-		$this->userRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:User");
-		$this->badgeRepository = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Badge\Badge");
-		$this->exoRepository = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
-		
-		
-		$this->translator = $this->get('translator');
+		$this->badgeManager         = $badgeManager;
+		$this->moocService          = $moocService;
+		$this->analyticsManager     = $analyticsManager;
+		$this->roleManager          = $roleManager;
+		$this->userManager          = $userManager;
+		$this->logRepository        = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Log\Log");
+		$this->messageRepository    = $this->getDoctrine()->getRepository("ClarolineForumBundle:Message");
+		$this->userRepository       = $this->getDoctrine()->getRepository("ClarolineCoreBundle:User");
+		$this->badgeRepository      = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Badge\Badge");
+		$this->exoRepository        = $this->getDoctrine()->getRepository("UJMExoBundle:Exercise");
+		$this->entityManager        = $entityManager;
+		$this->translator           = $this->get('translator');
 		
 	}
 	/**
@@ -569,11 +572,12 @@ class AnalyticsExportController extends Controller {
 	public function exportSubscriptionsStatsAction(AbstractWorkspace $workspace) {
     	// Init the roles to filter the stats.
     	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	//$managerRole = $this->roleManager->getManagerRole($workspace);
+    	//$excludeRoles[] = $managerRole->getName();
+    	//$excludeRoles[] = "ROLE_ADMIN";
+    	//$excludeRoles[] = "ROLE_WS_CREATOR";
     	
+        // Get session
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
         
        if ( ! $currentSession ) {
@@ -584,70 +588,91 @@ class AnalyticsExportController extends Controller {
             throw new NotFoundHttpException();
         }
         
+        $moocSessionId = $currentSession->getId();
+        
+        // Get start and end date
 		$from = $currentSession->getStartInscriptionDate();
 		$to = $currentSession->getEndInscriptionDate();
 		
-		$now = new \DateTime();
-		if ($now < $to) {
-			$to = $now;
-		}
-		
+        // Prepare export columns ($headerCSV)
 		$rowsCSV = array();
-		
 		$headerCSV = array();
 
-		$headerCSV[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-		$headerCSV[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-		$headerCSV[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-		$headerCSV[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
-		$headerCSV[4] = "Subscription date";
-		$headerCSV[5] = "Subscription time";
-		$rowsCSV[] = $headerCSV;
+		$headerCSV[0]   = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$headerCSV[1]   = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$headerCSV[2]   = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$headerCSV[3]   = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$headerCSV[4]   = "Subscription date";
+		$headerCSV[5]   = "Subscription time";
+        $headerCSV[6]   = $this->translator->trans('mooc_analytics_role', array(), 'platform');
+		$rowsCSV[]      = $headerCSV;
 		
-		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
-		$data = $this->logRepository->getSubscriptionsForWorkspace($workspace, $userIds);
-		$orderedData = array();
-		foreach ($data as $datum) {
-			$mail = $datum['mail'];
-			if (array_key_exists($mail, $orderedData)) {
-				$date1 = $datum['subscriptionDate'];
-				$time1 = $datum['subscriptionTime'];
-
-				$date2 = $orderedData[$mail]['subscriptionDate'];
-				$time2 = $orderedData[$mail]['subscriptionTime'];
-				
-				if (($date1 < $date2) || ($date1 == $date2 && $time1 < $time2)) {
-					$orderedData[$mail] = $datum;					
-				}
-			} else {
-				$orderedData[$mail] = $datum;
-			}
-		}
-		usort($orderedData, function($a, $b) {
-			$date1 = $a['subscriptionDate'];
-			$time1 = $a['subscriptionTime'];
-
-			$date2 = $b['subscriptionDate'];
-			$time2 = $b['subscriptionTime'];
-			
-			if ($date1 > $date2) {
-				return 1;
-			} else if ($date1 < $date2) {
-				return -1;
-			} else {
-				if ($time1 > $time2) {
-					return 1;
-				} else if ($time1 < $time2) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-		});
-		
+        $sql = "SELECT last_name AS lastName,
+                first_name AS firstName, 
+                username AS nickname , 
+                mail AS email,
+                date(creation_date) AS Subscription_date,
+                time(creation_date) AS Subscription_time, 
+                IF( id IN (
+                    SELECT DISTINCT u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name = 'ROLE_ADMIN' or r.name = 'ROLE_WS_CREATOR' 
+                ),'admin',
+                    IF( id IN ( 
+                        SELECT distinct u.id 
+                        FROM claro_user u 
+                        INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                        INNER JOIN claro_role r ON r.id = ur.role_id 
+                        WHERE r.name IN ( 
+                            SELECT CONCAT('ROLE_WS_MANAGER_',guid) AS role_name_pedagogue 
+                            FROM claro_workspace w 
+                            INNER JOIN claro_mooc m ON w.id = m.workspace_id 
+                            INNER JOIN claro_mooc_session ms ON m.id = ms.mooc_id 
+                            WHERE ms.id = $moocSessionId 
+                        ) ) ,'mooc_manager','collaborator'
+                ) ) AS role 
+                FROM ( ( 
+                    SELECT DISTINCT u.id as id, 
+                    u.last_name AS last_name, 
+                    u.first_name AS first_name, 
+                    u.username AS username, 
+                    u.mail AS mail, 
+                    u.creation_date AS creation_date 
+                    FROM claro_mooc_session ms 
+                        INNER JOIN claro_mooc m ON ms.mooc_id = m.id 
+                        INNER JOIN claro_workspace w ON m.workspace_id = w.id 
+                        INNER JOIN claro_role r ON w.id = r.workspace_id 
+                        INNER JOIN claro_user_mooc_session ums ON ms.id = ums.moocsession_id 
+                        INNER JOIN claro_user u ON ums.user_id = u.id where ms.id = $moocSessionId 
+                    ) UNION (
+                    SELECT DISTINCT 
+                    u.id AS id, 
+                    u.last_name AS last_name, 
+                    u.first_name AS first_name, 
+                    u.username AS username, 
+                    u.mail AS mail, 
+                    u.creation_date AS creation_date 
+                    FROM claro_mooc_session ms 
+                        INNER JOIN claro_mooc m ON m.id = ms.mooc_id 
+                        INNER JOIN claro_group_mooc_session gms ON ms.id = gms.moocsession_id 
+                        INNER JOIN claro_user_group ug ON gms.group_id = ug.group_id
+                        INNER JOIN claro_user u ON ug.user_id = u.id 
+                        INNER JOIN claro_group cg ON ug.group_id = cg.id 
+                        WHERE ms.id = $moocSessionId 
+                    ) ) AS tab_inscrits 
+                    GROUP BY id 
+                    ORDER BY creation_date DESC";
+        
+        $rows = $this->entityManager->getConnection()->fetchAll($sql);
+        
+        foreach ( $rows as $row ) {
+            $orderedData[] = $row;
+        }
+        
 		$rowsCSV = array_merge($rowsCSV, $orderedData);	
 		
-
 		$content = $this->createCSVFromArray($rowsCSV);
 		return new Response($content, 200, array(
 				'Content-Type' => 'application/force-download',

@@ -48,15 +48,6 @@ class MoocAccessConstraintsListener extends ContainerAware
         // Code moved to WorkspaceManager.createWorkspace() postUpdateListener.
         // http://docs.doctrine-project.org/en/2.0.x/reference/events.html#postupdate-postremove-postpersist
         // can't modify entity or entity relations in postUpdate of this entity...
-        //if ($entity instanceof MoocSession) {
-//             $constraints = array();
-//             $accessContraints = $entity->getMooc()->getAccessConstraints();
-//             if (!empty($accessContraints)) {
-//                 $constraints = $accessContraints->toArray();
-//             }
-//             $service = $this->container->get('orange.moocaccesscontraints_service');
-//             $service->processUpgrade($constraints);
-        //}
     }
 
     public function preRemove(LifecycleEventArgs $args)

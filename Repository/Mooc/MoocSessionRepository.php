@@ -278,31 +278,4 @@ class MoocSessionRepository extends EntityRepository
         return $result;
         
     }
-    
-    public function countUsersForSession(MoocSession $session) {
-    	$dql = "SELECT COUNT(DISTINCT u.id)
-	    			FROM Claroline\CoreBundle\Entity\Mooc\MoocSession s
-	    			JOIN s.users u
-	    		WHERE s = :session
-	    		AND u.isEnabled = 1";
-    	 
-    	$query = $this->_em->createQuery($dql);
-    	$query->setParameter("session", $session);
-    	 
-    	return $query->getSingleScalarResult();
-    }
-    
-    public function countGroupsUsersForSession(MoocSession $session) {
-    	$dql = "SELECT COUNT(DISTINCT u.id)
-	    			FROM Claroline\CoreBundle\Entity\Mooc\MoocSession s
-	    			JOIN s.groups g
-	    			JOIN g.users u
-	    		WHERE s = :session
-	    		AND u.isEnabled = 1";
-    	 
-    	$query = $this->_em->createQuery($dql);
-    	$query->setParameter("session", $session);
-    	 
-    	return $query->getSingleScalarResult();
-    }
 }

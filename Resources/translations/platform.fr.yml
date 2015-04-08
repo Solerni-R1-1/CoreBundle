@@ -1083,6 +1083,7 @@ mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de public
 mooc_analytics_theme_name: Nom du sujet 
 mooc_analytics_theme_nb_posts: Nombre de publications dans le sujet
 mooc_analytics_export: Exportez les données du MOOC
+mooc_analytics_role: Role dans le MOOC
 export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances
 export_badge_skill: Classement des utilisateurs participant aux badges de compétences
 export_badge_participation_knowledge: Participation aux badges de connaissances
@@ -1191,6 +1192,7 @@ badges_critere : Critère d'obtention
 badges_actions : Actions qui ont mené à l'attribution de ce badge
 #Page mes badges
 no_mooc_followed: Aucun mooc à afficher
+no_mooc_today: Aucun mooc à afficher
 connect_with_facebook: Je me connecte avec Facebook
 all_fields_mandatory: Tous les champs sont obligatoires
 already_registered: J'ai déjà un compte, je me connecte
@@ -1356,7 +1358,7 @@ Métiers: Métiers
 Apprentissage: Apprentissage
 Culture: Culture
 access_restricted: 'Vous ne faites pas partie de la liste des participants éligibles à ce MOOC. En cas de réclamation vous pouvez nous contacter à l''adresse suivante : <a href="mailto:help@solerni.com">help@solerni.com</a>'
-password_rules: 'Le mot de passe doit comporter au moins 8 caractères, au moins 1 chiffre, au moins 1 minuscule, au moins 1 majuscule, au moins un caractère non-alphanumérique'
+password_rules: 'Le mot de passe <b>ne doit pas contenir d''espace</b> et doit comporter :<br>- au moins 8 caractères<br>- au moins 1 chiffre<br>- au moins 1 minuscule<br>- au moins 1 majuscule<br>- au moins 1 symbole (tel que @, £, & ou $...)'
 password_hint_intro: 'Ajoutez au minimum : '
 password_hint_morecar: ' caractère supplémentaire'
 password_hint_morecars: ' caractères supplémentaires'
@@ -1364,3 +1366,5 @@ password_hint_onenumber: un chiffre
 password_hint_onesymbol: un symbole
 password_hint_onemin: une minuscule
 password_hint_onemaj: une majuscule
+password_hint_nowhitespace: Attention ! Votre mot de passe contient au moins un espace. Merci de le retirer.
+reinit_password: Réinitialiser votre mot de passe

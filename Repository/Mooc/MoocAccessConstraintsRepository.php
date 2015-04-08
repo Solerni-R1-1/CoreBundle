@@ -16,25 +16,15 @@ class MoocAccessConstraintsRepository extends EntityRepository
 {
 
 	public function findByUserMail($mail) {
-		$domain = substr($mail, strrpos($mail, '@'));
-		echo $domain."<br />";
-		
+		$domain = substr($mail, strrpos($mail, '@') + 1);
+
 		$dql = "SELECT mac FROM Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints mac
-				WHERE mac.patterns LIKE :start_domain
-				OR mac.patterns LIKE :middle_domain
-				OR mac.patterns LIKE :end_domain
-				
-				OR mac.whitelist LIKE :start_mail
-				OR mac.whitelist LIKE :middle_mail
-				OR mac.whitelist LIKE :end_mail";
+				WHERE mac.patterns LIKE :domain
+				OR mac.whitelist LIKE :mail";
+
 		$query = $this->_em->createQuery($dql);
-		$query->setParameter("start_mail", $mail."\n%");
-		$query->setParameter("middle_mail", "%\n".$mail."\n%");
-		$query->setParameter("end_mail", "%\n".$mail);
-		
-		$query->setParameter("start_domain", $domain."\n%");
-		$query->setParameter("middle_domain", "%\n".$domain."\n%");
-		$query->setParameter("end_domain", "%\n".$domain);
+		$query->setParameter("domain", $domain);
+		$query->setParameter("mail", $mail);
 		
 		return $query->getResult();
 	}

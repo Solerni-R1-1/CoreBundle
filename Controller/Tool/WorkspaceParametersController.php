@@ -381,22 +381,26 @@ class WorkspaceParametersController extends Controller
                         $this->getDoctrine()->getManager()->remove($moocSession);
                     }
                 }
+                
+                $service = $this->container->get('orange.moocaccesscontraints_service');
 
-               /* Setting current mooc for each constraint */
-                foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {              
+               /* Setting current mooc for each constraint and update rules */
+                foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {            
                     $accessConstraint->addMooc($mooc);
+                    $service->processUpgradeConstraint($accessConstraint, $mooc);
                 }
 
-
-                /*Remove mooc from constraint deleted from mooc*/
+                /*Remove mooc from constraint deleted from mooc and update rules*/
                 foreach ( $originalConstraints as $constraint) {
                     if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
-                        $constraint->removeMooc($mooc);
+                        $service->processRemoveConstraint($constraint, $mooc);
+                        $constraint->removeMooc($mooc);                    
                     }
                 }
-
-                $this->workspaceManager->createWorkspace($workspace);
-                $this->workspaceManager->rename($workspace, $workspace->getName());
+                
+                $this->getDoctrine()->getManager()->merge($workspace);
+                $this->getDoctrine()->getManager()->flush();
+                //$this->workspaceManager->rename($workspace, $workspace->getName());
                 $displayable = $workspace->isDisplayable();
 
                 if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
