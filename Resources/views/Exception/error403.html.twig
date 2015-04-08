@@ -12,7 +12,7 @@
             {% else %}
                 <p>{{'forbidden_url'|trans({}, 'platform')}}</p>
             {% endif %}
-            <p>{{ 'get_back_message'|trans({}, 'platform')|raw }}</p>
+            <p>{{ 'get_back_message'|trans({'back_url': path('claro_desktop_open'), 'catalog_url' :path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }, 'platform')|raw }}</p>
         </div>
     </div>
 {% endblock %}

@@ -1276,7 +1276,7 @@ private_masculin: private
 Session: Session
 sorry: Sorry
 internal_server_error: Internal server error.
-get_back_message: You can go back to <a href="javascript:history.back()">the previous page</a> or to <a href="/">the frontpage.</a>
+get_back_message: You can go to <a href="back_url">your dashboard</a>, <a href="catalog_url">see the catalogue</a> or get back to <a href="/">the frontpage.</a>
 wrong_request: The syntax of your request is incorrect.
 forbidden_url: You are not authorised to access this page.
 page_not_found: The page you have requested does not exist.
