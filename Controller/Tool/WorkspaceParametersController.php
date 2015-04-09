@@ -361,6 +361,10 @@ class WorkspaceParametersController extends Controller
 		                $hasErrors = true;
 	                	
 	                }
+                    
+                    if ( ! $hasErrors ) {
+                        $this->getDoctrine()->getManager()->persist($moocSession);
+                    }
                 }
                 
                 if ($hasErrors) {
@@ -374,7 +378,9 @@ class WorkspaceParametersController extends Controller
                 			'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
                 	);
                 }
-
+                
+                $this->getDoctrine()->getManager()->flush();
+                
                 /* remove sessions from database if deleted */
                 foreach ( $originalSessions as $moocSession ) {
                     if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
@@ -398,7 +404,7 @@ class WorkspaceParametersController extends Controller
                     }
                 }
                 
-                $this->getDoctrine()->getManager()->merge($workspace);
+                $this->getDoctrine()->getManager()->persist($workspace);
                 $this->getDoctrine()->getManager()->flush();
                 //$this->workspaceManager->rename($workspace, $workspace->getName());
                 $displayable = $workspace->isDisplayable();
