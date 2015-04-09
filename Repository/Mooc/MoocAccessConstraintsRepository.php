@@ -23,8 +23,8 @@ class MoocAccessConstraintsRepository extends EntityRepository
 				OR mac.whitelist LIKE :mail";
 
 		$query = $this->_em->createQuery($dql);
-		$query->setParameter("domain", $domain);
-		$query->setParameter("mail", $mail);
+		$query->setParameter("domain", '%' . $domain . '%');
+		$query->setParameter("mail", '%' . $mail . '%');
 		
 		return $query->getResult();
 	}

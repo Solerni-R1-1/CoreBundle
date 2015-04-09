@@ -70,7 +70,11 @@ class MoocAccessConstraintsService extends Controller
     	foreach ($users as $user) {
     		/* @var $user User */
         	$constraints = $constraintsRepository->findByUserMail( $user->getMail() );
-
+            
+            if ( ! $constraints ) {
+                $this->echo_memory_usage('No constraint found for' . $user->getUsername());
+            }
+            
     		foreach ($constraints as $constraint) {
     			foreach ($constraint->getMoocs() as $mooc) {
     				foreach ($mooc->getMoocSessions() as $session) {

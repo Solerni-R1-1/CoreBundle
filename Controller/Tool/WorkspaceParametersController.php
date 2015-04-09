@@ -301,6 +301,7 @@ class WorkspaceParametersController extends Controller
             if ( $form->isValid() && $form_mooc->isValid() ) {
             	$forumIds = array();
             	$hasErrors = false;
+                
                 /* Setting current mooc for newly added sessions */
                 foreach ( $mooc->getMoocSessions() as $i => $moocSession ) {
                    	if (  ! $moocSession->getMooc() ) {
@@ -400,7 +401,7 @@ class WorkspaceParametersController extends Controller
                 foreach ( $originalConstraints as $constraint) {
                     if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
                         $service->processRemoveConstraint($constraint, $mooc);
-                        $constraint->removeMooc($mooc);                    
+                        $constraint->removeMooc($mooc);            
                     }
                 }
                 
