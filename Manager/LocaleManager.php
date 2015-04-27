@@ -119,7 +119,7 @@ class LocaleManager
     {
         $locales = $this->getAvailableLocales();
         $locale = $this->defaultLocale;
-        $preferred = explode('_', $request->getPreferredLanguage( $locales ));
+        $preferred = explode('_', $request->getPreferredLanguage());
         
         switch (true) {
             case ($locale = $request->attributes->get('_locale')): break;
