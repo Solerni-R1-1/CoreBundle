@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Claroline\CoreBundle\Manager\AnalyticsManager;
 
 /**
  * Description of StaticController
@@ -62,7 +63,8 @@ class MoocController extends Controller
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
      *     "moocService"        = @DI\Inject("orange.mooc.service"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager")
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager")
      * })
      */
     public function __construct( 
@@ -72,15 +74,18 @@ class MoocController extends Controller
             WorkspaceManager $workspaceManager,
             MailManager $mailManager,
             MoocService $moocService,
-    		RoleManager $roleManager
+    		RoleManager $roleManager,
+            AnalyticsManager $analyticsManager
+            
         ) {
-        $this->translator = $translator;
-        $this->security = $security;
-        $this->router = $router;
-        $this->workspaceManager = $workspaceManager;
-        $this->mailManager = $mailManager;
-        $this->moocService = $moocService;
-        $this->roleManager = $roleManager;
+        $this->translator           = $translator;
+        $this->security             = $security;
+        $this->router               = $router;
+        $this->workspaceManager     = $workspaceManager;
+        $this->mailManager          = $mailManager;
+        $this->moocService          = $moocService;
+        $this->roleManager          = $roleManager;
+        $this->analyticsManager     = $analyticsManager;
     }
 
     /**
@@ -95,7 +100,7 @@ class MoocController extends Controller
     public function moocPageAction(Mooc $mooc, $user ) {
         
         $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
-        $nbUsers = $this->moocService->countUsersForSession($session);
+        $nbUsers = $this->analyticsManager->getTotalUsersWithGroupsForSession($session);
         
         if (  ! $mooc->isPublic() ) {
         	/* redirect anon users to login if mooc is private */
@@ -396,7 +401,7 @@ class MoocController extends Controller
             $progression = null;
         }
         
-        $nbUsers = $this->moocService->countUsersForSession($session);
+        $nbUsers = $this->analyticsManager->getTotalUsersWithGroupsForSession($session);
 
         return $this->render(
         'ClarolineCoreBundle:Mooc:moocSessionComponent.html.twig',

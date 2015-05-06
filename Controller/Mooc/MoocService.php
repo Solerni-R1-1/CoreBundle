@@ -184,12 +184,6 @@ class MoocService extends Controller
             return "#";
         }
         
-        /*$blogRes = $workspace->getMooc()->getBlog();
-        if ( $blogRes ) {
-            $blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
-            return $this->get('router')->generate('icap_blog_view', array('blogId' => $blog->getId()));
-        }*/
-        
     	$lesson =  $this->getLessonFromWorkspace( $workspace, $user );
     	if ($lesson != null) {
         	return $this->getRouteToTheLastChapter( $lesson, $user );
@@ -209,12 +203,6 @@ class MoocService extends Controller
         return $this->getDoctrine()
         ->getRepository( 'ClarolineCoreBundle:Mooc\\MoocSession' )
         ->getAvailableSessionAroundToday( $user, $nbDaysAround, $nbMaxResults );
-    }
-    
-
-    public function countUsersForSession(MoocSession $session) {
-    	$sessionRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
-    	return $sessionRepo->countUsersForSession($session) + $sessionRepo->countGroupsUsersForSession($session);
     }
     
 }

@@ -688,8 +688,13 @@ body.dsk .alert { display: none; }
 
 .slrn-input-wrapper .tooltip.in { 
     opacity:1; 
-    filter:alpha( opacity=100 ); 
+    filter:alpha( opacity=100 );
 }
+
+.slrn-input-wrapper .tooltip-inner {
+    text-align: left;    
+}
+
 
 .strength-meter-wrapper {
     text-align:     left;

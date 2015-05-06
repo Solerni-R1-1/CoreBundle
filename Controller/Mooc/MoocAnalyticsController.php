@@ -118,7 +118,7 @@ class MoocAnalyticsController extends Controller
         $connectionMean = $this->analyticsManager->getMeanNumberConnectionsDaily($session, $excludeRoles);
         
         // Most active users table
-        $userIds = $this->userManager->getWorkspaceUserIds($workspace, $this->getExcludeRoles($workspace));
+        $userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
 		$mostActiveUsers = $this->analyticsManager->getMostActiveUsers($session, $userIds, 10);
         $mostActiveUsersWithHeader = $mostActiveUsers;
         $row = array();
@@ -439,10 +439,10 @@ class MoocAnalyticsController extends Controller
     
     private function getExcludeRoles(AbstractWorkspace $workspace) {
     	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($workspace);
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
+    	//$managerRole = $this->roleManager->getManagerRole($workspace);
+    	//$excludeRoles[] = $managerRole->getName();
+    	//$excludeRoles[] = "ROLE_ADMIN";
+    	//$excludeRoles[] = "ROLE_WS_CREATOR";
     	
     	return $excludeRoles;
     }

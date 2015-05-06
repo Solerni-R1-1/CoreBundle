@@ -76,30 +76,26 @@ class AnalyticsUserMoocStatsRepository extends EntityRepository {
 		return $query->getResult();
 	}
 	
-	public function countTotalForumMessagesForSession(MoocSession $moocSession) {
-		$workspace = $moocSession->getMooc()->getWorkspace();
-		$from = $moocSession->getStartDate();
-		$to = $moocSession->getEndDate();
-		
-		$dql = "SELECT SUM(aums.nbPublicationsForum)
-				FROM Claroline\CoreBundle\Entity\Analytics\AnalyticsUserMoocStats aums
-				WHERE aums.workspace = :workspace
-				AND aums.date >= :from
-				AND aums.date <= :to";
-		
+	public function countTotalForumMessagesForSession( $resourceNodeId ) {
 
-		$query = $this->_em->createQuery($dql);
-		$query->setParameters(array(
-				"workspace" => $workspace,
-				"from"		=> $from,
-				"to"		=> $to
-		));
-		
+		$dql = "SELECT COUNT( DISTINCT message.id )
+				FROM Claroline\ForumBundle\Entity\Message message
+                INNER JOIN Claroline\ForumBundle\Entity\Subject subject
+                    WITH message.subject = subject
+                INNER JOIN Claroline\ForumBundle\Entity\Category category
+                    WITH subject.category = category
+                INNER JOIN Claroline\ForumBundle\Entity\Forum forum
+                    WITH category.forum = forum
+                INNER JOIN  Claroline\CoreBundle\Entity\Resource\ResourceNode node
+                    WITH forum.resourceNode = (:resourceNodeId)
+                ";
+        
+        $query = $this->_em->createQuery($dql);
+		$query->setParameter('resourceNodeId', $resourceNodeId );
+            
 		return $query->getSingleScalarResult();
 	}
 	
-
-
 	public function countAverageForumMessagesForSession(MoocSession $moocSession) {
 		$workspace = $moocSession->getMooc()->getWorkspace();
 		$from = $moocSession->getStartDate();

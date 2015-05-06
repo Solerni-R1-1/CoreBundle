@@ -35,16 +35,16 @@ protected function configure() {
 		$prepManager = $this->getContainer()->get('claroline.manager.analytics_preparation_manager');
 		$wsRepo = $this->getContainer()->get('doctrine')->getRepository("ClarolineCoreBundle:Workspace\AbstractWorkspace");
 		$wsArr = $wsRepo->findAllMoocWorkspaces();
-		//$wsArr = array($wsRepo->find(13302));
+
 		foreach ($wsArr as $ws) {
 			/* @var $ws AbstractWorkspace */
 			if ($ws->getMooc() != null && count($ws->getMooc()->getMoocSessions()) > 0) {
 				$output->writeln("Starting preparation of workspace ".$ws->getId()." with name ".$ws->getName());
 				$excludeRoles = array();
-				$managerRole = $roleManager->getManagerRole($ws);
-				$excludeRoles[] = $managerRole->getName();
-				$excludeRoles[] = "ROLE_ADMIN";
-				$excludeRoles[] = "ROLE_WS_CREATOR";
+				//$managerRole = $roleManager->getManagerRole($ws);
+				//$excludeRoles[] = $managerRole->getName();
+				//$excludeRoles[] = "ROLE_ADMIN";
+				//$excludeRoles[] = "ROLE_WS_CREATOR";
 
 				foreach ($ws->getMooc()->getMoocSessions() as $moocSession) {
 					$output->writeln("Starting preparation of session ".$moocSession->getId()." with name ".$moocSession->getTitle());

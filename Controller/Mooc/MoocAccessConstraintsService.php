@@ -56,45 +56,39 @@ class MoocAccessConstraintsService extends Controller
     }
     
     /*
-     * This function add the 
+     * This function add a new user to the constraint
      */
 	public function processUpgradeUsers(array $users) {
+        
+        foreach( $users as $user ) {
+            $this->echo_memory_usage('Adding user' . $user->getUsername());
+        }
+        
 
         $constraintsRepository = $this->em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints');
     	
     	foreach ($users as $user) {
     		/* @var $user User */
         	$constraints = $constraintsRepository->findByUserMail( $user->getMail() );
-    		$sessionsByUsers = $user->getSessionsByUsers();
             
-            /*
-             * I Guess this loop remove the users from sessions now unauthorized
-             */
-    		foreach ( $sessionsByUsers as $i => $sessionByUser ) {
-    			/* @var $sessionByUser SessionsByUsers */
-    			if ( ! in_array($sessionByUser->getMoocAccessConstraints(), $constraints ) ) {
-    				unset( $sessionsByUsers[$i] );
-    				$this->em->remove($sessionByUser);
-    			} else {
-    				unset($constraints[array_search($sessionByUser, $constraints)]);
-    			}
-    		}
-    		
+            if ( ! $constraints ) {
+                $this->echo_memory_usage('No constraint found for' . $user->getUsername());
+            }
+            
     		foreach ($constraints as $constraint) {
     			foreach ($constraint->getMoocs() as $mooc) {
     				foreach ($mooc->getMoocSessions() as $session) {
 			    		$newSession = new SessionsByUsers();
-			    		
 			    		$newSession->setMoocAccessConstraints($constraint);
 			    		$newSession->setUser($user);
 			    		$newSession->setMoocSession($session);
 			    		$newSession->setMoocOwner($constraint->getMoocOwner());
-			    		$sessionsByUsers->add($newSession);
 			    		$this->em->persist($newSession);
     				}
     			}
     		}
-    		$this->em->persist($user);
+            
+    		$this->em->merge($user);
     		$this->em->flush();
     	}
     }
@@ -114,39 +108,56 @@ class MoocAccessConstraintsService extends Controller
     	foreach ( $constraints as $constraint ) {
     		/* @var $constraint MoocAccessConstraints */
             
-            $usersArrayList = $this->getUsersListMatchingConstraint( $constraint );
-            
-            // Reduce useless array depth
-            $usersList = array();
-            foreach ( $usersArrayList as $userArray ) {
-               $usersList[] = $userArray['id'];
-            }
-            
-            // First, remove from DB the rows where users ID are not in the list. They were removed
-            $this->checkAndRemoveUsersForConstraint( $constraint, $usersList );
-            
-            // Second step, get users already auitorized
-            $usersScalarResult = $this->sessionsByUsersRepo->getListofUsersAlreadyPresent( $constraint, $usersList );
-            $usersInRows = array();
-            foreach ( $usersScalarResult as $userArray ) {
-               $usersInRows[] = $userArray['user'];
-            }
-            // Then remove them from the list 
-            $usersList = array_diff( $usersList, $usersInRows );
-            
-            if ( count ( $usersList ) > 0 ) {
-                // Add what is left of users to the DB
-                $this->addUsersToAllowedTable( $constraint, $usersList );
-                $this->echo_memory_usage('users by session added.');
-            }
-
+            $this->processUpgradeConstraint( $constraint );
 
             // Update constraint and end transaction
-            //$this->em->merge($constraint);
             $this->em->flush();
             $this->em->clear();
     	}
     }
+    /*
+     * Update a constraint user list 
+     */
+    public function processUpgradeConstraint( $constraint, $mooc = null ) {
+
+        $usersArrayList = $this->getUsersListMatchingConstraint( $constraint );
+        // Reduce useless array depth
+        $usersList = array();
+        foreach ( $usersArrayList as $userArray ) {
+           $usersList[] = $userArray['id'];
+        }
+
+        // First, remove from DB the rows where users ID are not in the list. They were removed
+        $this->checkAndRemoveUsersForConstraint( $constraint, $usersList );
+
+        // Second step, get users already auitorized
+        $usersScalarResult = $this->sessionsByUsersRepo->getListofUsersAlreadyPresent( $constraint, $usersList, $mooc );
+        $usersInRows = array();
+        foreach ( $usersScalarResult as $userArray ) {
+           $usersInRows[] = $userArray['user'];
+        }
+        // Then remove them from the list 
+        $usersList = array_diff( $usersList, $usersInRows );
+
+        if ( count ( $usersList ) > 0 ) {
+            // Add what is left of users to the DB
+            $this->addUsersToAllowedTable( $constraint, $usersList );
+        }
+        
+    }
+    
+    public function processRemoveConstraint( $constraint, $mooc ) {
+        
+        foreach( $mooc->getMoocSessions() as $session ) {
+            $objectstoDelete = $this->sessionsByUsersRepo->findBy(array( 'moocSession' => $session, 'moocAccessConstraints' => $constraint ));
+            if ( $objectstoDelete ) {
+                foreach( $objectstoDelete as $sessionByUser ) {
+                    $rowstoDelete[] = $sessionByUser->getId();
+                }
+                $this->sessionsByUsersRepo->deleteRowsFromIds( $rowstoDelete );
+            }
+        }
+     }
     
     /*
      * return an array empty or list or users (by getScalarResults() from repository)
@@ -191,8 +202,6 @@ class MoocAccessConstraintsService extends Controller
                 $rowstoDelete[] = $dataSet['id'];
                 $usersToDelete[] = $dataSet['user'];
             }
-            // remove role for removed users
-            //$this->removeRoleForUsers( $constraint, $usersToDelete );
             
             //Remove sessions by users rows for DB (there is a function in repo to remove entities via dql)
             $this->sessionsByUsersRepo->deleteRowsFromIds( $rowstoDelete );
@@ -233,6 +242,12 @@ class MoocAccessConstraintsService extends Controller
             foreach ( $usersList as $key => $userId ) {
                 $user = $this->userRepo->findOneBy( array( 'id' => $userId ) );
                 
+                // If already in database, dont add a new one
+                if ( $this->sessionsByUsersRepo->findOneBy( array( 'user' => $user, 'moocSession' => $session, 'moocAccessConstraints' => $constraint ) ) ) {
+                    continue;
+                }
+                
+                // Add new entry
                 $newSession = new SessionsByUsers();
                 $newSession->setMoocAccessConstraints($constraint);
 	    		$newSession->setUser($user);
@@ -240,6 +255,7 @@ class MoocAccessConstraintsService extends Controller
 	    		$newSession->setMoocOwner($moocOwner);
                 $this->em->merge($newSession);
                 
+                // Loops
                 if ( $key % 500 === 0 ) {
                     $this->em->flush();
                     $this->em->clear();
@@ -274,27 +290,21 @@ class MoocAccessConstraintsService extends Controller
    
     public function refreshDeletedConstraintForWorkspace(AbstractWorkspace $workspace) {
     	if ($workspace->getMooc() != null) {
-	    	/* @var $roleManager RoleManager */
-	    	$roleManager = $this->container->get('claroline.manager.role_manager');
     		
     		/* @var $constraintsRepo MoocAccessConstraintsRepository */
     		$constraintsRepo = $this->em->getRepository('ClarolineCoreBundle:Mooc\MoocAccessConstraints');
     		$constraints = $constraintsRepo->findByMooc($workspace->getMooc(), $workspace->getMooc()->getAccessConstraints()->toArray());
-    		
-    		
+            
     		foreach ($constraints as $constraint) {
     			foreach ($constraint->getSessionsByUsers() as $sessionByUser) {
     				$moocSession = $sessionByUser->getMoocSession();
     				if ($workspace->getMooc()->getMoocSessions()->contains($moocSession)) {
-	    				$user = $sessionByUser->getUser();
-	    				$collaboratorRole = $roleManager->getCollaboratorRole($moocSession->getMooc()->getWorkspace());
-		    			if (!$user->getMoocSessions()->contains($moocSession)) {
-		    				$user->removeRole($collaboratorRole);
-		    			}
 	    				$this->em->remove($sessionByUser);
     				}
     			}
     		}
+            $this->em->flush();
+            $this->em-clear();
     	}
     }
 }

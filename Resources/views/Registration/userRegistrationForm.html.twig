@@ -131,8 +131,8 @@
                                                             'data-name': 'pass_confirmation', 
                                                             'data-validation-error-msg' : 'user_rules_password'|trans({}, 'platform')
                     } }) }}
-                    <span class="icon-question-sign password-helper" data-title="{{'password_rules'|trans({}, 'platform')}}" data-toggle="tooltip" data-placement="right"></span>
-                    <div class="strength-meter-wrapper"><span class="strength-meter"></span></div>
+                    <span class="icon-question-sign password-helper" data-html="true" data-title="{{ 'password_rules'|trans({}, 'platform')|raw }}" data-toggle="tooltip" data-placement="right"></span>
+                    <div class="strength-meter-wrapper"><span class="strength-meter"></span><span class="strength-out"></span></div>
                     {# Display error #}
                     {% if form.plainPassword.first.vars.errors %}    
                         <div class="slrn-errors__item"><span class="help-title">Mot de passe : </span>{{ form_errors( form.plainPassword.first ) }}</div>

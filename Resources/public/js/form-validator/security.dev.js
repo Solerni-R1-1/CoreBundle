@@ -82,6 +82,7 @@
             var translator = window.Translator;
             var score = 0;
             var message = [translator.get('platform:password_hint_intro')];
+            var message_out = [];
 
             var checkRepetition = function (pLen, str) {
                 var res = "";
@@ -115,7 +116,7 @@
 
             //password is just a numbers or chars
             if (password.length >= 8 ) {
-                score += 12;
+                score += 10;
             } else {
                 var missingCar = 8 - password.length;
                 if ( missingCar == 1 ) {
@@ -128,29 +129,36 @@
 
             //password has 1 numbers
             if (password.match(/(.*[0-9])/)) {
-                score += 12;
+                score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onenumber'));
             }
 
             //password has 1 symbols
             if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~])/)) {
-                score += 12;
+                score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onesymbol'));
             }
 
             //password has Upper and Lower chars
             if (password.match(/(.*[a-z])/)) {
-                score += 12;
+                score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onemin'));
             }
             
             if (password.match(/(.*[A-Z])/)) {
-                score += 12;
+                score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onemaj'));
+            }
+           
+            // Pas d'espace
+            if ( ! password.match(/(.*[\s])/) ) {
+                score += 10;
+            } else {
+                message_out.push(translator.get('platform:password_hint_nowhitespace'));
             }
             
             //password has number and chars
@@ -202,7 +210,8 @@
             
             return {
                 'score': score,
-                'message': message
+                'message': message,
+                'message_out': message_out
             }
         },
 
@@ -281,6 +290,12 @@
                     }
                 } else {
                     css.display = "none";
+                }
+                
+                if ( strength.message_out.length > 0 ) {
+                    jQuery('.strength-out').text(strength.message_out[0]).css(css);
+                } else {
+                    jQuery('.strength-out').text('');
                 }
 
                 $displayContainer
