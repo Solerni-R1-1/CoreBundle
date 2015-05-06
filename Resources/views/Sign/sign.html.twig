@@ -46,6 +46,10 @@
     <div class="col-md-5 slrn-md-5 slrn-md-5--signin col-xs-5">
         {% block alternateText %}{% endblock %}
     </div>
+    {# we have a redirect from the mooc presentation page for a private mooc #}
+    {% if privateMoocSession|default and privateMoocSession.getMooc().getTitle()|lower == 'mission usages digitaux' %}
+        {% include 'ClarolineCoreBundle:Partials:modalInformation.html.twig' %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

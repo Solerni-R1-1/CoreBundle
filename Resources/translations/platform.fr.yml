@@ -1368,3 +1368,6 @@ password_hint_onemin: une minuscule
 password_hint_onemaj: une majuscule
 password_hint_nowhitespace: Attention ! Votre mot de passe contient au moins un espace. Merci de le retirer.
 reinit_password: Réinitialiser votre mot de passe
+
+important_information: Information importante
+important_information_cooc: Pour accéder au COOC interne de votre entreprise &laquo; %moocName% &raquo;, merci de vous inscrire avec votre adresse mail professionnelle et d'utiliser Firefox comme navigateur.

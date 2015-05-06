@@ -1,0 +1,18 @@
+<div id="modal-information" style="top: 25%;"class="modal fade" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h4>{{ "important_information"|trans({}, "platform")|raw }}</h4>
+				<p>{{ "important_information_cooc"|trans({"%moocName%":privateMoocSession.getMooc().getTitle()}, "platform")|raw }}</p>
+			</div>
+			<div class="modal-footer">
+				<input type="button" class="btn btn-primary" data-dismiss="modal" value="{{ 'ok'|trans({}, 'platform') }}"/>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $(window).ready( function() {
+        $('#modal-information').modal({backdrop: "static"});
+    });
+</script>

@@ -1384,3 +1384,6 @@ password_hint_onemin: one lowercase letter
 password_hint_onemaj: one uppercase letter
 password_hint_nowhitespace: Careful! Your password have at least one whitespace. Please remove it.
 reinit_password: Change your password
+
+important_information: Important information
+important_information_cooc: To access to your company internal COOC &laquo; %moocName% &raquo;, thank you to sign up with your professional email address and use Firefox as browser.
