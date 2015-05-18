@@ -441,7 +441,7 @@ class MoocAnalyticsController extends Controller
     	$excludeRoles = array();
     	//$managerRole = $this->roleManager->getManagerRole($workspace);
     	//$excludeRoles[] = $managerRole->getName();
-    	//$excludeRoles[] = "ROLE_ADMIN";
+    	$excludeRoles[] = "ROLE_ADMIN";
     	//$excludeRoles[] = "ROLE_WS_CREATOR";
     	
     	return $excludeRoles;

@@ -719,25 +719,42 @@ class AnalyticsManager
         
         $moocSessionId = $session->getId();
                 
-        $sql = "SELECT COUNT( DISTINCT ID ) AS subscribed_users
-                FROM ( 
-                ( SELECT DISTINCT u.id AS id FROM claro_mooc_session ms 
+        $sql = "SELECT COUNT(DISTINCT id) AS subscribed_users
+                FROM ( (
+                    SELECT DISTINCT u.id AS id 
+                    FROM claro_mooc_session ms 
                     INNER JOIN claro_mooc m ON ms.mooc_id = m.id 
                     INNER JOIN claro_workspace w ON m.workspace_id = w.id 
                     INNER JOIN claro_role r ON w.id = r.workspace_id 
                     INNER JOIN claro_user_mooc_session ums ON ms.id = ums.moocsession_id 
-                    INNER JOIN claro_user u ON ums.user_id = u.id
-                    WHERE ms.id = $moocSessionId 
-                ) UNION ( 
-                SELECT DISTINCT u.id AS id FROM claro_mooc_session ms 
+                    INNER JOIN claro_user u ON ums.user_id = u.id 
+                    where ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                            SELECT DISTINCT u.id 
+                            FROM claro_user u 
+                            INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                            INNER JOIN claro_role r ON r.id = ur.role_id 
+                            WHERE r.name = 'ROLE_ADMIN' -- or r.name = 'ROLE_WS_CREATOR' 
+                            )
+                    )
+                    UNION (
+                    SELECT DISTINCT u.id AS id 
+                    FROM claro_mooc_session ms 
                     INNER JOIN claro_mooc m ON m.id = ms.mooc_id 
                     INNER JOIN claro_group_mooc_session gms ON ms.id = gms.moocsession_id 
-                    INNER JOIN claro_user_group ug ON gms.group_id = ug.group_id
+                    INNER JOIN claro_user_group ug ON gms.group_id = ug.group_id 
                     INNER JOIN claro_user u ON ug.user_id = u.id 
                     INNER JOIN claro_group cg ON ug.group_id = cg.id 
-                    WHERE ms.id = $moocSessionId 
-                ) )
-                as tab_inscrits";
+                    WHERE ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                            SELECT DISTINCT u.id 
+                            FROM claro_user u 
+                            INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                            INNER JOIN claro_role r ON r.id = ur.role_id 
+                            WHERE r.name = 'ROLE_ADMIN' -- or r.name = 'ROLE_WS_CREATOR' 
+                            )
+                    )
+                )as tab_inscrits";
         
         $rows = $this->entityManager->getConnection()->fetchAll($sql);
         
@@ -756,7 +773,7 @@ class AnalyticsManager
         $excludeRoles = array();
         //$managerRole = $this->roleManager->getManagerRole( $session->getMooc()->getWorkspace() );
         //$excludeRoles[] = $managerRole->getName();
-        //$excludeRoles[] = "ROLE_ADMIN";
+        $excludeRoles[] = "ROLE_ADMIN";
         //$excludeRoles[] = "ROLE_WS_CREATOR";
         
         return $excludeRoles;

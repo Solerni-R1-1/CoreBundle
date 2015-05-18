@@ -43,16 +43,19 @@ protected function configure() {
 				$excludeRoles = array();
 				//$managerRole = $roleManager->getManagerRole($ws);
 				//$excludeRoles[] = $managerRole->getName();
-				//$excludeRoles[] = "ROLE_ADMIN";
+				$excludeRoles[] = "ROLE_ADMIN";
 				//$excludeRoles[] = "ROLE_WS_CREATOR";
 
 				foreach ($ws->getMooc()->getMoocSessions() as $moocSession) {
-					$output->writeln("Starting preparation of session ".$moocSession->getId()." with name ".$moocSession->getTitle());
-					$prepManager->prepareConnectionsAndSubscriptionsByDay($moocSession, $excludeRoles);
-					$output->writeln("Starting preparation of the users of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
-					$prepManager->prepareUserAnalytics($moocSession, $excludeRoles);
-					$output->writeln("Starting preparation of the badges of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
-					$prepManager->prepareBadgeAnalytics($moocSession, $excludeRoles);
+                    // Only process active or future moocSessions
+                    if ( $moocSession->getEndDate()->format("Y-m-d") > date("Y-m-d") ) {
+                        $output->writeln("Starting preparation of session ".$moocSession->getId()." with name ".$moocSession->getTitle());
+                        $prepManager->prepareConnectionsAndSubscriptionsByDay($moocSession, $excludeRoles);
+                        $output->writeln("Starting preparation of the users of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
+                        $prepManager->prepareUserAnalytics($moocSession, $excludeRoles);
+                        $output->writeln("Starting preparation of the badges of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
+                        $prepManager->prepareBadgeAnalytics($moocSession, $excludeRoles);
+                    }
 				}
 				
 				unset($excludeRoles);

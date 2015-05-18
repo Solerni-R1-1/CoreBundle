@@ -1068,11 +1068,12 @@ mooc_analytics_user_name: Nom
 mooc_analytics_user_firstname: Prénom
 mooc_analytics_user_username: Pseudo
 mooc_analytics_user_mail: Adresse e-mail
+mooc_analytics_user_validated: Compte validé
 mooc_analytics_publisher_nb_pub: Nombre de publications
 mooc_analytics_users_nb_logs: Activité
 mooc_analytics_users_nb_published_posts: Nombre de messages publiés
-mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
-mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
+mooc_analytics_keynumbers_connections_today: "Nombre de connexions du jour"
+mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connexions par jour"
 mooc_analytics_keynumbers_subscriptions_today: "Nombre d'inscrits du jour"
 mooc_analytics_keynumbers_subscriptions_total: "Nombre total d'inscrits"
 mooc_analytics_keynumbers_active_users: "Nombre d'utilisateurs actifs (1)"
@@ -1145,8 +1146,8 @@ ParticipationEvolutionRateBadge: Evolution de la participation au badge
 ParticipationEvolutionRateDescription: Mesurez la tendance de la participation au badge
 mooc_analytics_exports: Rapports disponibles en téléchargement (fichier CSV)
 analytics_key_data: En données
-connectionStats: Suivi des connections
-connectionStatsDescription: Suivez l'évolution des connections au MOOC
+connectionStats: Suivi des connexions
+connectionStatsDescription: Suivez l'évolution des connexions au MOOC
 ParticipationRateBadge: Taux de participation au badge
 ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge
 isvalid: Statut
@@ -1310,7 +1311,7 @@ failure: Echec
 in_progress: En cours
 available: Disponible
 time_day: Heure de la journée
-connections_count: Nombre de connections
+connections_count: Nombre de connexions
 activity_in_mooc: Activité sur le cours
 inscriptions_total: Inscriptions totales
 publications: Publications
@@ -1324,7 +1325,7 @@ non_active_users: Utilisateurs non actifs
 inscriptions_number: Nombre d'inscriptions
 inscriptions_cumulated: Inscriptions cumulées
 inscriptions_daily: Inscriptions quotidiennes
-mooc_connections: Connections au MOOC
+mooc_connections: Connexions au MOOC
 download_report: Télécharger le rapport
 key_data_active_users: %activeUsers1% inscrits au MOOC.<br>%activeUsers0% utilisateurs actifs au cours des 7 derniers jours.<br>%inactiveUsers% utilisateurs inactifs au cours des 7 derniers jours.
 mooc_entering: Entrées dans le MOOC
