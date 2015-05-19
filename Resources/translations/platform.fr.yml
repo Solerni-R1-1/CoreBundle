@@ -1233,7 +1233,7 @@ available_on: Disponible le
 see_my_profil: Voir mon profil
 my_mailsystem: Ma messagerie
 badge: Badge
-still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obtenir
+still_badges_to_go: Il vous reste encore remainingBadges badge%plural% à obtenir
 gain_on: Obtenu le
 ongoing_badge: Badge en cours d'acquisition
 free_price: prix gratuit
@@ -1248,8 +1248,8 @@ activities: Activités
 Homme: Homme
 Femme: Femme
 years_old: ans
-posted_messages: messages postés
-community_votes: messages votés par la communauté
+posted_messages: message%plural% posté%plural%
+community_votes: messages voté%plural% par la communauté
 badges_number: badge%plural%
 followed_moocs: Moocs suivis
 mandatory_fields: Les champs marqués d'une étoile %symbol% sont obligatoires

@@ -2030,8 +2030,12 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-header--owner .slrn-header__description {
-    left:   -6.5em;
     color:  #606060;
+}
+
+.slrn-header--owner .header-logo-img {
+    float:          left;
+    margin-right:   30px;;
 }
 
 .slrn-header--mooc .slrn-header__description {

@@ -1067,8 +1067,8 @@ session_end_subscription: End of registration
 session_title: Session title
 session_max_users: Maximum number of registrations<br><span style="font-weight:"
 session_choose_forum: --Choose a session forum--
-constraint_whitelist: White list <br><span style="font-weight:"
-constraint_pattern: Authorised fields <br><span style="font-weight:"
+constraint_whitelist: White list <br><span style="font-weight:normal">(1 email per line)</span>
+constraint_pattern: Authorised fields <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>
 constraint_choose_owner: --Choose the owner of the access rules--
 fb_forbidden: It is not possible to reset accounts linked to social networks.
 see_all_owner_moocs: View all MOOCs
@@ -1249,7 +1249,7 @@ available_on: Available on
 see_my_profil: View my profile
 my_mailsystem: My inbox
 badge: Badge
-still_badges_to_go: You have %remainingBadges% badge%plural% left to obtain
+still_badges_to_go: You have remainingBadges badge%plural% left to obtain
 gain_on: Obtained on
 ongoing_badge: Badge in progress
 follow_us_on: Follow us on
@@ -1263,8 +1263,8 @@ activities: Activities
 Homme: Male
 Femme: Female
 years_old: years old
-posted_messages: messages posted
-community_votes: message voted for by the community
+posted_messages: message%plural% posted
+community_votes: message%plural% voted for by the community
 badges_number: badge%plural%
 followed_moocs: MOOCs followed
 mandatory_fields: Fields marked with a star%symbol% are mandatory

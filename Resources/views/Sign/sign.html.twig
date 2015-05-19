@@ -7,7 +7,8 @@
 {% block content %}
     {% if privateMoocSession|default %}
         {% set isPrivate = true %}
-    {% endif %}
+        {% set moocSession = privateMoocSession %}
+    {% endif %} 
 	{% if moocSession|default  %}
         <div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
             <h2 class="slrn-login-mooc-register">
