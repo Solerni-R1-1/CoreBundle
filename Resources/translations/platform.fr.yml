@@ -1069,6 +1069,9 @@ mooc_analytics_user_firstname: Prénom
 mooc_analytics_user_username: Pseudo
 mooc_analytics_user_mail: Adresse e-mail
 mooc_analytics_user_validated: Compte validé
+mooc_analytics_user_subscriptiondate: Date d'inscription
+mooc_analytics_user_subscriptiontime: Heure d'inscription
+mooc_analytics_user_lastconnectiondate: Dernière connexion
 mooc_analytics_publisher_nb_pub: Nombre de publications
 mooc_analytics_users_nb_logs: Activité
 mooc_analytics_users_nb_published_posts: Nombre de messages publiés

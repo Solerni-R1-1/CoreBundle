@@ -1085,6 +1085,9 @@ mooc_analytics_user_firstname: First name
 mooc_analytics_user_username: Nickname
 mooc_analytics_user_mail: E-mail address
 mooc_analytics_user_validated: Validated account
+mooc_analytics_user_subscriptiondate: Subcription date
+mooc_analytics_user_subscriptiontime: Subcription time
+mooc_analytics_user_lastconnectiondate: Last connection
 mooc_analytics_publisher_nb_pub: Number of submissions
 mooc_analytics_users_nb_logs: Activity
 mooc_analytics_users_nb_published_posts: Number of published messages
