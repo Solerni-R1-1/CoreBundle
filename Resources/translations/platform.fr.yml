@@ -1202,6 +1202,7 @@ all_fields_mandatory: Tous les champs sont obligatoires
 already_registered: J'ai déjà un compte, je me connecte
 not_registered: Je n'ai pas de compte, je m'inscris
 connect_now: je me connecte maintenant
+register_now: je m'inscris maintenant
 tagline_header: Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs
 i_register: Je m'inscris
 solerni_question: Vous avez déjà un compte Solerni ?

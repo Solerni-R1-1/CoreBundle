@@ -1218,6 +1218,7 @@ all_fields_mandatory: All fields required
 already_registered: I log in
 not_registered: I register
 connect_now: Log in now
+register_now: I register now
 tagline_header: Develop your skills in your own time by following friendly and collaborative learning pathways
 i_register: Register
 solerni_question: Do you already have a Solerni account?

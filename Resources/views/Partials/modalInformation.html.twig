@@ -2,8 +2,17 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
-				<h4>{{ "important_information"|trans({}, "platform")|raw }}</h4>
-				<p>{{ "important_information_cooc"|trans({"%moocName%":privateMoocSession.getMooc().getTitle()}, "platform")|raw }}</p>
+				<h4 style="font-family: Arial,Helvetica,sans-serif;color:#F60;">Important - COOC Mission usages digitaux</h4><br />
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;">La plateforme Solerni est la plateforme d&eacute;velopp&eacute;e par Orange pour h&eacute;berger ce COOC</p>
+                <p style="font-family: Arial,Helvetica,sans-serif;font-size:12px;"><b>Comment s&prime;inscrire ?</b></p>
+                <ul style="font-family: Arial,Helvetica,sans-serif;font-size:12px;list-style-image: url('https://solerni.org/mooc/file/resource/media/98996');">
+                    <li><strong>Utilisez le navigateur Firefox</strong> pour acc&eacute;der  &agrave; la plateforme. Celui-ci est d&eacute;j&agrave; pr&eacute;sent sur votre poste eBuro.</li>
+                    <li><strong>Si vous n&prime;avez pas de compte sur la plateforme Solerni, vous devez en cr&eacute;er un avec votre adresse professionnelle.</strong></li>
+                    <li><strong>Si vous avez d&eacute;j &agrave; un compte sur la plateforme Solerni, mais avec une adresse personnelle, </strong>vous devez vous cr&eacute;er un nouveau compte avec votre adresse professionnelle <strong>(car un COOC est interne)</strong>. </li>
+                    <li>Pour cela il faut vous d&eacute;connecter et recommencer la proc&eacute;dure d&prime;inscription.</li>
+                    <li>Une fois que vous avez cr&eacute;&eacute; votre compte Solerni, vous acc&eacute;dez  &agrave; la fiche descriptive du COOC et vous devez cliquer sur le bouton <span style="color:#ff004f;font-weight:bold;">s&prime;inscrire au Mooc</span>. </li>
+                </ul>
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;">Si vous rencontrez des probl&egrave;mes pour vous inscrire, contactez-nous : <a href="mailto:help@solerni.com" style="color:#ff004f">help@solerni.com</a>.</p>
 			</div>
 			<div class="modal-footer">
 				<input type="button" class="btn btn-primary" data-dismiss="modal" value="{{ 'ok'|trans({}, 'platform') }}"/>

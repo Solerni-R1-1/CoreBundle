@@ -47,8 +47,10 @@ protected function configure() {
 				//$excludeRoles[] = "ROLE_WS_CREATOR";
 
 				foreach ($ws->getMooc()->getMoocSessions() as $moocSession) {
-                    // Only process active or future moocSessions
-                    if ( $moocSession->getEndDate()->format("Y-m-d") > date("Y-m-d") ) {
+                    echo ( date("Y-m-d", strtotime("-1 days")) );
+                    // Only process active or future moocSessions. As the script is launched the next day at 4:00AM, we check if 
+                    // the end of the mooc session is >= to yesterday
+                    if ( $moocSession->getEndDate()->format("Y-m-d") >= date("Y-m-d", strtotime("-1 days")) ) {
                         $output->writeln("Starting preparation of session ".$moocSession->getId()." with name ".$moocSession->getTitle());
                         $prepManager->prepareConnectionsAndSubscriptionsByDay($moocSession, $excludeRoles);
                         $output->writeln("Starting preparation of the users of the session ".$moocSession->getId()." with name ".$moocSession->getTitle());
