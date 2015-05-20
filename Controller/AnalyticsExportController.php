@@ -519,12 +519,6 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportUsersGeneralStatsAction(AbstractWorkspace $workspace) {
-    	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	//$managerRole = $this->roleManager->getManagerRole($workspace);
-    	//$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	//$excludeRoles[] = "ROLE_WS_CREATOR";
     	
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
         
@@ -652,12 +646,6 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportSubscriptionsStatsAction(AbstractWorkspace $workspace) {
-    	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	//$managerRole = $this->roleManager->getManagerRole($workspace);
-    	//$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	//$excludeRoles[] = "ROLE_WS_CREATOR";
     	
         // Get session
 		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
@@ -797,12 +785,6 @@ class AnalyticsExportController extends Controller {
 	 */
 	public function exportConnectionStatsAction(AbstractWorkspace $workspace, $nbDays) {
 		if ($workspace->isMooc()) {
-	    	// Init the roles to filter the stats.
-	    	$excludeRoles = array();
-	    	//$managerRole = $this->roleManager->getManagerRole($workspace);
-	    	//$excludeRoles[] = $managerRole->getName();
-	    	$excludeRoles[] = "ROLE_ADMIN";
-	    	//$excludeRoles[] = "ROLE_WS_CREATOR";
 
             // Get session
             $currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
@@ -969,30 +951,128 @@ class AnalyticsExportController extends Controller {
         if (  ! $currentSession ) {
             throw new NotFoundHttpException();
         }
+        
+        $moocSessionId = $currentSession->getId();
 		
 		$headerCSV = array();
 		$header = array();
 
-		$header[0] = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
-		$header[1] = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
-		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
-		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
-		$header[4] = $this->translator->trans('mooc_analytics_publisher_nb_pub', array(), 'platform');
+		$header[0]      = $this->translator->trans('mooc_analytics_user_name', array(), 'platform');
+		$header[1]      = $this->translator->trans('mooc_analytics_user_firstname', array(), 'platform');
+		$header[2]      = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
+		$header[3]      = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
+		$header[4]      = $this->translator->trans('mooc_analytics_publisher_nb_pub', array(), 'platform');
+        $header[6]      = $this->translator->trans('mooc_analytics_role', array(), 'platform');
+		$headerCSV[]    = $header;
+        
+        $sql = "SELECT last_name AS lastName,
+            first_name AS firstName,
+            username AS nickname,
+            mail AS email,
+            IFNULL(tab_messages_per_doer.nbMessagesOnMOOCforum,0) AS nbMessagesOnMOOCforum,
+            if(
+                userid IN (
+                    SELECT DISTINCT u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name = 'ROLE_ADMIN' OR r.name = 'ROLE_WS_CREATOR' 
+                    )
+            ,'admin',if(
+                userid IN (
+                    SELECT distinct u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name IN (
+                        SELECT CONCAT('ROLE_WS_MANAGER_',guid) AS role_name_pedagogue 
+                        FROM claro_workspace w 
+                        INNER JOIN claro_mooc m ON w.id = m.workspace_id 
+                        INNER JOIN claro_mooc_session ms ON m.id = ms.mooc_id 
+                        WHERE ms.id = $moocSessionId
+                        )
+                    )
+            ,'mooc_manager','collaborator'
+            ) ) AS role 
+        FROM (
+            (
+                SELECT
+                    DISTINCT u.id AS userid,
+                    u.last_name AS last_name,
+                    u.first_name AS first_name,
+                    u.username AS username,
+                    u.mail AS mail,
+                    u.creation_date AS creation_date 
+                    FROM claro_mooc_session ms 
+                    INNER JOIN claro_mooc m ON ms.mooc_id = m.id 
+                    INNER JOIN claro_workspace w ON m.workspace_id = w.id 
+                    INNER JOIN claro_role r ON w.id = r.workspace_id 
+                    INNER JOIN claro_user_mooc_session ums ON ms.id = ums.moocsession_id 
+                    INNER JOIN claro_user u ON ums.user_id = u.id 
+                    WHERE ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                        SELECT distinct u.id 
+                        FROM claro_user u 
+                        INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                        INNER JOIN claro_role r ON r.id = ur.role_id 
+                        WHERE r.name = 'ROLE_ADMIN' -- OR r.name = 'ROLE_WS_CREATOR' 
+                        ) 
+            )
+        UNION 	(
+                SELECT
+                    DISTINCT u.id AS userid,
+                    u.last_name AS last_name,
+                    u.first_name AS first_name,
+                    u.username AS username,
+                    u.mail AS mail,
+                    u.creation_date AS creation_date
+                    FROM claro_mooc_session ms 
+                    INNER JOIN claro_mooc m ON m.id = ms.mooc_id 
+                    INNER JOIN claro_group_mooc_session gms ON ms.id = gms.moocsession_id 
+                    INNER JOIN claro_user_group ug ON gms.group_id = ug.group_id 
+                    INNER JOIN claro_user u ON ug.user_id = u.id 
+                    INNER JOIN claro_group cg ON ug.group_id = cg.id 
+                    WHERE ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                        SELECT distinct u.id 
+                        FROM claro_user u 
+                        INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                        INNER JOIN claro_role r ON r.id = ur.role_id 
+                        WHERE r.name = 'ROLE_ADMIN' -- OR r.name = 'ROLE_WS_CREATOR' 
+                        ) 
+            ) 
+        )AS tab_inscrits
+        LEFT OUTER JOIN
+        (SELECT 
+                cfm.user_id,
+                COUNT(cfm.id) AS nbMessagesOnMOOCforum
+            FROM claro_forum_message cfm 
+            INNER JOIN claro_forum_subject cfs ON cfs.id = cfm.subject_id
+            INNER JOIN claro_forum_category cfc ON cfc.id = cfs.category_id
+            INNER JOIN claro_forum cf ON cf.id = cfc.forum_id
+            INNER JOIN claro_mooc_session cms ON cms.forum_id = cf.resourceNode_id
+            WHERE
+                cms.id=$moocSessionId
+                AND cfm.user_id NOT IN (
+                    SELECT distinct u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name = 'ROLE_ADMIN' -- OR r.name = 'ROLE_WS_CREATOR'
+                )
+            GROUP BY cfm.user_id
+        ) AS tab_messages_per_doer ON tab_messages_per_doer.user_id=tab_inscrits.userid
+        ORDER BY nbMessagesOnMOOCforum desc";
 		
-		$headerCSV[] = $header;
+        $rows = $this->entityManager->getConnection()->fetchAll($sql);
 
-		// Init the roles to filter the stats.
-		$excludeRoles = array();
-		$managerRole = $this->roleManager->getManagerRole($workspace);
-		$excludeRoles[] = $managerRole->getName();
-		$excludeRoles[] = "ROLE_ADMIN";
-		$excludeRoles[] = "ROLE_WS_CREATOR";
-		
-		$userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
-		$data = $this->analyticsManager->getForumStats($currentSession, $userIds);
-		
-		$rowsCSV = array_merge($headerCSV, $data);
-		$content = $this->createCSVFromArray($rowsCSV);
+        foreach ( $rows as $row ) {
+            $orderedData[] = $row;
+        }
+
+        $rowsCSV = array_merge($headerCSV, $orderedData);
+
+        $content = $this->createCSVFromArray($rowsCSV);
 		
 		return new Response($content, 200, array(
 				'Content-Type' => 'application/force-download',
@@ -1011,13 +1091,18 @@ class AnalyticsExportController extends Controller {
 	 * @return Response
 	 */
 	public function exportUsersActivityAction(AbstractWorkspace $workspace) {
-		// Init the roles to filter the stats.
-		$excludeRoles = array();
-		$managerRole = $this->roleManager->getManagerRole($workspace);
-		$excludeRoles[] = $managerRole->getName();
-		$excludeRoles[] = "ROLE_ADMIN";
-		$excludeRoles[] = "ROLE_WS_CREATOR";
-		 
+		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
+        
+       if ( ! $currentSession ) {
+            $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
+        }
+        
+        if (  ! $currentSession ) {
+            throw new NotFoundHttpException();
+        }
+        
+        $moocSessionId = $currentSession->getId();
+		
 		$headerCSV = array();
 		$header = array();
 	
@@ -1026,24 +1111,123 @@ class AnalyticsExportController extends Controller {
 		$header[2] = $this->translator->trans('mooc_analytics_user_username', array(), 'platform');
 		$header[3] = $this->translator->trans('mooc_analytics_user_mail', array(), 'platform');
 		$header[4] = $this->translator->trans('mooc_analytics_users_nb_logs', array(), 'platform');
-	
-		$headerCSV[] = $header;
+        $header[6] = $this->translator->trans('mooc_analytics_role', array(), 'platform');
+		$headerCSV[]    = $header;
 
-		$currentSession = $this->moocService->getActiveOrLastSessionFromWorkspace($workspace);
-        
-        if ( ! $currentSession ) {
-            $currentSession = $this->moocService->getActiveOrNextSessionFromWorkspace($workspace, null);
-        }
-        
-        if (  ! $currentSession ) {
-            throw new NotFoundHttpException();
+         $sql = "SELECT last_name AS lastName,
+            first_name AS firstName,
+            username AS nickname,
+            mail AS email,
+            IFNULL(tab_activity_per_doer.nbActivityOnMOOC,0) AS nbActivityOnMOOC,
+            if(
+                userid IN (
+                    SELECT DISTINCT u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name = 'ROLE_ADMIN' OR r.name = 'ROLE_WS_CREATOR' 
+                    )
+            ,'admin',if(
+                userid IN (
+                    SELECT DISTINCT u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name IN (
+                        SELECT CONCAT('ROLE_WS_MANAGER_',guid) AS role_name_pedagogue 
+                        FROM claro_workspace w 
+                        INNER JOIN claro_mooc m ON w.id = m.workspace_id 
+                        INNER JOIN claro_mooc_session ms ON m.id = ms.mooc_id 
+                        WHERE ms.id = $moocSessionId
+                        )
+                    )
+            ,'mooc_manager','collaborator'
+            ) ) AS role 
+        FROM (
+            (
+                SELECT
+                    DISTINCT u.id AS userid,
+                    u.last_name AS last_name,
+                    u.first_name AS first_name,
+                    u.username AS username,
+                    u.mail AS mail,
+                    u.creation_date AS creation_date 
+                    FROM claro_mooc_session ms 
+                    INNER JOIN claro_mooc m ON ms.mooc_id = m.id 
+                    INNER JOIN claro_workspace w ON m.workspace_id = w.id 
+                    INNER JOIN claro_role r ON w.id = r.workspace_id 
+                    INNER JOIN claro_user_mooc_session ums ON ms.id = ums.moocsession_id 
+                    INNER JOIN claro_user u ON ums.user_id = u.id 
+                    WHERE ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                        SELECT distinct u.id 
+                        FROM claro_user u 
+                        INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                        INNER JOIN claro_role r ON r.id = ur.role_id 
+                        WHERE r.name = 'ROLE_ADMIN' -- or r.name = 'ROLE_WS_CREATOR' 
+                        ) 
+            )
+        UNION 	(
+                SELECT
+                    DISTINCT u.id AS userid,
+                    u.last_name AS last_name,
+                    u.first_name AS first_name,
+                    u.username AS username,
+                    u.mail AS mail,
+                    u.creation_date AS creation_date
+                    FROM claro_mooc_session ms 
+                    INNER JOIN claro_mooc m ON m.id = ms.mooc_id 
+                    INNER JOIN claro_group_mooc_session gms ON ms.id = gms.moocsession_id 
+                    INNER JOIN claro_user_group ug ON gms.group_id = ug.group_id 
+                    INNER JOIN claro_user u ON ug.user_id = u.id 
+                    INNER JOIN claro_group cg ON ug.group_id = cg.id 
+                    WHERE ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                        SELECT distinct u.id 
+                        FROM claro_user u 
+                        INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                        INNER JOIN claro_role r ON r.id = ur.role_id 
+                        WHERE r.name = 'ROLE_ADMIN' -- OR r.name = 'ROLE_WS_CREATOR' 
+                        ) 
+            ) 
+        )AS tab_inscrits
+        LEFT OUTER JOIN
+        (SELECT
+                doer_id,
+                COUNT(cl.doer_id) AS nbActivityOnMOOC
+            FROM claro_log cl 
+            INNER JOIN claro_workspace cw ON cw.id = cl.workspace_id 
+            INNER JOIN claro_mooc cm ON cm.workspace_id = cw.id 
+            INNER JOIN claro_mooc_session cms ON cms.mooc_id = cm.id 
+            WHERE
+                cms.id=$moocSessionId
+                AND cl.action NOT IN (
+                    'workspace-role-subscribe_user',
+                    'workspace-role-unsubscribe_user',
+                    'workspace-role-subscribe_group',
+                    'workspace-role-unsubscribe_group') 
+                AND cl.date_log >= cms.start_inscription_date -- better start_date ?? 
+                AND cl.date_log <= cms.end_date 
+                AND cl.doer_id NOT IN (
+                    SELECT distinct u.id 
+                    FROM claro_user u 
+                    INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                    INNER JOIN claro_role r ON r.id = ur.role_id 
+                    WHERE r.name = 'ROLE_ADMIN' -- OR r.name = 'ROLE_WS_CREATOR'
+                )
+            GROUP BY doer_id
+        ) AS tab_activity_per_doer ON tab_activity_per_doer.doer_id=tab_inscrits.userid
+        ORDER BY nbActivityOnMOOC desc";
+		
+        $rows = $this->entityManager->getConnection()->fetchAll($sql);
+
+        foreach ( $rows as $row ) {
+            $orderedData[] = $row;
         }
 
-        $userIds = $this->userManager->getWorkspaceUserIds($workspace, $excludeRoles);
-		$data = $this->analyticsManager->getMostActiveUsers($currentSession, $userIds);
-	
-		$rowsCSV = array_merge($headerCSV, $data);
-		$content = $this->createCSVFromArray($rowsCSV);
+        $rowsCSV = array_merge($headerCSV, $orderedData);
+
+        $content = $this->createCSVFromArray($rowsCSV);
 	
 		return new Response($content, 200, array(
 				'Content-Type' => 'application/force-download',
