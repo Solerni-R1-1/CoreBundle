@@ -1068,7 +1068,7 @@ session_title: Session title
 session_max_users: Maximum number of registrations<br><span style="font-weight:"
 session_choose_forum: --Choose a session forum--
 constraint_whitelist: White list <br><span style="font-weight:normal">(1 email per line)</span>
-constraint_pattern: Authorised fields <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>
+constraint_pattern: Authorised domains <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>
 constraint_choose_owner: --Choose the owner of the access rules--
 fb_forbidden: It is not possible to reset accounts linked to social networks.
 see_all_owner_moocs: View all MOOCs
