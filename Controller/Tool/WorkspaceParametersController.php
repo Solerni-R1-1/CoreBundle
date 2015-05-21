@@ -400,12 +400,11 @@ class WorkspaceParametersController extends Controller
                 /*Remove mooc from constraint deleted from mooc and update rules*/
                 foreach ( $originalConstraints as $constraint) {
                     if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
-                        $service->processRemoveConstraint($constraint, $mooc);
-                        $constraint->removeMooc($mooc);            
+                        $service->processRemoveConstraint($constraint, $mooc);    
                     }
                 }
                 
-                $this->getDoctrine()->getManager()->persist($workspace);
+                $this->getDoctrine()->getManager()->merge($workspace);
                 $this->getDoctrine()->getManager()->flush();
                 //$this->workspaceManager->rename($workspace, $workspace->getName());
                 $displayable = $workspace->isDisplayable();
