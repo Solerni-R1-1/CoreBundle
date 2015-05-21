@@ -1250,7 +1250,7 @@ Homme: Homme
 Femme: Femme
 years_old: ans
 posted_messages: message%plural% posté%plural%
-community_votes: messages voté%plural% par la communauté
+community_votes: message%plural% voté%plural% par la communauté
 badges_number: badge%plural%
 followed_moocs: Moocs suivis
 mandatory_fields: Les champs marqués d'une étoile %symbol% sont obligatoires
