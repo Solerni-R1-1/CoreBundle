@@ -940,7 +940,7 @@ body.dsk .alert { display: none; }
     background-color: #FFF;
 }
 
-.slrn-footer-languageblock .slrn-item__marqueur::after {
+.slrn-footer-languageblock .slrn-item__marqueur:after {
     background-color: #EEEEEF;
 }
 
@@ -1464,7 +1464,7 @@ body.dsk .alert { display: none; }
     margin:     20px 0;
 }
 
-.my-moocs-nav::after {
+.my-moocs-nav:after {
     content:    "";
     display:    inline-block;
     width:      100%;
@@ -1816,7 +1816,7 @@ input[type="file"] { height: auto; }
     line-height:    32px;
 }
 
-.slrn-my_badges-list__content--my_evals::before {
+.slrn-my_badges-list__content--my_evals:before {
     content:        "";
     width:          32px;
     height:         32px;
@@ -1938,15 +1938,17 @@ input[type="file"] { height: auto; }
     padding: .2em .5em .2em 2.3em;
 }
 
-.slrn-search-form--inactive:before {
-    content: "";
-    width: 21px;
-    height: 21px;
+.slrn-search-form--inactive:after {
+    content:    "";
+    width:      21px;
+    height:     21px;
     background: transparent url(../images/sprites_solerni.png) no-repeat 0 -805px;
-    position: absolute;
-    top: 1em;
-    left: .8em;
+    position:   absolute;
+    top:        1em;
+    left:       .8em;
+    z-index:    10;
 }
+
 
 .slrn-search-form ::-webkit-input-placeholder {
     color: #EEF5FB;

@@ -8,14 +8,36 @@
  * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
  */
 
-.slrn-top-header__item { zoom: 1; display: inline; float: none !important; }
-#top_bar .slrn-logo { display: inline-block; }
-.slrn-facebook-connect[disabled] { background-color: #999; }
-.form-horizontal .control-label { text-align: left !important; }
-.form-horizontal input[type=checkbox] { border: 2px solid transparent; outline-width: 0; outline-color: transparent !important; outline-style: none !important; }
+.slrn-top-header__item { 
+    zoom: 1; 
+    display: inline; 
+    float: none !important; 
+}
+
+#top_bar .slrn-logo { 
+    display: inline-block; 
+}
+
+.slrn-facebook-connect[disabled] { 
+    background-color: #999; 
+}
+
+.form-horizontal .control-label { 
+    text-align: left !important; 
+}
+
+.form-horizontal input[type=checkbox] { 
+    border: 2px solid transparent; 
+    outline-width: 0; 
+    outline-color: transparent !important; 
+    outline-style: none !important; 
+}
+
 .form-horizontal input[type=text],
 .form-horizontal input[type=email], 
-.form-horizontal input[type=password] { padding: 4px 12px 3px 12px; }
+.form-horizontal input[type=password] { 
+    padding: 4px 12px 3px 12px;
+}
 
 .slrn-widget__list--railroad__pseudo {
     content: "";
@@ -25,6 +47,19 @@
     background-color: #FF004F; 
     top: 2em;
 }
-.slrn-widget__list--railroad .slrn-widget__list__item { z-index: 1; }
-.slrn-widget__list--railroad .slrn-widget__list__item.is-done:before { content: " "; }
-.btn-done-lesson.is-done:before { content: " \f00c"; }
+
+.slrn-widget__list--railroad .slrn-widget__list__item { 
+    z-index: 1; 
+}
+
+.slrn-widget__list--railroad .slrn-widget__list__item.is-done:before { 
+    content: " "; 
+}
+
+.btn-done-lesson.is-done:before { 
+    content: " \f00c";
+}
+
+.slrn-search-form__input {
+    background: #A6B3BC url(../images/sprites_solerni.png) no-repeat 5px -799px;
+}
