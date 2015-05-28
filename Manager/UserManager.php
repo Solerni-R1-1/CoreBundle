@@ -175,7 +175,7 @@ class UserManager
             $this->mailManager->sendChangePasswordMessage($user);
         }
     }
-    
+
 
     /**
      * Rename a user.
@@ -207,14 +207,15 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
-        
+
         $unique = md5( uniqid() );
         $identifier = 'invite-'. substr($unique, 0, 8);
+        $password = 'Invite#' . $unique;
         //soft delete~
         $user->setMail($identifier . '@solerni.org');
         $user->setFirstName('Invité');
         $user->setLastName('Invite');
-        $user->setPlainPassword($unique);
+        $user->setPlainPassword($password);
         $user->setUsername($identifier);
         $user->setUsername($identifier);
         $user->setPublicUrl($identifier);
@@ -294,11 +295,11 @@ class UserManager
      */
     public function importUsers(array $users)
     {
-    	
+
     	$this->em->getConnection()->getConfiguration()->setSQLLogger(null);
     	gc_enable();
     	$config = Configuration::fromTemplate($this->personalWsTemplateFile);
-    	
+
     	$this->objectManager->beginTransaction();
         $this->objectManager->startFlushSuite();
 
@@ -323,7 +324,7 @@ class UserManager
         $this->objectManager->commit();
         $this->objectManager->clear();
     }
-    
+
     /**
      * Create a user.
      * Its basic properties (name, username,... ) must already be set.
@@ -333,18 +334,18 @@ class UserManager
      * @return \Claroline\CoreBundle\Entity\User
      */
     public function createUserForImport(User $user, $config) {
-    	
+
     	$this->setPersonalWorkspaceForImport($user, $config);
-    
+
     	$user
 	    	->setPublicUrl($user->getUsername())
 	    	->setPublicProfilePreferences(new UserPublicProfilePreferences());
-    
+
     	$this->toolManager->addRequiredToolsToUser($user);
     	$this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
     	$this->objectManager->persist($user);
     	$this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
-    
+
     	return $user;
     }
     /**
@@ -644,14 +645,14 @@ class UserManager
         array $workspaces,
         $page,
         $search,
-        $max = 20, 
-        $orderedBy = 'id', 
+        $max = 20,
+        $orderedBy = 'id',
         $order = null
     )
     {
         $users = $this->userRepo
             ->findUsersByWorkspacesAndSearch($workspaces, $search, $orderedBy, $order);
-            
+
         return $this->pagerFactory->createPagerFromArray($users, $page, $max, true, false);
     }
 
@@ -831,10 +832,10 @@ class UserManager
     public function getNotifiedByWorkspace(AbstractWorkspace $workspace, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
     {
     	$res = $this->userRepo->findNotifiedByWorkspace($workspace, true, $orderedBy, $order);
-    
+
     	return $this->pagerFactory->createPager($res, $page, $max);
     }
-    
+
 
     /**
      * @param AbstractWorkspace $workspace
@@ -847,7 +848,7 @@ class UserManager
     public function getNotifiedByWorkspaceWithName(AbstractWorkspace $workspace, $search, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
     {
     	$res = $this->userRepo->findNotifiedByWorkspaceWithName($workspace, $search, true, $orderedBy, $order);
-    
+
     	return $this->pagerFactory->createPager($res, $page, $max);
     }
 
@@ -979,7 +980,7 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
-    
+
     public function toArrayForPicker($users)
     {
         $resultArray = array();
@@ -1039,10 +1040,10 @@ class UserManager
 
         return $userPublicProfilePreferences;
     }
-    
+
     public function getWorkspaceUserIds(AbstractWorkspace $workspace, array $excludeRoles) {
     	$ids = $this->userRepo->getWorkspaceUserIds($workspace, $excludeRoles);
-    	
+
     	$ids = array_unique(array_map('current', $ids));
     	return $ids;
     }

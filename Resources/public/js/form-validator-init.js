@@ -1,15 +1,15 @@
-/* 
+/*
  * This file is part of Solerni.
- * 
+ *
  * Copyright (C) 2014 Orange
- * 
+ *
  * Description: Init form verification jQuery plugin
- * 
+ *
  * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
  */
 
 jQuery(document).ready(function(jQuery) {
-    
+
     var SolerniMsg = {
       errorTitle : 'Le formulaire n\'est pas valide !',
       requiredFields : 'Ce champ est requis',
@@ -41,32 +41,41 @@ jQuery(document).ready(function(jQuery) {
       groupCheckedTooManyStart : 'Please choose a maximum of ',
       groupCheckedEnd : ' item(s)'
     };
-    
+
     /* USING security.dev because I changed the method to find password confirmation */
     jQuery.validate({
         borderColorOnError: '#FF004F',
-        modules: 'security.dev',
-        showHelpOnFocus: false,
-        addSuggestions: false,
-        validateOnBlur: true,
-        langage: SolerniMsg,
-        onModulesLoaded: function() {
-            var config = {
-                fontSize:   '.9em',
-                padding:    '.5em .3em .2em .3em',
-                bad :       'Complexité très faible',
-                weak :      'Complexité faible',
-                good :      'Complexité insuffisante',
-                strong :    'Complexité optimale'
-            };
-            // Init Strength Display
-            if ( jQuery('#profile_form_plainPassword_first').length > 0 ) {
-                jQuery('#profile_form_plainPassword_first').displayPasswordStrength( config );
-            }
-            if ( jQuery('#reset_pwd_form_plainPassword_first').length > 0 ) {
-                jQuery('#reset_pwd_form_plainPassword_first').displayPasswordStrength( config );
-            }
-        }
+        showHelpOnFocus:    false,
+        addSuggestions:     false,
+        validateOnBlur:     true,
+        langage:            SolerniMsg
     });
+
+    // Init Strength Display as callback doesn't work properly in IE8
+    passInit = function() {
+        var config = {
+            fontSize:   '.9em',
+            padding:    '.5em .3em .2em .3em',
+            bad :       'Complexité très faible',
+            weak :      'Complexité faible',
+            good :      'Complexité insuffisante',
+            strong :    'Complexité optimale'
+        };
+        // Creation de compte publique par l'utilisateur
+        if ( jQuery('#profile_form_plainPassword_first').length > 0 ) {
+            jQuery('#profile_form_plainPassword_first').displayPasswordStrength( config );
+        }
+        // Modification de mot de passe par l'utilisateur
+        if ( jQuery('#reset_pwd_form_plainPassword_first').length > 0 ) {
+            jQuery('#reset_pwd_form_plainPassword_first').displayPasswordStrength( config );
+        }
+        // Creation d'un utilisateur par l'administrateur
+        if ( jQuery('#profile_form_creation_plainPassword_first').length > 0 ) {
+            jQuery('#profile_form_creation_plainPassword_first').displayPasswordStrength( config );
+        }
+    }
+
+    // Launch real-time display of pwd strenght
+    passInit();
 
 });
