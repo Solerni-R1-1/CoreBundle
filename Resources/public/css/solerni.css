@@ -102,7 +102,7 @@ body.subnavbar-fixed {
     font-weight: bold;
     text-transform: uppercase;
 }
-.navbar-inverse .navbar-nav > li:not(.slrn-topbar--messages) > a:hover { text-decoration: underline; }
+.navbar-inverse .navbar-nav > li > a:hover { text-decoration: underline; }
 .navbar-inverse .navbar-nav > .slrn-topbar--account > a { text-transform: capitalize; }
 
 .navbar-inverse .navbar-nav > .slrn-topbar--account .dropdown-toggle {
