@@ -5,7 +5,7 @@
             <div class="dsk__avatar">
             {% if userThumbnailSrc is not null %}
                 <img
-                    class="dsk__avatar__thumb" 
+                    class="dsk__avatar__thumb"
                     src="{{ image( 'thumbnails/' ~ userThumbnailSrc ).scaleResize(66,66)}}"
                     alt="{{ 'avatar'|trans({}, 'platform') }} {{ user.getFirstName() }} {{ user.getLastName() }}"
                     width="66"
@@ -26,7 +26,7 @@
                 {% if renderingContext == 'dashboard' %}{% set dashboardIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item">
                     <span class="dsk__menu__span">
-                        <a class='{% if dashboardIsActive is defined %}{{ dashboardIsActive }}{% endif %}dsk__menu__link' 
+                        <a class='{% if dashboardIsActive is defined %}{{ dashboardIsActive }}{% endif %}dsk__menu__link'
                            href="{{ path( 'claro_desktop_open' ) }}">{{ 'dashboard' | trans({}, 'platform') }}
                         </a>
                     </span>
@@ -35,7 +35,7 @@
                 {% if renderingContext == 'mes_moocs' %}{% set mesMoocsIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item">
                     <span class="dsk__menu__span">
-                        <a class='{% if mesMoocsIsActive is defined %}{{ mesMoocsIsActive }}{% endif %}dsk__menu__link' 
+                        <a class='{% if mesMoocsIsActive is defined %}{{ mesMoocsIsActive }}{% endif %}dsk__menu__link'
                            href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'mes moocs' | trans({}, 'platform') }}
                         </a>
                     </span>
@@ -44,39 +44,41 @@
                 {% if renderingContext == 'badges' %}{% set badgesIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item">
                     <span class='dsk__menu__span'>
-                        <a class='{% if badgesIsActive is defined %}{{ badgesIsActive }}{% endif %}dsk__menu__link' 
+                        <a class='{% if badgesIsActive is defined %}{{ badgesIsActive }}{% endif %}dsk__menu__link'
                            href="{{ path('claro_profile_view_badges') }}">{{ 'my_badges' | trans({}, 'platform') }}
                         </a>
                     </span>
                 </li>
-                
+
                 {% if renderingContext == 'my_badges' %}{% set myBadgesIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item">
                     <span class='dsk__menu__span'>
-                        <a class='{% if myBadgesIsActive is defined %}{{ myBadgesIsActive }}{% endif %}dsk__menu__link' 
+                        <a class='{% if myBadgesIsActive is defined %}{{ myBadgesIsActive }}{% endif %}dsk__menu__link'
                            href="{{ path( 'solerni_user_evaluations', {} ) }}">{{ 'my_evals' | trans({}, 'platform') }}
                         </a>
                     </span>
                 </li>
-                
-                {% if renderingContext == 'my_library' %}{% set myLibraryIsActive = 'active ' %}{% endif %}
-                <li class="dsk__menu__item">
-                    <span class='dsk__menu__span'>
-                        <a class='{% if myLibraryIsActive is defined %}{{ myLibraryIsActive }}{% endif %}dsk__menu__link' 
-                           href="{{ path('claro_workspace_open_tool', { 
-                                        'workspaceId': user.getPersonalWorkspace().getId(), 
-                                        'toolName': 'resource_manager' } ) }}">{{ 'my_library' | trans({}, 'platform') }}
-                        </a>
-                    </span>
-                </li>
-                
+
+                {% if user.getPersonalWorkspace()|default %}
+                    {% if renderingContext == 'my_library' %}{% set myLibraryIsActive = 'active ' %}{% endif %}
+                    <li class="dsk__menu__item">
+                        <span class='dsk__menu__span'>
+                            <a class='{% if myLibraryIsActive is defined %}{{ myLibraryIsActive }}{% endif %}dsk__menu__link'
+                               href="{{ path('claro_workspace_open_tool', {
+                                            'workspaceId': user.getPersonalWorkspace().getId(),
+                                            'toolName': 'resource_manager' } ) }}">{{ 'my_library' | trans({}, 'platform') }}
+                            </a>
+                        </span>
+                    </li>
+                {% endif %}
+
                 {% if renderingContext == 'my_messages' %}{% set myMessagesIsActive = 'active ' %}{% endif %}
                 <li class="dsk__menu__item">
                    <span class='dsk__menu__span'>
-                      <a class='{% if myMessagesIsActive is defined %}{{ myMessagesIsActive }}{% endif %} dsk__menu__link' 
+                      <a class='{% if myMessagesIsActive is defined %}{{ myMessagesIsActive }}{% endif %} dsk__menu__link'
                          href="{{ path('claro_message_list_received', {} ) }}">
-                            {% if nbMessages != 0 %} 
-                                <span class='dsk__menu__span__right'>{{ nbMessages }}</span> 
+                            {% if nbMessages != 0 %}
+                                <span class='dsk__menu__span__right'>{{ nbMessages }}</span>
                             {% endif %}{{ 'my_mailsystem' | trans({}, 'platform') }}
                       </a>
                    </span>

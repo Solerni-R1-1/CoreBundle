@@ -1,5 +1,5 @@
 {% macro item(params) %}
-    <li role="presentation" 
+    <li role="presentation"
         {% if params.id is defined and params.id is not empty %} id="{{ params.id }}" {% endif %}
         class="{% if params.dropdown is defined and params.dropdown is not empty %}dropdown{% endif %}{% if params.css is defined and params.css is not empty %} {{params.css}}{% endif %}{% if params.isCurrentPage is defined and params.isCurrentPage( itemRoute ) is not empty %} active{% endif %}"
     >
@@ -24,8 +24,8 @@
         {% if params.marqueur is defined and params.marqueur is not empty and isCurrentLoginPage( params.route | default(' ') ) %}<span class="slrn-item__marqueur"></span>{% endif %}
     </li>
 {% endmacro %}
-    
-    
+
+
 {# list available languages #}
 {% set currentLocale, currentLocaleFull = app.request.getLocale(), 'none' %}
 {% for language in app.session.get('availableLanguages') %}
@@ -33,38 +33,43 @@
         {% set currentLocaleFull = language.fullName %}
     {% endif %}
 {% endfor %}
-    
+
 {# END MACRO START RENDER #}
 {% block topBar %}
 
-    
+
     {% block leftSide %}{% endblock leftSide %}
-    
+
     {# DISPLAY THE LINK TO CMS PRESENTATION #}
     {% block whatIsSolerni %}
         {% include ('ClarolineCoreBundle:Mooc:searchFormComponent.html.twig') %}
         {% import _self as topbar %}
         {{ topbar.item({
-            'name':'what_is_solerni', 
-            'breakhide': true, 
-            'id':'what_is_solerni', 
+            'name':'what_is_solerni',
+            'breakhide': true,
+            'id':'what_is_solerni',
             'href':path( 'solerni_static_page', { 'name': 'cms_quoi' } ),
             'title': 'discover_solerni' }) }}
         {{ topbar.item({
             'name':'catalogue',
-            'breakhide': true, 
-            'id':'catalogue', 
+            'breakhide': true,
+            'id':'catalogue',
             'href':path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false',
-            'title':'discover_catalogue', 
-            'marqueur': true, 
-            'route': '/catalogue', 
+            'title':'discover_catalogue',
+            'marqueur': true,
+            'route': '/catalogue',
             'css':'slrn-topbar-item' }) }}
     {% endblock %}
-        
+
     {% block rightSide %}
         {% import _self as topbar %}
         {# DISPLAY LINK TO DASHBOARD & MESSAGES AND NUMBER OF #}
-        {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':['desktop/tool/open/home', 'mes_moocs', 'profile/badge', 'mes_evaluations', 'workspaces/' ~ app.user.getPersonalWorkspace().getId() ~ '/open/tool/resource_manager', 'message'], 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
+        {% if app.user.getPersonalWorkspace()|default %}
+            {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':['desktop/tool/open/home', 'mes_moocs', 'profile/badge', 'mes_evaluations', 'workspaces/' ~ app.user.getPersonalWorkspace().getId() ~ '/open/tool/resource_manager', 'message'], 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
+        {% else %}
+            {{ topbar.item({'name':'dashboard', 'breakhide': true, 'icon':'', 'href': path( 'claro_desktop_open' ), 'route':['desktop/tool/open/home', 'mes_moocs', 'profile/badge', 'mes_evaluations', 'message'], 'title':'dashboard'|trans({}, 'platform'), 'css':'slrn-topbar-item', 'marqueur':true }) }}
+        {% endif %}
+
         {% if countUnreadMessages == 0 %}
             {% set countUnreadMessages = '' %}
             {% set messagesTitle = 'no_message' | trans({'%count%': countUnreadMessages}, 'platform') %}
@@ -141,7 +146,7 @@
         {% if is_granted('ROLE_ADMIN') %}
             {{ topbar.item({ 'name':'administration', 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'css':'slrn-topbar-item__sub'  }) }}
         	<li class="divider"></li>
-        {% endif %}	
+        {% endif %}
         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
         	{% import _self as topbar %}
             {{ topbar.item({ 'name':'moocs', 'href':path('admin_parameters_mooc'), 'icon':'cog', 'route':'/admin/parameters/mooc/', 'css':'slrn-topbar-item__sub'  }) }}
@@ -151,7 +156,7 @@
 	        {{ topbar.item({ 'name':'create_mooc', 'href':path('claro_workspace_creation_form'), 'icon':'pencil', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
 	        <li class="divider"></li>
             {{ topbar.item({ 'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book', 'route':'',  'css':'slrn-topbar-item__sub'  }) }}
-	        <li class="divider"></li>    
+	        <li class="divider"></li>
         {% endif %}
 
         {% if isImpersonated %}
@@ -161,17 +166,17 @@
         {% endif %}
         {{ topbar.item({ 'name':'logout', 'href':logoutPath, 'icon':'remove', 'route':'logout',  'css':'slrn-topbar-item__sub slrn-topbar--logout'  }) }}
     {% endblock dropdownLogged %}
-            
-    {% block language %}      
+
+    {% block language %}
         {% import _self as topbar %}
         {% use 'ClarolineCoreBundle:Partials:dropdownLanguages.html.twig' %}
         {{ topbar.item({
-            'name': currentLocaleFull, 
-            'icon':'', 
-            'route':'', 
+            'name': currentLocaleFull,
+            'icon':'',
+            'route':'',
             'dropdown':block('dropdownLangage'),
-            'css':'slrn-topbar-item slrn-topbar--language js-dropdown-language' 
+            'css':'slrn-topbar-item slrn-topbar--language js-dropdown-language'
         }) }}
     {% endblock language %}
-            
+
 {% endblock topBar %}
