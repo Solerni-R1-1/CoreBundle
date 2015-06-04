@@ -7,10 +7,10 @@
 {% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
 
 {% block content %}
-    
+
 
     <div>{{ macros.flashBox() }}</div>
-    
+
     <div class="panel panel-default panel-user">
         <div class="slrn-row relative">
             {% if canEdit %}
@@ -31,11 +31,13 @@
                             </a>
                         </li>
                         {% endif %}
+                        {% if user.publicUrl|default %}
                         <li role="presentation" >
                             <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
                                 {{ 'see_public_profile'|trans({}, 'platform') }}
                             </a>
                         </li>
+                        {% endif %}
                         {% if false == user.hasTunedPublicUrl %}
                         <li role="presentation" >
                             <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">
