@@ -18,19 +18,21 @@
                 <p class="slrn-grey-block slrn-info-block slrn-info-block--public-url">
                     {{ 'public_profile_url_tuning_only_once'|trans({}, 'platform') }}.
                 </p>
-                <p class="slrn-current-url">
-                    {{ 'your_current_url'|trans({}, 'platform') }}
-                    <strong>
-                        {#<a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ 'public_profile'|trans({}, 'platform') }}">#}
-                            {{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}
-                        {#</a>#}
-                    </strong>
-                </p>              
+                 {% if user.publicUrl|default %}
+                    <p class="slrn-current-url">
+                        {{ 'your_current_url'|trans({}, 'platform') }}
+                        <strong>
+                            {#<a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ 'public_profile'|trans({}, 'platform') }}">#}
+                               {{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}
+                            {#</a>#}
+                        </strong>
+                    </p>
+                {% endif %}
                 <div class="form-group public_profile_url">
                     <label class="col-md-3 control-label">{{ path('claro_profile_view') }}</label>
                     <div class="col-md-4">
-                        {{ form_widget(form.public_url) }}
-                        {{ form_errors(form.public_url) }}
+                        {{ form_widget(form.publicUrl) }}
+                        {{ form_errors(form.publicUrl) }}
                         <input type="hidden" value="{{ currentPublicUrl }}" id="current_public_profile_url">
                     </div>
                     <div class="col-md-1 slrn-more-info">

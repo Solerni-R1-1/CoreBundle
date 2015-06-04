@@ -534,7 +534,7 @@ public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%
 public_profile_undiscoverable_text: 'We have not found any profile corresponding to <strong>%publicUrl%</strong>'
 public_profile_url_tuning_only_once: 'You can only personalise your public profile URL once'
 public_registration: 'Public registration'
-public_url_help: 'Note :'
+public_url_help: 'Note : the personalised URL cannot be empty, must be a maximum of 30 letters or numbers. Do not use spaces, symbols or special characters.'
 public_empty: 'There is no public workspace'
 public_workspaces: 'Public workspaces'
 profile_description_title: Find out more about me
@@ -841,13 +841,14 @@ yes: yes
 yesterday_activity: 'Monitoring activity'
 your_current_url: 'Your current URL'
 public_profile_url_tuning_only_once: 'You can only personalise your public profile URL once'
-public_url_help: The personalised URL must be a maximum of 30 letters or numbers. Do not use spaces, symbols or special characters.'
+public_url_help: The personalised URL cannot be empty, must be a maximum of 30 letters or numbers. Do not use spaces, symbols or special characters.'
+public_url_double: 'Your personnal URL must be unique'
 manage_tools: Manage tools
 create_role: Create a role
 uncompress_file: Unzip the file if possible
 your_username: 'Your user name is'
 
-#Custom Solerni	
+#Custom Solerni
 connect_with_mail: 'I am logging in with my e-mail'
 register_with_mail: 'I am registering with my e-mail'
 must_use_password: 'You must enter your password'
@@ -914,7 +915,7 @@ show_my_evals: Display my evaluations
 
 back_to_parameters: 'Return to the administration'
 
-#Mooc Form Edit	
+#Mooc Form Edit
 workspace_form_isMooc: 'MOOC'
 claroline_corebundle_mooc: 'MOOC editing file'
 claroline_corebundle_mooc_title: 'Title'
@@ -960,7 +961,7 @@ mooc_edit: 'MOOC settings'
 sessions_edit: 'MOOC sessions management'
 add_session: 'Create a new session'
 delete_session: 'Delete the session'
-#categories	
+#categories
 
 mooc_categories: 'MOOCs categories'
 mooc_categories_create: 'Create a category'
@@ -1013,7 +1014,7 @@ entity_cannot_be_deleted: 'This entity cannot be deleted as it is associated wit
 workspace_parameters: 'Workspace settings'
 
 mooc_by_entreprise: MOOCs proposed by %entreprise%
-proposed_by: Proposed by 
+proposed_by: Proposed by
 know_more: Find out more
 mooc_archives: Access course archives
 get_warned_next_session: Notify me of the next session
@@ -1133,9 +1134,9 @@ user_wish_to_unsubscribe: Do you want to unsubscribe from Solerni?
 unsubscribe_self: unsubscribe
 back_to_profile: Return to profile
 slrn_public_profile_undiscoverable: Private profile
-slrn_public_profile_undiscoverable_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
+slrn_public_profile_undiscoverable_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available.
 public_profile_undiscoverable_anonymously: Private profile
-public_profile_undiscoverable_anonymously_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
+public_profile_undiscoverable_anonymously_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available.
 profile_options_personalize: Customization options
 slrn_edit_public_profile: Manage public profile preferences
 slrn_my_public_profile: My public profile
@@ -1175,7 +1176,7 @@ currentPassword: Current password
 edit_password_error_current : The password you entered does not match your actual password.
 export_csv: 'Export in CSV'
 export_mail: 'Export e-mail addresses'
-#Page contact	
+#Page contact
 contact_general: General
 contact : Contact us
 Contactez_nous : Contact us
@@ -1196,9 +1197,9 @@ contact_name : Service label
 contact_mail : Service e-mail
 contact_success : Your message has been sent.
 remove_contact_confirm_message : Are you sure you wish to delete this service?
-#Page contact	
+#Page contact
 message_send : Your message has been sent.
-#Page mes badges	
+#Page mes badges
 badges_tous : All MOOCs
 badges_nomooc : Solerni badges
 badges_voir_details : View more detail about the badge
@@ -1210,7 +1211,7 @@ badges_version : Version
 badges_description : Description
 badges_critere : Award criteria
 badges_actions : Actions which lead to this badge being awarded
-#Page mes badges	
+#Page mes badges
 no_mooc_followed: No MOOC to display
 no_mooc_today: No MOOC to display
 connect_with_facebook: I log in with Facebook

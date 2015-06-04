@@ -37,6 +37,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\CoreBundle\Entity\Mooc\MoocSession;
+use Symfony\Component\Form\FormError;
 
 /**
  * Controller of the user profile.
@@ -59,7 +60,7 @@ class ProfileController extends Controller
      *     "security"        = @DI\Inject("security.context"),
      *     "request"         = @DI\Inject("request"),
      *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
-     *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
+     *     "encoderFactory"  = @DI\Inject("security.encoder_factory")
      * })
      */
     public function __construct(
@@ -143,7 +144,7 @@ class ProfileController extends Controller
     {
         $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
         $userMoocPreferencesArray = array();
-        
+
         // create also forms for each userMoocPreferences (right now, the only pref. is visibility)
         $formMooc = array();
         $userMoocPreferencesRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\UserMoocPreferences');
@@ -158,7 +159,7 @@ class ProfileController extends Controller
             }
             // We need a name identifier different for each formType
             $formType = new \Claroline\CoreBundle\Form\Mooc\userMoocPreferencesType( $mooc->getId() );
-            
+
             // Create array of form with mooc object and create form object
             $userMoocPreferencesArray[] = array( 'mooc' => $mooc, 'userMoocPreferencesForm' => $this->createForm( $formType, $userMoocPreferenceEntity ));
         }
@@ -169,14 +170,14 @@ class ProfileController extends Controller
             $entityManager = $this->get('doctrine.orm.entity_manager');
             // handle requests
             $form->handleRequest($this->request);
-            
+
             // For each userMoocPreferences persist entity
             foreach ( $userMoocPreferencesArray as $userMoocPreferences ) {
                 $userMoocPreferencesForm = $userMoocPreferences['userMoocPreferencesForm'];
                 $userMoocPreferencesForm->handleRequest($this->request);
                 if ( $userMoocPreferencesForm->isValid() ) {
                     $userMoocPreferenceEntity = $userMoocPreferencesForm->getData();
-                    $entityManager->persist($userMoocPreferenceEntity);               
+                    $entityManager->persist($userMoocPreferenceEntity);
                 }
             }
 
@@ -201,7 +202,7 @@ class ProfileController extends Controller
                 } catch(\Exception $exception){
                     $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
                 }
-                
+
                 return $this->redirect($this->generateUrl('claro_profile_view'));
             }
         }
@@ -209,8 +210,8 @@ class ProfileController extends Controller
         $nbBadges = $loggedUser->getBadges()->count();
         $messageRepository = $this->getDoctrine()->getRepository('ClarolineForumBundle:Message');
         $nbPostedMessages = $messageRepository->countUserMessages($loggedUser);
-    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);  
-        
+    	$nbVotedMessages = $messageRepository->countUserMessagesLiked($loggedUser);
+
         return array(
             'form' => $form->createView(),
             'userMoocPreferencesArray' => $userMoocPreferencesArray,
@@ -262,7 +263,7 @@ class ProfileController extends Controller
         			'nbBadges' => $nbBadges,
         			'nbPostedMessages' => $nbPostedMessages,
         			'nbVotedMessages' => $nbVotedMessages
-        	)));        	
+        	)));
         }
 
         return $response;
@@ -307,6 +308,29 @@ class ProfileController extends Controller
             $translator = $this->get('translator');
 
             $user = $form->getData();
+
+            // Public URL cannot be empty
+            if ( ! $user->getPublicUrl() ) {
+                $form->get('publicUrl')->addError(new FormError($translator->trans('public_url_help', array(), 'platform')));
+                 return array(
+                    'form'         => $form->createView(),
+                    'user'         => $user,
+                    'editYourself' => $editYourself
+                );
+            }
+
+            // Check if publicUrl is already used
+            $searchedUsers = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($user->getPublicUrl());
+            if ( $searchedUsers ) {
+                $form->get('publicUrl')->addError(new FormError($translator->trans('public_url_double', array(), 'platform')));
+                return array(
+                    'form'         => $form->createView(),
+                    'user'         => $user,
+                    'editYourself' => $editYourself
+                );
+            }
+
+
             $this->userManager->rename($user, $user->getUsername());
 
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
@@ -401,7 +425,7 @@ class ProfileController extends Controller
                 $entityManager->persist($loggedUser);
                 $entityManager->flush();
 
-                $this->userManager->sendEmailChangePassword($loggedUser);              
+                $this->userManager->sendEmailChangePassword($loggedUser);
 
                 $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
                 return $this->redirect($this->generateUrl('claro_profile_view'));
@@ -410,7 +434,7 @@ class ProfileController extends Controller
                 return $this->redirect($this->generateUrl('claro_user_password_edit'));
             }
 
-            
+
         }
 
         return array(
@@ -434,7 +458,7 @@ class ProfileController extends Controller
         if ( $loggedUser->hasTunedPublicUrl() ) {
             return $this->redirect($this->generateUrl('claro_profile_view'));
         }
-        
+
         $currentPublicUrl = $loggedUser->getPublicUrl();
         $form = $this->createForm(new UserPublicProfileUrlType(), $loggedUser);
         $form->handleRequest($this->request);
@@ -445,10 +469,31 @@ class ProfileController extends Controller
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
             $translator = $this->get('translator');
 
-            try {
-                /** @var \Claroline\CoreBundle\Entity\User $user */
-                $user = $form->getData();
+            /** @var \Claroline\CoreBundle\Entity\User $user */
+            $user = $form->getData();
 
+            // Public URL cannot be empty
+            if ( ! $user->getPublicUrl() ) {
+                $form->get('publicUrl')->addError(new FormError($translator->trans('public_url_help', array(), 'platform')));
+                 return array(
+                    'form'             => $form->createView(),
+                    'user'             => $loggedUser,
+                    'currentPublicUrl' => $currentPublicUrl
+                );
+            }
+
+            // Check if publicUrl is already used
+            $searchedUsers = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($user->getPublicUrl());
+            if ( $searchedUsers ) {
+                $form->get('publicUrl')->addError(new FormError($translator->trans('public_url_double', array(), 'platform')));
+                return array(
+                    'form'             => $form->createView(),
+                    'user'             => $loggedUser,
+                    'currentPublicUrl' => $currentPublicUrl
+                );
+            }
+
+            try {
                 $user->setHasTunedPublicUrl(true);
 
                 $entityManager = $this->get('doctrine.orm.entity_manager');
@@ -479,11 +524,11 @@ class ProfileController extends Controller
      * @EXT\Method({"POST"})
      */
     public function checkPublicUrlAction(Request $request)
-    {   
-        $publicUrl = $request->request->get('publicUrl');   
+    {
+        $publicUrl = $request->request->get('publicUrl');
         $isValid = true;
 
-        // If it's always okay : 
+        // If it's always okay :
         //  We test the pattern
         if($isValid){
             $pattern = User::$patternUrlPublic;
@@ -492,7 +537,7 @@ class ProfileController extends Controller
             }
         }
 
-        // If it's always okay : 
+        // If it's always okay :
         //  We test the unicity
         if($isValid){
             $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
@@ -500,13 +545,13 @@ class ProfileController extends Controller
                 $isValid = false;
             }
         }
-        
+
         $data = array('check' => $isValid);
 
         $response = new JsonResponse($data);
         return $response;
     }
-    
+
     /**
      * @EXT\Route(
      *     "/delete/{userId}",
@@ -519,13 +564,13 @@ class ProfileController extends Controller
      */
     public function deleteUserProfileAction( User $loggedUser )
     {
-     
+
         return array(
             'user' => $loggedUser
         );
 
     }
-    
+
     /**
      * @EXT\Route(
      *     "/delete/{userId}",
@@ -541,7 +586,7 @@ class ProfileController extends Controller
         $this->userManager->deleteUser($loggedUser);
         $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($loggedUser));
         $this->security->setToken(NULL);
-        
+
         return $this->redirect( $this->generateUrl('solerni_static_page', array( 'name' => 'cms_url' ) ) );
     }
 
