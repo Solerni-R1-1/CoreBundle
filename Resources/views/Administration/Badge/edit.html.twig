@@ -102,7 +102,12 @@
                                            data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}"
                                            data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
                                     </td>
-                                    <td><a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
+                                    <td>{% if user.getPublicUrl()|default %}
+                                            <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a>
+                                        {% else %}
+                                            {{ user.firstname }}
+                                        {% endif %}
+                                    </td>
                                     <td>{{ user.lastname }}</td>
                                 </tr>
                             {% endfor %}

@@ -93,8 +93,8 @@
                            	 	{% for session in workspace.getMooc().getMoocSessions() %}
 								<li role="presentation">
 									<input
-                                    	class="chk-session hide" 
-                                    	type="checkbox" 
+                                    	class="chk-session hide"
+                                    	type="checkbox"
                                     	value="{{ session.getId() }}"
                                         data-name="{{ session.getTitle() }}"
                                         id="session-{{ session.getId() }}" />
@@ -168,7 +168,11 @@
                             <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
                                 <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"> </input></td>
                                 <td>
-                                    <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
+                                    {% if user.getPublicUrl()|default %}
+                                        <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
+                                    {% else %}
+                                        {{user.getUsername()}}
+                                    {% endif %}
                                 </td>
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
@@ -200,7 +204,7 @@
                                             </span>
                                         {% endif %}
                                     {% endfor %}
-                                    
+
                                     {% set groups = user.getGroups() %}
                                         {% for group in groups %}
                                         {% for session in group.getMoocSessions() %}
@@ -253,7 +257,7 @@
                 sessions[j] = $(element).attr('data-name');
                 j++;
             });
-            
+
 
             if (i > 0) {
                 var html = Twig.render(confirmAddRole,
@@ -332,7 +336,7 @@
                         var td = $('#row-' + users[i] + " .cell-sessions");
                         var cell = $(td[0]);
                         var html = cell.html();
-                        
+
                         for (var j = 0; j < sessions.length; j++) {
                             var sessionLib = $('#session-' + sessions[j]).attr('data-name');
                             //only append the span if the role isn't already here

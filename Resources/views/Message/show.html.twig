@@ -37,15 +37,19 @@
 
                                     <br/>
 
-                                    {{ 'to_message'|trans({}, 'platform') }}: 
+                                    {{ 'to_message'|trans({}, 'platform') }}:
                                     {% set cpt = 0 %}
-                                    {% for dest in messageDisqus.getUserMessages() %} 
+                                    {% for dest in messageDisqus.getUserMessages() %}
                                         {% if not dest.isSent() %}
                                             {% if cpt > 0 %} - {% endif %}
-                                            <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
-                                            {% set cpt = cpt + 1 %}
+                                            {% if  dest.getUser().getPublicUrl()|default %}
+                                                <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
+                                            {% else %}
+                                                {{ dest.getUser().getUserName() }}
+                                            {% endif %}
+                                        {% set cpt = cpt + 1 %}
                                         {% endif %}
-                                        
+
                                     {% endfor %}
                                 </p>
                             </div>

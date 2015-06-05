@@ -147,21 +147,23 @@ class MoocSessionManager
     	}
     	$this->om->flush();
     }
-    
+
 
     public function addUsersToSession(array $users, array $sessions) {
     	foreach ($sessions as $session) {
     		foreach ($users as $user) {
     			/* @var $session MoocSession */
-    			if (!$session->getUsers()->contains($user)) {
-    				$session->getUsers()->add($user);
+    			if ( ! $user->isRegisteredToSession($session) ) {
+                    $sessionUsers = $session->getUsers();
+                    $sessionUsers->add($user);
+                    $session->setUsers( $sessionUsers );
+                    $this->om->merge($session);
     			}
-    			$this->om->persist($session);
     		}
     	}
     	$this->om->flush();
     }
-    
+
     /**
      * Remove a group from a session
      * @param Group $group The group
@@ -178,7 +180,7 @@ class MoocSessionManager
     	$this->om->persist($session);
     	$this->om->flush();
     }
-    
+
 
     /**
      * Remove a user from a session

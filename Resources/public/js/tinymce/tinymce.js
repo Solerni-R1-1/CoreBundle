@@ -346,7 +346,9 @@
     tinymce.claroline.mentionsInsert = function (item)
     {
         var publicProfileUrl = routing.generate('claro_public_profile_view') + '/';
-
+        if ( ! publicProfileUrl ) {
+            return;
+        }
         return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
     };
 
