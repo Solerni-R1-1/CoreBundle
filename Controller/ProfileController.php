@@ -319,9 +319,9 @@ class ProfileController extends Controller
                 );
             }
 
-            // Check if publicUrl is already used
+            // Check if publicUrl is already used by someone else
             $searchedUsers = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($user->getPublicUrl());
-            if ( $searchedUsers ) {
+            if ( $searchedUsers && $searchedUsers->getId() != $user->getId() ) {
                 $form->get('publicUrl')->addError(new FormError($translator->trans('public_url_double', array(), 'platform')));
                 return array(
                     'form'         => $form->createView(),
@@ -434,7 +434,6 @@ class ProfileController extends Controller
                 return $this->redirect($this->generateUrl('claro_user_password_edit'));
             }
 
-
         }
 
         return array(
@@ -454,6 +453,7 @@ class ProfileController extends Controller
      */
     public function editPublicUrlAction(User $loggedUser)
     {
+
         // Redirect user if he has already modified his public URL
         if ( $loggedUser->hasTunedPublicUrl() ) {
             return $this->redirect($this->generateUrl('claro_profile_view'));
@@ -464,6 +464,7 @@ class ProfileController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */

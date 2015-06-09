@@ -18,12 +18,12 @@
                 <p class="slrn-grey-block slrn-info-block slrn-info-block--public-url">
                     {{ 'public_profile_url_tuning_only_once'|trans({}, 'platform') }}.
                 </p>
-                 {% if user.publicUrl|default %}
+                 {% if currentPublicUrl|default %}
                     <p class="slrn-current-url">
                         {{ 'your_current_url'|trans({}, 'platform') }}
                         <strong>
                             {#<a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ 'public_profile'|trans({}, 'platform') }}">#}
-                               {{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}
+                               {{ path('claro_public_profile_view', {'publicUrl': currentPublicUrl}) }}
                             {#</a>#}
                         </strong>
                     </p>
