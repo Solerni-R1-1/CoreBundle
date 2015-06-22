@@ -210,11 +210,12 @@ class UserManager
 
         $unique = md5( uniqid() );
         $identifier = 'invite-'. substr($unique, 0, 8);
+        $password = 'Invite#' . $unique;
         //soft delete~
         $user->setMail($identifier . '@solerni.org');
         $user->setFirstName('Invité');
         $user->setLastName('Invite');
-        $user->setPlainPassword($unique);
+        $user->setPlainPassword($password);
         $user->setUsername($identifier);
         $user->setUsername($identifier);
         $user->setPublicUrl($identifier);

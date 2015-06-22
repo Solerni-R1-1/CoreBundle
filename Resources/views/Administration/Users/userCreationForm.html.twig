@@ -42,3 +42,12 @@
         </div>
     </form>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    {% javascripts debug=false filter='jsmin'
+        'bundles/clarolinecore/js/form-validator/jquery.form-validator.js'
+        'bundles/clarolinecore/js/form-validator/security.dev.js'
+        'bundles/clarolinecore/js/form-validator-init.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>{% endjavascripts %}
+{% endblock %}

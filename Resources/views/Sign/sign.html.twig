@@ -8,7 +8,7 @@
     {% if privateMoocSession|default %}
         {% set isPrivate = true %}
         {% set moocSession = privateMoocSession %}
-    {% endif %} 
+    {% endif %}
 	{% if moocSession|default  %}
         <div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
             <h2 class="slrn-login-mooc-register">
@@ -55,8 +55,11 @@
 
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator/jquery.form-validator.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
+    {% javascripts debug=false filter='jsmin'
+        'bundles/clarolinecore/js/form-validator/jquery.form-validator.js'
+        'bundles/clarolinecore/js/form-validator/security.dev.js'
+        'bundles/clarolinecore/js/form-validator-init.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>{% endjavascripts %}
      {% if is_facebook_available() %}
     <script>
         (function(d, s, id){
