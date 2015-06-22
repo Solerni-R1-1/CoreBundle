@@ -64,11 +64,25 @@
     background: #A6B3BC url(../images/sprites_solerni.png) no-repeat 5px -799px;
 }
 
-.presentation__mooc__pic {
-    width:  301px;
-    height: 216px;
-}
-
 #slrn-wrapper {
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#4cc8c8c8', endColorstr='#4cc8c8c8');
+}
+
+.bx-viewport {
+    z-index: 0;
+}
+
+.bx-controls {
+    z-index: 1;
+}
+
+.bx-prev,
+.bx-next {
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#4cc8c8c8', endColorstr='#4cc8c8c8');
+}
+
+.mooc_private_layer {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.7660444431189781, M12=0.6427876096865391, M21=-0.6427876096865391, M22=0.7660444431189781, SizingMethod='auto expand')";
+    margin-left: -51px; 
+    margin-top: -45px;
 }
