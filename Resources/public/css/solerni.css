@@ -1584,21 +1584,25 @@ input[type="file"] { height: auto; }
    background-color: #606060;
 }
 
-.slrn-resource-tools { float: right; }
+.slrn-resource-tools {
+    float: right;
+}
 
 .slrn-resource-tools .slrn-action-btn-wrapper { margin-left: .8em; }
 
 .slrn-resource-tools .slrn-action-btn-wrapper:first-child { margin-left: 0; }
 
 .slrn-resource-tools .slrn-action-btn {
+    background-color: #FFF;
     width: 38px;
     height: 38px;
     padding: 0;
-    background: transparent url(../images/sprites_solerni.png) no-repeat 0 0 scroll;
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat;
 }
 
-.slrn-resource-tools .disabled { opacity: .4; filter:alpha( opacity=40 ); }
-.slrn-resource-tools .disabled + .tooltip.in { opacity:.4; filter:alpha( opacity=40 ); }
+.slrn-resource-tools .disabled { opacity: .4; }
+.slrn-resource-tools .disabled + .tooltip.in { opacity: .4; }
 
 .slrn-action-btn.cut { background-position: 0 -504px; }
 .slrn-action-btn.cut:hover { background-position: 0 -542px; }

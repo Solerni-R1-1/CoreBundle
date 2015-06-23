@@ -83,6 +83,72 @@
 
 .mooc_private_layer {
     -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.7660444431189781, M12=0.6427876096865391, M21=-0.6427876096865391, M22=0.7660444431189781, SizingMethod='auto expand')";
-    margin-left: -51px; 
+    margin-left: -51px;
     margin-top: -45px;
+}
+
+.slrn-moocs-list .presentation__mooc {
+    float: left;
+    width: 100%;
+    margin: 0 0 40px 0;
+}
+
+.slrn-resource-tools {
+    float: right !important;
+}
+
+.slrn-resource-tools .disabled {
+    background-color: #FFF;
+    filter: alpha(opacity=40);
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat;
+}
+
+.slrn-action-btn.cut.disabled:hover {
+    background-color: #FFF;
+    background-image: none;
+    filter: alpha(opacity=40);
+    background-position: 0 -542px;
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat;
+}
+
+.slrn-action-btn.copy.disabled:hover {
+    background-color: #FFF;
+    background-image: none;
+    filter: alpha(opacity=40);
+    background-position: -45px -542px;
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat;
+}
+
+.slrn-action-btn.paste.disabled:hover {
+    background-color: #FFF;
+    background-image: none;
+    filter: alpha(opacity=40);
+    background-position: -90px -542px;
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat;
+}
+
+.slrn-action-btn.delete.disabled:hover {
+    background-color: #FFF;
+    background-image: none;
+    filter: alpha(opacity=40);
+    background-position: -135px -542px;
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat;
+}
+
+.slrn-action-btn.download.disabled:hover {
+    background-color: #FFF;
+    background-image: none;
+    filter: alpha(opacity=40);
+    background-position: -180px -542px;
+    background-image: url(../images/sprites_solerni.png);
+    background-repeat: no-repeat
+}
+
+.slrn-resource-tools .disabled + .tooltip.in {
+    filter: alpha(opacity=40);
 }
