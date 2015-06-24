@@ -68,6 +68,11 @@
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#4cc8c8c8', endColorstr='#4cc8c8c8');
 }
 
+.presentation__mooc__pic {
+    width:  301px;
+    height: 216px;
+}
+
 .bx-viewport {
     z-index: 0;
 }

@@ -20,10 +20,10 @@
                 {{document.mooc_owner_name}}
             </a>
         </span>
-        <div class="presentation__mooc__text__desc" ng-if="!hasParameter('q')">{{document.mooc_description_t}}</div>
-        <div class="presentation__mooc__text__desc" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') == -1 && document.mooc_about_description_t.indexOf('<mark>') >= 0">{{document.mooc_about_description_t}}</div>
-        <div class="presentation__mooc__text__desc" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') >= 0">{{document.mooc_description_t}}</div>
-        <div class="presentation__mooc__text__desc" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') == -1 && document.mooc_about_description_t.indexOf('<mark>') == -1">{{document.mooc_description_t | truncate:85}}</div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description_t | truncate:85" ng-if="!hasParameter('q')"></div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_about_description_t" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') == -1 && document.mooc_about_description_t.indexOf('<mark>') >= 0"></div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description_t" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') >= 0"></div>
+        <div class="presentation__mooc__text__desc" ng-bind-html = "document.mooc_description_t | truncate:85" ng-if="hasParameter('q') && document.mooc_description_t.indexOf('<mark>') == -1 && document.mooc_about_description_t.indexOf('<mark>') == -1"></div>
         <div class="presentation__mooc__text__button">
             <a href="{{ document.mooc_view_url | path }}" class="btn btn-primary">
                 {{ 'know_more'|trans }}
