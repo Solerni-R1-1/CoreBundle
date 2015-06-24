@@ -65,6 +65,7 @@
                             return this.replace(/^\s+|\s+$/g, '');
                         }
                     }
+                    Date.now = Date.now || function() { return +new Date; };
                 </script>
                 <script src="{{ asset('bundles/frontend/modernizr/modernizr-2.5.3.min.js') }}"></script>
                 <script src="{{ asset('bundles/clarolinecore/js/respond.js') }}"></script>
