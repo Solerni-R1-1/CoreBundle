@@ -1364,7 +1364,7 @@ Métiers: Métiers
 Apprentissage: Apprentissage
 Culture: Culture
 access_restricted: 'Vous ne faites pas partie de la liste des participants éligibles à ce MOOC. En cas de réclamation vous pouvez nous contacter à l''adresse suivante : <a href="mailto:help@solerni.com">help@solerni.com</a>'
-password_rules: 'Le mot de passe <b>ne doit pas contenir d''espace</b> et doit comporter :<br>- au moins 8 caractères<br>- au moins 1 chiffre<br>- au moins 1 minuscule<br>- au moins 1 majuscule<br>- au moins 1 symbole (tel que @, £, & ou $...)'
+password_rules: 'Le mot de passe <b>ne doit pas contenir d''espace</b> et doit comporter :<br>- au moins 8 caractères<br>- au moins 1 chiffre<br>- au moins 1 minuscule<br>- au moins 1 majuscule<br>- au moins 1 symbole de la liste ! @ # $ % ^ & * ?'
 password_hint_intro: 'Ajoutez au minimum : '
 password_hint_morecar: ' caractère supplémentaire'
 password_hint_morecars: ' caractères supplémentaires'
