@@ -592,7 +592,7 @@ body.dsk .alert { display: none; }
 .slrn-widget--badges .slrn-widget__title { color: #EEEEEF; }
 #collapsor_icon_badges { cursor: pointer; }
 .badge-knowledge { background: url('../images/sprites_solerni.png') no-repeat 15px -461px scroll; padding-left: 2.5em; }
-.badge-skills { background: url('../images/sprites_solerni.png') no-repeat  -77px -461px scroll; padding-left: 2.5em; }
+.badge-skills { background: url('../images/sprites_solerni.png') no-repeat  -246px -461px scroll; padding-left: 2.5em; }
 .slrn-widget--badges .collapsor { position: absolute; top: .2em; right: .3em; color: #9DAAB6; font-size: 1.8em; font-weight: bold; }
 .list_full_badges { color: #606060; }
 .slrn-badges-title {
