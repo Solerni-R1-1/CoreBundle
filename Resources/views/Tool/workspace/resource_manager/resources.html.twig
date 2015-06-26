@@ -9,7 +9,7 @@
 {% endblock %}
 {% block section_content %}
     {# title is not the if it"s a personnal workspace or not #}
-    {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+    {% if pp.user.getPersonalWorkspace()|default and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
         {% set isPersonnalWorkspace = true %}
     {% else %}
         {% set isPersonnalWorkspace = false %}
@@ -28,7 +28,7 @@
             {% render controller(
                 'ClarolineCoreBundle:Solerni:getDesktopAsideBlockWidget',
                 { 'renderingContext': 'my_library' }
-        ) %}       
+        ) %}
     {% endif %}
 
     <div class="col-xs-9 col-md-9 slrn-resource-manager-main">
@@ -41,17 +41,17 @@
                             workspace,
                             []
                         )
-                    }}  
+                    }}
 
                 </div>
             {% endif %}
             <a class="slrn-read-faq pink_link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'read_faq'|trans({}, 'platform') }}</a>
             <h2 class="slrn-content-main-title">
-                {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+                {% if app.user.getPersonalWorkspace()|default and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
                     {{ 'my_library' | trans({}, 'platform') }}
                 {% else %}
                     {{ 'mooc_resources' | trans({}, 'platform') }}
-                {% endif %}    
+                {% endif %}
                 <span></span>
             </h2>
         </div>
@@ -61,7 +61,7 @@
 {% endblock %}
 {% block javascripts %}
     {# title is not the same if it"s a personnal workspace or not #}
-    {% if app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+    {% if app.user.getPersonalWorkspace()|default and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
         {% set isPersonnalWorkspace = 1 %}
     {% else %}
         {% set isPersonnalWorkspace = 0 %}
