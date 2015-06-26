@@ -215,3 +215,7 @@
     width: auto;
     max-width: 100%;
 }
+
+.slrn-btn-garbage {
+    width: 36px !important;
+}

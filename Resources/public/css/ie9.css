@@ -17,3 +17,11 @@
 .slrn-resource-tools .disabled + .tooltip.in {
     filter:alpha( opacity=40 );
 }
+
+.bx-viewport {
+    z-index: 0;
+}
+
+.bx-controls {
+    z-index: 1;
+}
