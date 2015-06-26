@@ -48,8 +48,6 @@
     top:                2em;
 }
 
-
-
 .slrn-widget__list--railroad .slrn-widget__list__item {
     z-index: 1;
 }
@@ -167,4 +165,53 @@
 
 .slrn-resource-tools .disabled + .tooltip.in {
     filter: alpha(opacity=40);
+}
+
+.slrn-forum-td--tools {
+    height: 65px !important;
+}
+
+.slrn-like-bar__elem {
+    float:          left;
+    height:         100%;
+    margin-right:   5px;
+}
+
+.slrn-like-thumb.active i:before {
+    content: "\f164 ";
+}
+
+.slrn-like-thumb .icon-thumb {
+    font-size: 18px;
+}
+
+.panel-body--forum,
+.slrn-table-message,
+.slrn-forum-table,
+.row-message {
+    table-layout: fixed;
+    position: relative;
+}
+
+.slrn-forum-td {
+    position: static;
+}
+
+.slrn-message-content .slrn-message-content_html {
+    position: relative;
+    height: 100%;
+    padding-bottom: 2em;
+}
+
+.slrn-message-date {
+    bottom: 9.3em;
+}
+
+#messages_table_unique .slrn-message-date {
+    bottom: 6em;
+}
+
+.slrn-message-content .slrn-message-content_html img {
+    width: auto;
+    max-width: 100%;
 }
