@@ -1109,14 +1109,18 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function isPublicUrlValid(ExecutionContextInterface $context = null)
     {
+        $return = true;
+        $publicUrl = $this->getPublicUrl();
         // Search for whitespaces
         if ( $context && ! preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
-        } elseif ( !preg_match(USER::$patternUrlPublic, $this->getPublicUrl()) )  {
-            return false;
-        } else {
-            return true;
+        } elseif ( ! preg_match(USER::$patternUrlPublic, $publicUrl) )  {
+            $return = false;
+        } elseif ( ! $publicUrl ) {
+            $return = false;
         }
+
+        return $return;
     }
 
         public function isUserNameValid()

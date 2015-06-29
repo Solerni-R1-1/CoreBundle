@@ -219,3 +219,8 @@
 .slrn-btn-garbage {
     width: 36px !important;
 }
+
+.slrn-profile-form input[type=radio] {
+    border: 0;
+    outline: 0;
+}
