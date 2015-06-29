@@ -104,7 +104,7 @@
                         {{ form_widget(form.picture) }}
                     </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row slrn-picture-show-picture">
                         <label class="control-label col-md-3">
                             {{ 'current_picture_profile'|trans({}, 'platform')}}
                         </label>
@@ -113,8 +113,13 @@
                         </div>
                     </div>
                 {% endif %}
-                {# PICTURE INPUT #}
-                <div class="form-group row hide">
+                {# PICTURE INPUT - SHOW REGULAR FIELD FOR IE8 #}
+                <!--[if !(IE 8)]> -->
+                <div class="form-group row hide slrn-picture-upload-field">
+                <!-- <![endif]-->
+                <!--[IF (IE 8)]>
+                <div class="form-group row slrn-picture-upload-field">
+                <![endif]-->
                     {{ form_label(form.pictureFile) }}
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
                         {{ form_widget(form.pictureFile) }}
@@ -122,7 +127,7 @@
                 </div>
                 {# PICTURE ERROR MESSAGE #}
                 {% if form.pictureFile.vars.errors|length %}
-                    <div class="form-group row">
+                    <div class="form-group row slrn-picture-upload-field--error">
                         <label class="control-label col-md-3"></label>
                         <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                             {{ form_errors(form.pictureFile) }}
@@ -130,14 +135,15 @@
                     </div>
                 {% endif %}
                 {# UPLOAD PICTURE HELPER MESSAGE #}
-                <div class="form-group row">
+                <div class="form-group row slrn-picture-upload-field-helper">
                     <label class="control-label col-md-3"></label>
                     <div class="cold-md-9 col-xs-9 slrn-profile-edit-field">
                         <i class="small">{{'format_use'|trans({}, 'platform')}}</i>
                     </div>
                 </div>
-                {# UPLOAD BUTTON #}
-                <div class="form-group row">
+                {# UPLOAD BUTTON (NOT WORKING SO WE DON'T SHOW IT FOR IE8) #}
+                <!--[if !(IE 8)]> -->
+                <div class="form-group row slrn-picture-upload-field--custom">
                     <label class="control-label col-md-3">
                         {{ 'picture_profile'|trans({}, 'platform')}}
                     </label>
@@ -168,6 +174,7 @@
 
                     });
                 </script>
+                <!-- <![endif]-->
                 {# DESCRIPTION #}
                 <div class="form-group row">
                     {{ form_label(form.gender) }}
@@ -332,5 +339,4 @@
 
         jQuery('.slrn-date').datepicker({'format': 'dd/mm/yyyy'});
     </script>
-
 {% endblock %}

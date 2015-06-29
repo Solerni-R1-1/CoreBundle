@@ -224,3 +224,19 @@
     border: 0;
     outline: 0;
 }
+
+.slrn-picture-upload-field-helper {
+    position:       relative;
+    top:            -1.5em;
+    margin-bottom:  -1.5em;
+}
+
+.form-horizontal .slrn-profile-edit-field--social input {
+    border-left: 3px solid #999;
+    padding-left: 50px;
+    background: transparent url(../images/sprites_solerni.png) no-repeat -5px -850px scroll;
+}
+
+.slrn-profile-edit-field--social:before {
+    display: none;
+}
