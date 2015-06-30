@@ -680,6 +680,16 @@ body.dsk .alert { display: none; }
     width:              300px;
 }
 
+.slrn-content-container .tooltip-inner {
+    background-color:   #999 !important;
+    color:              #FFF;
+}
+
+.slrn-content-container .tooltip-arrow,
+.slrn-content-container .tooltip-arrow:after {
+    border-left-color: #999 !important;
+}
+
 
 .slrn-input-wrapper .tooltip.right .tooltip-arrow,
 .slrn-input-wrapper .tooltip.right .tooltip-arrow:after {

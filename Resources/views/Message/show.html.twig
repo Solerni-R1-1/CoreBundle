@@ -21,36 +21,32 @@
                     </div>
                     {% endif %}
                     <div class="panel-body">
-                        <div class='row msg_header'>
-
-
+                        <div class="msg_header">
                             <div class="col-md-2">
-                                {% if messageDisqus.getSender() and messageDisqus.getSender().getPicture() != "" %}
+                                {% if messageDisqus.getSender() and messageDisqus.getSender().getPicture()|default %}
                                     <img src="{{ image( 'thumbnails/tmb_54_54_' ~ messageDisqus.getSender().getPicture() ).scaleResize(54)}}" class="" alt="{{ messageDisqus.getObject() }}">
                                 {% endif %}
                             </div>
-
-
                             <div class="col-md-8">
                                 <p class="text-muted">
-                                    {{ 'from_message'|trans({}, 'platform') }}:  {% if messageDisqus.getSender() is defined and messageDisqus.getSender() %}<a href="{{ path('claro_public_profile_view', {'publicUrl': messageDisqus.getSender().getPublicUrl()}) }}">{{ messageDisqus.getSenderUsername() }}</a>{% else %}{{ messageDisqus.getSenderUsername() }}{% endif %}
-
-                                    <br/>
-
-                                    {{ 'to_message'|trans({}, 'platform') }}:
-                                    {% set cpt = 0 %}
-                                    {% for dest in messageDisqus.getUserMessages() %}
-                                        {% if not dest.isSent() %}
-                                            {% if cpt > 0 %} - {% endif %}
-                                            {% if  dest.getUser().getPublicUrl()|default %}
-                                                <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
-                                            {% else %}
-                                                {{ dest.getUser().getUserName() }}
+                                    <span class="msg_details msg_from">
+                                        {{ 'from_message'|trans({}, 'platform') }} :  {% if messageDisqus.getSender() is defined and messageDisqus.getSender() %}<a href="{{ path('claro_public_profile_view', {'publicUrl': messageDisqus.getSender().getPublicUrl()}) }}">{{ messageDisqus.getSenderUsername() }}</a>{% else %}{{ messageDisqus.getSenderUsername() }}{% endif %}
+                                    </span>
+                                    <span class="msg_details msg_to">
+                                        {{ 'to_message'|trans({}, 'platform') }} :
+                                        {% set cpt = 0 %}
+                                        {% for dest in messageDisqus.getUserMessages() %}
+                                            {% if not dest.isSent() %}
+                                                {% if cpt > 0 %} - {% endif %}
+                                                {% if  dest.getUser().getPublicUrl()|default %}
+                                                    <a href="{{ path('claro_public_profile_view', {'publicUrl': dest.getUser().getPublicUrl()}) }}">{{ dest.getUser().getUserName() }}</a>
+                                                {% else %}
+                                                    {{ dest.getUser().getUserName() }}
+                                                {% endif %}
+                                            {% set cpt = cpt + 1 %}
                                             {% endif %}
-                                        {% set cpt = cpt + 1 %}
-                                        {% endif %}
-
-                                    {% endfor %}
+                                        {% endfor %}
+                                    </span>
                                 </p>
                             </div>
 
@@ -64,7 +60,7 @@
                         </div>
 
 
-                        <div class='row msg_main'>
+                        <div class='msg_main'>
                                 {{ messageDisqus.getContent()|raw }}
                         </div>
 

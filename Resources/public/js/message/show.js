@@ -206,7 +206,7 @@ function getUsersFromInput(route, elements, queryStringKey)
                     }
 
                     if(currentValue != '' && currentValue.charAt(currentValue.length - 1) != ';'){
-                        currentValue += ';';   
+                        currentValue += ';';
                     }
 
 
@@ -235,7 +235,7 @@ function updateContactInput()
     labels = currentValue.split(';');
     uniqArray = new Array();
     $.each(labels, function(i, el){
-    if($.inArray(el, uniqArray) === -1) 
+    if($.inArray(el, uniqArray) === -1)
         uniqArray.push(el);
     });
     $('#message_form_to').val(uniqArray.join(";"));
@@ -253,8 +253,8 @@ $( document ).ready(function() {
         } else {
             css = "col-md-6";
         }
-        $('#message_form_to').offsetParent().after('<div id="message_form_to_error" class="' + css + '">' + 
-            '<div class="help-block field-error">' + 
+        $('#message_form_to').offsetParent().after('<div id="message_form_to_error" class="' + css + '">' +
+            '<div class="help-block field-error">' +
             $('#message_form_to').next().html()
             + '</div></div>');
         ;
@@ -282,7 +282,7 @@ $( document ).ready(function() {
 
     /**
      *
-     * Click on user button to open Modal windows 
+     * Click on user button to open Modal windows
      *
      **/
     $('.contacts-button').on('click', function () {
@@ -459,9 +459,9 @@ function listSelected(){
     for (var type in typeMapLabel){
         for (var key in typeMapLabel[type]){
             key = typeMapLabel[type][key];
-
-            var cleanedKey = key[1].replace('.', '__DOT__');
-
+            if ( key[1] ) {
+                var cleanedKey = key[1].replace('.', '__DOT__');
+            }
             $( "#contacts_selected_wrapper" ).append( "<span id='ctct_"+cleanedKey+"' class='tag label label-info contact_selected contact_selected_"+type+"' contact-id='"+key[0]+"' data-contact-label='"+key[1]+"' data-contact-type='"+type+"' >" + key[1] + "<span class='contact_selected_delete' data-role='remove'></span></span>" );
         }
     }
@@ -493,9 +493,9 @@ $('body').on('click', 'a.sortable', function (event) {
         postSortCallback
     );
 
-   
 
-});   
+
+});
 
 function postSortCallback(){
 
@@ -504,6 +504,6 @@ function postSortCallback(){
     if(currentSortby === 'DESC'){
         field.attr('data-by', 'ASC');
     } else {
-        field.attr('data-by', 'DESC');        
+        field.attr('data-by', 'DESC');
     }
 }
