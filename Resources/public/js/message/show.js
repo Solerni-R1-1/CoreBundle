@@ -116,41 +116,7 @@ function displayPager(type, normalRoute, searchRoute, reinit, callback)
             'workspace': []
         };
     }
-    /*if(!isSearch && initialData !== null){
-        console.log('clic bouton ' + toListArray);
-        var label;
 
-        typeMap = {
-            'user': [],
-            'group': [],
-            'workspace': []
-        };
-
-        for (var cpt in toListArray) {
-            label = toListArray[cpt].trim();
-
-            //Match workspace
-            if(label.match("^\[(.)*\]$")){
-                console.log(label + "is a workspace");
-                typeMap['workspace'].push(label);
-            //Match groupe
-            } else if(label.match("^\{(.)*\}$")){
-                console.log(label + "is a group");
-                typeMap['group'].push(label);
-            // so it's user
-            } else {
-                console.log(label + "is a user");
-                typeMap['user'].push(label);
-            }
-        };
-
-        console.log('typeMap ' + typeMap['user']);
-        console.log('typeMap ' + typeMap['group']);
-        console.log('typeMap ' + typeMap['workspace']);
-
-    } else {
-        console.log('switch dans modale');
-    }*/
     var route;
 
     if (search === '') {
@@ -196,13 +162,11 @@ function getUsersFromInput(route, elements, queryStringKey)
 
                     if(isSearch && currentValue.charAt(currentValue.length - 1) != ';') {
                         //We must remove the last part of search
-                        console.log(currentValue);
                         lastpos = currentValue.lastIndexOf(";");
                         if(lastpos == -1){
                             lastpos = 0;
                         }
                         currentValue = currentValue.substr(0, lastpos);
-                        console.log(currentValue);
                     }
 
                     if(currentValue != '' && currentValue.charAt(currentValue.length - 1) != ';'){
@@ -244,7 +208,7 @@ function updateContactInput()
 $( document ).ready(function() {
 
 
-    //If errors
+    // If errors
     if($('#message_form_to').offsetParent().children().last().attr('id') != 'message_form_to'){
 
         var css = '';
@@ -257,25 +221,12 @@ $( document ).ready(function() {
             '<div class="help-block field-error">' +
             $('#message_form_to').next().html()
             + '</div></div>');
-        ;
-
         $('#message_form_to').next().remove();
     }
 
-    $('#message_form_to').offsetParent().html(
-        '<div class="input-group">' +
-            $('#message_form_to').offsetParent().html() +
-            '<span class="input-group-btn">' +
-                '<button id="contacts-button-search" class="btn btn-primary contacts-button" type="button" disabled="disabled">' +
-                    '<i class="icon-search"></i>' +
-                '</button>' +
-                '<button id="contacts-button-add" class="btn btn-primary contacts-button" type="button">' +
-                    '<i class="icon-plus"></i>' +
-                '</button>' +
-            '</span>' +
-        '</div>'
-    );
-
+    // Append buttons next to the input field "send to"
+    $('#message_form_to').offsetParent()[0].appendChild($('.js-input-buttons')[0]);
+    // Attach events to the input field
     $('#message_form_to').on('propertychange keyup input paste change click', function () {
         statusSearch();
     });
@@ -461,8 +412,8 @@ function listSelected(){
             key = typeMapLabel[type][key];
             if ( key[1] ) {
                 var cleanedKey = key[1].replace('.', '__DOT__');
+                $( "#contacts_selected_wrapper" ).append( "<span id='ctct_"+cleanedKey+"' class='tag label label-info contact_selected contact_selected_"+type+"' contact-id='"+key[0]+"' data-contact-label='"+key[1]+"' data-contact-type='"+type+"' >" + key[1] + "<span class='contact_selected_delete' data-role='remove'></span></span>" );
             }
-            $( "#contacts_selected_wrapper" ).append( "<span id='ctct_"+cleanedKey+"' class='tag label label-info contact_selected contact_selected_"+type+"' contact-id='"+key[0]+"' data-contact-label='"+key[1]+"' data-contact-type='"+type+"' >" + key[1] + "<span class='contact_selected_delete' data-role='remove'></span></span>" );
         }
     }
 }

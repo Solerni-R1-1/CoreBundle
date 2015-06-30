@@ -215,3 +215,17 @@ table.scrollable thead th {
     display:        block;
     margin-bottom:  3px;
 }
+
+.slrn-message-custom-buttons {
+    position: absolute;
+    right: 83px;
+    top: 0;
+}
+
+slrn-message-custom-buttons .icon-search:before {
+    content: "\f002"
+}
+
+slrn-message-custom-buttons .disabled .icon-search:before {
+    content: "\f002 "
+}

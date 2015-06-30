@@ -50,7 +50,7 @@ class MessageType extends AbstractType
                 'to',
                 'text',
                 array(
-                    'attr' => array('placeholder'    => $this->translator->trans('message_form_to', array(), 'plateform')),
+                    'attr' => array('placeholder' => $this->translator->trans('message_form_to', array(), 'plateform')),
                     'data' => $this->username,
                     'required' => true,
                     'mapped' => true,
@@ -59,14 +59,14 @@ class MessageType extends AbstractType
                         new SendToNames()
                     )
                 )
-                 
+
             )
             ->add(
                 'object',
                 'text',
                 array(
-                    'attr' => array('placeholder'    => $this->translator->trans('message_form_object', array(), 'plateform')),
-                    'data' => $this->object, 
+                    'attr' => array('placeholder'=> $this->translator->trans('message_form_object', array(), 'plateform')),
+                    'data' => $this->object,
                     'required' => true
                 )
             )

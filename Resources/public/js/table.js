@@ -111,6 +111,7 @@
                 var btnClass = '.' + (
                     parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn
                 );
+
                 $(btnClass).click(function (e) {
                     currentAction = $(e.currentTarget).attr('data-action');
                     var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,

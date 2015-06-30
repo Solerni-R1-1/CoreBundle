@@ -73,7 +73,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="">
+                    <h3 class="panel-title">
                         {{ 'new_message'|trans({}, 'platform') }}
                     </h3>
                 </div>
@@ -146,16 +146,20 @@
             </div>
         </div>
     </div>
+    <!-- custom buttons. This DOM element will be emptied and moved -->
+    <div class="hide">
+        <span class="js-input-buttons input-group input-group-btn slrn-message-custom-buttons">
+            <button id="contacts-button-search" class="btn btn-primary contacts-button" type="button" disabled="disabled">
+                <i class="icon-search"></i>
+            </button>
+            <button id="contacts-button-add" class="btn btn-primary contacts-button" type="button">
+                <i class="icon-plus"></i>
+            </button>
+        </span>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/message/show.js') }}' type="text/javascript"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator/jquery.form-validator.js') }}"></script>
-    <!--[if IE 9 ]>
-        <script src="{{ asset('bundles/clarolinecore/js/jquery.placeholder.js') }}"></script>
-        <script src="{{ asset('bundles/clarolinecore/js/placeholder-init.js') }}"></script>
-    <![endif]-->
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
-
 {% endblock %}
