@@ -534,7 +534,7 @@ public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%
 public_profile_undiscoverable_text: 'We have not found any profile corresponding to <strong>%publicUrl%</strong>'
 public_profile_url_tuning_only_once: 'You can only personalise your public profile URL once'
 public_registration: 'Public registration'
-public_url_help: 'Note :'
+public_url_help: 'Note : the personalised URL cannot be empty, must be a maximum of 30 letters or numbers. Do not use spaces, symbols or special characters.'
 public_empty: 'There is no public workspace'
 public_workspaces: 'Public workspaces'
 profile_description_title: Find out more about me
@@ -841,13 +841,14 @@ yes: yes
 yesterday_activity: 'Monitoring activity'
 your_current_url: 'Your current URL'
 public_profile_url_tuning_only_once: 'You can only personalise your public profile URL once'
-public_url_help: The personalised URL must be a maximum of 30 letters or numbers. Do not use spaces, symbols or special characters.'
+public_url_help: The personalised URL cannot be empty, must be a maximum of 30 letters or numbers. Do not use spaces, symbols or special characters.'
+public_url_double: 'Your personnal URL must be unique'
 manage_tools: Manage tools
 create_role: Create a role
 uncompress_file: Unzip the file if possible
 your_username: 'Your user name is'
 
-#Custom Solerni	
+#Custom Solerni
 connect_with_mail: 'I am logging in with my e-mail'
 register_with_mail: 'I am registering with my e-mail'
 must_use_password: 'You must enter your password'
@@ -858,14 +859,14 @@ forgot_password: 'I have forgotten my password'
 user_form_mail: 'E-mail address'
 user_form_firstName: 'First name'
 user_form_lastName: 'Surname'
-user_form_firstName_invalid: 'Your first name cannot contain special characters.'
-user_form_lastName_invalid: 'Your surname cannot contain special characters.'
+user_form_firstName_invalid: 'Your first name cannot contain special characters nor being empty.'
+user_form_lastName_invalid: 'Your surname cannot contain special characters nor being empty.'
 user_form_username: 'Nickname'
 user_form_username_invalid: 'Your nickname must only contain letters and numbers, full stops and underscores, and must be a minimum of 3 characters'
 mail: 'E-mail'
 mail_invalid: 'You must enter a valid e-mail address'
 user_form_plainPassword_first: 'Password'
-user_rules_password: 'You must enter your password which must contain a minimum of 4 characters'
+user_rules_password: 'Your password does not match our password security policy'
 user_form_plainPassword_second: 'Password verification'
 user_form_public_url: Public profile URL
 user_form_publicUrl_invalid: The public URL can only contain letters, numbers, full stops or underscores.
@@ -914,7 +915,7 @@ show_my_evals: Display my evaluations
 
 back_to_parameters: 'Return to the administration'
 
-#Mooc Form Edit	
+#Mooc Form Edit
 workspace_form_isMooc: 'MOOC'
 claroline_corebundle_mooc: 'MOOC editing file'
 claroline_corebundle_mooc_title: 'Title'
@@ -960,7 +961,7 @@ mooc_edit: 'MOOC settings'
 sessions_edit: 'MOOC sessions management'
 add_session: 'Create a new session'
 delete_session: 'Delete the session'
-#categories	
+#categories
 
 mooc_categories: 'MOOCs categories'
 mooc_categories_create: 'Create a category'
@@ -1013,7 +1014,7 @@ entity_cannot_be_deleted: 'This entity cannot be deleted as it is associated wit
 workspace_parameters: 'Workspace settings'
 
 mooc_by_entreprise: MOOCs proposed by %entreprise%
-proposed_by: Proposed by 
+proposed_by: Proposed by
 know_more: Find out more
 mooc_archives: Access course archives
 get_warned_next_session: Notify me of the next session
@@ -1067,8 +1068,8 @@ session_end_subscription: End of registration
 session_title: Session title
 session_max_users: Maximum number of registrations<br><span style="font-weight:"
 session_choose_forum: --Choose a session forum--
-constraint_whitelist: White list <br><span style="font-weight:"
-constraint_pattern: Authorised fields <br><span style="font-weight:"
+constraint_whitelist: White list <br><span style="font-weight:normal">(1 email per line)</span>
+constraint_pattern: Authorised domains <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>
 constraint_choose_owner: --Choose the owner of the access rules--
 fb_forbidden: It is not possible to reset accounts linked to social networks.
 see_all_owner_moocs: View all MOOCs
@@ -1084,6 +1085,10 @@ mooc_analytics_user_name: Surname
 mooc_analytics_user_firstname: First name
 mooc_analytics_user_username: Nickname
 mooc_analytics_user_mail: E-mail address
+mooc_analytics_user_validated: Validated account
+mooc_analytics_user_subscriptiondate: Subcription date
+mooc_analytics_user_subscriptiontime: Subcription time
+mooc_analytics_user_lastconnectiondate: Last connection
 mooc_analytics_publisher_nb_pub: Number of submissions
 mooc_analytics_users_nb_logs: Activity
 mooc_analytics_users_nb_published_posts: Number of published messages
@@ -1099,6 +1104,7 @@ mooc_analytics_keynumbers_forum_publications_daily_mean: "Average number of dail
 mooc_analytics_theme_name: Subject name
 mooc_analytics_theme_nb_posts: Number of submissions in the subject
 mooc_analytics_export: Export MOOC data
+mooc_analytics_role: Role in MOOC
 export_badge_knowledge: Classification of users participating in knowledge badges
 export_badge_skill: Classification of users participating in skill badges
 export_badge_participation_knowledge: Participation in knowledge badges
@@ -1128,9 +1134,9 @@ user_wish_to_unsubscribe: Do you want to unsubscribe from Solerni?
 unsubscribe_self: unsubscribe
 back_to_profile: Return to profile
 slrn_public_profile_undiscoverable: Private profile
-slrn_public_profile_undiscoverable_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
+slrn_public_profile_undiscoverable_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available.
 public_profile_undiscoverable_anonymously: Private profile
-public_profile_undiscoverable_anonymously_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available. 
+public_profile_undiscoverable_anonymously_text: Sorry, <span class="slrn-bold">%first_name% %last_name%</span> profile is not available.
 profile_options_personalize: Customization options
 slrn_edit_public_profile: Manage public profile preferences
 slrn_my_public_profile: My public profile
@@ -1170,7 +1176,7 @@ currentPassword: Current password
 edit_password_error_current : The password you entered does not match your actual password.
 export_csv: 'Export in CSV'
 export_mail: 'Export e-mail addresses'
-#Page contact	
+#Page contact
 contact_general: General
 contact : Contact us
 Contactez_nous : Contact us
@@ -1191,9 +1197,9 @@ contact_name : Service label
 contact_mail : Service e-mail
 contact_success : Your message has been sent.
 remove_contact_confirm_message : Are you sure you wish to delete this service?
-#Page contact	
+#Page contact
 message_send : Your message has been sent.
-#Page mes badges	
+#Page mes badges
 badges_tous : All MOOCs
 badges_nomooc : Solerni badges
 badges_voir_details : View more detail about the badge
@@ -1205,13 +1211,15 @@ badges_version : Version
 badges_description : Description
 badges_critere : Award criteria
 badges_actions : Actions which lead to this badge being awarded
-#Page mes badges	
+#Page mes badges
 no_mooc_followed: No MOOC to display
+no_mooc_today: No MOOC to display
 connect_with_facebook: I log in with Facebook
 all_fields_mandatory: All fields required
 already_registered: I log in
 not_registered: I register
 connect_now: Log in now
+register_now: I register now
 tagline_header: Develop your skills in your own time by following friendly and collaborative learning pathways
 i_register: Register
 solerni_question: Do you already have a Solerni account?
@@ -1243,7 +1251,7 @@ available_on: Available on
 see_my_profil: View my profile
 my_mailsystem: My inbox
 badge: Badge
-still_badges_to_go: You have %remainingBadges% badge%plural% left to obtain
+still_badges_to_go: You have remainingBadges badge%plural% left to obtain
 gain_on: Obtained on
 ongoing_badge: Badge in progress
 follow_us_on: Follow us on
@@ -1257,8 +1265,8 @@ activities: Activities
 Homme: Male
 Femme: Female
 years_old: years old
-posted_messages: messages posted
-community_votes: message voted for by the community
+posted_messages: message%plural% posted
+community_votes: message%plural% voted for by the community
 badges_number: badge%plural%
 followed_moocs: MOOCs followed
 mandatory_fields: Fields marked with a star%symbol% are mandatory
@@ -1274,7 +1282,7 @@ private_masculin: private
 Session: Session
 sorry: Sorry
 internal_server_error: Internal server error.
-get_back_message: You can go back to <a href="javascript:history.back()">the previous page</a> or to <a href="/">the frontpage.</a>
+get_back_message: You can go to <a href="back_url">your dashboard</a>, <a href="catalog_url">see the catalogue</a> or get back to <a href="/">the frontpage.</a>
 wrong_request: The syntax of your request is incorrect.
 forbidden_url: You are not authorised to access this page.
 page_not_found: The page you have requested does not exist.
@@ -1370,3 +1378,18 @@ Enseignement: Teaching
 Métiers: Jobs
 Apprentissage: Learning
 Culture: Culture
+
+access_restricted: 'You are not part of this MOOC private list and therefore you are not authorized to access it. If you think this is a mistake, please report to us by sending an email to : <a href="mailto:help@solerni.com">help@solerni.com</a>'
+password_rules: Your password <b>must not have any whitespace</b>, and must have :<br>-at least 8 characters<br>-at least 1 number<br>-at least 1 lowercase character<br>-at least 1 uppercase character<br>-at least 1 symbol from the list ! @ # $ % ^ & * ?
+password_hint_intro: 'Add at least: '
+password_hint_morecar: ' more character'
+password_hint_morecars: ' more characters'
+password_hint_onenumber: one number
+password_hint_onesymbol: one symbol
+password_hint_onemin: one lowercase letter
+password_hint_onemaj: one uppercase letter
+password_hint_nowhitespace: Careful! Your password have at least one whitespace. Please remove it.
+reinit_password: Change your password
+
+important_information: Important information
+important_information_cooc: To access to your company internal COOC &laquo; %moocName% &raquo;, thank you to sign up with your professional email address and use Firefox as browser.

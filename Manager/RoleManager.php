@@ -670,6 +670,17 @@ class RoleManager
     
     public function hasUserAccess(User $user, AbstractWorkspace $workspace) {
     	$result = false;
+        
+        // Set authorization for private mooc by checking SessionsByUsers
+        if ( $workspace->getMooc() && ! $workspace->getMooc()->isPublic() && $user->getSessionsByUsers() ) {
+            
+            foreach ( $workspace->getMooc()->getMoocSessions() as $session ) {
+                if ( $this->om->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers')->findOneBy( array('user' => $user, 'moocSession' => $session ) ) ) {
+                    $result = true;
+                    break;
+                }
+            }
+        }
     	
     	$roles = $this->getRolesByWorkspace($workspace);
     	foreach ($roles as $role) {
@@ -680,6 +691,7 @@ class RoleManager
     			}
     		}
     	}
+
     	
     	return $result;
     }

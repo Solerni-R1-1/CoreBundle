@@ -2,9 +2,13 @@
     {% if log.getDetails().doer is defined %}
         <strong>
             {% if log.getDoer() != null %}
-                <a href="{{ path('claro_public_profile_view', {'publicUrl': log.getDoer().getPublicUrl()}) }}">
+                {% if log.getDoer().getPublicUrl()|default %}
+                    <a href="{{ path('claro_public_profile_view', {'publicUrl': log.getDoer().getPublicUrl()}) }}">
+                        {{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}
+                    </a>
+                {% else %}
                     {{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}
-                </a>
+                {% endif %}
             {% else %}
                 <em>{{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}</em>
             {% endif %}

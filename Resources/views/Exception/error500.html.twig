@@ -7,7 +7,7 @@
         <div class="col-md-offset-3 col-md-6">
             <p><b>{{'sorry'|trans({}, 'platform')}},</b></p>
             <p>{{'internal_server_error'|trans({}, 'platform')}}<br/>
-                {{'get_back_message'|trans({}, 'platform')|raw}}
+            <p>{{ 'get_back_message'|trans({'back_url': path('claro_desktop_open'), 'catalog_url' :path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }, 'platform')|raw }}</p>
             </p>
         </div>
     </div>

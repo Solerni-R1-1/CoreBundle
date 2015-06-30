@@ -111,6 +111,7 @@
                 var btnClass = '.' + (
                     parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn
                 );
+
                 $(btnClass).click(function (e) {
                     currentAction = $(e.currentTarget).attr('data-action');
                     var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
@@ -144,16 +145,7 @@
                     url: route,
                     type: type,
                     success: function () {
-                        if (parameters.route.action[currentAction].delete) {/*
-                            $('.chk-item:checked').each(function (index, element) {
-                                $(element).parent().parent().remove();
-                            });
-                            $('#check-all-items').prop('checked', false);*/
-                            location.reload();
-                        }
-                        if (parameters.route.action[currentAction].restore) {
-                            location.reload();
-                        }
+                        location.reload();
                     }
                 });
                 $('#table-modal').modal('hide');

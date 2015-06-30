@@ -68,10 +68,17 @@ class LocaleSetter
         $session = $this->container->get('session');
         // Do we have a query ? It means we want to change language
         $lang = $request->query->get('lang');
-        $availableLocales = $this->localeManager->getAvailableLocales();
         
+        // Create the available local in a numeric keys array 
+        $availableLocales = array();
+        if ( $this->localeManager->getAvailableLocales() ) {
+            foreach ( $this->localeManager->getAvailableLocales() as $availableLocale ) {
+                $availableLocales[] = $availableLocale;
+            }
+        }
+
         // If we have query, delete language list in session and change language
-        if ( $lang && in_array( $lang, $availableLocales )) {       
+        if ( $lang && in_array( $lang, $availableLocales )) {
             if ( $session->has('availableLanguages') ) {
                $session->remove('availableLanguages');
             }
@@ -83,14 +90,14 @@ class LocaleSetter
                 $user = $token->getUser();
                 $user->setLocale($lang);
                 $doctrine = $this->container->get('doctrine.orm.entity_manager');
-                $doctrine->persist($user);
+                $doctrine->merge($user);
                 $doctrine->flush();
             }
             return;
         }
-        
+
         // If not - and we do not have a previous $lang query, it's a regular anon user with default language
-        if ( ! $session->has('availableLanguages') && $token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken ) {
+        if ( ! $session->has('availableLanguages') && $token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken ) {           
             /* If anon. user, either serve the browser langage or if not applicable, the platform langage */
             if ( $request->getPreferredLanguage( $availableLocales ) ) {
                 $request->setLocale( $request->getPreferredLanguage( $availableLocales ) );

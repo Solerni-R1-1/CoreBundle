@@ -301,6 +301,7 @@ class WorkspaceParametersController extends Controller
             if ( $form->isValid() && $form_mooc->isValid() ) {
             	$forumIds = array();
             	$hasErrors = false;
+                
                 /* Setting current mooc for newly added sessions */
                 foreach ( $mooc->getMoocSessions() as $i => $moocSession ) {
                    	if (  ! $moocSession->getMooc() ) {
@@ -361,6 +362,10 @@ class WorkspaceParametersController extends Controller
 		                $hasErrors = true;
 	                	
 	                }
+                    
+                    if ( ! $hasErrors ) {
+                        $this->getDoctrine()->getManager()->persist($moocSession);
+                    }
                 }
                 
                 if ($hasErrors) {
@@ -374,29 +379,34 @@ class WorkspaceParametersController extends Controller
                 			'illustration' => ($mooc != null ? $mooc->getIllustrationWebPath() : '')
                 	);
                 }
-
+                
+                $this->getDoctrine()->getManager()->flush();
+                
                 /* remove sessions from database if deleted */
                 foreach ( $originalSessions as $moocSession ) {
                     if ( $mooc->getMoocSessions()->contains($moocSession) == false ) {
                         $this->getDoctrine()->getManager()->remove($moocSession);
                     }
                 }
+                
+                $service = $this->container->get('orange.moocaccesscontraints_service');
 
-               /* Setting current mooc for each constraint */
-                foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {              
+               /* Setting current mooc for each constraint and update rules */
+                foreach ( $mooc->getAccessConstraints() as $accessConstraint ) {            
                     $accessConstraint->addMooc($mooc);
+                    $service->processUpgradeConstraint($accessConstraint, $mooc);
                 }
 
-
-                /*Remove mooc from constraint deleted from mooc*/
+                /*Remove mooc from constraint deleted from mooc and update rules*/
                 foreach ( $originalConstraints as $constraint) {
                     if ( $mooc->getAccessConstraints()->contains($constraint) == false ) {
-                        $constraint->removeMooc($mooc);
+                        $service->processRemoveConstraint($constraint, $mooc);    
                     }
                 }
-
-                $this->workspaceManager->createWorkspace($workspace);
-                $this->workspaceManager->rename($workspace, $workspace->getName());
+                
+                $this->getDoctrine()->getManager()->merge($workspace);
+                $this->getDoctrine()->getManager()->flush();
+                //$this->workspaceManager->rename($workspace, $workspace->getName());
                 $displayable = $workspace->isDisplayable();
 
                 if (!$displayable && $displayable !== $wsRegisteredDisplayable) {

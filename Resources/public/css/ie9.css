@@ -1,14 +1,27 @@
-/* 
+/*
  * This file is part of Solerni.
- * 
+ *
  * Copyright (C) 2014 Orange
- * 
+ *
  * Description: IE9 specific stylesheet
- * 
+ *
  * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
  */
 
 .form-horizontal input[type=checkbox] { border: 2px solid transparent; outline-width: 0; outline-color: transparent !important; outline-style: none !important; }
 .form-horizontal input[type=text],
-.form-horizontal input[type=email], 
+.form-horizontal input[type=email],
 .form-horizontal input[type=password] { padding: 4px 12px 3px 12px; }
+
+.slrn-resource-tools .disabled,
+.slrn-resource-tools .disabled + .tooltip.in {
+    filter:alpha( opacity=40 );
+}
+
+.bx-viewport {
+    z-index: 0;
+}
+
+.bx-controls {
+    z-index: 1;
+}

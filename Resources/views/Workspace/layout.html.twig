@@ -19,15 +19,15 @@
     {% endif %}
 {% endif %}
     {% set noTabs = false %}
-    {% if app.user and workspace is defined and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+    {% if app.user and workspace is defined and app.user.getPersonalWorkspace()|default and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
         {% set noTabs = true %}
     {% endif %}
 
 {% block bodyClasses %}{% if workspace is defined and noTabs == false %}subnavbar-fixed{% endif %}{% endblock %}
 
-{# WE DO NOT USE BREADCRUMB 
+{# WE DO NOT USE BREADCRUMB
 {% block breadcrumb %}
-    
+
     <div id="resource-breadcrumb">
         {% if _resource is defined %}
             <div id="twig-resource-attributes"
@@ -81,7 +81,7 @@
         {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
-        {% if (is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) and app.user.personalWorkspace.getId() != workspace.getId()) or is_granted('ROLE_WS_CREATOR') %}
+        {% if (is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) and app.user.personalWorkspace|default and app.user.personalWorkspace.getId() != workspace.getId()) or is_granted('ROLE_WS_CREATOR') %}
             {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
         {% endif %}
 
@@ -120,20 +120,20 @@
         {% set params = params|merge({ 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) %}
     {% endif %}
     {% if params and workspace is defined and noTabs == false %}
-        
+
         <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/headroom.0.7.0.min.js') }}'></script>
         <script type="text/javascript">
-            
+
             $( document ).ready(function() {
-                
+
                 // grab an element
                 var myElement = document.querySelector(".slrn-subnavbar-container");
-                
-                // Be sure we have a element 
+
+                // Be sure we have a element
                 if ( ! myElement ) {
                     return false;
                 }
-                
+
                 // construct an instance of Headroom, passing the element
                 var headroom  = new Headroom(myElement, {
                   "offset": 136,
@@ -141,7 +141,7 @@
                 });
 
                 // initialise
-                headroom.init(); 
+                headroom.init();
             });
         </script>
     {% endif %}

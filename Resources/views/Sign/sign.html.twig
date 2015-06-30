@@ -5,13 +5,21 @@
 {% block solerniHeaderImage %}{% endblock %}
 
 {% block content %}
-	{% if moocSession is defined %}<div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
-	<h2 class="slrn-login-mooc-register">{{ "login_register_mooc"|trans({"%moocName%": moocSession.getMooc().getTitle()}, "platform")|raw }}</h2>
-		<hr class="slrn-hr"/>
-	</div>{% endif %}
+    {% if privateMoocSession|default %}
+        {% set isPrivate = true %}
+        {% set moocSession = privateMoocSession %}
+    {% endif %}
+	{% if moocSession|default  %}
+        <div class="col-md-12 col-xs-12 slrn-md-12 slrn-md-12--signin">
+            <h2 class="slrn-login-mooc-register">
+                {{ "login_register_mooc"|trans({"%moocName%": moocSession.getMooc().getTitle()}, "platform")|raw }}
+            </h2>
+            <hr class="slrn-hr"/>
+        </div>
+    {% endif %}
     <div class="col-md-6 col-xs-6 slrn-md-6 slrn-md-6--signin">
         <h1 class="slrn-section-title">{% block formTitle %}{% endblock %}</h1>
-        {% if is_facebook_available() %}
+        {% if is_facebook_available() and not isPrivate|default %}
             <button onclick="fb_login();" disabled="disabled" class="slrn-facebook-connect">
                 {{ 'connect_with_facebook'|trans({}, 'platform')}}
             </button>
@@ -39,12 +47,19 @@
     <div class="col-md-5 slrn-md-5 slrn-md-5--signin col-xs-5">
         {% block alternateText %}{% endblock %}
     </div>
+    {# we have a redirect from the mooc presentation page for a private mooc #}
+    {% if privateMoocSession|default and privateMoocSession.getMooc().getTitle()|lower == 'mission usages digitaux' %}
+        {% include 'ClarolineCoreBundle:Partials:modalInformation.html.twig' %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent()}}
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator/jquery.form-validator.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/form-validator-init.js') }}"></script>
+    {% javascripts debug=false filter='jsmin'
+        'bundles/clarolinecore/js/form-validator/jquery.form-validator.js'
+        'bundles/clarolinecore/js/form-validator/security.dev.js'
+        'bundles/clarolinecore/js/form-validator-init.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>{% endjavascripts %}
      {% if is_facebook_available() %}
     <script>
         (function(d, s, id){

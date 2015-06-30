@@ -69,4 +69,70 @@ class SessionsByUsersRepository extends EntityRepository
 		$qb->setParameter('sessionsIds', $sessionsIds);
 		$qb->getQuery()->execute();
 	}
+    
+    public function getConstraintRowsNotMatchUsersList( $constraintId, array $usersList ) {
+        
+        $dql = "SELECT s.id, IDENTITY(s.user) as user
+    			FROM Claroline\CoreBundle\Entity\Mooc\SessionsByUsers s
+                WHERE s.moocAccessConstraints = (:constraintId)";
+        
+        if ( count( $usersList ) > 0 ) {
+            $dql .= "AND s.user NOT IN (:usersList)";
+        }
+        
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("constraintId", $constraintId);
+        
+        if ( count( $usersList ) > 0 ) {
+            $query->setParameter("usersList", $usersList);
+        }
+        
+        return  $query->getScalarResult();
+        
+    }
+    
+    public function getListofUsersAlreadyPresent( $constraintId, array $usersList, $mooc = null ) {
+        
+        $dql = "SELECT IDENTITY(s.user) as user
+    			FROM Claroline\CoreBundle\Entity\Mooc\SessionsByUsers s
+                WHERE s.user IN (:usersList)
+                AND s.moocAccessConstraints = (:constraintId)";
+        
+        if ( $mooc ) {
+            
+            $sessions = array();
+            foreach ( $mooc->getMoocSessions() as $session ) {
+                $sessions[] = $session;
+            }
+            
+            $dql .= "AND s.moocSession IN (:moocSessions)";
+        }
+        
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("usersList", $usersList);
+        $query->setParameter("constraintId", $constraintId);
+        
+        if ( $mooc ) {
+            $query->setParameter("moocSessions", $sessions);
+        }
+        
+        return  $query->getScalarResult();
+        
+    }
+    
+    /*
+     * Arrays of ids
+     */
+    public function deleteRowsFromIds( array $rowstoDelete ) {
+        
+        $dql = "DELETE Claroline\CoreBundle\Entity\Mooc\SessionsByUsers s
+                WHERE s.id IN (:rowsToDelete)";
+        
+       $query = $this->_em->createQuery($dql);
+       $query->setParameter("rowsToDelete", $rowstoDelete);
+       
+       return $query->execute();
+    }
+    
+   
 }

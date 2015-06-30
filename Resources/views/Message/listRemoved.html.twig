@@ -27,9 +27,19 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="action-button btn-tools btn-tools-trash" data-action="remove" > </button>
-        <button class="action-button btn-tools btn-tools-restore" data-action="restore" > </button> 
+        <button class="action-button btn-tools btn-tools-trash"
+                data-action="remove"
+                data-toggle="tooltip"
+                data-placement="left"
+                data-original-title="{{'delete'|trans({}, 'platforum')}}">
+        </button>
 
+        <button class="action-button btn-tools btn-tools-restore"
+                data-action="restore"
+                data-toggle="tooltip"
+                data-placement="left"
+                data-original-title="{{'restore'|trans({}, 'platforum')}}">
+        </button>
     {% endif %}
 {% endmacro %}
 
@@ -55,8 +65,8 @@
     {% endif %}
     </div>
     <div class="table-responsive">
-        <table class="table table-condensed table-solerni" id="messages-table"> 
-            <thead> 
+        <table class="table table-condensed table-solerni" id="messages-table">
+            <thead>
                 <tr>
                     <th style='width:4%;'><input type="checkbox" name="all" id="check-all-items"></input></th>
                     <th style='width:20%;'>{{ 'from_message'|trans({}, 'platform') }}</th>
@@ -156,10 +166,10 @@
 
                     $('#check-all-items').prop('checked', true);
                 }
-                
+
             } else {
                 $( this ).parent().parent().removeClass('selected');
-                
+
                 needHide = true;
                 $('.chk-item').each(function( index ) {
                   if($( this )[0].checked){
@@ -171,7 +181,7 @@
                     $( '.btn-tools' ).hide();
                 }
                 $('#check-all-items').prop('checked', false);
-                
+
             }
         });
 
@@ -188,6 +198,6 @@
             }
         });
 
-        
+
     </script>
 {% endblock %}

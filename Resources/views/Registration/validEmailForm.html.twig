@@ -22,10 +22,10 @@
     <div class="col-md-12 col-xs-12">
     	{% if msg == 'accountValidation_key_ok' %}
     		<h1 class="slrn-section-title">Votre compte est validé avec succès.</h1>
-            <p>Nous allons vous conduire vers la page demandée. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
+            <p>Nous allons vous rediriger vers la page demandée. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
         {% elseif msg == 'accountValidation_key_already' %}
             <h1 class="slrn-section-title">Votre compte est déjà validé.</h1>
-            <p>Nous allons vous conduire vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
+            <p>Nous allons vous rediriger vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez <a href='{{ nextUrl }}' class='slrn-red-link'>cliquer sur ce lien.</a></p>
         {% else %}
     		<h1 class="slrn-section-title">Problème à l'activation du compte</h1>
         	<p class="label label-warning">La validation du compte correspondant à l'email {{mail}} n'est pas possible. Ce compte n'existe pas, a été supprimé ou bien la clé de validation est incorrecte.</p>

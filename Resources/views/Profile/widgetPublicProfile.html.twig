@@ -98,11 +98,13 @@
             <ul class="slrn-profile-counters">
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-post"></i>
-	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} {{'posted_messages'|trans({}, 'platform')}}</p>
+                    {% if nbPostedMessages > 1 %}{% set plural = 's' %}{% else %}{% set plural = '' %}{% endif %}
+	            	<p class="slrn-profile-counter">{{ nbPostedMessages }} {{'posted_messages'|trans({'%plural%': plural}, 'platform')}}</p>
 	            </li>
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-vote"></i>
-	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} {{'community_votes'|trans({}, 'platform')}}</p>
+                    {% if nbVotedMessages > 1 %}{% set plural = 's' %}{% else %}{% set plural = '' %}{% endif %}
+	            	<p class="slrn-profile-counter">{{ nbVotedMessages }} {{'community_votes'|trans({'%plural%': plural}, 'platform')}}</p>
 	            </li>
 	            <li class="slrn-profile-counters-li">
 	            	<i class="slrn-icon-profile-badge"></i>

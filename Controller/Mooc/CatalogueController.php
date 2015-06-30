@@ -90,16 +90,16 @@ class CatalogueController extends Controller
         // We need to check if the user have the right to see each session
         $sessionsByUsersRepository = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers');
         $autorizedSessions = array();
+        $is_admin = ( $user instanceof \Claroline\CoreBundle\Entity\User && $user->hasRole('ROLE_ADMIN') ) ? true : false;;
         
         foreach(  $owner->getMoocs() as $mooc ) {
             foreach( $mooc->getMoocSessions() as $session ) {
                 // Mooc is public, OR user is member of the session OR user is admin = add session to the list
                 if (
-                    $mooc->getIsPublic() ||
-                    $user instanceof \Claroline\CoreBundle\Entity\User &&
-                    $user->hasRole('ROLE_ADMIN') || 
+                    $mooc->isPublic()                       ||
+                    $is_admin                               || 
                     $session->getUsers()->contains( $user ) ||
-                    $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) ) 
+                    $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) )
                 {
                     $autorizedSessions[] = $session;
                 } else {

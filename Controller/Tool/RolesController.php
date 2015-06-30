@@ -276,10 +276,10 @@ class RolesController extends Controller
     {
     	$this->checkAccess($workspace);
     	$this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
-    
+
     	return new Response('success');
     }
-    
+
 
     /**
      * @EXT\Route(
@@ -293,7 +293,7 @@ class RolesController extends Controller
     {
     	$this->checkAccess($workspace);
     	$this->moocSessionManager->removeUserFromSession($user, $session);
-    
+
     	return new Response('success');
     }
 
@@ -372,9 +372,9 @@ class RolesController extends Controller
     	$pager = ($search === '') ?
 	    	$this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
 	    	$this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
-    
+
     	$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
-    
+
     	return array(
     			'workspace' => $workspace,
     			'pager' => $pager,
@@ -463,7 +463,7 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, false);
-        
+
         if (!empty($sessions)) {
         	$this->moocSessionManager->addUsersToSession($users, $sessions);
         }
@@ -483,10 +483,10 @@ class RolesController extends Controller
     {
     	$this->checkAccess($workspace);
     	$this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
-    
+
     	return new Response('success');
     }
-    
+
 
     /**
      * @EXT\Route(
@@ -500,7 +500,7 @@ class RolesController extends Controller
     {
     	$this->checkAccess($workspace);
     	$this->moocSessionManager->removeGroupFromSession($group, $session);
-    
+
     	return new Response('success');
     }
 
@@ -515,7 +515,7 @@ class RolesController extends Controller
      *     "groups",
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds"=true, "name"="groupIds"}
-     * )   
+     * )
      * @EXT\ParamConverter(
      *     "sessions",
      *      class="ClarolineCoreBundle:Mooc\MoocSession",
@@ -530,7 +530,7 @@ class RolesController extends Controller
     public function addGroupsToRolesAction(array $groups, array $sessions, array $roles, AbstractWorkspace $workspace) {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($groups, $roles, false);
-        
+
         if (!empty($sessions)) {
         	$this->moocSessionManager->addGroupsToSession($groups, $sessions);
         }
@@ -562,7 +562,7 @@ class RolesController extends Controller
      */
     public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
-        
+
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
@@ -582,7 +582,7 @@ class RolesController extends Controller
             'direction' => $direction
         );
     }
-    
+
     /**
      * @EXT\Route(
      *     "/{workspace}/users/notify/page/{page}/max/{max}/order/{order}/direction/{direction}",
@@ -607,15 +607,15 @@ class RolesController extends Controller
      */
     public function notifyUsersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
-    
+
     	$this->checkAccess($workspace);
-    
+
     	$pager = ($search === '') ?
     	$this->userManager->getNotifiedByWorkspace($workspace, $page, $max, $order, $direction):
     	$this->userManager->getNotifiedByWorkspaceWithName($workspace, $search, $page, $max, $order, $direction);
-    
+
     	$direction = $direction === 'DESC' ? 'DESC' : 'ASC';
-    
+
     	return array(
     			'workspace' => $workspace,
     			'pager' => $pager,
@@ -625,7 +625,7 @@ class RolesController extends Controller
     			'direction' => $direction
     	);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/{workspace}/users/notify/export/{format}",
@@ -634,13 +634,13 @@ class RolesController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * 
+     *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceNotifyUsers.html.twig")
      */
     public function exportCSVNotifyUsersListAction(AbstractWorkspace $workspace, $format)
     {
     	$this->checkAccess($workspace);
-    	
+
     	if ($format == 'csv') {
     		$content = $this->workspaceManager->exportWorkspaceNotifyUsersAsCSV($workspace);
     	} else if ($format == 'mail') {

@@ -534,7 +534,8 @@ public_profile_undiscoverable_anonymously_text: 'Vous devez être <a href="%logi
 public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concordant pour <strong>%publicUrl%</strong>'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
 public_registration: 'Inscription publique'
-public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+public_url_help: 'Note : Votre URL personnalisée ne peut pas être vide et doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+public_url_double: 'Votre URL personnalisée doit être unique'
 public_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 profile_description_title: En savoir plus sur moi
@@ -837,7 +838,7 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
-public_url_help: 'L''URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+public_url_help: 'L''URL personnalisée ne peut pas être vide, doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 manage_tools: Gérer les outils
 create_role: Créer un rôle
 uncompress_file: Décompresser le fichier si possible
@@ -853,14 +854,14 @@ forgot_password: 'J''ai oublié mon mot de passe'
 user_form_mail: 'Adresse email'
 user_form_firstName: 'Prénom'
 user_form_lastName: 'Nom'
-user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux.'
-user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux.'
+user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux ni être vide.'
+user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux ni être vide.'
 user_form_username: 'Pseudo'
 user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres, des points et des underscores, et posséder au minimum 3 caractères'
 mail: 'Email'
 mail_invalid: 'Vous devez saisir une adresse email valide'
 user_form_plainPassword_first: 'Mot de passe'
-user_rules_password: 'Vous devez saisir votre mot de passe qui doit contenir 4 caractères au minimum'
+user_rules_password: 'Votre mot de passe ne correspond pas aux normes de sécurité attendues'
 user_form_plainPassword_second: 'Vérification du mot de passe'
 user_form_public_url: Url de profil public
 user_form_publicUrl_invalid: L'URL publique ne peut contenir que des lettres, des chiffres, des points ou des underscores
@@ -1018,7 +1019,7 @@ running: En cours
 to_come: A venir
 over: Terminé
 no_moocs_owner: Pas de Mooc disponible pour cette entreprise
-no_evals_yet: <p>Vous n'avez pas d'évaluations en cours.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations. 
+no_evals_yet: <p>Vous n'avez pas d'évaluations en cours.<br><a class="pink_link" href="%url%">Consultez les FAQ</a> afin de découvrir le fonctionnement des évaluations.
 new message: Nouveau message
 add_destinataires : Ajouter le(s) destinataire(s)
 mailsystem: Messagerie
@@ -1068,11 +1069,15 @@ mooc_analytics_user_name: Nom
 mooc_analytics_user_firstname: Prénom
 mooc_analytics_user_username: Pseudo
 mooc_analytics_user_mail: Adresse e-mail
+mooc_analytics_user_validated: Compte validé
+mooc_analytics_user_subscriptiondate: Date d'inscription
+mooc_analytics_user_subscriptiontime: Heure d'inscription
+mooc_analytics_user_lastconnectiondate: Dernière connexion
 mooc_analytics_publisher_nb_pub: Nombre de publications
 mooc_analytics_users_nb_logs: Activité
 mooc_analytics_users_nb_published_posts: Nombre de messages publiés
-mooc_analytics_keynumbers_connections_today: "Nombre de connections du jour"
-mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connections par jour"
+mooc_analytics_keynumbers_connections_today: "Nombre de connexions du jour"
+mooc_analytics_keynumbers_mean_connections_daily: "Nombre moyen de connexions par jour"
 mooc_analytics_keynumbers_subscriptions_today: "Nombre d'inscrits du jour"
 mooc_analytics_keynumbers_subscriptions_total: "Nombre total d'inscrits"
 mooc_analytics_keynumbers_active_users: "Nombre d'utilisateurs actifs (1)"
@@ -1080,9 +1085,10 @@ mooc_analytics_keynumbers_connection_hour: "Plage horaire moyenne la plus connec
 mooc_analytics_keynumbers_activity_hour: "Plage horaire moyenne la plus active"
 mooc_analytics_keynumbers_forum_publications_total: "Nombre total de publications sur le forum"
 mooc_analytics_keynumbers_forum_publications_daily_mean: "Nombre moyen de publications par jour"
-mooc_analytics_theme_name: Nom du sujet 
+mooc_analytics_theme_name: Nom du sujet
 mooc_analytics_theme_nb_posts: Nombre de publications dans le sujet
 mooc_analytics_export: Exportez les données du MOOC
+mooc_analytics_role: Role dans le MOOC
 export_badge_knowledge: Classement des utilisateurs participant aux badges de connaissances
 export_badge_skill: Classement des utilisateurs participant aux badges de compétences
 export_badge_participation_knowledge: Participation aux badges de connaissances
@@ -1144,8 +1150,8 @@ ParticipationEvolutionRateBadge: Evolution de la participation au badge
 ParticipationEvolutionRateDescription: Mesurez la tendance de la participation au badge
 mooc_analytics_exports: Rapports disponibles en téléchargement (fichier CSV)
 analytics_key_data: En données
-connectionStats: Suivi des connections
-connectionStatsDescription: Suivez l'évolution des connections au MOOC
+connectionStats: Suivi des connexions
+connectionStatsDescription: Suivez l'évolution des connexions au MOOC
 ParticipationRateBadge: Taux de participation au badge
 ParticipationRateDescription: Répartition des utilisateurs ayant essayé ou non d'acquérir le badge
 isvalid: Statut
@@ -1191,11 +1197,13 @@ badges_critere : Critère d'obtention
 badges_actions : Actions qui ont mené à l'attribution de ce badge
 #Page mes badges
 no_mooc_followed: Aucun mooc à afficher
+no_mooc_today: Aucun mooc à afficher
 connect_with_facebook: Je me connecte avec Facebook
 all_fields_mandatory: Tous les champs sont obligatoires
 already_registered: J'ai déjà un compte, je me connecte
 not_registered: Je n'ai pas de compte, je m'inscris
 connect_now: je me connecte maintenant
+register_now: je m'inscris maintenant
 tagline_header: Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs
 i_register: Je m'inscris
 solerni_question: Vous avez déjà un compte Solerni ?
@@ -1227,7 +1235,7 @@ available_on: Disponible le
 see_my_profil: Voir mon profil
 my_mailsystem: Ma messagerie
 badge: Badge
-still_badges_to_go: Il vous reste encore %remainingBadges% badge%plural% à obtenir
+still_badges_to_go: Il vous reste encore remainingBadges badge%plural% à obtenir
 gain_on: Obtenu le
 ongoing_badge: Badge en cours d'acquisition
 free_price: prix gratuit
@@ -1242,8 +1250,8 @@ activities: Activités
 Homme: Homme
 Femme: Femme
 years_old: ans
-posted_messages: messages postés
-community_votes: messages votés par la communauté
+posted_messages: message%plural% posté%plural%
+community_votes: message%plural% voté%plural% par la communauté
 badges_number: badge%plural%
 followed_moocs: Moocs suivis
 mandatory_fields: Les champs marqués d'une étoile %symbol% sont obligatoires
@@ -1259,7 +1267,7 @@ private_masculin: privé
 Session: Session
 sorry: Désolé
 internal_server_error: Erreur interne du serveur.
-get_back_message: Vous pouvez revenir à <a href="javascript:history.back()">la page précédente</a> ou à <a href="/">l'accueil.</a>
+get_back_message: Vous pouvez vous rendre sur votre <a href="back_url">tableau de bord</a>, <a href="catalog_url">voir le catalogue</a> ou retourner à <a href="/">l'accueil.</a>
 wrong_request: La syntaxe de votre requête est erronée.
 forbidden_url: Vous n'avez pas l'autorisation d'accéder à cette page.
 page_not_found: La page que vous souhaitez afficher n'existe pas.
@@ -1308,7 +1316,7 @@ failure: Echec
 in_progress: En cours
 available: Disponible
 time_day: Heure de la journée
-connections_count: Nombre de connections
+connections_count: Nombre de connexions
 activity_in_mooc: Activité sur le cours
 inscriptions_total: Inscriptions totales
 publications: Publications
@@ -1322,7 +1330,7 @@ non_active_users: Utilisateurs non actifs
 inscriptions_number: Nombre d'inscriptions
 inscriptions_cumulated: Inscriptions cumulées
 inscriptions_daily: Inscriptions quotidiennes
-mooc_connections: Connections au MOOC
+mooc_connections: Connexions au MOOC
 download_report: Télécharger le rapport
 key_data_active_users: %activeUsers1% inscrits au MOOC.<br>%activeUsers0% utilisateurs actifs au cours des 7 derniers jours.<br>%inactiveUsers% utilisateurs inactifs au cours des 7 derniers jours.
 mooc_entering: Entrées dans le MOOC
@@ -1355,3 +1363,17 @@ Enseignement: Enseignement
 Métiers: Métiers
 Apprentissage: Apprentissage
 Culture: Culture
+access_restricted: 'Vous ne faites pas partie de la liste des participants éligibles à ce MOOC. En cas de réclamation vous pouvez nous contacter à l''adresse suivante : <a href="mailto:help@solerni.com">help@solerni.com</a>'
+password_rules: 'Le mot de passe <b>ne doit pas contenir d''espace</b> et doit comporter :<br>- au moins 8 caractères<br>- au moins 1 chiffre<br>- au moins 1 minuscule<br>- au moins 1 majuscule<br>- au moins 1 symbole de la liste ! @ # $ % ^ & * ?'
+password_hint_intro: 'Ajoutez au minimum : '
+password_hint_morecar: ' caractère supplémentaire'
+password_hint_morecars: ' caractères supplémentaires'
+password_hint_onenumber: un chiffre
+password_hint_onesymbol: un symbole
+password_hint_onemin: une minuscule
+password_hint_onemaj: une majuscule
+password_hint_nowhitespace: Attention ! Votre mot de passe contient au moins un espace. Merci de le retirer.
+reinit_password: Réinitialiser votre mot de passe
+
+important_information: Information importante
+important_information_cooc: Pour accéder au COOC interne de votre entreprise &laquo; %moocName% &raquo;, merci de vous inscrire avec votre adresse mail professionnelle et d'utiliser Firefox comme navigateur.

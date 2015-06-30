@@ -27,7 +27,12 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="action-button btn-tools btn-tools-trash" data-action="remove"> </button>
+        <button class="action-button btn-tools btn-tools-trash"
+                data-action="remove"
+                data-toggle="tooltip"
+                data-placement="left"
+                data-original-title="{{'delete'|trans({}, 'platforum')}}">
+        </button>
     {% endif %}
 {% endmacro %}
 
@@ -39,21 +44,21 @@
 {% block title %}{{ 'messages_received' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-     
+
     <div class="search-bar row margin-bottom-md">
         <div class='col-xs-12 col-md-12'>
             {{ displayControls() }}
         </div>
     </div>
-    
+
     {#<div>
     {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}
     {% endif %}
     </div>#}
     <div class="table-responsive">
-        <table class="table table-condensed table-solerni" id="messages-table"> 
-            <thead> 
+        <table class="table table-condensed table-solerni" id="messages-table">
+            <thead>
                 <tr>
                     <th style='width:4%;'><input type="checkbox" name="all" id="check-all-items"></input></th>
                     <th style='width:20%;'>{{ 'from_message'|trans({}, 'platform') }}</th>
@@ -156,10 +161,10 @@
 
                     $('#check-all-items').prop('checked', true);
                 }
-                
+
             } else {
                 $( this ).parent().parent().removeClass('selected');
-                
+
                 needHide = true;
                 $('.chk-item').each(function( index ) {
                   if($( this )[0].checked){
@@ -171,7 +176,7 @@
                     $( '.btn-tools' ).hide();
                 }
                 $('#check-all-items').prop('checked', false);
-                
+
             }
         });
 

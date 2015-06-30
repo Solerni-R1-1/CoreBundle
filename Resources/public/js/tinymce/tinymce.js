@@ -346,7 +346,9 @@
     tinymce.claroline.mentionsInsert = function (item)
     {
         var publicProfileUrl = routing.generate('claro_public_profile_view') + '/';
-
+        if ( ! publicProfileUrl ) {
+            return;
+        }
         return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
     };
 
@@ -356,7 +358,7 @@
     tinymce.claroline.configuration = {
         'relative_urls': false,
         'theme': 'modern',
-        'language': home.locale.trim(),
+        'language': $.trim(home.locale),
         'browser_spellcheck': true,
         'autoresize_min_height': 100,
         'autoresize_max_height': 500,
@@ -367,10 +369,8 @@
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code -mention -accordion'
         ],
-        'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
-                    'resourcePicker fileUpload | fullscreen displayAllButtons',
-        'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
-                    'image media link charmap | print preview code',
+        'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | resourcePicker fileUpload | fullscreen displayAllButtons',
+        'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | image media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,
@@ -381,7 +381,7 @@
             'delay': 200
         }
     };
-
+    
     /**
      * Initialization function for TinyMCE editors.
      */

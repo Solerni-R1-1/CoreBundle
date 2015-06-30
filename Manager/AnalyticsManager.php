@@ -39,6 +39,7 @@ use Claroline\CoreBundle\Repository\Analytics\AnalyticsMoocStatsRepository;
 use Claroline\CoreBundle\Entity\Analytics\AnalyticsBadgeMoocStats;
 use Claroline\CoreBundle\Repository\Analytics\AnalyticsBadgeMoocStatsRepository;
 use Claroline\CoreBundle\Repository\Analytics\AnalyticsUserMoocStatsRepository;
+use Doctrine\ORM\EntityManager;
 
 /**
  * @DI\Service("claroline.manager.analytics_manager")
@@ -71,17 +72,23 @@ class AnalyticsManager
     private $analyticsUserMoocStatsRepo;
     /** @var AnalyticsBadgeMoocStatsRepository */
     private $analyticsBadgeMoocStatsRepo;
+    /** @var moocSessionRepository */
+    private $moocSessionRepository;
+    
     private $translator;
     
     private $roleManager;
+    
+    private $entityManager;
 
     /**
      * @DI\InjectParams({
-     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *     "moocService"   = @DI\Inject("orange.mooc.service"),
-     *     "badgeManager"  = @DI\Inject("claroline.manager.badge"),
-     *     "translator"    = @DI\Inject("translator"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager")
+     *     "objectManager"      = @DI\Inject("claroline.persistence.object_manager"),
+     *     "moocService"        = @DI\Inject("orange.mooc.service"),
+     *     "badgeManager"       = @DI\Inject("claroline.manager.badge"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "entityManager"      = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(
@@ -89,7 +96,8 @@ class AnalyticsManager
     		MoocService $moocService,
     		BadgeManager $badgeManager,
     		TranslatorInterface $translator,
-    		RoleManager $roleManager)
+    		RoleManager $roleManager,
+            EntityManager $entityManager)
     {
         $this->om            	= $objectManager;
         $this->moocService 		= $moocService;
@@ -101,12 +109,14 @@ class AnalyticsManager
         $this->logRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
         $this->messageRepository= $objectManager->getRepository('ClarolineForumBundle:Message');
         $this->badgeRepository 	= $objectManager->getRepository('ClarolineCoreBundle:Badge\Badge');
-        $this->analyticsMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsMoocStats');
-        $this->analyticsHourlyMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsHourlyMoocStats');
-        $this->analyticsUserMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsUserMoocStats');
-        $this->analyticsBadgeMoocStatsRepo = $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsBadgeMoocStats');
-        $this->translator       = $translator;
-        $this->roleManager		= $roleManager;
+        $this->analyticsMoocStatsRepo =         $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsMoocStats');
+        $this->analyticsHourlyMoocStatsRepo =   $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsHourlyMoocStats');
+        $this->analyticsUserMoocStatsRepo =     $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsUserMoocStats');
+        $this->analyticsBadgeMoocStatsRepo =    $objectManager->getRepository('ClarolineCoreBundle:Analytics\AnalyticsBadgeMoocStats');
+        $this->moocSessionRepository =          $objectManager->getRepository('ClarolineCoreBundle:Mooc\MoocSession');
+        $this->translator       =               $translator;
+        $this->roleManager		=               $roleManager;
+        $this->entityManager    =               $entityManager;
 
     }
 
@@ -399,9 +409,9 @@ class AnalyticsManager
      * @param AbstractWorkspace $workspace
      */
     public function getForumActivity(MoocSession $session) {
-    	$contributions = array();
-    	$contributions[0] = array();
-    	$contributions[1] = 0;
+    	$contributions      = array();
+    	$contributions[0]   = array();
+    	$contributions[1]   = 0;
     	
 		$messagesPerDay = $this->analyticsUserMoocStatsRepo->countDailyForumMessagesForSession($session);
 		
@@ -436,13 +446,13 @@ class AnalyticsManager
     	return $this->analyticsUserMoocStatsRepo->countForumMessagesForSessionByUsers($session, $userIds, $limit);
     }
     
-   public function getBadgesRate(MoocSession $session, $filteredRoles, $skillBadges, $knowledgeBadges) {
+   public function  getBadgesRate(MoocSession $session, $filteredRoles, $skillBadges, $knowledgeBadges) {
 	   	$badgeStats = $this->analyticsBadgeMoocStatsRepo->findBy(array(
 	   		"workspace" => $session->getMooc()->getWorkspace(),
 	   		"badgeType" => $skillBadges ? "skill" : "knowledge"));
 	   	$badgesSuccessRates = $this->analyticsBadgeMoocStatsRepo->countBadgesSuccessRateForSession($session);
 	   	$participationRates = array();
-	   	$successRates = array();   		
+	   	$successRates = array();
 	   	
 	   	$orderedBadgeStats = array();
 	   	$badges = array();
@@ -480,7 +490,7 @@ class AnalyticsManager
 	    	$rateBadge['success'] = $badgeSuccessRates['totalSuccess'];
 	    	$rateBadge['failure'] = $badgeSuccessRates['totalFail'];
 	    	$rateBadge['inProgress'] = $badgeSuccessRates['totalParticipations'];
-	    	$rateBadge['available'] = $this->analyticsMoocStatsRepo->countSubscriptionsForSession($session)
+	    	$rateBadge['available'] = $this->getTotalUsersWithGroupsForSession($session)
 	    		- ($badgeSuccessRates['totalParticipations']
 	    				+ $badgeSuccessRates['totalSuccess']
 	    				+ $badgeSuccessRates['totalFail']);
@@ -524,8 +534,7 @@ class AnalyticsManager
      **************************************/
     
     public function getTotalSubscribedUsers(MoocSession $session) {
-    	return $this->analyticsMoocStatsRepo->countSubscriptionsForSession(
-    			$session);
+    	return $this->getTotalUsersWithGroupsForSession( $session );
     }
     
     public function getTotalSubscribedUsersToday(MoocSession $session, $filterRoles) {
@@ -592,22 +601,36 @@ class AnalyticsManager
     	return $index;
     }
     
-    public function getTotalForumPublications(MoocSession $session, $filterRoles) {
-    	return $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession($session);
+    /*
+     * Return int number of message forum
+     */
+    public function getTotalForumPublications( MoocSession $session ) {
+        
+        // Get forum resource Node Id
+        $forumNodeId =  $session->getForum()->getId();
+        
+        if ( $forumNodeId ) {
+            $number = $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession( $forumNodeId );
+        } else {
+             $number = 0;
+        }
+        
+        return $number;
     }
     
-    public function getForumPublicationsDailyMean(MoocSession $session, $filterRoles) {
+    public function getForumPublicationsDailyMean( $session, $totalForumPublications ) {
+        
     	$from = new \DateTime($session->getStartDate()->format("Y-m-d"));
     	$to = new \DateTime($session->getEndDate()->format("Y-m-d"));
     	$now = new \DateTime("today midnight");
+        
     	if ($now < $to) {
     		$to = $now;
     	}
     	
     	$nbDays = date_diff($from, $to, true)->format("%a") + 1;
     	
-    	$nbMessages = $this->analyticsUserMoocStatsRepo->countTotalForumMessagesForSession($session);
-    	return $nbMessages / $nbDays;
+    	return $totalForumPublications / $nbDays;
     }
     
     public function getMostActiveSubjects(MoocSession $session, $nbDays, $filterRoles) {
@@ -630,11 +653,9 @@ class AnalyticsManager
     
     public function getAnalyticsMoocKeyNumbers(MoocSession $session, User $user) {
     	// Init the roles to filter the stats.
-    	$excludeRoles = array();
-    	$managerRole = $this->roleManager->getManagerRole($session->getMooc()->getWorkspace());
-    	$excludeRoles[] = $managerRole->getName();
-    	$excludeRoles[] = "ROLE_ADMIN";
-    	$excludeRoles[] = "ROLE_WS_CREATOR";
+        $excludeRoles = $this->getExcludedRoles($session);
+        
+        $totalForumPublications = $this->getTotalForumPublications( $session );
     	
    		$nbConnectionsToday = array(
     			"key" => $this->getTranslationKeyForKeynumbers('connections_today'),
@@ -650,7 +671,7 @@ class AnalyticsManager
     	
     	$nbSubscriptions = array(
     			"key" => $this->getTranslationKeyForKeynumbers('subscriptions_total'),
-    			"value" => $this->getTotalSubscribedUsers($session, $excludeRoles));
+    			"value" => $this->getTotalUsersWithGroupsForSession($session));
     	
     	$nbActiveUsers = array(
     			"key" => $this->getTranslationKeyForKeynumbers('active_users'),
@@ -666,11 +687,13 @@ class AnalyticsManager
     	
     	$nbForumPublications = array(
     			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_total'),
-    			"value" => $this->getTotalForumPublications($session, $excludeRoles));
+    			"value" => $totalForumPublications
+        );
     	
     	$meanForumPublicationsDaily = array(
     			"key" => $this->getTranslationKeyForKeynumbers('forum_publications_daily_mean'),
-    			"value" => $this->getForumPublicationsDailyMean($session, $excludeRoles));
+    			"value" => $this->getForumPublicationsDailyMean( $session, $totalForumPublications )
+        );
         
         return array(
             'workspace' => $session->getMooc()->getWorkspace(),
@@ -690,5 +713,69 @@ class AnalyticsManager
     
     private function getTranslationKeyForKeynumbers($id) {
     	return $this->translator->trans('mooc_analytics_keynumbers_'.$id, array(), 'platform');
+    }
+    
+    public function getTotalUsersWithGroupsForSession( $session ) {
+        
+        $moocSessionId = $session->getId();
+                
+        $sql = "SELECT COUNT(DISTINCT id) AS subscribed_users
+                FROM ( (
+                    SELECT DISTINCT u.id AS id 
+                    FROM claro_mooc_session ms 
+                    INNER JOIN claro_mooc m ON ms.mooc_id = m.id 
+                    INNER JOIN claro_workspace w ON m.workspace_id = w.id 
+                    INNER JOIN claro_role r ON w.id = r.workspace_id 
+                    INNER JOIN claro_user_mooc_session ums ON ms.id = ums.moocsession_id 
+                    INNER JOIN claro_user u ON ums.user_id = u.id 
+                    where ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                            SELECT DISTINCT u.id 
+                            FROM claro_user u 
+                            INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                            INNER JOIN claro_role r ON r.id = ur.role_id 
+                            WHERE r.name = 'ROLE_ADMIN' -- or r.name = 'ROLE_WS_CREATOR' 
+                            )
+                    )
+                    UNION (
+                    SELECT DISTINCT u.id AS id 
+                    FROM claro_mooc_session ms 
+                    INNER JOIN claro_mooc m ON m.id = ms.mooc_id 
+                    INNER JOIN claro_group_mooc_session gms ON ms.id = gms.moocsession_id 
+                    INNER JOIN claro_user_group ug ON gms.group_id = ug.group_id 
+                    INNER JOIN claro_user u ON ug.user_id = u.id 
+                    INNER JOIN claro_group cg ON ug.group_id = cg.id 
+                    WHERE ms.id= $moocSessionId
+                    AND u.id NOT IN (
+                            SELECT DISTINCT u.id 
+                            FROM claro_user u 
+                            INNER JOIN claro_user_role ur ON u.id = ur.user_id 
+                            INNER JOIN claro_role r ON r.id = ur.role_id 
+                            WHERE r.name = 'ROLE_ADMIN' -- or r.name = 'ROLE_WS_CREATOR' 
+                            )
+                    )
+                )as tab_inscrits";
+        
+        $rows = $this->entityManager->getConnection()->fetchAll($sql);
+        
+        $result = false;
+        
+        if ( $rows[0]['subscribed_users'] ) {
+            $result = $rows[0]['subscribed_users'];
+        }
+
+        return $result;
+        
+    }
+
+    public function getExcludedRoles( $session ) {
+        
+        $excludeRoles = array();
+        //$managerRole = $this->roleManager->getManagerRole( $session->getMooc()->getWorkspace() );
+        //$excludeRoles[] = $managerRole->getName();
+        $excludeRoles[] = "ROLE_ADMIN";
+        //$excludeRoles[] = "ROLE_WS_CREATOR";
+        
+        return $excludeRoles;
     }
 }

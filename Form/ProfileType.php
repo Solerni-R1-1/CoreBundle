@@ -59,15 +59,15 @@ class ProfileType extends AbstractType
             		'disabled' => true,
             		'label' => 'administrative_code')
             )
-            ->add('publicUrl','text', array('label' => 'user_form_public_url' ))
+            ->add('publicUrl','text', array('required' => true, 'label' => 'user_form_public_url' ))
             ->add('mail', 'email', array('read_only' => true, 'disabled' => true, 'required' => false, 'label' => 'email'))
             ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
             ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
         if (!$this->isAdmin) {
             $builder->add(
-                    'accepted_com_terms', 
-                    'checkbox', 
+                    'accepted_com_terms',
+                    'checkbox',
                     array(
                         'label' => 'I agree that my personal information be used for commercial purposes',
                         'required' => false
@@ -124,7 +124,7 @@ class ProfileType extends AbstractType
                 'required' => false,
                 'widget' => 'single_text',
                 'widget' => 'single_text',
-                'attr' => array( 'class' => 'slrn-date', 'placeholder' => 'jj/mm/aaaa'), 
+                'attr' => array( 'class' => 'slrn-date', 'placeholder' => 'jj/mm/aaaa'),
                 'format' => 'dd/MM/yyyy'))
         	->add('website', 'text', array('required' => false))
         	->add('twitter', 'text', array('required' => false))

@@ -103,10 +103,13 @@
                 {{ user.getId() }}
 
                 {% if user.getPicture() != "" %}
-                <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}" class="thumbnail">
-                    <div class="user-picture" style="background-image:url('{{ asset('uploads/pictures/') ~  user.getPicture() }}');
-                "></div>
-                </a>
+                    {% if user.getPublicUrl()|default %}
+                        <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}" class="thumbnail">
+                            <div class="user-picture" style="background-image:url('{{ asset('uploads/pictures/') ~  user.getPicture() }}');"></div>
+                        </a>
+                    {% else %}
+                        <div class="user-picture" style="background-image:url('{{ asset('uploads/pictures/') ~  user.getPicture() }}');"></div>
+                    {% endif %}
                 {% else %}
                 <div class="user-picture" style="background-image:url('{{asset('bundles/clarolinecore/images/workspace/tools/user.png')}}');
                 ">
