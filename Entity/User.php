@@ -300,7 +300,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="is_first_visit", type="boolean")
      */
     protected $isFirstVisit = true;
-    
+
      /**
      * @var ArrayCollection
      *
@@ -328,8 +328,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @var SessionsByUsers[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers", 
-     *      mappedBy="user", 
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\SessionsByUsers",
+     *      mappedBy="user",
      *      cascade={"all"}
      * )
      */
@@ -350,7 +350,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     protected $notifyWorkspaces;
-    
+
     /**
      * @ORM\OneToMany(
      * 		targetEntity="UJM\ExoBundle\Entity\ExerciseUser",
@@ -358,8 +358,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var array
      */
     protected $givenUpExercises;
-    
-    
+
+
     const GENDER_UNKNOWN = 0;
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
@@ -407,12 +407,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(type="string", nullable=true)
      */
     protected $googlePlus;
-    
+
         /**
      * @var $userMoocPreferences[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences", 
-     *      mappedBy="user", 
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences",
+     *      mappedBy="user",
      *      cascade={"all"}
      * )
      */
@@ -443,7 +443,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->id;
     }
-    
+
 
     public function setId($id)
     {
@@ -577,6 +577,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     public function setPlainPassword($plainPassword)
     {
+        // Check password complexity
+        if ( ! $this->checkSolerniPassword($plainPassword) ) {
+            return;
+        }
+
         $this->plainPassword = $plainPassword;
         $this->password = null;
 
@@ -1104,16 +1109,20 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function isPublicUrlValid(ExecutionContextInterface $context = null)
     {
+        $return = true;
+        $publicUrl = $this->getPublicUrl();
         // Search for whitespaces
         if ( $context && ! preg_match(USER::$patternUrlPublic, $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
-        } elseif ( !preg_match(USER::$patternUrlPublic, $this->getPublicUrl()) )  {
-            return false;
-        } else {
-            return true;
+        } elseif ( ! preg_match(USER::$patternUrlPublic, $publicUrl) )  {
+            $return = false;
+        } elseif ( ! $publicUrl ) {
+            $return = false;
         }
+
+        return $return;
     }
-    
+
         public function isUserNameValid()
     {
         // Alphanumeric + dot
@@ -1128,7 +1137,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->isFirstVisit;
     }
-    
+
     public function setFirstVisit($boolean)
     {
         $this->isFirstVisit = $boolean;
@@ -1175,33 +1184,33 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setFacebookAccount($isFacebookAccount){
         $this->isFacebookAccount = $isFacebookAccount;
     }
-    
+
     public function __toString() {
     	return "User(".$this->id.") : ".$this->username;
     }
-    
+
     public function isRegisteredToSession(MoocSession $session) {
     	foreach ($this->moocSessions as $moocSession) {
     		if ($moocSession->getId() == $session->getId()) {
     			return true;
     		}
     	}
-    	
+
     	foreach ($this->groups as $group) {
     		foreach ($group->getMoocSessions() as $moocSession) {
     			if ($moocSession->getId() == $session->getId()) {
     				return true;
-    			}	
+    			}
     		}
     	}
-    	
+
     	return false;
     }
-    
+
     public function getNotifyWorkspaces() {
     	return $this->notifyWorkspaces;
     }
-    
+
     public function hasGivenUpExercise(Exercise $exercise) {
     	foreach ($this->givenUpExercises as $exerciseUser) {
     		if ($exerciseUser->isGivenUp()
@@ -1211,43 +1220,43 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     	}
     	return false;
     }
-    
+
     public function getGender() { return $this->gender; }
-    
+
     public function getCountry() { return $this->country; }
-    
+
     public function getCity() { return $this->city; }
-    
+
     public function getBirthdate() { return $this->birthdate; }
-    
+
     public function getWebsite() { return $this->website; }
-    
+
     public function getFacebook() { return $this->facebook; }
-    
+
     public function getTwitter() { return $this->twitter; }
-    
+
     public function getLinkedIn() { return $this->linkedIn; }
-    
+
     public function getGooglePlus() { return $this->googlePlus; }
-    
+
     public function setGender($gender) { $this->gender = $gender; }
-    
+
     public function setCountry($country) { $this->country = $country; }
-    
+
     public function setCity($city) { $this->city = $city; }
-    
+
     public function setBirthdate($birthdate) { $this->birthdate = $birthdate; }
-    
+
     public function setWebsite($website) { $this->website = $website; }
-    
+
     public function setFacebook($facebook) { $this->facebook = $facebook; }
-    
+
     public function setTwitter($twitter) { $this->twitter = $twitter; }
-    
+
     public function setLinkedIn($linkedIn) { $this->linkedIn = $linkedIn; }
-    
+
     public function setGooglePlus($googlePlus) { $this->googlePlus = $googlePlus; }
-    
+
     public function getAge() {
     	if ($this->birthdate != null) {
 	    	$now = new \DateTime();
@@ -1256,7 +1265,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     		return 0;
     	}
     }
-    
+
     public function getGenderLabel() {
     	if (self::GENDER_FEMALE == $this->gender) {
     		return "Femme";
@@ -1266,14 +1275,38 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     		return "";
     	}
     }
-    
+
     public function setUserMoocPreferences(ArrayCollection $userMoocPreferences)
     {
         $this->userMoocPreferences = $userMoocPreferences;
     }
-    
+
     public function getUserMoocPreferences() {
-        
+
         return $this->userMoocPreferences;
+    }
+
+    private function checkSolerniPassword($password) {
+
+        // First rule : 8 characters minimum
+        if ( strlen($password) < 8 ) {
+            return false;
+        }
+
+        // Second rule : one number minimum
+        // Third rule : one maj character minimum
+        // Fourth rule : one min character minimum
+        // Firth rule : one symbol minimum
+        if ( ! preg_match_all('$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$', $password) ) {
+            return false;
+        }
+
+        // Last rule : no space
+        if ( ctype_space($password) ) {
+            return false;
+        }
+
+        return true;
+
     }
 }

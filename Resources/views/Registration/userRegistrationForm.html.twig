@@ -51,7 +51,7 @@
                         <div class="slrn-errors__item"><span class="help-title">Prénom : </span>{{ form_errors( form.firstName ) }}</div>
                     {% endif %}
                 </div>
-                
+
                 {# Last Name #}
                 <div class="slrn-input-wrapper">
                     {% if form.lastName.vars.errors %}
@@ -60,19 +60,19 @@
                         {% set lastNameClasses = RegularClasses %}
                     {% endif %}
                     {{ form_label( form.lastName, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
-                    {{ form_widget( form.lastName, {'attr': { 
-                                                                'placeholder' : 'user_form_lastName'|trans({}, 'platform'), 
-                                                                'class' : lastNameClasses, 
-                                                                'data-validation': 'alphanumeric required',   
+                    {{ form_widget( form.lastName, {'attr': {
+                                                                'placeholder' : 'user_form_lastName'|trans({}, 'platform'),
+                                                                'class' : lastNameClasses,
+                                                                'data-validation': 'alphanumeric required',
                                                                 'data-validation-allowing': '-éèöàñïîêôâ ',
-                                                                'data-validation-error-msg' : 'user_form_lastName_invalid'|trans({}, 'platform') 
+                                                                'data-validation-error-msg' : 'user_form_lastName_invalid'|trans({}, 'platform')
                     } }) }}
                     {# Display error #}
                     {% if form.lastName.vars.errors %}
                         <div class="slrn-errors__item"><span class="help-title">Nom : </span>{{ form_errors( form.lastName ) }}</div>
                     {% endif %}
                 </div>
-                
+
                 {# UserName #}
                 <div class="slrn-input-wrapper">
                     {% if form.username.vars.errors %}
@@ -94,7 +94,7 @@
                         <div class="slrn-errors__item"><span class="help-title">Pseudo : </span>{{ form_errors( form.username ) }}</div>
                     {% endif %}
                 </div>
-                
+
                 {# email  #}
                 <div class="slrn-input-wrapper">
                     {% if form.mail.vars.errors %}
@@ -103,18 +103,18 @@
                         {% set mailClasses = RegularClasses %}
                     {% endif %}
                     {{ form_label( form.mail, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
-                    {{ form_widget( form.mail, {'attr': { 
-                                                            'placeholder' : 'mail'|trans({}, 'platform'), 
-                                                            'class' : mailClasses, 
-                                                            'data-validation': 'email', 
+                    {{ form_widget( form.mail, {'attr': {
+                                                            'placeholder' : 'mail'|trans({}, 'platform'),
+                                                            'class' : mailClasses,
+                                                            'data-validation': 'email',
                                                             'data-validation-error-msg' : 'mail_invalid'|trans({}, 'platform')
                     } }) }}
                     {# Display error #}
-                    {% if form.mail.vars.errors %}   
+                    {% if form.mail.vars.errors %}
                         <div class="slrn-errors__item"><span class="help-title">Email : </span>{{ form_errors( form.mail ) }}</div>
                     {% endif %}
                 </div>
-                
+
                 {# Password First #}
                 <div class="slrn-input-wrapper">
                     {% if form.plainPassword.first.vars.errors %}
@@ -123,18 +123,21 @@
                             {% set plainPasswordFirstClasses = RegularClasses %}
                     {% endif %}
                     {{ form_label( form.plainPassword.first, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}
-                    {{ form_widget( form.plainPassword.first, {'attr': { 
+                    {{ form_widget( form.plainPassword.first, {'attr': {
                                                             'placeholder' : 'user_form_plainPassword_first'|trans({}, 'platform'),
                                                             'class' : plainPasswordFirstClasses,
-                                                            'data-validation': 'strength', 
-                                                            'data-validation-strength': '3', 
-                                                            'data-name': 'pass_confirmation', 
+                                                            'data-validation': 'strength',
+                                                            'data-validation-strength': '3',
+                                                            'data-name': 'pass_confirmation',
                                                             'data-validation-error-msg' : 'user_rules_password'|trans({}, 'platform')
                     } }) }}
                     <span class="icon-question-sign password-helper" data-html="true" data-title="{{ 'password_rules'|trans({}, 'platform')|raw }}" data-toggle="tooltip" data-placement="right"></span>
-                    <div class="strength-meter-wrapper"><span class="strength-meter"></span><span class="strength-out"></span></div>
+                    <div class="strength-meter-wrapper">
+                        <span class="strength-meter"></span>
+                        <span class="strength-out"></span>
+                    </div>
                     {# Display error #}
-                    {% if form.plainPassword.first.vars.errors %}    
+                    {% if form.plainPassword.first.vars.errors %}
                         <div class="slrn-errors__item"><span class="help-title">Mot de passe : </span>{{ form_errors( form.plainPassword.first ) }}</div>
                     {% endif %}
                 </div>
@@ -165,8 +168,8 @@
                     {% endif %}
                     {% set acceptedTermsInvalidMsg %}{{ 'cgu_terms_invalid'|trans({}, 'platform') }}{% endset %}
                     <span class="slrn-checkbox-label"><label class="slrn-checkbox-label--cgu" for="profile_form_accepted_terms">{{ 'cgu_terms_label_partial'|trans({}, 'platform') }}</label> <a class="js-open" href="{{ path( 'solerni_static_page', { 'name': 'cms_cgu' } ) }}">{{ 'cgu_terms_link'|trans({}, 'platform') }}</a></span>
-                    {{ form_widget( form.accepted_terms, {'attr': { 
-                                                            'class' : acceptedTermsClasses, 
+                    {{ form_widget( form.accepted_terms, {'attr': {
+                                                            'class' : acceptedTermsClasses,
                                                             'data-validation': 'required',
                                                             'data-validation-error-msg' : acceptedTermsInvalidMsg
                     } }) }}
@@ -195,22 +198,22 @@
     </form>
 </div>
 {% endblock %}
-    
+
 {% block alternateText %}
     <h2 class="slrn-section-title">{{'already_registered'|trans({}, 'platform')}}</h2>
     <p>{{'solerni_question'|trans({}, 'platform')}}<br />
     {{'please_connect'|trans({}, 'platform')}}</p>
     <p><a class="slrn-link" href="{{ path('claro_security_login') }}">{{'connect'|trans({}, 'platform')}}</a></p>
 {% endblock %}
-    
+
 {% block javascripts %}
     {{ parent()}}
     <script type="text/javascript">
         jQuery(document).ready(function(jQuery) {
             jQuery('.js-open').on( 'click', function(elm) {
                 elm.preventDefault();
-                cguWin = window.open( jQuery(this).attr('href'), 'cgu', 'toolbar=0,scrollbars=1,resizable=1,status=0,width=980,height=600,top=100,left=200' );           
-            });        
+                cguWin = window.open( jQuery(this).attr('href'), 'cgu', 'toolbar=0,scrollbars=1,resizable=1,status=0,width=980,height=600,top=100,left=200' );
+            });
         });
     </script>
-{% endblock %} 
+{% endblock %}

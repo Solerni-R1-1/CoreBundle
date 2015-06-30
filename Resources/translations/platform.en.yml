@@ -1380,7 +1380,7 @@ Apprentissage: Learning
 Culture: Culture
 
 access_restricted: 'You are not part of this MOOC private list and therefore you are not authorized to access it. If you think this is a mistake, please report to us by sending an email to : <a href="mailto:help@solerni.com">help@solerni.com</a>'
-password_rules: Your password <b>must not have any whitespace</b>, and must have :<br>-at least 8 characters<br>-at least 1 number<br>-at least 1 lowercase character<br>-at least 1 uppercase character<br>-at least 1 symbol (as @, £, & ou $...)
+password_rules: Your password <b>must not have any whitespace</b>, and must have :<br>-at least 8 characters<br>-at least 1 number<br>-at least 1 lowercase character<br>-at least 1 uppercase character<br>-at least 1 symbol from the list ! @ # $ % ^ & * ?
 password_hint_intro: 'Add at least: '
 password_hint_morecar: ' more character'
 password_hint_morecars: ' more characters'

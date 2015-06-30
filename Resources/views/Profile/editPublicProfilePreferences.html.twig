@@ -28,40 +28,41 @@
                             <p class="slrn-bold">{{ 'make_my_public_profil_visible'|trans({}, 'platform') }}:</p>
                             {{ form_errors(form.share_policy) }}
                             {{ form_widget(form.share_policy) }}
-                            <div class="preferences">
-                                <p class="slrn-bold slrn-margin-top-40">{{ 'display'|trans({}, 'platform') }}:</p>
-                                <div class="checkbox">
-                                    <label>
-                                        {{ form_widget(form.display_base_informations) }}{{ 'base_informations'|trans({}, 'platform') }}
-                                    </label>
+                            <div class="preferences_wrapper">
+                                <div class="preferences">
+                                    <p class="slrn-bold slrn-margin-top-40">{{ 'display'|trans({}, 'platform') }}:</p>
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.display_base_informations) }}{{ 'base_informations'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.display_optional_information) }}{{ 'optional_information'|trans({}, 'platform')|raw }}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>
+                                    {#<div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.display_phone_number) }} {{ 'phone'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.allow_mail_sending) }} {{ 'public_profile_preferences_allow_mail_sending'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>#}
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.allow_message_sending) }} {{ 'public_profile_preferences_allow_message_sending'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="checkbox">
-                                    <label>
-                                        {{ form_widget(form.display_optional_information) }}{{ 'optional_information'|trans({}, 'platform')|raw }}
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
-                                    </label>
-                                </div>
-                                {#<div class="checkbox">
-                                    <label>
-                                        {{ form_widget(form.display_phone_number) }} {{ 'phone'|trans({}, 'platform') }}
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        {{ form_widget(form.allow_mail_sending) }} {{ 'public_profile_preferences_allow_mail_sending'|trans({}, 'platform') }}
-                                    </label>
-                                </div>#}
-                                <div class="checkbox">
-                                    <label>
-                                        {{ form_widget(form.allow_message_sending) }} {{ 'public_profile_preferences_allow_message_sending'|trans({}, 'platform') }}
-                                    </label>
-                                </div> 
-                            </div>
-                            <div class="mooc_preferences">
+                                <div class="mooc_preferences">
                                 <p class="slrn-bold slrn-margin-top-40">{{'your_moocs_visibility'|trans({}, 'platform')}}</p>
                                 {% if userMoocPreferencesArray|default %}
                                     {% for userMoocPreferences in userMoocPreferencesArray %}
@@ -78,6 +79,7 @@
                                         </div>
                                     {% endfor %}
                                 {% endif %}
+                            </div>
                             </div>
                             {{ form_rest(form) }}
                         </div>

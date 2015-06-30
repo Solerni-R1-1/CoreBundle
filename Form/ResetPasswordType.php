@@ -39,11 +39,11 @@ class ResetPasswordType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options, $askOldPass = false) {
-        
+
         if($this->askOldPass) {
-                $builder->add('password', 
+                $builder->add('password',
                     'password',
-                    array('required' => true, 
+                    array('required' => true,
                           'label' => 'currentPassword',
                           'attr' => array ('placeholder' => $this->translator->trans('currentPassword'))
                           )
@@ -55,13 +55,13 @@ class ResetPasswordType extends AbstractType
             array(
                 'type' => 'password',
                 'invalid_message' => 'password_mismatch',
-                'first_options' => array('label' => 'new_password', 
+                'first_options' => array('label' => 'new_password',
                                             'attr' => array (
                                                 'data-name' => 'pass_confirmation',
                                                 'placeholder' => $this->translator->trans('password'),
                                                 'class' => 'plainPasswordFirstClasses',
-                                                'data-validation' => 'length',
-                                                'data-validation-length' => 'min4',
+                                                'data-validation' => 'strength',
+                                                'data-validation-strength' => '3',
                                                 'data-validation-error-msg' => $this->translator->trans('user_rules_password', array(), 'platform')
                 ) ),
                 'second_options' => array('label' => 'repeat_password',

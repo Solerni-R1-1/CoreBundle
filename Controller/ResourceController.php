@@ -51,7 +51,7 @@ class ResourceController extends Controller
     private $templating;
     private $logManager;
 	private $moocService;
-    
+
     /**
      * @DI\InjectParams({
      *     "sc"              = @DI\Inject("security.context"),
@@ -167,9 +167,9 @@ class ResourceController extends Controller
                     $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
                 }
             }
-            
+
             $return = new JsonResponse($nodesArray);
-            
+
             if ( preg_match( "/(Trident\/5)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ) {
                 $return->headers->set('Content-Type', 'text/html');
             }
@@ -202,13 +202,13 @@ class ResourceController extends Controller
         // redirect user to inscription if he's not registered to a session and is not ADMIN
         $workspace = $node->getWorkspace();
         $user = $this->sc->getToken()->getUser();
-//         if (    $workspace->isMooc() && 
+//         if (    $workspace->isMooc() &&
 //                 ! $this->get('orange.mooc.service')->getSessionForRegisteredUserFromWorkspace( $workspace, $this->sc->getToken()->getUser() ) &&
 //                 ! $this->sc->isGranted('ROLE_WS_CREATOR')
 //             ) {
 //                 return $this->redirect( $this->get('router')
-//                             ->generate('mooc_view', array( 
-//                                 'moocId' => $workspace->getMooc()->getId(), 
+//                             ->generate('mooc_view', array(
+//                                 'moocId' => $workspace->getMooc()->getId(),
 //                                 'moocName' => $workspace->getMooc()->getTitle()))
 //                 );
 //         }
@@ -216,7 +216,7 @@ class ResourceController extends Controller
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $hasAccess = $this->checkAccess('OPEN', $collection, !($user instanceof User));
-        
+
 
         $mustCheckIfSession = true;
         foreach ($node->getRights() as $right) {
@@ -224,7 +224,7 @@ class ResourceController extends Controller
         		$mustCheckIfSession = false;
         	}
         }
-        
+
         // If workspace has mooc and sessions, check if user has subscribed to a session...
         if ($mustCheckIfSession && $hasAccess && $workspace->getMooc() != null && count($workspace->getMooc()->getMoocSessions()) > 0) {
         	$hasAccess = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user) != null;
@@ -237,7 +237,7 @@ class ResourceController extends Controller
 	            $resourceArray
 	        );
 	        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
-	
+
 	        return $event->getResponse();
         } else {
         	return $this->redirect( $this->get('router')->generate('mooc_view',
@@ -441,7 +441,7 @@ class ResourceController extends Controller
                 readfile($file);
             }
         );
-        
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName.'"');
@@ -483,13 +483,13 @@ class ResourceController extends Controller
     public function openDirectoryAction(ResourceNode $node = null)
     {
         $user = $this->sc->getToken()->getUser();
-        $userPersonalWorkspaceId = $user->getPersonalWorkspace()->getId();
+        $userPersonalWorkspaceId = ($user->getPersonalWorkspace()) ? $user->getPersonalWorkspace()->getId() : false;
         $path = array();
         $creatableTypes = array();
         $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
         $canChangePosition = false;
         $nodesWithCreatorPerms = array();
-        
+
         if ($node === null) {
             $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
             $isRoot = true;
@@ -528,7 +528,7 @@ class ResourceController extends Controller
             	if ($workspace->isMooc()) {
             		$sessions = $workspace->getMooc()->getMoocSessions();
             	}
-            	
+
             	if ($sessions) {
             		$currentSession = $this->entityManager
 	            		->getRepository('ClarolineCoreBundle:Mooc\MoocSession')
@@ -560,23 +560,23 @@ class ResourceController extends Controller
             $creatableTypes = array_merge($creatableTypes, $adminTypes);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
-        
+
         /*
          * We will only authorize certains types of resources
          * in personal workspace
          */
         $personalWorkspaceAuthorized = array(
-            'file' => '', 
+            'file' => '',
             'directory' => '',
             'text'=> '',
             'resource_shortcut' => ''
         );
-        
+
         if ( $userPersonalWorkspaceId == $workspaceId ) {
            $creatableTypes = array_intersect_key( $creatableTypes, $personalWorkspaceAuthorized );
         }
-        
-        
+
+
 
         $jsonResponse = new JsonResponse(
             array(
@@ -869,7 +869,7 @@ class ResourceController extends Controller
     public function embedResource(ResourceNode $node, $type, $extension, $view = 'default')
     {
         $entity = null;
-        
+
         switch ($type) {
             case 'video':
                 $view = 'video';
@@ -881,7 +881,7 @@ class ResourceController extends Controller
                 $view = 'image';
                 break;
             case 'custom':
-                switch ($extension) { 
+                switch ($extension) {
                     case 'orange_extern_video':
                         $entity = $this->entityManager
                                         ->getRepository('OrangeExternVideoBundle:Video')

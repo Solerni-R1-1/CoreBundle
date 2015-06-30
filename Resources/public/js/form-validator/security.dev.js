@@ -59,13 +59,13 @@
         name : 'strength',
         validatorFunction : function(val, $el, conf) {
             var requiredStrength = $el.valAttr('strength')
-            
+
             if(requiredStrength && requiredStrength > 3) {
                 requiredStrength = 3;
             }
-            
+
             var strengthValue = $.formUtils.validators.validate_strength.calculatePasswordStrength(val);
-            
+
             return strengthValue.score >= requiredStrength;
         },
         errorMessage : '',
@@ -78,7 +78,7 @@
          * @return {Number}
          */
         calculatePasswordStrength : function(password) {
-            
+
             var translator = window.Translator;
             var score = 0;
             var message = [translator.get('platform:password_hint_intro')];
@@ -147,20 +147,20 @@
             } else {
                 message.push(translator.get('platform:password_hint_onemin'));
             }
-            
+
             if (password.match(/(.*[A-Z])/)) {
                 score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onemaj'));
             }
-           
+
             // Pas d'espace
             if ( ! password.match(/(.*[\s])/) ) {
                 score += 10;
             } else {
                 message_out.push(translator.get('platform:password_hint_nowhitespace'));
             }
-            
+
             //password has number and chars
             //if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) {
             //    score += 12;
@@ -180,13 +180,13 @@
             //if (password.match(/^\w+$/) || password.match(/^\d+$/)) {
             //    score -= 10;
             //}
-            
+
 
             //verifying 0 < score < 100
             if (score < 0) {
                 score = 0;
             }
-            
+
             if (score > 100) {
                 score = 100;
             }
@@ -203,11 +203,11 @@
             else {
                 score = 3;
             }
-            
+
             if ( message.length == 1 ) {
                 message = ""
             }
-            
+
             return {
                 'score': score,
                 'message': message,
@@ -215,7 +215,10 @@
             }
         },
 
-        strengthDisplay : function($el, options) {
+        strengthDisplay : function( $el, options ) {
+
+            var elementTitle = $el[0].id; // just IE8 stuff which loose object properties somewhere in the call
+
             var config = {
                 fontSize: '12pt',
                 padding: '4px',
@@ -229,9 +232,16 @@
                 $.extend(config, options);
             }
 
-            $el.bind('keyup', function() {
-                var val = $(this).val();
-                var $parent = typeof config.parent == 'undefined' ? $(this).parent() : $(config.parent);
+            $(document).on('keyup', function(event) {
+
+                $el = jQuery('#'+elementTitle);
+
+                if ( $el.attr('id') !== event.target.id ) {
+                    return false; // Only use instanciated element in the first place. Cannot bind to input element because IE8
+                }
+
+                var val = $el.val();
+                var $parent = typeof config.parent == 'undefined' ? $el.parent() : $(config.parent);
                 var $displayContainer = $parent.find('.strength-meter');
                 if($displayContainer.length == 0) {
                     $displayContainer = $('<span></span>');
@@ -285,13 +295,13 @@
                         if ( i == strength.message.length - 1 || i == 0 ) {
                             endof = "";
                         }
-                        
+
                         message += strength.message[i] + endof;
                     }
                 } else {
                     css.display = "none";
                 }
-                
+
                 if ( strength.message_out.length > 0 ) {
                     jQuery('.strength-out').text(strength.message_out[0]).css(css);
                 } else {
@@ -419,7 +429,7 @@
     });
 
     $.fn.displayPasswordStrength = function(conf) {
-        new $.formUtils.validators.validate_strength.strengthDisplay(this, conf);
+        new $.formUtils.validators.validate_strength.strengthDisplay( this, conf );
         return this;
     };
 

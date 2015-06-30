@@ -188,7 +188,9 @@ class UserManager
         $user->setUsername($username);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
-        $this->workspaceManager->rename($pws, $personalWorkspaceName);
+        if ( $pws ) {
+            $this->workspaceManager->rename($pws, $personalWorkspaceName);
+        }
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
@@ -210,11 +212,12 @@ class UserManager
 
         $unique = md5( uniqid() );
         $identifier = 'invite-'. substr($unique, 0, 8);
+        $password = 'Invite#' . $unique;
         //soft delete~
         $user->setMail($identifier . '@solerni.org');
         $user->setFirstName('Invité');
         $user->setLastName('Invite');
-        $user->setPlainPassword($unique);
+        $user->setPlainPassword($password);
         $user->setUsername($identifier);
         $user->setUsername($identifier);
         $user->setPublicUrl($identifier);
