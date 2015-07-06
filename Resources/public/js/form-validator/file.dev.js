@@ -94,7 +94,7 @@
         validatorFunction : function(val, $input) {
             var maxSize = $input.valAttr('max-size');
             if( !maxSize ) {
-                console.log('Input "'+$input.attr('name')+'" is missing data-validation-max-size attribute');
+                //console.log('Input "'+$input.attr('name')+'" is missing data-validation-max-size attribute');
                 return true;
             } else if( !SUPPORTS_FILE_READER ) {
                 return true; // no fallback available

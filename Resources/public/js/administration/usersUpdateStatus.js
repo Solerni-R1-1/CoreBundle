@@ -29,15 +29,15 @@ jQuery(document).ready(function(jQuery) {
             error:      function(xhr, status, error) {
                 // Specific error when user try to unvalidate his own mail
                 if ( xhr.status == 418 ) {
-                    console.log (xhr);
+                    //console.log (xhr);
                     alert(xhr.responseJSON.errorMessage);
                 } else {
                     alert('There was an (' + xhr.status + ') error during the update user process. Please try to reload the page and if the error repeats itself, report to administrator');
-            
+
                 }
             }
         });
-        
+
     });
 
 });
