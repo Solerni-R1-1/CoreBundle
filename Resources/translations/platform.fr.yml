@@ -739,7 +739,7 @@ up: Monter
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
-url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
+url_invalid: Le lien de changement de mot de passe n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de changement de mot de passe.
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'

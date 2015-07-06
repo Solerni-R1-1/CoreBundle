@@ -740,8 +740,7 @@ up: Move up
 upload: Downloading
 upload_denied: 'You do not have permission to create a resource in this place'
 upload_fail: 'Download failure'
-url_invalid: The link you followed is invalid or has already been used. Please request your password again.
-
+url_invalid: The password renewal link you followed is invalid or has already been used. Please request a password change again.
 user: User
 user_accounts: 'User accounts'
 user_creation: 'Creating a user'
