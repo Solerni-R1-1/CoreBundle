@@ -240,3 +240,8 @@
 .slrn-profile-edit-field--social:before {
     display: none;
 }
+
+.desktop_catalogue_img {
+    width: 100%;
+    height: auto;
+}
