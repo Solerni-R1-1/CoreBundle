@@ -42,9 +42,11 @@
                     {{ form_widget( form.firstName, {'attr': {
                                                                 'placeholder' : 'user_form_firstName'|trans({}, 'platform'),
                                                                 'class' : firstNameClasses,
-                                                                'data-validation': 'alphanumeric required',
+                                                                'data-validation': 'alphanumeric required length',
+                                                                'data-validation-length': 'min2',
                                                                 'data-validation-allowing': '-éèöàñïîêôâ ',
-                                                                'data-validation-error-msg' : 'user_form_firstName_invalid'|trans({}, 'platform')
+                                                                'data-validation-error-msg' : 'user_form_firstName_invalid'|trans({}, 'platform'),
+                                                                'data-validation-event': 'keyup'
                     } }) }}
                     {# Display error #}
                     {% if form.firstName.vars.errors %}
@@ -63,9 +65,11 @@
                     {{ form_widget( form.lastName, {'attr': {
                                                                 'placeholder' : 'user_form_lastName'|trans({}, 'platform'),
                                                                 'class' : lastNameClasses,
-                                                                'data-validation': 'alphanumeric required',
+                                                                'data-validation': 'alphanumeric required length',
+                                                                'data-validation-length': 'min2',
                                                                 'data-validation-allowing': '-éèöàñïîêôâ ',
-                                                                'data-validation-error-msg' : 'user_form_lastName_invalid'|trans({}, 'platform')
+                                                                'data-validation-error-msg' : 'user_form_lastName_invalid'|trans({}, 'platform'),
+                                                                'data-validation-event': 'keyup'
                     } }) }}
                     {# Display error #}
                     {% if form.lastName.vars.errors %}
@@ -84,10 +88,11 @@
                     {{ form_widget( form.username, {'attr': {
                                                                 'placeholder' : 'user_form_username'|trans({}, 'platform'),
                                                                 'class' : usernameClasses,
-                                                                'data-validation': 'alphanumeric length',
+                                                                'data-validation': 'alphanumeric required length',
                                                                 'data-validation-length': 'min3',
-                                                                'data-validation-allowing': '-_. ',
-                                                                'data-validation-error-msg' : 'user_form_username_invalid'|trans({}, 'platform')
+                                                                'data-validation-allowing': '-_.',
+                                                                'data-validation-error-msg' : 'user_form_username_invalid'|trans({}, 'platform'),
+                                                                'data-validation-event': 'keyup'
                     } }) }}
                     {# Display error #}
                     {% if form.username.vars.errors %}
@@ -107,7 +112,8 @@
                                                             'placeholder' : 'mail'|trans({}, 'platform'),
                                                             'class' : mailClasses,
                                                             'data-validation': 'email',
-                                                            'data-validation-error-msg' : 'mail_invalid'|trans({}, 'platform')
+                                                            'data-validation-error-msg' : 'mail_invalid'|trans({}, 'platform'),
+                                                            'data-validation-event': 'keyup'
                     } }) }}
                     {# Display error #}
                     {% if form.mail.vars.errors %}
@@ -129,7 +135,8 @@
                                                             'data-validation': 'strength',
                                                             'data-validation-strength': '3',
                                                             'data-name': 'pass_confirmation',
-                                                            'data-validation-error-msg' : 'user_rules_password'|trans({}, 'platform')
+                                                            'data-validation-error-msg' : 'user_rules_password'|trans({}, 'platform'),
+                                                            'data-validation-event': 'keyup'
                     } }) }}
                     <span class="icon-question-sign password-helper" data-html="true" data-title="{{ 'password_rules'|trans({}, 'platform')|raw }}" data-toggle="tooltip" data-placement="right"></span>
                     <div class="strength-meter-wrapper">
@@ -154,7 +161,8 @@
                                                             'class' : plainPasswordSecondClasses,
                                                             'data-validation': 'confirmation',
                                                             'data-name': 'pass',
-                                                            'data-validation-error-msg' : 'password_mismatch'|trans({}, 'platform')
+                                                            'data-validation-error-msg' : 'password_mismatch'|trans({}, 'platform'),
+                                                            'data-validation-event': 'keyup'
                     } }) }}
                 </div>
             {% if form.accepted_terms is defined %}

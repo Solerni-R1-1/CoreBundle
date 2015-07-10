@@ -739,7 +739,7 @@ up: Monter
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
-url_invalid: Le lien suivit n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de mot de passe.
+url_invalid: Le lien de changement de mot de passe n'est pas valide ou a déjà été utilisé. Merci de refaire une demande de changement de mot de passe.
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
@@ -854,8 +854,8 @@ forgot_password: 'J''ai oublié mon mot de passe'
 user_form_mail: 'Adresse email'
 user_form_firstName: 'Prénom'
 user_form_lastName: 'Nom'
-user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux ni être vide.'
-user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux ni être vide.'
+user_form_firstName_invalid: 'Votre prénom ne peut pas contenir de caractères spéciaux ni avoir moins de 2 lettres.'
+user_form_lastName_invalid: 'Votre nom ne peut pas contenir de caractères spéciaux ni avoir moins de 2 lettres.'
 user_form_username: 'Pseudo'
 user_form_username_invalid: 'Votre pseudo ne doit contenir que des lettres et des chiffres, des points et des underscores, et posséder au minimum 3 caractères'
 mail: 'Email'
@@ -1364,7 +1364,7 @@ Métiers: Métiers
 Apprentissage: Apprentissage
 Culture: Culture
 access_restricted: 'Vous ne faites pas partie de la liste des participants éligibles à ce MOOC. En cas de réclamation vous pouvez nous contacter à l''adresse suivante : <a href="mailto:help@solerni.com">help@solerni.com</a>'
-password_rules: 'Le mot de passe <b>ne doit pas contenir d''espace</b> et doit comporter :<br>- au moins 8 caractères<br>- au moins 1 chiffre<br>- au moins 1 minuscule<br>- au moins 1 majuscule<br>- au moins 1 symbole de la liste ! @ # $ % ^ & * ?'
+password_rules: 'Le mot de passe <b>ne doit pas contenir d''espace</b> et doit comporter au moins :<br>- 8 caractères<br>- 1 chiffre<br>- 1 minuscule<br>- 1 majuscule<br>- 1 symbole de la liste<br>&nbsp;&nbsp;! @ # $ % ^ & * ?'
 password_hint_intro: 'Ajoutez au minimum : '
 password_hint_morecar: ' caractère supplémentaire'
 password_hint_morecars: ' caractères supplémentaires'

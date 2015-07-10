@@ -705,7 +705,6 @@ body.dsk .alert { display: none; }
     text-align: left;
 }
 
-
 .strength-meter-wrapper {
     text-align:     left;
     margin-bottom:  .5em;
@@ -778,6 +777,11 @@ body.dsk .alert { display: none; }
 .has-success .form-control.valid:focus { border-color: #C9D200; }
 .has-success .form-control.error { border-color: #FF004F; }
 .has-success .form-control.error:focus { border-color: #FF004F; }
+
+.has-success .slrn-errors__item,
+.has-error .slrn-errors__item {
+    display: none;
+}
 
 /* FOOTER */
 .slrn-footer { border-top: 1em solid #FFF; padding: 1em 0 2em 0; }

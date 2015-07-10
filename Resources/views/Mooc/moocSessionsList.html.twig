@@ -5,13 +5,15 @@
     {% if sessionsAvailable|length == 0 %}
 
       <p>{{'no_mooc_today'|trans({}, 'platform')}}</p>
-      <a class="" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}"><img src='{{ asset('bundles/clarolinecore/images/ban_catalogue.png') }}' alt='Consulter le catalogue' width='695px' height='131px'/></a> 
+      <a class="desktop_catalogue_link" href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}">
+          <img class="desktop_catalogue_img" src='{{ asset('bundles/clarolinecore/images/ban_catalogue.png') }}' alt='Consulter le catalogue' width='695px' height='131px'/>
+      </a>
     {% else %}
 
       {% if sessionComponentLayout == 'slider-small' %}
           <ul class="bxslider">
       {% endif %}
-              
+
 
       {% for session in sessionsAvailable %}
 
@@ -40,7 +42,7 @@
       {% if sessionComponentLayout == 'slider-small' %}
           </ul>
           <script type="text/javascript">
-          
+
           $(document).ready(function(){
 
 
@@ -49,7 +51,7 @@
            {#   pause: 200,
                 auto: true,  #}
                 mode: 'fade',
-                infiniteLoop: false, 
+                infiniteLoop: false,
                 hideControlOnEnd: true
               });
 
@@ -65,7 +67,7 @@
     {% if sessionComponentLayout == 'slider-small' %}
         <ul class="bxslider">
     {% endif %}
-            
+
     {% for session in sessions %}
 
     	{% if sessionComponentLayout == 'slider-small' %}
@@ -90,7 +92,7 @@
     {% if sessionComponentLayout == 'slider-small' %}
         </ul>
         <script type="text/javascript">
-        
+
         $(document).ready(function(){
 
 
@@ -99,7 +101,7 @@
          {#   pause: 200,
               auto: true,  #}
               mode: 'fade',
-              infiniteLoop: false, 
+              infiniteLoop: false,
               hideControlOnEnd: true
             });
 
