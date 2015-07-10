@@ -204,11 +204,11 @@
 }
 
 .slrn-message-date {
-    bottom: 9.3em;
+    bottom: 4.5em;
 }
 
 #messages_table_unique .slrn-message-date {
-    bottom: 6em;
+    bottom: 0;
 }
 
 .slrn-message-content .slrn-message-content_html img {
@@ -244,4 +244,25 @@
 .desktop_catalogue_img {
     width: 100%;
     height: auto;
+}
+
+.modal-file-upload .btn-lg.filePicker {
+    display : none;
+}
+
+.modal-file-upload__input {
+    position: static !important;
+    top: 0 !important;
+
+    width: 80%;
+    margin: 10px auto;
+    padding: 2px 4px;
+}
+
+.filePicker-ie8 {
+    display: block;
+}
+
+.slrn-blog-aside .fc-event-title {
+    display: none;
 }
