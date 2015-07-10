@@ -50,7 +50,7 @@
                     } }) }}
                     {# Display error #}
                     {% if form.firstName.vars.errors %}
-                        <div class="slrn-errors__item"><span class="help-title">Prénom : </span>{{ form_errors( form.firstName ) }}</div>
+                        <div class="slrn-errors__item"><span class="help-title">{{'user_form_firstName'|trans({}, 'platform')}} : </span>{{ form_errors( form.firstName ) }}</div>
                     {% endif %}
                 </div>
 
@@ -73,7 +73,7 @@
                     } }) }}
                     {# Display error #}
                     {% if form.lastName.vars.errors %}
-                        <div class="slrn-errors__item"><span class="help-title">Nom : </span>{{ form_errors( form.lastName ) }}</div>
+                        <div class="slrn-errors__item"><span class="help-title">{{'user_form_lastName'|trans({}, 'platform')}} : </span>{{ form_errors( form.lastName ) }}</div>
                     {% endif %}
                 </div>
 
@@ -96,7 +96,7 @@
                     } }) }}
                     {# Display error #}
                     {% if form.username.vars.errors %}
-                        <div class="slrn-errors__item"><span class="help-title">Pseudo : </span>{{ form_errors( form.username ) }}</div>
+                        <div class="slrn-errors__item"><span class="help-title">{{'user_form_username'|trans({}, 'platform')}} : </span>{{ form_errors( form.username ) }}</div>
                     {% endif %}
                 </div>
 
@@ -117,7 +117,7 @@
                     } }) }}
                     {# Display error #}
                     {% if form.mail.vars.errors %}
-                        <div class="slrn-errors__item"><span class="help-title">Email : </span>{{ form_errors( form.mail ) }}</div>
+                        <div class="slrn-errors__item"><span class="help-title">{{'mail'|trans({}, 'platform')}} : </span>{{ form_errors( form.mail ) }}</div>
                     {% endif %}
                 </div>
 
@@ -145,7 +145,7 @@
                     </div>
                     {# Display error #}
                     {% if form.plainPassword.first.vars.errors %}
-                        <div class="slrn-errors__item"><span class="help-title">Mot de passe : </span>{{ form_errors( form.plainPassword.first ) }}</div>
+                        <div class="slrn-errors__item"><span class="help-title">{{'user_form_plainPassword_first'|trans({}, 'platform')}} : </span>{{ form_errors( form.plainPassword.first ) }}</div>
                     {% endif %}
                 </div>
                 {# Password Second #}
