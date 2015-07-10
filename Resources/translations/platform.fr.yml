@@ -16,7 +16,7 @@
 'I agree that my personal information be used for commercial purposes' : 'J''accepte que mes informations personnelles soient utilisées à des fins commerciales '
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 'Last name': Nom
-'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
+'Or choose an existing file from resource manager': 'Veuillez choisir un fichier existant dans gestionnaire de ressources'
 'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
 'Overview of recent activities of your workspaces': 'Aperçu des activités récentes de vos espaces de travail'

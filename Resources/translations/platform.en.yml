@@ -16,7 +16,7 @@
 'I agree that my personal information be used for commercial purposes' : 'I accept that my personal information can be used for commercial purposes '
 'Last action': '{1} Last action|[1,Inf] %logAmount% Last actions'
 'Last name': Surname
-'Or choose an existing file from resource manager': 'Or please choose an existing file in the resource manager'
+'Or choose an existing file from resource manager': 'Please choose an existing file in the resource manager'
 'Overview of all recent activities in %workspaceName%': 'Overview of all %workspaceName% recent activities'
 'Overview of recent activities in %workspaceName%': 'Overview of %workspaceName% recent activities'
 'Overview of recent activities of your workspaces': 'Overview of your workspace recent activities'
