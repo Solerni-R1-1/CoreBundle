@@ -679,7 +679,7 @@ body.dsk .alert { display: none; }
     color:              #FFF;
     width:              300px;
 }
-
+/*
 .slrn-content-container .tooltip-inner {
     background-color:   #999 !important;
     color:              #FFF;
@@ -689,7 +689,7 @@ body.dsk .alert { display: none; }
 .slrn-content-container .tooltip-arrow:after {
     border-left-color: #999 !important;
 }
-
+*/
 
 .slrn-input-wrapper .tooltip.right .tooltip-arrow,
 .slrn-input-wrapper .tooltip.right .tooltip-arrow:after {
