@@ -66,6 +66,8 @@
 
 .slrn-search-form__input {
     background: #A6B3BC url(../images/sprites_solerni.png) no-repeat 5px -799px;
+    color:      #EEF5FB !important;
+    padding:    .35em .5em .2em 2.5em !important
 }
 
 #slrn-wrapper {
