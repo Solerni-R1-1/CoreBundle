@@ -268,3 +268,7 @@
 .slrn-blog-aside .fc-event-title {
     display: none;
 }
+
+.blog_banner_configurator .panel-body .ui-spinner #icap_blog_banner_form_banner_height {
+    color: #999 !important;
+}
