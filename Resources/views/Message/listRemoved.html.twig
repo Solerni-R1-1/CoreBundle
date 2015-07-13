@@ -68,11 +68,10 @@
         <table class="table table-condensed table-solerni" id="messages-table">
             <thead>
                 <tr>
-                    <th style='width:4%;'><input type="checkbox" name="all" id="check-all-items"></input></th>
+                    <th style='width:5%;'><input type="checkbox" name="all" id="check-all-items"></input></th>
                     <th style='width:20%;'>{{ 'from_message'|trans({}, 'platform') }}</th>
-                    <th style='width:60%;'>{{ 'object'|trans({}, 'platform') }}</th>
-                    <th style='width:16%;'>{{ 'date'|trans({}, 'platform') }}</th>
-                    {#<th style='width:3%;'></th>#}
+                    <th style='width:55%;'>{{ 'object'|trans({}, 'platform') }}</th>
+                    <th style='width:20%;'>{{ 'date'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="message-table-body">
@@ -86,17 +85,18 @@
                             pointer-hand"
                             href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
                         >
-                            <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
-                            <td> {{ userMessage.getMessage().getObject() | truncate(80, false, ' [...]') }} </td>
-                            <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
-                         {#   <td>
-                                {% if userMessage.isRead() %}
-                                    <div style="color: green" class="icon-ok-sign"></div>
-                                {% else %}
-                                    <a href="{{ path('claro_message_mark_as_read', {'message': userMessage.getMessage().getId()}) }}" class="mark-as-read"><i class="icon-envelope"></i></a>
-                                {% endif %}
-                            </td>#}
+                            <td class="slrn-message__check">
+                                <input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input>
+                            </td>
+                            <td class="slrn-message__name">
+                                <span>{{ userMessage.getMessage().getSenderUsername() }}</span>
+                            </td>
+                            <td class="slrn-message__subject">
+                                <span>{{ userMessage.getMessage().getObject() | truncate(40, false, ' [...]') }}</span>
+                            </td>
+                            <td class="slrn-message__date">
+                                <span>{{ userMessage.getMessage().getDate()|intl_date_format }}</span>
+                            </td>
                         </tr>
                     {% endfor %}
                 {% else %}

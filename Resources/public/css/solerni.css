@@ -263,6 +263,19 @@ body.subnavbar-fixed {
 .navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages:hover:before,
 .navbar-inverse .navbar-nav .slrn-topbar--messages.slrn-topbar--have-messages.active:before { color: #FFF; border-color: #ee2553;background-color: #ee2553; }
 */
+
+.slrn-message__name {
+    width:      20% !important;
+    max-width:  145px;
+}
+
+.slrn-message__name span {
+    display:        block;
+    overflow:       hidden;
+    white-space:    nowrap;
+
+}
+
 /* BOOTSTRAP */
 .please-wait { z-index: 1100; }
 
