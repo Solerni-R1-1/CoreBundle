@@ -674,26 +674,41 @@ body.dsk .alert { display: none; }
     top:        .3em;
 }
 
+/* Tooltip modifications */
+.tooltip.in {
+    opacity: 1 !important;
+}
+
 .slrn-input-wrapper .tooltip-inner {
     background-color:   #999 !important;
     color:              #FFF;
     width:              300px;
 }
-/*
+
+
 .slrn-content-container .tooltip-inner {
     background-color:   #999 !important;
     color:              #FFF;
 }
 
-.slrn-content-container .tooltip-arrow,
-.slrn-content-container .tooltip-arrow:after {
+.slrn-content-container .tooltip.left .tooltip-arrow,
+.slrn-content-container .tooltip.left .tooltip-arrow:after {
     border-left-color: #999 !important;
 }
-*/
 
-.slrn-input-wrapper .tooltip.right .tooltip-arrow,
-.slrn-input-wrapper .tooltip.right .tooltip-arrow:after {
+.slrn-content-container.tooltip.right .tooltip-arrow,
+.slrn-content-container .tooltip.right .tooltip-arrow:after {
     border-right-color: #999 !important;
+}
+
+.slrn-content-container .tooltip.top .tooltip-arrow,
+.slrn-content-container .tooltip.top .tooltip-arrow:after {
+    border-top-color: #999 !important;
+}
+
+.slrn-content-container .tooltip.bottom .tooltip-arrow,
+.slrn-content-container .tooltip.bottom .tooltip-arrow:after {
+    border-bottom-color: #999 !important;
 }
 
 .slrn-input-wrapper .tooltip.in {
