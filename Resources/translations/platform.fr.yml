@@ -997,7 +997,7 @@ mooc_administration: Administration générale des MOOCs
 back_to_mooc_parameters: Retour à l'administration des MOOCs
 mooc_list: Liste des MOOCs
 mooc_parameters: Editer le MOOC
-entity_cannot_be_deleted: 'Cette entité ne peut pas supprimée car associée aux MOOCs suivants :'
+entity_cannot_be_deleted: 'Cette entité ne peut pas être supprimée car associée aux MOOCs suivants :'
 workspace_parameters: 'Paramètres du workspace'
 mooc_by_entreprise: Les Moocs proposés par %entreprise%
 proposed_by: Proposé par
