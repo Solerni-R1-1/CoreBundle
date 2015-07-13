@@ -608,10 +608,7 @@ body.dsk .alert { display: none; }
 .slrn-badges-count i { font-size: 1.1em; font-weight: bold; }
 .badge-item { display: inline-block; background: transparent url('../images/sprites_solerni.png') no-repeat 0 -422px scroll; width: 35px; height: 35px; }
 .badge-item--acquired { background-position: -37px -422px; }
-.slrn-widget--badges .tooltip-inner { background-color: #AAC044 !important; color: #FFF; }
-.slrn-widget--badges .tooltip.top .tooltip-arrow,
-.slrn-widget--badges .tooltip.top .tooltip-arrow:after { border-top-color: #AAC044 !important; }
-.slrn-widget--badges .tooltip.in { opacity:1; filter:alpha( opacity=100 ); }
+
 
 /* REGISTRATION FORM */
 .panel,
@@ -677,47 +674,51 @@ body.dsk .alert { display: none; }
 /* Tooltip modifications */
 .tooltip.in {
     opacity: 1 !important;
+    filter:alpha( opacity=100 ) !important;
 }
 
 .slrn-input-wrapper .tooltip-inner {
     background-color:   #999 !important;
     color:              #FFF;
     width:              300px;
+    text-align:         left;
 }
-
 
 .slrn-content-container .tooltip-inner {
     background-color:   #999 !important;
     color:              #FFF;
 }
 
-.slrn-content-container .tooltip.left .tooltip-arrow,
-.slrn-content-container .tooltip.left .tooltip-arrow:after {
+.slrn-content-container .tooltip.left .tooltip-arrow {
     border-left-color: #999 !important;
 }
 
-.slrn-content-container.tooltip.right .tooltip-arrow,
-.slrn-content-container .tooltip.right .tooltip-arrow:after {
+.slrn-content-container .tooltip.right .tooltip-arrow {
     border-right-color: #999 !important;
 }
 
-.slrn-content-container .tooltip.top .tooltip-arrow,
-.slrn-content-container .tooltip.top .tooltip-arrow:after {
+.slrn-content-container .tooltip.top .tooltip-arrow {
     border-top-color: #999 !important;
 }
 
-.slrn-content-container .tooltip.bottom .tooltip-arrow,
-.slrn-content-container .tooltip.bottom .tooltip-arrow:after {
+.slrn-content-container .tooltip.bottom .tooltip-arrow {
     border-bottom-color: #999 !important;
 }
 
-.slrn-input-wrapper .tooltip.in {
-    opacity:1;
-    filter:alpha( opacity=100 );
+/* badges tooltip of lesson page */
+
+.slrn-widget--badges .badge-item + .tooltip .tooltip-inner {
+    background-color: #C3C3C3 !important;
+}
+.slrn-widget--badges .badge-item + .tooltip .tooltip-arrow {
+    border-top-color: #C3C3C3 !important;
 }
 
-.slrn-input-wrapper .tooltip-inner {
-    text-align: left;
+.slrn-widget--badges .badge-item--acquired + .tooltip .tooltip-inner {
+    background-color: #AAC044 !important;
+}
+.slrn-widget--badges .badge-item--acquired + .tooltip .tooltip-arrow {
+    border-top-color: #AAC044 !important;
 }
 
 .strength-meter-wrapper {
