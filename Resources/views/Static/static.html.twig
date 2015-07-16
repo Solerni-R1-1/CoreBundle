@@ -1,0 +1,62 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block bodyClasses %}static{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/static.css')}}'>
+{% endblock %}
+
+{% block solerniHeaderImage %}
+    <div class="js-static-target" data-static-source="{{page}}">
+
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery( document ).ready(function() {
+
+            var target = jQuery('.js-static-target');
+
+            function displayContent( response, status ) {
+                target.html(response);
+            }
+
+            function displayError( response, status, error ) {
+                target.html(error);
+            }
+
+            /*
+             * Check for langage (from Claroline Tools)
+             * Make a Ajax request to static URL to get content and display it
+             */
+            function requestContent() {
+                var lang;
+                // inconsistent langage format
+                if ( window.Claroline.Home.locale.indexOf('_') === -1 ) {
+                    lang =  window.Claroline.Home.locale;
+                } else {
+                    lang = window.Claroline.Home.locale.split('_')[0];
+                }
+
+                jQuery.ajax({
+                    url: '/static/' + target.data('static-source') + '_' + lang + '.html',
+                    dataType: 'html'
+                })
+                .success(function(response,status) {
+                    displayContent( response, status );
+                })
+                .error(function(response, status, error) {
+                    displayError( response, status, error );
+                })
+                ;
+            }
+            requestContent();
+        });
+    </script>
+
+{% endblock %}

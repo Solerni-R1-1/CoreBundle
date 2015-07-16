@@ -18,23 +18,35 @@ use JMS\DiExtraBundle\Annotation as DI;
  *
  * @author Kevin Danezis <kdanezis@sii.fr>
  * @author Anas AMEZIANE <aameziane@sii.fr>
- * 
+ *
  * @copyright 2014 @ sii.fr for Orange
- *           
+ *
  */
 class StaticController extends Controller
 {
         /**
          * @Route("/page/{name}", name="solerni_static_page")
+         *
+         * @Template("ClarolineCoreBundle:Static:static.html.twig")
          */
         public function getStaticPageAction($name){
-            
+
+            $templated_urls = array('cms_cgu', 'cms_quoi', 'cms_partenaires', 'cms_legal', 'cms_faq');
+
+            if ( in_array( $name, $templated_urls ) ) {
+
+                return array(
+                    'page'  => $name
+                );
+
+            }
+
             return $this->redirect( $this->getStaticPage( $name ) );
 
         }
-        
+
         public function getStaticPage($name){
-        
+
             // check values into parameters.yml. Also take a look inside README.md for example
             // it's must be something like "solerni_static_$name"
             if($this->container->hasParameter('solerni_' . $name)) {

@@ -1,0 +1,668 @@
+
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+.contentw a, .contentw h1, .contentw h2 {
+    font-weight: bold;
+}
+
+.contentw .pipe a, .contentw .pipe h1, .contentw .pipe h2 {
+    font-weight: normal;
+}
+.contentw .container {
+    padding:    0 15px;
+    width:      956px;
+    min-width:  956px;
+    max-width:  956px;
+}
+
+.rslides {
+    position: relative;
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.rslides li {
+    -webkit-backface-visibility: hidden;
+    position: absolute;
+    display: none;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.rslides li:first-child {
+    position: relative;
+    display: block;
+    float: left;
+}
+
+.rslides img {
+    display: block;
+    height: auto;
+    float: left;
+    width: 100%;
+    border: 0;
+}
+
+.header__w {
+    font-family: 'Arial';
+    font-size: 12px;
+    color: #ffffff;
+}
+
+.footer_w {
+    font-family: 'Arial';
+    font-size: 12px;
+}
+
+#apPart{
+    display:none;
+}
+
+.contentw__content {
+    min-height:     300px;
+}
+
+.contentw__content--quoi {
+    padding-top:    60px;
+}
+
+.contentw__content a {
+    color:  #606060;
+}
+
+.rslides {
+    border-bottom:  7px solid #FF004F;
+    height:         247px;
+}
+
+.slider {
+    min-width:  954px;
+    position:   absolute;
+    top:        50px;
+    width:      100%;
+}
+
+.slider__text_w {
+    height:     368px;
+    margin-top: 60px;
+    position:   relative;
+}
+
+.slider__text {
+    background-image: url("/static/img/design/apprendre.png");
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+    color: #FFFFFF;
+    left: 0;
+    min-height: 170px;
+    padding-left: 230px;
+    position: absolute;
+    top: 30px;
+    width: 480px;
+    z-index: 20;
+}
+
+.slider__text__desc {
+    font-size: 24px;
+}
+
+.slider__text__span {
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    border-radius: 7px;
+    border-style: solid;
+    border-width: 1px 1px 3px 3px;
+    display: inline-block;
+    margin-top: 20px;
+    padding: 1px;
+}
+
+.slider__ico {
+    background-image: url("/static/img/design/pointsFort.png");
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    bottom: 0;
+    height: 160px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 20;
+    text-align: center;
+}
+
+.slider__ico__span__content,
+.slider__ico__span__community,
+.slider__ico__span__activity,
+.slider__ico__span__degree{
+    color: #000000;
+    display: inline-block;
+    font-weight: normal;
+    height: 30px;
+    margin: 0 30px;
+    padding-top: 120px;
+    text-align: center;
+    width: 175px;
+}
+
+.presentationslider, .presentation {
+    margin-top:20px;
+}
+
+.presentation__title {
+    margin:20px 0;
+}
+
+.presentation__title__left{
+  font-size:20px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.presentation__title__right{
+  float: right;
+  margin-top: 0.3em;
+}
+
+.presentation__title__right a{
+  color:#FF004F;
+  font-weight: normal;
+}
+
+.presentation__mooc{
+  position:relative;
+  height: 232px;
+  background-color: #EEEEEF;
+  margin: 10px 0 40px;
+  color:#333333;
+  overflow:hidden;
+}
+.presentation__mooc a{
+    text-decoration:none;
+}
+.presentation__mooc:nth-last-child(2){
+    margin: 0;
+}
+.presentation__mooc__pic,
+.presentation__mooc__text,
+.presentation__mooc__meta{
+  display: inline-block;
+  float:left;
+
+}
+.presentation__mooc__pic{
+  position:relative;
+  width: 324px;
+}
+.presentation__mooc__text{
+  margin: 0 47px 0 30px;
+  width: 370px;
+}
+.presentation__mooc__text__title{
+  font-weight: bold;
+  display: block;
+  font-size: 24px;
+  margin-top: 30px;
+  height: 33px;
+  overflow: hidden;
+  color:#333333;
+}
+.presentation__mooc__text__title:hover{
+    text-decoration:none;
+}
+.presentation__mooc__text__subtitle{
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.presentation__mooc__text__subtitle a{
+    color:#2e3f4c;
+}
+.presentation__mooc__text__desc{
+  color: #606060;
+  display: block;
+  font-size: 14px;
+  margin-top: 10px;
+
+}
+.presentation__mooc__text__desc__more{
+    color: #FF004F;
+    font-weight: initial;
+    padding: 0 10px;
+}
+
+.presentation__mooc__text__link{
+  margin-top: 10px;
+}
+
+.presentation__mooc__meta{
+  padding-top: 50px;
+  width: 162px;
+}
+.presentation__mooc__meta__date,
+.presentation__mooc__meta__badge,
+.presentation__mooc__meta__price,
+.presentation__mooc__meta__activity{
+  background-image: url("/static/img/design/ico.png");
+  background-repeat: no-repeat;
+  color: #606060;
+  display: block;
+  font-size: 10px;
+
+  height: 42px;
+  line-height: 42px;
+  margin: 10px 0;
+  padding-left: 39px;
+  text-transform: uppercase;
+  width: 115px;
+}
+
+.presentation__mooc__meta__date{
+}
+.presentation__mooc__meta__badge{
+  background-position: 0 -42px;
+}
+.presentation__mooc__meta__price{
+  background-position: 0 -84px;
+}
+.presentation__mooc__meta__activity{
+  background-position: 0 -120px;
+}
+.mooc_private_layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background-color: #FF004F;
+    color: #FFF;
+    border-top: 1px solid #BC4865;
+    border-bottom: 1px solid #BC4865;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    -ms-transform: rotate(-40deg) translate(-70px, -15px);
+    -moz-transform: rotate(-40deg) translate(-70px, -15px);
+    -webkit-transform: rotate(-40deg) translate(-70px, -15px);
+    transform: rotate(-40deg) translate(-70px, -15px);
+    width: 250px;
+}
+.presentation__mooc__block__logo {
+position: absolute;
+right: 28px;
+bottom: 34px;
+}
+.valign{
+
+  vertical-align:middle;
+  display:inline-block;
+  line-height:1em;
+  text-align:left;
+}
+
+.presentation__people{
+  margin: 20px 0 0;
+}
+
+.content {
+    padding-top: 0;
+}
+
+.content__margin {
+    margin-top: 285px;
+}
+
+.side__left{
+    float: left;
+    width: 230px;
+}
+.sidebar__ul{
+    padding: 0;
+}
+.sidebar__ul__li{
+    list-style: none outside none;
+}
+.sidebar__ul__li:first-child .sidebar__ul__li__span{
+    border:0 none;
+}
+
+.sidebar__ul__li__link{
+
+}
+
+.sidebar__ul__li__span{
+    background-color: #F6F6F8;
+    display: block;
+    font-size: 1.2em;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 10px;
+    border-top: 1px solid #EEEEEF;
+}
+
+.sidebar__ul__li__span.menuactive{
+    color: #F6F6F8;
+    background-color: #4B667C;
+}
+
+
+.side__right{
+    display: inline-block;
+    margin-left: 45px;
+    width: 670px;
+}
+
+
+
+.collapse h2, .wrapperCollapse{
+    padding-left: 20px;
+}
+
+.collapse h2{
+  background-image: url("/static/img/design/spriteCollapse.png");
+  background-repeat: no-repeat;
+  background-position: 0px 7px;
+}
+
+.collapse h2.open{
+  background-position: 0 -32px;
+}
+
+
+
+.partenaire{
+    background-color: #F6F6F8;
+    margin-bottom: 10px;
+}
+
+.partenaire__logo{
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 110px;
+    width: 155px;
+    vertical-align:top;
+}
+.partenaire__text {
+    display: inline-block;
+    margin-bottom: 20px;
+    width: 500px;
+}
+.partenaire__h2 {
+    font-size: 1.8em;
+    margin-bottom: 0.7em;
+}
+
+.partenaire__web {
+    margin-top: 10px;
+}
+
+.contentw, .header__w,.slider__text_w  {
+    width:          956px;
+    margin:         0 auto;
+    color:          #222;
+    font-family:    Arial;
+    font-size:      12px;
+}
+
+.contentw__content a.partenaire__link{
+    color:#FF004F;
+}
+.content_404{
+    margin-top: 13%;
+    font-size: 17px;
+    width: 430px;
+}
+.content_404 a{
+    color:#FF004F;
+    cursor: pointer;
+}
+
+
+footer{
+  background-color: #EEEEEF;
+}
+.footer_bottom{
+    width:100%;
+    position : fixed;
+    bottom : 0;
+}
+.footer_w{
+  height: 107px;
+  margin: 0 auto;
+  width: 956px;
+}
+.footer_w__menu{
+  width: 550px;
+}
+.footer_w__menu__ul{
+  display: inline;
+  float: left;
+  margin: 33px 20px 0;
+  padding: 0;
+}
+.footer_w__menu__ul__li{
+  list-style: none outside none;
+  margin-bottom: 5px;
+
+}
+.footer_w__menu__ul__li__link {
+  color: #606060;
+
+}
+.footer_w__menu__ul__li__span {
+  margin: 5px 0;
+}
+.footer_w__social{
+  float: right;
+  width: 300px;
+}
+.footer_w__social__follow{
+    color: #999999;
+    display: block;
+    font-weight: bold;
+    margin-top: 17px;
+    position: absolute;
+    width: auto;
+}
+.footer_w__social__link{
+  color: #FFFFFF;
+  display: inline-block;
+  margin: 5px 7px 0;
+}
+
+.footer_w__social__span{
+  background-image: url("/static/img/design/icone-social.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 32px;
+  margin-top: 35px;
+  text-indent: -999em;
+  width: 32px;
+}
+.footer_w__social__span:hover{
+
+}
+.footer_w__social__link:hover{
+  text-decoration:none;
+  background-image: url("/static/img/design/tooltip.gif");
+  background-position: 50% 11px;
+  background-repeat: no-repeat;
+  text-decoration: none;
+}
+
+.footer_w__social__span__hover{
+  background-color: #999999;
+  border-radius: 5px;
+  display: none;
+  margin-left: -26px;
+  padding: 5px 10px;
+  position: absolute;
+  text-align: center;
+  width: 64px;
+}
+
+.footer_w__social__link:hover .footer_w__social__span__hover{
+  display:block;
+}
+
+
+.ico_facebook{
+  background-position:0px 0px;
+}
+.ico_twitter{
+  background-position:-46px 0px;
+}
+.ico_linkedin{
+  background-position:-93px 0px;
+}
+.ico_googlep{
+  background-position:-140px 0px;
+}
+.ico_blog{
+  background-position:-187px 0px;
+}
+.ico_rss{
+  background-position:-234px 0px;
+}
+
+.footer_w__social__link:hover .social_facebook{
+  background-position:0px -41px;
+}
+.footer_w__social__link:hover .social_twitter{
+  background-position:-46px -41px;
+}
+.footer_w__social__link:hover .social_linkedin{
+  background-position:-93px -41px;
+}
+.footer_w__social__link:hover .social_googlep{
+  background-position:-140px -41px;
+}
+.footer_w__social__link:hover .social_blog{
+  background-position:-187px -41px;
+}
+.footer_w__social__link:hover .social_rss{
+  background-position:-234px -41px;
+}
+
+
+.footer_w__powered{
+  background-image: url("/static/img/design/byOrange.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 36px;
+  margin:38px 5px 0 0;
+  text-indent: -999em;
+  width: 123px;
+  float: right;
+}
+
+
+.menuPart{}
+.menuPart ul{ padding:0;}
+.menuPart li {background:#f6f6f8; padding:6px 10px; list-style:none; margin:0;}
+.menuPart li.on{background:#4b667c;}
+.menuPart li.on a{color:#fff;}
+.menuPart li a{color:#606060; font-weight:bold;}
+.menuPart li:hover{background:#4b667c;}
+.menuPart li:hover a{color:#fff;}
+.countryBlock { padding: 10px; background:#f6f6f8;}
+.countryBlock img { float: left; margin: 30px;}
+.countryBlock p { margin-left: 190px; font-size:11px;}
+.countryBlock p strong { font-size: 20px; font-weight: bold; color:#000;}
+.visuel{z-index  : 1; height:220px; overflow:hidden;border-bottom: 7px solid #4b667c; min-width:1171px; position:relative;}
+.visuel img{width : 100%; height : auto; position : relative; z-index : 2;}
+.visuelinterne{z-index  : 1; height:auto; overflow:hidden;position:relative;}
+.visuelinterne img{width : 100%; height : auto; position : relative; z-index : 2;}
+.sousHeader{position:relative;height:300px; margin-top:-320px;}
+.entete{position:absolute; top: 50px; z-index:5; width:970px; left : 50%; margin-left : -485px;}
+.apropos{width:260px; font-family:londrinaShadow, Arial, Helvetica, sans-serif; font-size:45px;color:#fff; line-height:45px; text-transform:uppercase; }
+.apropos span{ font-family:LondrinaSolid, Arial, Helvetica, sans-serif; font-size:65px;}
+.citation{width:700px;font-family:Arial, Helvetica, sans-serif; font-size:24px;color:#fff;line-height:24px; text-shadow:1px 1px 0 #000;}
+.citation .signature{font-size:18px;line-height:18px; opacity:0.5;}
+.btnentree{position:absolute; bottom: -10px; z-index:5; width:630px; left : 50%; margin-left : -276px; text-align:center;}
+.btnentree div{float:left; width:315px;}
+.btnentree div span{display:inline-block; background-image: url("/static/img/design_apropos/entree_a_propos.png");background-repeat: no-repeat;width:89px; height:84px;}
+.btnentree div.on span.imgentreprise{background-position: 0 0;}
+.btnentree div.off span.imgentreprise{background-position: 0 -83px;}
+.btnentree div.on span.imgparticipant{background-position: -89px 0 ;}
+.btnentree div.off span.imgparticipant{background-position: -89px -83px;}
+.btnentree div p{font-family:LondrinaSolid, Arial, Helvetica, sans-serif; font-size:24px; text-transform:uppercase;}
+.btnentree div.on p{color:#FF004F;}
+.btnentree div.off p{color:#4b667c;}
+.btnentree div.off p a:hover{text-decoration:underline;}
+section.pipe{ background: url("/static/img/design_apropos/pipe3.png") no-repeat 0 0; min-height:300px;padding-left:70px;}
+section.pipe h1{font-family:londrinaShadow, Arial, Helvetica, sans-serif; font-size:40px;color:#000; margin:10px 0;}
+section.pipe h1 span{font-family:LondrinaSolid, Arial, Helvetica, sans-serif;color:#FF004F; font-weight:bold;}
+section.pipe h2{font-size:20px;}
+section.pipe p{font-size:16px;}
+.bulle{ padding-bottom:42px; background:url("/static/img/design_apropos/bulle_pointe.png") no-repeat bottom center;}
+.bulle2{ padding-bottom:42px; background:url("/static/img/design_apropos/bulle_pointe2.png") no-repeat bottom center;}
+.contenu{background:#f6f6f8;border-radius: 45px;}
+.powerbulle{font-family:londrinaSolid, Arial, Helvetica, sans-serif; font-size:30px;color:#4B667C; text-align:center; padding:10px;}
+.powerbulle span{font-family:londrinaShadow, Arial, Helvetica, sans-serif;}
+.megabulle {padding:20px 30px;}
+.megabulle h3{font-family:londrinaShadow, Arial, Helvetica, sans-serif; font-size:40px;color:#000; margin:0 0 20px 0;}
+.question strong{display:inline-block; margin-right:15px;}
+.pagetop{text-align:right; padding-right:20px; background:url("/static/img/design_apropos/top.png") no-repeat right 7px; color:#606060;}
+.pagetop a{color:#606060;}
+
+.colorPink { color: #ff004f;}
+.colorPink:hover { color: #ff004f;}
+.colorpink { color: #ff004f;}
+.colorpink:hover { color: #ff004f;}
+.question a { color: #ffffff; };
+
+.button__link{
+  background-color: #FF004F;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: bold;
+}
+.button__link:hover{
+  text-decoration:none;
+  background-color: #D90045;
+}
+.button__link__span{
+  display: inline-block;
+  margin: 8px 15px;
+}
