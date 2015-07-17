@@ -2807,3 +2807,8 @@ body.subnavbar-fixed.displayCookieWarning {
     margin-right:   .5em;
     padding:        3px 6px;
 }
+
+.slrn-list-group-item {
+    overfow:    hidden;
+    word-wrap:  break-word;
+}
