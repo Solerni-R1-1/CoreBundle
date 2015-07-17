@@ -272,3 +272,16 @@
 .blog_banner_configurator .panel-body .ui-spinner #icap_blog_banner_form_banner_height {
     color: #999 !important;
 }
+
+.slrn-items-per-page__elmnt {
+    display:    inline-block !important;
+    position:   absolute;
+    left:       -9999px;
+}
+
+label.label-active {
+    background :        #FF004F;
+    color:              #FFFFFF;
+    cursor:             auto;
+    font-weight:        bold;
+}
