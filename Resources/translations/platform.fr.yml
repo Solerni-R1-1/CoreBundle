@@ -1002,6 +1002,7 @@ workspace_parameters: 'Paramètres du workspace'
 mooc_by_entreprise: Les Moocs proposés par %entreprise%
 proposed_by: Proposé par
 know_more: En savoir +
+know_more_cookies: En savoir +
 mooc_archives: Accéder aux archives du cours
 get_warned_next_session: M'avertir de la prochaine session
 dont_get_warned_next_session: Ne pas m'avertir de la prochaine session
@@ -1377,3 +1378,8 @@ reinit_password: Réinitialiser votre mot de passe
 
 important_information: Information importante
 important_information_cooc: Pour accéder au COOC interne de votre entreprise &laquo; %moocName% &raquo;, merci de vous inscrire avec votre adresse mail professionnelle et d'utiliser Firefox comme navigateur.
+
+about_us: A propos de nous
+support: Support
+follow_us: Suivez-nous
+international: International

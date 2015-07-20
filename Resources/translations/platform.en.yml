@@ -1015,6 +1015,7 @@ workspace_parameters: 'Workspace settings'
 mooc_by_entreprise: MOOCs proposed by %entreprise%
 proposed_by: Proposed by
 know_more: Find out more
+know_more_cookies: Learn more
 mooc_archives: Access course archives
 get_warned_next_session: Notify me of the next session
 dont_get_warned_next_session: Do not notify me of the next session
@@ -1367,10 +1368,10 @@ en: English
 es: Español
 
 authorize_exploitation: Privacy
-solerni_footer_title: Apprendre, c'est toujours mieux ensemble#GB
-solerni_footer_text: Solerni est une solution logicielle complète dédiée à la création et à l'hébergement de parcours d'apprentissage massifs collaboratifs.#GB
+solerni_footer_title: Learning together is always better
+solerni_footer_text: Solerni is a global solution that helps organizations to build, design and host new learning paths in a collaborative way, for small or massive groups
 
-cookie_warn_message: En poursuivant votre navigation sur le site, vous acceptez l'utilisation de cookies pour vous proposer une navigation optimale et nous permettre de réaliser des statistiques de visites#GB
+cookie_warn_message: By continuing to browse this site, you are agreeing to our use of cookies to optimize your browsing experience and maintain site statistics
 
 #Core Categories
 Enseignement: Teaching
@@ -1392,3 +1393,8 @@ reinit_password: Change your password
 
 important_information: Important information
 important_information_cooc: To access to your company internal COOC &laquo; %moocName% &raquo;, thank you to sign up with your professional email address and use Firefox as browser.
+
+about_us: About us
+support: Support
+follow_us: Follow us
+international: International

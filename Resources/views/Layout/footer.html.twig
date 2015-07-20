@@ -6,7 +6,7 @@
             <p>{{'solerni_footer_text'|trans({}, 'platform')}}</p>
         </div>
         <div class="col-md-2 footer-column ">
-            <p class="footer_title">A propos de nous</p>
+            <p class="footer_title">{{ 'about_us'|trans({}, 'platform') }}</p>
             <ul class="footer_cms_menu__column">
                 <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_quoi' } ) }}">{{ 'about_solerni'|trans({}, 'platform') }}</a></li>
                 <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_partenaires' } ) }}">{{ 'partners'|trans({}, 'platform') }}</a></li>
@@ -15,14 +15,14 @@
             </ul>
         </div>
         <div class="col-md-2 footer-column ">
-            <p class="footer_title">Support</p>
+            <p class="footer_title">{{ 'support'|trans({}, 'platform') }}</p>
             <ul class="footer_cms_menu__column">
                 <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'solerni_static_page', { 'name': 'cms_faq' } ) }}">{{ 'faq'|trans({}, 'platform') }}</a></li>
                 <li class="footer_cms_menu_column__item"><a class="footer_cms_menu_column__link" href="{{ path( 'contact_show' ) }}">{{ 'contact'|trans({}, 'platform') }}</a></li>
             </ul>
         </div>
         <div class="col-md-2 footer-column ">
-            <p class="footer_title">Suivez-nous</p>
+            <p class="footer_title">{{ 'follow_us'|trans({}, 'platform') }}</p>
             <a href="{{ path( 'solerni_static_page', { 'name': 'social_facebook' } ) }}" class="footer_social_link" target="_blank">
                 <span class="footer_social_link__icon social_facebook">{{ 'facebook'|trans({}, 'platform') }}</span><!--
                 --><span class="footer_icon_text">{{ 'facebook'|trans({}, 'platform') }}</span>
@@ -37,7 +37,7 @@
             </a>
         </div>
         <div class="col-md-2 footer-column ">
-            <p class="footer_title">International</p>
+            <p class="footer_title">{{ 'international'|trans({}, 'platform') }}</p>
             <ul class="slrn-footer-languageblock">
                 {% import 'ClarolineCoreBundle:Layout:topBarItems.html.twig' as topbar %}
                 {% use 'ClarolineCoreBundle:Partials:dropdownLanguages.html.twig' %}
