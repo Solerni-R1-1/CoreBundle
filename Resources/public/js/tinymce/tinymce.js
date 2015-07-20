@@ -369,7 +369,7 @@
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code -mention -accordion'
         ],
-        'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | resourcePicker fileUpload | fullscreen displayAllButtons',
+        'toolbar1': 'bold italic underline strikethrough | forecolor backcolor | undo redo | alignleft aligncenter alignright alignjustify | media link resourcePicker fileUpload | code | fullscreen',
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | image media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'invalid_elements':'script',

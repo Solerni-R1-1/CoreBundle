@@ -106,19 +106,12 @@
                 return res;
             };
 
-            //password length
-            //score += password.length * 4;
-            //score += ( checkRepetition(1, password).length - password.length ) * 1;
-            //score += ( checkRepetition(2, password).length - password.length ) * 1;
-            //score += ( checkRepetition(3, password).length - password.length ) * 1;
-            //score += ( checkRepetition(4, password).length - password.length ) * 1;
-
-
             //password is just a numbers or chars
-            if (password.length >= 8 ) {
+            passLength = password.length || 0;
+            if (passLength >= 8 ) {
                 score += 10;
             } else {
-                var missingCar = 8 - password.length;
+                var missingCar = 8 - passLength;
                 if ( missingCar == 1 ) {
                     numberMissing = missingCar + translator.get('platform:password_hint_morecar');
                 } else {
@@ -128,59 +121,38 @@
             }
 
             //password has 1 numbers
-            if (password.match(/(.*[0-9])/)) {
+            if (password.match(/([0-9])/)) {
                 score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onenumber'));
             }
 
             //password has 1 symbols
-            if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~])/)) {
+            if (password.match(/([!@#$%^&\*?_~])/)) {
                 score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onesymbol'));
             }
 
             //password has Upper and Lower chars
-            if (password.match(/(.*[a-z])/)) {
+            if (password.match(/([a-z])/)) {
                 score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onemin'));
             }
 
-            if (password.match(/(.*[A-Z])/)) {
+            if (password.match(/([A-Z])/)) {
                 score += 10;
             } else {
                 message.push(translator.get('platform:password_hint_onemaj'));
             }
 
             // Pas d'espace
-            if ( ! password.match(/(.*[\s])/) ) {
+            if ( ! password.match(/([\s])/) ) {
                 score += 10;
             } else {
                 message_out.push(translator.get('platform:password_hint_nowhitespace'));
             }
-
-            //password has number and chars
-            //if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) {
-            //    score += 12;
-            //}
-            //
-            //password has number and symbol
-            //if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/) && password.match(/([0-9])/)) {
-            //    score += 15;
-            //}
-
-            //password has char and symbol
-            //if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/) && password.match(/([a-zA-Z])/)) {
-            //    score += 15;
-            //}
-
-            //password is just a numbers or chars
-            //if (password.match(/^\w+$/) || password.match(/^\d+$/)) {
-            //    score -= 10;
-            //}
-
 
             //verifying 0 < score < 100
             if (score < 0) {

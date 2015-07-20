@@ -47,7 +47,6 @@ jQuery(document).ready(function(jQuery) {
         borderColorOnError: '#FF004F',
         showHelpOnFocus:    false,
         addSuggestions:     false,
-        validateOnBlur:     true,
         langage:            SolerniMsg
     });
 

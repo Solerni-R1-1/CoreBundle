@@ -1065,7 +1065,7 @@ session_end_date: End of session
 session_start_subscription: Start of registration
 session_end_subscription: End of registration
 session_title: Session title
-session_max_users: Maximum number of registrations<br><span style="font-weight:"
+session_max_users: Maximum number of registrations<br><span style="font-weight:normal">(0 means no limit)</span>
 session_choose_forum: --Choose a session forum--
 constraint_whitelist: White list <br><span style="font-weight:normal">(1 email per line)</span>
 constraint_pattern: Authorised domains <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>

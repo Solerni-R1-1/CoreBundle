@@ -237,6 +237,25 @@ class AuthenticationController
 
     /**
      * @Route(
+     *     "/sendmail",
+     *     name="claro_redirect_to_reset",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+     */
+    public function redirectToResetAction(Request $request)
+    {
+
+        $lang = $request->query->get('lang');
+
+        $uri = ($lang) ? $this->router->generate('claro_security_forgot_password', array('lang' => $lang)) : $this->router->generate('claro_security_forgot_password') ;
+
+        return new RedirectResponse($uri);
+    }
+
+    /**
+     * @Route(
      *     "/newpassword/{hash}/",
      *     name="claro_security_reset_password",
      *     options={"expose"=true}
