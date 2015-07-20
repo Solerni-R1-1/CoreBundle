@@ -16,7 +16,7 @@
 'I agree that my personal information be used for commercial purposes' : 'I accept that my personal information can be used for commercial purposes '
 'Last action': '{1} Last action|[1,Inf] %logAmount% Last actions'
 'Last name': Surname
-'Or choose an existing file from resource manager': 'Or please choose an existing file in the resource manager'
+'Or choose an existing file from resource manager': 'Please choose an existing file in the resource manager'
 'Overview of all recent activities in %workspaceName%': 'Overview of all %workspaceName% recent activities'
 'Overview of recent activities in %workspaceName%': 'Overview of %workspaceName% recent activities'
 'Overview of recent activities of your workspaces': 'Overview of your workspace recent activities'
@@ -740,8 +740,7 @@ up: Move up
 upload: Downloading
 upload_denied: 'You do not have permission to create a resource in this place'
 upload_fail: 'Download failure'
-url_invalid: The link you followed is invalid or has already been used. Please request your password again.
-
+url_invalid: The password renewal link you followed is invalid or has already been used. Please request a password change again.
 user: User
 user_accounts: 'User accounts'
 user_creation: 'Creating a user'
@@ -859,8 +858,8 @@ forgot_password: 'I have forgotten my password'
 user_form_mail: 'E-mail address'
 user_form_firstName: 'First name'
 user_form_lastName: 'Surname'
-user_form_firstName_invalid: 'Your first name cannot contain special characters nor being empty.'
-user_form_lastName_invalid: 'Your surname cannot contain special characters nor being empty.'
+user_form_firstName_invalid: 'Your first name cannot contain special characters nor being less than 2 letters.'
+user_form_lastName_invalid: 'Your surname cannot contain special characters nor being less than 2 letters.'
 user_form_username: 'Nickname'
 user_form_username_invalid: 'Your nickname must only contain letters and numbers, full stops and underscores, and must be a minimum of 3 characters'
 mail: 'E-mail'
@@ -1066,7 +1065,7 @@ session_end_date: End of session
 session_start_subscription: Start of registration
 session_end_subscription: End of registration
 session_title: Session title
-session_max_users: Maximum number of registrations<br><span style="font-weight:"
+session_max_users: Maximum number of registrations<br><span style="font-weight:normal">(0 means no limit)</span>
 session_choose_forum: --Choose a session forum--
 constraint_whitelist: White list <br><span style="font-weight:normal">(1 email per line)</span>
 constraint_pattern: Authorised domains <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>
@@ -1380,7 +1379,7 @@ Apprentissage: Learning
 Culture: Culture
 
 access_restricted: 'You are not part of this MOOC private list and therefore you are not authorized to access it. If you think this is a mistake, please report to us by sending an email to : <a href="mailto:help@solerni.com">help@solerni.com</a>'
-password_rules: Your password <b>must not have any whitespace</b>, and must have :<br>-at least 8 characters<br>-at least 1 number<br>-at least 1 lowercase character<br>-at least 1 uppercase character<br>-at least 1 symbol from the list ! @ # $ % ^ & * ?
+password_rules: 'Your password <b>must not have whitespaces</b>, and must have at least :<br>- 8 characters<br>- 1 number<br>- 1 lowercase character<br>- 1 uppercase character<br>- 1 symbol from the list<br>&nbsp;&nbsp;! @ # $ % ^ & * ?'
 password_hint_intro: 'Add at least: '
 password_hint_morecar: ' more character'
 password_hint_morecars: ' more characters'

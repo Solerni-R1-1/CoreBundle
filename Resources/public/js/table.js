@@ -114,11 +114,13 @@
 
                 $(btnClass).click(function (e) {
                     currentAction = $(e.currentTarget).attr('data-action');
-                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
-                        {'nbItems': $('.chk-item:checked').length}
-                    );
-                    $('#table-modal .modal-body').html(html);
-                    $('#table-modal').modal('show');
+                    if (currentAction) {
+                        var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
+                            {'nbItems': $('.chk-item:checked').length}
+                        );
+                        $('#table-modal .modal-body').html(html);
+                        $('#table-modal').modal('show');
+                    }
                 });
             }
         }

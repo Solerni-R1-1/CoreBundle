@@ -66,6 +66,8 @@
 
 .slrn-search-form__input {
     background: #A6B3BC url(../images/sprites_solerni.png) no-repeat 5px -799px;
+    color:      #EEF5FB !important;
+    padding:    .35em .5em .2em 2.5em !important
 }
 
 #slrn-wrapper {
@@ -208,7 +210,7 @@
 }
 
 #messages_table_unique .slrn-message-date {
-    bottom: 6em;
+    bottom: 4.5em;
 }
 
 .slrn-message-content .slrn-message-content_html img {
@@ -239,4 +241,47 @@
 
 .slrn-profile-edit-field--social:before {
     display: none;
+}
+
+.desktop_catalogue_img {
+    width: 100%;
+    height: auto;
+}
+
+.modal-file-upload .btn-lg.filePicker {
+    display : none;
+}
+
+.modal-file-upload__input {
+    position: static !important;
+    top: 0 !important;
+
+    width: 80%;
+    margin: 10px auto;
+    padding: 2px 4px;
+}
+
+.filePicker-ie8 {
+    display: block;
+}
+
+.slrn-blog-aside .fc-event-title {
+    display: none;
+}
+
+.blog_banner_configurator .panel-body .ui-spinner #icap_blog_banner_form_banner_height {
+    color: #999 !important;
+}
+
+.slrn-items-per-page__elmnt {
+    display:    inline-block !important;
+    position:   absolute;
+    left:       -9999px;
+}
+
+label.label-active {
+    background :        #FF004F;
+    color:              #FFFFFF;
+    cursor:             auto;
+    font-weight:        bold;
 }

@@ -225,7 +225,7 @@ $( document ).ready(function() {
     }
 
     // Append buttons next to the input field "send to"
-    $('#message_form_to').offsetParent()[0].appendChild($('.js-input-buttons')[0]);
+    $('#message_form_to').offsetParent().append($('.js-input-buttons'));
     // Attach events to the input field
     $('#message_form_to').on('propertychange keyup input paste change click', function () {
         statusSearch();

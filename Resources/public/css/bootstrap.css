@@ -1,10 +1,10 @@
-/* 
+/*
  * This file is part of Solerni.
- * 
+ *
  * Copyright (C) 2014 Orange
- * 
+ *
  * Description: Bootstrap CSS File
- * 
+ *
  * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
  */
 
@@ -258,7 +258,7 @@ html {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.428571429;
   color: #606060;

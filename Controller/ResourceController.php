@@ -170,7 +170,8 @@ class ResourceController extends Controller
 
             $return = new JsonResponse($nodesArray);
 
-            if ( preg_match( "/(Trident\/5)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ) {
+            if ( preg_match( "/(Trident\/5)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ||
+                 preg_match( "/(MSIE 8)/", $this->request->server->get('HTTP_USER_AGENT') ) > 0 ) {
                 $return->headers->set('Content-Type', 'text/html');
             }
 

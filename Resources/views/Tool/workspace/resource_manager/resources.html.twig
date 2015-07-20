@@ -9,7 +9,7 @@
 {% endblock %}
 {% block section_content %}
     {# title is not the if it"s a personnal workspace or not #}
-    {% if pp.user.getPersonalWorkspace()|default and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
+    {% if app.user.getPersonalWorkspace()|default and app.user.getPersonalWorkspace().getId() == workspace.getId() %}
         {% set isPersonnalWorkspace = true %}
     {% else %}
         {% set isPersonnalWorkspace = false %}

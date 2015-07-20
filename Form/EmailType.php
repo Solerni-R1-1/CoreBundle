@@ -15,9 +15,24 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class EmailType extends AbstractType
 {
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    private $translator;
+
+    /**
+     * @DI\InjectParams({
+     *     "translator" = @DI\Inject("translator")
+     * })
+     *
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -25,8 +40,13 @@ class EmailType extends AbstractType
             'email',
             array(
                 'required' => true,
-                'constraints' => new Email()
-            )
+                'constraints' => new Email(),
+                'attr' => array (   'placeholder' => $this->translator->trans('user_form_mail'),
+                                    'class'         => 'slrn-input',
+                                    'data-validation' => 'email',
+                                    'data-validation-error-msg' => $this->translator->trans('mail_invalid', array(), 'platform'),
+                                    'data-validation-event' => 'keyup'
+            ))
         );
     }
 

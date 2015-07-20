@@ -1286,7 +1286,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $this->userMoocPreferences;
     }
 
-    private function checkSolerniPassword($password) {
+    public function checkSolerniPassword($password) {
 
         // First rule : 8 characters minimum
         if ( strlen($password) < 8 ) {

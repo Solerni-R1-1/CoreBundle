@@ -30,20 +30,22 @@
 	                {% endfor %}
                 {% endfor %}
             {% endif %}
-            
+
             {% set sessionNumber = sessionIds|length %}
-            
+
             {% if sessionNumber > 0 %}
-            
+
                 <h3 class="slrn-content-secondary-title">{{ 'my_moocs'|trans({}, 'platform') }}</h3>
                 <a class="slrn-link-right pink_link"href="{{ path( 'solerni_mes_moocs' ) }}">{{ 'display_all_my_moocs'|trans({}, 'platform') }}</a>
-            
+
             {% else %}
                 <h3 class="slrn-content-secondary-title">{{ 'recommandations'|trans({}, 'platform') }}</h3>
-                <a class="slrn-link-right pink_link"href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}">{{ 'display_catalogue'|trans({}, 'platform') }}</a>
+                <a class="slrn-link-right pink_link"href="{{ path( 'solerni_catalogue', {}) ~ '#?page=1&rpp=10&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,duration,ispub&sb=false' }}">
+                    {{ 'display_catalogue'|trans({}, 'platform') }}
+                </a>
             {% endif %}
         </div>
-                
+
         {# change display if we have more than one active mooc #}
         {% if sessionNumber <= 1 %}
             {% set sessionComponentLayout = '2-column' %}
@@ -66,12 +68,12 @@
                 'mainTitle':    'mailsystem'|trans({}, 'platform'),
                 'statusText':   'no_message'|trans({}, 'platform'),
                 'iconClass':    'ico__messagerie',
-                'subText':      'dashboard_widget_message_default_text'|trans({}, 'platform'),   
+                'subText':      'dashboard_widget_message_default_text'|trans({}, 'platform'),
                 'footerUrl':    path('claro_message_list_received', {} ),
                 'footerText':   'show_mailsystem'|trans({}, 'platform')
             }
         ) %}
-         
+
         {# Inject badges block widget #}
         {% render controller(
             'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
@@ -80,12 +82,12 @@
                 'mainTitle':        'my_badges'|trans({}, 'platform'),
                 'statusText':       'no_badges'|trans({}, 'platform'),
                 'iconClass':        'ico__badge',
-                'subText':          'dashboard_widget_badges_default_text'|trans({}, 'platform'),   
+                'subText':          'dashboard_widget_badges_default_text'|trans({}, 'platform'),
                 'footerUrl':        path('claro_profile_view_badges', {} ),
                 'footerText':       'show_badges'|trans({}, 'platform')
             }
         ) %}
-         
+
         {# Inject evaluations block widget #}
         {% render controller(
             'ClarolineCoreBundle:Solerni:getDesktopFooterBlockMessage',
@@ -94,7 +96,7 @@
                 'mainTitle':    'my_evals'|trans({}, 'platform'),
                 'statusText':   'no_evals'|trans({}, 'platform'),
                 'iconClass':    'ico__eval',
-                'subText':      'dashboard_widget_evals_default_text'|trans({}, 'platform'), 
+                'subText':      'dashboard_widget_evals_default_text'|trans({}, 'platform'),
                 'footerUrl':    path( 'solerni_static_page', { 'name': 'cms_faq' } ),
                 'footerText':   'page_my_badges'|trans({}, 'platform')
             }

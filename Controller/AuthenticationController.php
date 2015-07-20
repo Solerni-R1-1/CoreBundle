@@ -100,22 +100,22 @@ class AuthenticationController
     {
     	$data = array();
     	$session = $this->request->getSession();
-    	
-    	
+
+
         if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $this->request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } else {
             $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-        }        
-        
+        }
+
         $lastUsername = $session->get(SecurityContext::LAST_USERNAME);
-        
+
         if ($session->has("moocSession")) {
         	$moocSession = $session->get("moocSession");
         	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
         	$data['moocSession'] = $moocSession;
         }
-        
+
         if ($session->has("privateMoocSession")) {
         	$moocSession = $session->get("privateMoocSession");
         	$moocSession = $this->om->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
@@ -138,7 +138,7 @@ class AuthenticationController
     public function forgotPasswordAction()
     {
         if ($this->mailManager->isMailerAvailable()) {
-            $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array());
+            $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array($this->translator));
 
             return array('form' => $form->createView());
         }
@@ -188,7 +188,7 @@ class AuthenticationController
      */
     public function sendEmailAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array($this->translator), null);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -233,6 +233,25 @@ class AuthenticationController
             'error' => $this->translator->trans('wrong_captcha', array(), 'platform'),
             'form' => $form->createView()
         );
+    }
+
+    /**
+     * @Route(
+     *     "/sendmail",
+     *     name="claro_redirect_to_reset",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+     */
+    public function redirectToResetAction(Request $request)
+    {
+
+        $lang = $request->query->get('lang');
+
+        $uri = ($lang) ? $this->router->generate('claro_security_forgot_password', array('lang' => $lang)) : $this->router->generate('claro_security_forgot_password') ;
+
+        return new RedirectResponse($uri);
     }
 
     /**
@@ -285,9 +304,14 @@ class AuthenticationController
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($this->translator), $user);
         $form->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        // Get form data if valid
+        if ($form->isValid() ) {
             $data = $form->getData();
             $plainPassword = $data->getPlainPassword();
+        }
+
+        // If form valid and password is complex enough
+        if ($form->isValid() && $user->checkSolerniPassword($plainPassword)) {
             $user->setPlainPassword($plainPassword);
             $user->setResetPasswordHash(null);
             $this->om->persist($user);
@@ -299,9 +323,12 @@ class AuthenticationController
             return new RedirectResponse($this->router->generate('claro_security_login'));
         }
 
+
+
         return array(
             'hash' => $hash,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'error' => $this->translator->trans('edit_password_error', array(), 'platform')
         );
     }
 
