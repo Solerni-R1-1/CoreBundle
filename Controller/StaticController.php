@@ -29,7 +29,11 @@ class StaticController extends Controller
          *
          * @Template("ClarolineCoreBundle:Static:static.html.twig")
          */
-        public function getStaticPageAction($name){
+        public function getStaticPageAction($name) {
+
+            if ( $name == 'cms_url' ) {
+                return $this->redirect($this->generateUrl('claro_index', array()));
+            }
 
             $templated_urls = array('cms_cgu', 'cms_quoi', 'cms_partenaires', 'cms_legal', 'cms_faq');
 

@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Doctrine\ORM\EntityManager;
 
 /**
  * @TODO doc
@@ -37,6 +38,7 @@ class HomeController
     private $templating;
     private $homeService;
     private $router;
+    private $em;
 
     /**
      * @InjectParams({
@@ -46,9 +48,10 @@ class HomeController
      *     "templating"     = @Inject("templating"),
      *     "homeService"    = @Inject("claroline.common.home_service"),
      *     "router"         = @Inject("router"),
+     *     "em"             = @Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(HomeManager $manager, Request $request, $security, $templating, $homeService, $router)
+    public function __construct(HomeManager $manager, Request $request, $security, $templating, $homeService, $router, EntityManager $em)
     {
         $this->manager = $manager;
         $this->request = $request;
@@ -56,6 +59,7 @@ class HomeController
         $this->templating = $templating;
         $this->homeService = $homeService;
         $this->router = $router;
+        $this->em = $em;
     }
 
     /**
@@ -88,27 +92,24 @@ class HomeController
      *
      * @Route("/type/{type}", name="claro_get_content_by_type")
      * @Route("/", name="claro_index", defaults={"type" = "home"})
+     * @ParamConverter("user", options={"authenticatedUser" = false })
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function homeAction($type)
+    public function homeAction($type, $user)
     {
-        /*$response = $this->render(
+        $sessions = $this->em->getRepository('ClarolineCoreBundle:Mooc\MoocSession')->getFiveMoreRecentSessions($user);
+
+        $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
             array(
-                'region' => $this->renderRegions($this->manager->getRegionContents()),
-                'content' => $this->typeAction($type)->getContent()
+                'sessions' =>$sessions
             )
         );
-        $response->headers->addCacheControlDirective('no-cache', true);
-        $response->headers->addCacheControlDirective('max-age', 0);
-        $response->headers->addCacheControlDirective('must-revalidate', true);
-        $response->headers->addCacheControlDirective('no-store', true);
-        $response->headers->addCacheControlDirective('expires', '-1');*/
-        return $this->redirect($this->generateUrl('claro_desktop_open_tool', array('toolName' => 'home')));
-        /*return $response;*/
+
+        return $response;
     }
-    
+
      /**
      * Generates a URL from the given parameters.
      *
@@ -124,7 +125,7 @@ class HomeController
     {
         return $this->router->generate($route, $parameters, $referenceType);
     }
-    
+
      /**
      * Returns a RedirectResponse to the given URL.
      *

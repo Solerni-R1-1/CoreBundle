@@ -1,70 +1,83 @@
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
-{% block leftbar %}
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="list-group menu">
-            <div class="list-group-item disabled">{{ "Content Administration" | trans({}, "home") }}</div>
-            <a class="list-group-item {% if path('claro_index') == app.request.requesturi %} active{% endif %}"
-                href="{{ path("claro_index") }}">
-                <i class="icon-home"></i> {{ "home" | trans({}, "platform") }}
-            </a>
-            <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
-                href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
-                <i class="icon-list"></i> {{ "Menus" | trans({}, "home") }}
-            </a>
-            <a class="list-group-item relative{{ "/types" | compareRoute(" active") }}"²
-                href="{{ path("claroline_types_manager") }}">
-                <i class="icon-file"></i> {{ "Pages" | trans({}, "home") }}
-            </a>
-        </div>
-    {% endif %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/static.css')}}'>
 {% endblock %}
 
-{% block content %}
+{% block leftbar %}
+   {{ parent() }}
+{% endblock %}
+
+{% block solerniHeaderImage %}
     <div class="visible-xs spacing-right">
         {{ block("leftbar") }}
     </div>
-
-    {% if region['header'] is defined %}
-        <div class="content-12 region-header clearfix">
-            {{  region['header'] | raw }}
-        </div>
-    {% endif %}
-    <div>
-        {% if region['left'] is defined %}
-            <div class="content-3">
-                    {{ region['left'] | raw }}
-            </div>
-        {% endif %}
-
-        <div class="{% if region['left'] is defined and
-            region['right'] is defined %}content-6{% elseif region['left'] is defined or
-            region['right'] is defined %}content-9{% else %}content-12{% endif %}">
-            {% if region['content'] is defined %}
-                {{ region['content'] | raw }}
-            {% endif %}
-
-            {{ content | raw }}
-        </div>
-
-        {% if region['right'] is defined %}
-            <div class="content-3">
-                {{ region['right'] | raw }}
-            </div>
-        {% endif %}
+    <!-- Block Slider + info -->
+    <div class='slider'>
+        <ul class="rslides">
+            <li><img src="https://solerni.org/uploads/img/slider/Solerni_bandeau_1600x450.jpg" alt=""></li>
+        </ul>
     </div>
-    {% if region['footer'] is defined %}
-        <div class='content-12'>
-            {{  region['footer'] | raw }}
+    <!-- / Block Slider + info -->
+	<div class='slider__text_w'>
+        <div class='slider__text'>
+            <span class='slider__text__desc'>
+                Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs
+            </span>
+            <span class='slider__text__span'>
+                <a href='https://solerni.org/mooc/register/form' class='button__link slider__text__link'>
+                    <span class='button__link__span slider__text__link__span'>Je m'inscris gratuitement</span>
+                </a>
+            </span>
         </div>
-    {% endif %}
+        <div class='slider__ico'>
+            <a href='https://solerni.org/a-propos-de-solerni'>
+              <span class='slider__ico__span__content'>Vous êtes libres d'enrichir et de partager des contenus</span>
+             </a>
+            <a href='https://solerni.org/a-propos-de-solerni'>
+                <span class='slider__ico__span__community'>Vous apprenez des autres et avec les autres</span>
+             </a>
+            <a href='https://solerni.org/a-propos-de-solerni'>
+                <span class='slider__ico__span__activity'>Vous progressez en pratiquant seul ou à plusieurs</span>
+             </a>
+            <a href='https://solerni.org/a-propos-de-solerni'>
+                <span class='slider__ico__span__degree'>Vous obtenez une validation de vos apprentissages</span>
+             </a>
+        </div>
+    </div>
 {% endblock %}
 
+{% block content %}
+    <div class='presentation__title'>
+        <div class='presentation__title__left'>Nouveautés</div>
+        <div class='presentation__title__right'>
+            <a href='https://solerni.org/mooc/search/query#?page=1&rpp=10&q=&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false'><span class'presentation__nouveaute__more'>Voir toutes les nouveautés</span></a>
+        </div>
+    </div>
+
+    {% if sessions|default() %}
+        {% for session in sessions %}
+            {% render controller(
+                  'ClarolineCoreBundle:Mooc\\Mooc:renderSessionComponent',
+                  {   'session':                   session,
+                      'showUserProgression':       true,
+                      'sessionComponentLayout':    '3-column'
+                  }
+              ) %}
+        {% endfor %}
+
+    {% endif %}
+
+    <div class='presentation__title'>
+        <div class='presentation__title__left'>&nbsp;</div>
+        <div class='presentation__title__right'>
+            <a href='https://solerni.org/mooc/search/query#?page=1&rpp=10&q=&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false'><span class'presentation__nouveaute__more'>Voir toutes les nouveautés</span></a>
+        </div>
+    </div>
+
+
+{% endblock %}
 {% block javascripts %}
     {{ parent() }}
-        <script type="text/javascript" src="{{ asset('bundles/frontend/fluidvids/fluidvids.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/height.js') }}"></script>
-        {% if is_granted('ROLE_ADMIN') %}
-            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
-        {% endif %}
 {% endblock %}

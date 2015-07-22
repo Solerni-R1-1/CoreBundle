@@ -111,7 +111,7 @@ h6 {
 
 .rslides {
     border-bottom:  7px solid #FF004F;
-    height:         247px;
+    height:         259px;
 }
 
 .slider {
@@ -137,12 +137,13 @@ h6 {
     padding-left: 230px;
     position: absolute;
     top: 30px;
-    width: 480px;
+    width: 716px;
     z-index: 20;
 }
 
 .slider__text__desc {
-    font-size: 24px;
+    font-size:      24px;
+    line-height:    1.4;
 }
 
 .slider__text__span {
@@ -157,16 +158,15 @@ h6 {
 }
 
 .slider__ico {
-    background-image: url("/static/img/design/pointsFort.png");
-    background-position: 50% 0;
-    background-repeat: no-repeat;
-    bottom: 0;
-    height: 160px;
-    left: 0;
-    position: absolute;
-    width: 100%;
-    z-index: 20;
-    text-align: center;
+    background-image:       url("/static/img/design/pointsFort.png");
+    background-position:    50% 0;
+    background-repeat:      no-repeat;
+    bottom:                 0;
+    height:                 160px;
+    left:                   0;
+    position:               absolute;
+    width:                  100%;
+    text-align:             center;
 }
 
 .slider__ico__span__content,
@@ -192,9 +192,10 @@ h6 {
 }
 
 .presentation__title__left{
-  font-size:20px;
-  display: inline-block;
-  font-weight: bold;
+  font-size:    20px;
+  display:      inline-block;
+  font-weight:  bold;
+  color:        #000;
 }
 
 .presentation__title__right{
@@ -207,129 +208,6 @@ h6 {
   font-weight: normal;
 }
 
-.presentation__mooc{
-  position:relative;
-  height: 232px;
-  background-color: #EEEEEF;
-  margin: 10px 0 40px;
-  color:#333333;
-  overflow:hidden;
-}
-.presentation__mooc a{
-    text-decoration:none;
-}
-.presentation__mooc:nth-last-child(2){
-    margin: 0;
-}
-.presentation__mooc__pic,
-.presentation__mooc__text,
-.presentation__mooc__meta{
-  display: inline-block;
-  float:left;
-
-}
-.presentation__mooc__pic{
-  position:relative;
-  width: 324px;
-}
-.presentation__mooc__text{
-  margin: 0 47px 0 30px;
-  width: 370px;
-}
-.presentation__mooc__text__title{
-  font-weight: bold;
-  display: block;
-  font-size: 24px;
-  margin-top: 30px;
-  height: 33px;
-  overflow: hidden;
-  color:#333333;
-}
-.presentation__mooc__text__title:hover{
-    text-decoration:none;
-}
-.presentation__mooc__text__subtitle{
-  display: block;
-  font-size: 11px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-.presentation__mooc__text__subtitle a{
-    color:#2e3f4c;
-}
-.presentation__mooc__text__desc{
-  color: #606060;
-  display: block;
-  font-size: 14px;
-  margin-top: 10px;
-
-}
-.presentation__mooc__text__desc__more{
-    color: #FF004F;
-    font-weight: initial;
-    padding: 0 10px;
-}
-
-.presentation__mooc__text__link{
-  margin-top: 10px;
-}
-
-.presentation__mooc__meta{
-  padding-top: 50px;
-  width: 162px;
-}
-.presentation__mooc__meta__date,
-.presentation__mooc__meta__badge,
-.presentation__mooc__meta__price,
-.presentation__mooc__meta__activity{
-  background-image: url("/static/img/design/ico.png");
-  background-repeat: no-repeat;
-  color: #606060;
-  display: block;
-  font-size: 10px;
-
-  height: 42px;
-  line-height: 42px;
-  margin: 10px 0;
-  padding-left: 39px;
-  text-transform: uppercase;
-  width: 115px;
-}
-
-.presentation__mooc__meta__date{
-}
-.presentation__mooc__meta__badge{
-  background-position: 0 -42px;
-}
-.presentation__mooc__meta__price{
-  background-position: 0 -84px;
-}
-.presentation__mooc__meta__activity{
-  background-position: 0 -120px;
-}
-.mooc_private_layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 10px;
-    background-color: #FF004F;
-    color: #FFF;
-    border-top: 1px solid #BC4865;
-    border-bottom: 1px solid #BC4865;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-align: center;
-    -ms-transform: rotate(-40deg) translate(-70px, -15px);
-    -moz-transform: rotate(-40deg) translate(-70px, -15px);
-    -webkit-transform: rotate(-40deg) translate(-70px, -15px);
-    transform: rotate(-40deg) translate(-70px, -15px);
-    width: 250px;
-}
-.presentation__mooc__block__logo {
-position: absolute;
-right: 28px;
-bottom: 34px;
-}
 .valign{
 
   vertical-align:middle;
@@ -645,24 +523,28 @@ section.pipe p{font-size:16px;}
 .pagetop{text-align:right; padding-right:20px; background:url("/static/img/design_apropos/top.png") no-repeat right 7px; color:#606060;}
 .pagetop a{color:#606060;}
 
-.colorPink { color: #ff004f;}
-.colorPink:hover { color: #ff004f;}
-.colorpink { color: #ff004f;}
-.colorpink:hover { color: #ff004f;}
-.question a { color: #ffffff; };
+.colorPink { color: #ff004f; }
+.colorPink:hover { color: #ff004f; }
+.colorpink { color: #ff004f; }
+.colorpink:hover { color: #ff004f; }
+.question a { color: #ffffff; }
 
-.button__link{
-  background-color: #FF004F;
-  border-radius: 4px;
-  display: inline-block;
-  font-size: 15px;
-  font-weight: bold;
+.button__link {
+    color: #FFF;
+    background-color: #FF004F;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: bold;
 }
-.button__link:hover{
-  text-decoration:none;
-  background-color: #D90045;
+
+.button__link:hover {
+    color: #FFF;
+    text-decoration:none;
+    background-color: #D90045;
 }
-.button__link__span{
+
+.button__link__span {
   display: inline-block;
   margin: 8px 15px;
 }
