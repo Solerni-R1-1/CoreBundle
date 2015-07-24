@@ -2,10 +2,10 @@
 
 <html lang="fr">
 <head>
-    <title>Rappel de vos identifiants Solerni</title>
+    <title>{{'sub_confirm_title'|trans({}, 'mail')}}</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
-    
+
     <table border="0" width="100%" cellpadding="0" cellspacing="0">
         <tr bgcolor="#4b667c">
             <td width="620" align="center">
@@ -29,57 +29,21 @@
                                     <td>
 
 
-Bonjour {{user.getFirstName()}}, {{user.getLastName()}}<br/>
+{{'mail_hello'|trans({}, 'mail')}} {{user.getFirstName()}}, {{user.getLastName()}}<br/>
 <br/>
-Nous vous remercions pour votre inscription sur le site <strong>Solerni</strong>.<br/>
+{{'sub_confirm_thanks'|trans({}, 'mail')}} <strong>Solerni</strong>.<br/>
 <br/>
-Voici un rappel de vos identifiants de connexion pour acc&eacute;der &agrave; votre compte :<br/>
+{{'sub_confirm_remind'|trans({}, 'mail')}} :<br/>
 <ul>
-	<li>Identifiant : {{user.getMail()}}</li>
-	<li>Mot de passe : vous seul le connaissez</li>
+	<li>{{'mail'|trans({}, 'platform')}} : {{user.getMail()}}</li>
+	<li>{{'password'|trans({}, 'platform')}} : {{'sub_confirm_only'|trans({}, 'mail')}}</li>
 </ul>
-Vous pouvez d&egrave;s &agrave; pr&eacute;sent acc&eacute;der &agrave; votre compte en cliquant <a href='{{ url('claro_security_login') }}'>ici</a>.<br/>
+{{'sub_confirm_link'|trans({}, 'mail')}} <a href='{{ url('claro_security_login') }}'>{{'sub_confirm_here'|trans({}, 'mail')}}</a>.<br/>
 <br/>
-A tr&egrave;s vite sur Solerni, votre nouvelle plateforme de Moocs francophone collaborative.<br/>
+{{'sub_confirm_soon'|trans({}, 'mail')}}.<br/>
 <br/>
 <br/>
-<strong>L'&eacute;quipe de Solerni.org</strong><br/>
-Apprendre c'est toujours mieux ensemble
-<a href='https://solerni.org'>Solerni.org</a><br/>
-
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td bgcolor="#eeeeef">
-                                        <table border="0" width="100%">
-                                            <tr>
-                                                <td>
-                                                    <font color="#999999">Suivez-nous sur</font><br>
-                                                    <a href="https://www.facebook.com/pages/Solerni/648508191861244?fref=ts"><img border="0" src="http://laborange.fr/sites/default/files/picto_facebook.png" alt="Suivez-nous sur Facebook" /></a>
-                                                    &nbsp;&nbsp;
-                                                    <a href="https://twitter.com/SolerniOfficiel"><img border="0" src="http://laborange.fr/sites/default/files/picto_twitter.png" alt="Suivez-nous sur Twitter" /></a>
-                                                    &nbsp;&nbsp;
-                                                    <a href="http://blog.solerni.org"><img border="0" src="http://laborange.fr/sites/default/files/picto_blog.png" alt="Suivez-nous sur notre blog" /></a>
-                                                </td>
-                                                <td align="right" valign="bottom">
-                                                    <a href="http://www.orange.com"><img border="0" src="http://laborange.fr/sites/default/files/byorange.png" alt="Powered by Orange" /></a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr bgcolor="#f8f7f7">
-                                    <td>
-                                        <font size="2">
-                                        Vous recevez cet e-mail car votre adresse e-mail <a href="mailto:{{user.getMail()}}">{{user.getMail()}}</a> a &eacute;t&eacute; utilis&eacute;e pour votre enregistrement sur notre site <a href="https://solerni.org">Solerni.org</a>.Si vous ne vous &ecirc;tes pas inscrit &agrave; Solerni, veuillez simplement ignorer ce message et votre compte sera supprim&eacute; automatiquement.
-
-                                        Ce message vous est envoy&eacute; automatiquement, merci de ne pas y r&eacute;pondre directement.<br>
-                                        Si vous avez des questions &eacute;crivez-nous &agrave; <a href="mailto:contact@solerni.com">contact@solerni.com</a>.<br>
-                                        Afin de bien recevoir nos e-mails, ajoutez cette adresse <a href="mailto:noreply@solerni.com">noreply@solerni.com</a> dans votre carnet d'adresses.<br>
-                                        </font>
-                                    </td>
-                                </tr>
+{% include('ClarolineCoreBundle:Partials:mailFooter.html.twig') %}
                             </table>
                         </td>
                     </tr>

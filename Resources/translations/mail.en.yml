@@ -1,0 +1,57 @@
+mail_hello: Hello
+solerni_team: The Solerni team
+solerni_slogan: Learning is always better together
+mail_follow_us: Follow us on
+mail_our: our
+mail_welcome: Welcome
+
+init_password_title: Resetting your password
+init_password_body: You have requested a password reset. If you did not request this reset, please ignore this message.
+init_password_pseudo: Your username is
+init_password_link: Click on the link to reset your password
+
+sub_confirm_title: Reminder of your Solerni login details
+sub_confirm_thanks: Thank you for registering to
+sub_confirm_remind: Here is a reminder of your account login details
+sub_confirm_only: you are the only one to know
+sub_confirm_link: You can now access your account by
+sub_confirm_here: here
+sub_confirm_soon: See you very soon on Solerni, your new collaborative French-language MOOC platform.
+
+sub_email_title: Confirmation of your email address on Solerni
+sub_email_body1: We have received a registration request from you using your email address
+sub_email_body2: To confirm this request, please click the following link
+sub_email_link: confirm my registration
+sub_email_copy: If the button does not work, copy and paste the following link to your browser's address bar
+
+sub_mooc_title: Confirmation of registration for MOOC
+sub_mooc_confirm: We would like to confirm your registration for MOOC
+sub_mooc_started: which started on
+sub_mooc_will_start: which will start on
+sub_mooc_duration: and last
+sub_mooc_weeks: weeks
+sub_mooc_body: Very shortly you will receive an email from the teaching team informing you of how the MOOC will proceed. In the meantime, we would like to thank you for registering and hope you really enjoy this new training course on Solerni, your collaborative French-language MOOC platform.
+
+pass_change_confirm_title: Changement de votre mot de passe Solerni#GB
+sub_confirm_body: Nous vous confirmons le changement effectif de votre mot de passe sur notre plateforme. Vous pouvez dès à présent vous reconnecter avec votre nouveau mot de passe#GB
+
+sub_welcome_title: Welcome to Solerni
+sub_welcome_body1: We are delighted to welcome you to Solerni, your new collaborative French-language MOOC platform.
+sub_welcome_body2: More than just gaining knowledge, we hope this platform will help you to hone your skills. Indeed, we see learning as more than just something to be done alone with a teacher or a trainer, but also together, as a network. You hone your skills by following a pathway that promotes interaction and activities. You will be supported by your peers at all times, but also by teachers whose aim is to help you learn by encouraging information sharing and mutual enrichment.
+sub_welcome_body3: Let's get started, sign up for a MOOC
+sub_welcome_body4: Our platform has just launched and new, varied MOOCs will be added over the weeks.
+sub_welcome_body5: You can view
+sub_welcome_body6: and sign up for one of the MOOCs that is already available. Our platform is open and free, so there is no limit on what you can sign up for!
+sub_welcome_body7: Stay in contact, stay connected
+sub_welcome_body8: To keep up with new developments and events on Solerni, join us on Facebook and Twitter, and don't forget to visit our Blog, which will keep you informed of the latest news about these new social and collaborative learning methods.
+sub_welcome_body9: For effective communication, complete your profile
+sub_welcome_body10: And to ensure you are able to interact with other learners and teachers, don't forget to complete and configure your
+sub_welcome_body11: That's it! You're now ready to start your collaborative MOOC adventure with us. We hope to see you very soon on Solerni, and hope you enjoy new and rewarding experiences with us!
+sub_welcome_catalogue: our catalogue
+sub_welcome_profile: public profile
+
+mail_footer1: You have received this email because your email address
+mail_footer2: was used to sign up to our website
+mail_footer3: This is an automatic message, please do not reply to it directly. If you have any questions, write to us at
+mail_footer4: To ensure that you never miss our emails, add this address
+mail_footer5: to your address book

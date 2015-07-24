@@ -1,0 +1,57 @@
+mail_hello: Bonjour
+solerni_team: L'équipe de Solerni.org
+solerni_slogan: Apprendre c'est toujours mieux ensemble
+mail_follow_us: Suivez-nous sur
+mail_our: sur
+mail_welcome: Bienvenue
+
+init_password_title: Réinitialisation de votre mot de passe
+init_password_body: Vous avez demandé la réinitialisation de votre mot de passe. Si vous n'êtes pas à l'origine de cette action, veuillez ignorer ce message.
+init_password_pseudo: Votre pseudo est
+init_password_link: Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe
+
+sub_confirm_title: Rappel de vos identifiants Solerni
+sub_confirm_thanks: Nous vous remercions pour votre inscription sur le site
+sub_confirm_remind: Voici un rappel de vos identifiants de connexion pour accéder à votre compte
+sub_confirm_only: vous seul le connaissez
+sub_confirm_link: Vous pouvez dès à présent accéder à votre compte en cliquant
+sub_confirm_here: ici
+sub_confirm_soon: A très vite sur Solerni, votre nouvelle plateforme de Moocs francophone collaborative
+
+sub_email_title: Confirmation de votre adresse email sur Solerni
+sub_email_body1: Nous avons reçu une demande d'inscription de votre part avec votre adresse e-mail
+sub_email_body2: Afin de valider cette demande nous vous invitons à cliquer sur le lien suivant
+sub_email_link: valider mon inscription
+sub_email_copy: Si le bouton ne fonctionne pas, copiez-collez le lien suivant dans la barre d'adresse de votre navigateur
+
+sub_mooc_title: Confirmation d’inscription au Mooc
+sub_mooc_confirm: Nous vous confirmons votre inscription au Mooc
+sub_mooc_started: qui a débuté le
+sub_mooc_will_start: qui débutera le
+sub_mooc_duration: pour une durée de
+sub_mooc_weeks: semaines
+sub_mooc_body: Vous recevrez très prochainement un mail de l’équipe pédagogique vous informant du déroulement du Mooc. En attendant, nous vous remercions pour votre inscription et vous souhaitons beaucoup de  plaisir à suivre ce nouveau parcours d’apprentissage sur Solerni, votre plateforme de Moocs francophone collaborative.
+
+pass_change_confirm_title: Changement de votre mot de passe Solerni
+sub_confirm_body: Nous vous confirmons le changement effectif de votre mot de passe sur notre plateforme. Vous pouvez dès à présent vous reconnecter avec votre nouveau mot de passe#GB
+
+sub_welcome_title: Bienvenue sur Solerni
+sub_welcome_body1: We are delighted to welcome you to Solerni, your new collaborative French-language MOOC platform.
+sub_welcome_body2: Plus que l’acquisition de connaissances, nous souhaitons que cette plateforme vous aide à développer vos compétences. Nous pensons en effet qu’aujourd’hui, l’apprentissage ne peut plus se faire seul face à un professeur ou un formateur mais aussi ensemble, en réseau. C'est à travers un parcours favorisant les échanges et les activités que vous développerez vos compétences. Vous serez à tout moment accompagné(e) par vos pairs mais aussi par des pédagogues dont l’objectif est de faciliter vos apprentissages en stimulant le partage d’information et l'enrichissement mutuel.
+sub_welcome_body3: C’est parti, inscrivez-vous à un Mooc
+sub_welcome_body4: Notre plateforme vient tout juste d’être lancée et s’enrichira au fil des semaines de nouveaux Moocs aux contenus variés.
+sub_welcome_body5: Vous pouvez d’ores et déjà consulter
+sub_welcome_body6: et vous inscrire à l’un des Moocs disponibles aujourd’hui. Notre plateforme est ouverte et gratuite, les inscriptions sont donc illimitées !
+sub_welcome_body7: Restez en contact, restez connecté
+sub_welcome_body8: Pour être au courant des nouveautés et des évènements sur Solerni, rejoignez nous sur Facebook et Twitter, sans oublier d’aller faire un tour sur notre Blog qui vous informera des actualités liées  à l’univers de ces nouvelles méthodes d’apprentissage sociales et collaboratives.
+sub_welcome_body9: Pour bien communiquer, remplissez votre profil
+sub_welcome_body10: Et pour être sûr(e) de pouvoir échanger avec les autres apprenants et les pédagogues, n’oubliez pas de remplir et de paramétrer votre
+sub_welcome_body11: Voilà, vous êtes prêt(e) à présent pour vous lancer avec nous dans l’aventure des Moocs collaboratifs. En espérant vous retrouver très vite sur Solerni où nous vous souhaitons de vivre de nouvelles expériences enrichissantes !
+sub_welcome_catalogue: notre catalogue
+sub_welcome_profile: profil public
+
+mail_footer1: Vous recevez cet e-mail car votre adresse e-mail
+mail_footer2: a été utilisée pour votre enregistrement sur notre site
+mail_footer3: Si vous ne vous êtes pas inscrit à Solerni, veuillez simplement ignorer ce message et votre compte sera supprimé automatiquement. Ce message vous est envoyé automatiquement, merci de ne pas y répondre directement. Si vous avez des questions écrivez-nous à
+mail_footer4: Afin de bien recevoir nos e-mails, ajoutez cette adresse
+mail_footer5: dans votre carnet d'adresses

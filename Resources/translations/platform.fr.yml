@@ -1392,3 +1392,21 @@ home_button3: Vous progressez en pratiquant seul ou à plusieurs
 home_button4: Vous obtenez une validation de vos apprentissages
 home_new: Nouveautés
 home_see_news: Voir toutes les nouveautés
+
+valid_success_title: Votre compte est validé avec succès.
+valid_success_redirect1: Nous allons vous rediriger vers la page demandée. Si la redirection ne s'effectue pas automatiquement, vous pouvez
+valid_success_redirect2: cliquer sur ce lien
+valid_already_title: Votre compte est déjà validé.
+valid_already_body1: Nous allons vous rediriger vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez
+valid_error_title: Problème à l'activation du compte
+valid_error_body1: La validation du compte correspondant à l'email
+valid_error_body2: n'est pas possible. Ce compte n'existe pas, a été supprimé ou bien la clé de validation est incorrecte
+valid_error_body3: Si vous avez supprimé par erreur votre compte, veuillez en récréer un nouveau en cliquant sur
+valid_error_body4: inscription
+
+sub_registered_title: Votre inscription a été enregistrée, il ne reste plus qu'à valider votre compte
+sub_registered_body1: Pour valider définitivement votre inscription, cliquez sur le lien contenu dans le mail que nous avons envoyé à l'adresse
+sub_registered_body2: Si vous ne recevez pas notre mail, veuillez vérifier si celui-ci n'est pas bloqué dans vos courriers indésirables
+sub_registered_body3: Si c'est le cas, merci d'ajouter cette adresse noreply@solerni.com dans votre carnet d'adresses
+sub_registered_body4: Sinon
+sub_registered_body5: cliquez sur ce lien pour recevoir de nouveau notre email
