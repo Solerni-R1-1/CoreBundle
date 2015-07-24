@@ -144,6 +144,7 @@ h6 {
 .slider__text__desc {
     font-size:      24px;
     line-height:    1.4;
+    display:        block;
 }
 
 .slider__text__span {
@@ -181,6 +182,7 @@ h6 {
     padding-top: 120px;
     text-align: center;
     width: 175px;
+    vertical-align: top;
 }
 
 .presentationslider, .presentation {

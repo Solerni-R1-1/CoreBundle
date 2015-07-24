@@ -16,33 +16,35 @@
     <!-- Block Slider + info -->
     <div class='slider'>
         <ul class="rslides">
-            <li><img src="https://solerni.org/uploads/img/slider/Solerni_bandeau_1600x450.jpg" alt=""></li>
+            <li><img src="/static/img/slider/Solerni_bandeau_1600x450.jpg" alt=""></li>
         </ul>
     </div>
     <!-- / Block Slider + info -->
 	<div class='slider__text_w'>
         <div class='slider__text'>
             <span class='slider__text__desc'>
-                Développez autrement vos compétences en suivant à votre rythme des parcours d'apprentissage conviviaux et collaboratifs
+                {{'home_slogan'|trans({}, 'platform')}}
             </span>
-            <span class='slider__text__span'>
-                <a href='https://solerni.org/mooc/register/form' class='button__link slider__text__link'>
-                    <span class='button__link__span slider__text__link__span'>Je m'inscris gratuitement</span>
-                </a>
-            </span>
+            {% if not app.user %}
+                <span class='slider__text__span'>
+                    <a href='https://solerni.org/mooc/register/form' class='button__link slider__text__link'>
+                        <span class='button__link__span slider__text__link__span'>{{'home_subscribe'|trans({}, 'platform')}}</span>
+                    </a>
+                </span>
+            {% endif %}
         </div>
         <div class='slider__ico'>
             <a href='https://solerni.org/a-propos-de-solerni'>
-              <span class='slider__ico__span__content'>Vous êtes libres d'enrichir et de partager des contenus</span>
+              <span class='slider__ico__span__content'>{{'home_button1'|trans({}, 'platform')}}</span>
              </a>
             <a href='https://solerni.org/a-propos-de-solerni'>
-                <span class='slider__ico__span__community'>Vous apprenez des autres et avec les autres</span>
+                <span class='slider__ico__span__community'>{{'home_button2'|trans({}, 'platform')}}</span>
              </a>
             <a href='https://solerni.org/a-propos-de-solerni'>
-                <span class='slider__ico__span__activity'>Vous progressez en pratiquant seul ou à plusieurs</span>
+                <span class='slider__ico__span__activity'>{{'home_button3'|trans({}, 'platform')}}</span>
              </a>
             <a href='https://solerni.org/a-propos-de-solerni'>
-                <span class='slider__ico__span__degree'>Vous obtenez une validation de vos apprentissages</span>
+                <span class='slider__ico__span__degree'>{{'home_button4'|trans({}, 'platform')}}</span>
              </a>
         </div>
     </div>
@@ -50,9 +52,11 @@
 
 {% block content %}
     <div class='presentation__title'>
-        <div class='presentation__title__left'>Nouveautés</div>
+        <div class='presentation__title__left'>{{'home_new'|trans({}, 'platform')}}</div>
         <div class='presentation__title__right'>
-            <a href='https://solerni.org/mooc/search/query#?page=1&rpp=10&q=&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false'><span class'presentation__nouveaute__more'>Voir toutes les nouveautés</span></a>
+            <a href='https://solerni.org/mooc/search/query#?page=1&rpp=10&q=&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false'>
+                <span class'presentation__nouveaute__more'>{{'home_see_news'|trans({}, 'platform')}}</span>
+            </a>
         </div>
     </div>
 
@@ -72,7 +76,9 @@
     <div class='presentation__title'>
         <div class='presentation__title__left'>&nbsp;</div>
         <div class='presentation__title__right'>
-            <a href='https://solerni.org/mooc/search/query#?page=1&rpp=10&q=&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false'><span class'presentation__nouveaute__more'>Voir toutes les nouveautés</span></a>
+            <a href='https://solerni.org/mooc/search/query#?page=1&rpp=10&q=&fs=type__claroline_core_mooc_moocsession&ss=ispub__true&afs=status,mcat,owner,ispub&sb=false'>
+                <span class'presentation__nouveaute__more'>{{'home_see_news'|trans({}, 'platform')}}</span>
+            </a>
         </div>
     </div>
 
