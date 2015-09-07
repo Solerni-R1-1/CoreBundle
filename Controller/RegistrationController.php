@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
@@ -33,7 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\CoreBundle\Controller\RegistrationController as BaseController;
-
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 
 /**
@@ -314,18 +315,18 @@ class RegistrationController extends Controller
     public function registerUserAction()
     {
         $this->checkAccess();
-    	$session = $this->request->getSession();
+        $session = $this->request->getSession();
         $data = array();
         $user = new User();
 
         $localeManager = $this->get('claroline.common.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+        /* @var $form Form */
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
-       
+
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             $this->get('claroline.manager.user_manager')->createUserWithRole(
                 $user,
@@ -336,21 +337,93 @@ class RegistrationController extends Controller
             $data['hash'] = $this->getHash($user->getMail());
             return $this->redirect($this->generateUrl('claro_registration_send_mail', $data));
         } else {
-        	if ($session->has("moocSession")) {
-        		$moocSession = $session->get("moocSession");
-        		$moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
-        		$data['moocSession'] = $moocSession;
-        	}
-            
+            if ($session->has("moocSession")) {
+                $moocSession = $session->get("moocSession");
+                $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+                $data['moocSession'] = $moocSession;
+            }
+
             if ($session->has("privateMoocSession")) {
                 $moocSession = $session->get("privateMoocSession");
                 $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
                 $data['privateMoocSession'] = $moocSession;
             }
-        	
-        	$data['form'] = $form->createView();
-        	
-        	return $data;
+
+            $data['form'] = $form->createView();
+
+            return $data;
+        }
+    }
+
+    /**
+     * @Route(
+     *     "/api/csrf",
+     *     name="claro_registration_register_csrf_json"
+     * )
+     *
+     * Gets a CSRF token by JSON
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCSRFApiAction()
+    {
+        $this->checkAccess();
+        /* @var $csrf CsrfTokenManagerInterface */
+        $csrf = $this->get('security.csrf.token_manager');
+        $token = $csrf->refreshToken("profile_form");
+
+        return new Response(json_encode(array('token' => $token->getValue())));
+    }
+
+    /**
+     * @Route(
+     *     "/api/create",
+     *     name="claro_registration_register_user_json"
+     * )
+     *
+     * Registers a new user and sends back JSON.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function registerUserApiAction()
+    {
+        $this->checkAccess();
+        $session = $this->request->getSession();
+        $data = array();
+        $user = new User();
+
+        $localeManager = $this->get('claroline.common.locale_manager');
+        $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+        /* @var $form Form */
+        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
+
+        $form->handleRequest($this->get('request'));
+
+        $errors = array();
+        if ($form->isValid()) {
+            $status = "ok";
+            $returnCode = 200;
+            $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
+            $this->get('claroline.manager.user_manager')->createUserWithRole(
+                $user,
+                PlatformRoles::USER
+            );
+        } else {
+            $status = "ko";
+            $returnCode = 400;
+
+            $this->getErrors($form, $errors);
+        }
+        return new Response(json_encode(array('status' => $status, 'errors' => $errors)), $returnCode);
+    }
+
+    private function getErrors(Form $form, &$errors)
+    {
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $form->getPropertyPath().":".$error->getMessage();
+        }
+        foreach ($form->all() as $child) {
+            $this->getErrors($child, $errors);
         }
     }
 
