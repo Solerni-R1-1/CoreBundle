@@ -205,6 +205,23 @@ class MoocController extends Controller
     }
 
     /**
+     * Redirect the user towards another action depending of a keyword
+     *
+     *
+     * @Route("/mooc/{moocId}/lesson", name="mooc_view_last_chapter")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *      "mooc",
+     *      class="ClarolineCoreBundle:Mooc\Mooc",
+     *      options={"id" = "moocId", "strictId" = true}
+     * )
+     */
+    public function backToLessonAction($mooc, $user)
+    {
+        return $this->sessionApprendrePage($mooc, $user);
+    }
+
+    /**
      * 
      * Redirect user to the lesson object of the mooc
      * 
