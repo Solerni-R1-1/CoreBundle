@@ -229,13 +229,31 @@ class MoocSessionRepository extends EntityRepository
      * @param AbstractWorkspace $workspace
      */
     public function getActiveOrLastSession(AbstractWorkspace $workspace) {
-    	$query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms
+        $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms
 				WHERE ms.mooc = :mooc
 				AND ms.startDate < CURRENT_TIMESTAMP()
 				ORDER BY ms.endDate DESC ";
-		$qb = $this->_em->createQuery($query)->setParameters(array(
-				"mooc" => $workspace->getMooc()
-		));
+        $qb = $this->_em->createQuery($query)->setParameters(array(
+            "mooc" => $workspace->getMooc()
+        ));
+
+        $result = $qb->getResult();
+
+        return ( count($result) > 0 ) ? $result[0] : NULL;
+    }
+
+    /**
+     * Returns the active session, or the last one if no active session for a given mooc ID.
+     * @param int $moocId The mooc id
+     */
+    public function getActiveOrLastSessionForMoocId($moocId) {
+        $query = "SELECT ms FROM Claroline\CoreBundle\Entity\Mooc\MoocSession ms
+				WHERE ms.mooc = :mooc
+				AND ms.startDate < CURRENT_TIMESTAMP()
+				ORDER BY ms.endDate DESC ";
+        $qb = $this->_em->createQuery($query)->setParameters(array(
+            "mooc" => $moocId
+        ));
 
         $result = $qb->getResult();
 

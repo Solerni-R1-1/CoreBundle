@@ -125,8 +125,8 @@ class RegistrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendEmailValidationAction($mail = null, $hash = null){
-
+    public function sendEmailValidationAction($mail = null, $hash = null)
+    {
         if( empty($mail) ){
             throw new AccessDeniedHttpException();
         }
@@ -147,7 +147,7 @@ class RegistrationController extends Controller
 
         $key = $user->getKeyValidate();
         $mail = $user->getMail();
-        
+
         // Redirect to dashboard if user is already validated
         if ( $user->getIsValidate() ) {
             return $this->redirect($this->generateUrl('claro_desktop_open'));     
@@ -222,7 +222,7 @@ class RegistrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function validateUserAction($mail, $key) {
+    public function validateUserAction(Request $request, $mail, $key) {
         
         $form = null;
         $log = $this->container->get('logger');
@@ -282,6 +282,11 @@ class RegistrationController extends Controller
                 $nextUrl = $this->get('router')->generate('mooc_view', array ( 'moocId' => $moocSession->getMooc()->getId(), 'moocName' => $moocSession->getMooc()->getTitle() ));
                 $session->remove('privateMoocSession');
             // Finish mooc notification    
+            } elseif ($request->query->has('moocId')) {
+                $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
+                $moocSession = $moocRepository->getActiveOrLastSessionForMoocId($request->query->get('moocId'));
+
+                $nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
             } else {
                 $nextUrl = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'), true);
             }
@@ -397,7 +402,10 @@ class RegistrationController extends Controller
         /* @var $form Form */
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
 
-        $form->handleRequest($this->get('request'));
+
+        $request = $this->get('request');
+
+        $form->handleRequest($request);
 
         $errors = array();
         if ($form->isValid()) {
@@ -408,6 +416,19 @@ class RegistrationController extends Controller
                 $user,
                 PlatformRoles::USER
             );
+
+            $key = $user->getKeyValidate();
+            $mail = $user->getMail();
+
+            $log = $this->container->get('logger');
+            $log->debug("Send mail with key {$key} to {$mail}");
+
+            if ($request->request->has('moocId')) {
+                $moocId = $request->request->get('moocId');
+            } else {
+                $moocId = null;
+            }
+            $this->userManager->sendEmailValidation($user, $moocId);
         } else {
             $status = "ko";
             $returnCode = 400;

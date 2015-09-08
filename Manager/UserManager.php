@@ -143,9 +143,9 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function sendEmailValidation($user){
+    public function sendEmailValidation($user, $moocId = null){
         if ($this->mailManager->isMailerAvailable()) {
-            $this->mailManager->sendValidationMessage($user);
+            $this->mailManager->sendValidationMessage($user, $moocId);
         }
     }
 

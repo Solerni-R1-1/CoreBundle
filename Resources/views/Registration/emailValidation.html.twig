@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>{{'sub_email_title'|trans('', 'mail')}}</title>
+    <title>{{'sub_email_title'|trans({}, 'mail')}}</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
 
@@ -35,9 +35,9 @@
 <br/>
 {{'sub_email_body2'|trans({}, 'mail')}} :<br/>
 <br/>
-<a href='{{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate} ) }}'>{{'sub_email_link'|trans({}, 'mail')}}</a><br/>
+<a href='{{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}'>{{'sub_email_link'|trans({}, 'mail')}}</a><br/>
 <br/>
-{{'sub_email_copy'|trans({}, 'mail')}} :  {{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate} ) }}<br/>
+{{'sub_email_copy'|trans({}, 'mail')}} :  {{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}<br/>
 <br/>
 <br/>
 {% include('ClarolineCoreBundle:Partials:mailFooter.html.twig') %}

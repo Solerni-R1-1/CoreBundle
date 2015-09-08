@@ -97,11 +97,11 @@ class MailManager
      *
      * @return boolean
      */
-    public function sendValidationMessage(User $user){
-
+    public function sendValidationMessage(User $user, $moocId = null)
+    {
         $subject = 'Confirmation de votre adresse email sur Solerni';
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Registration:emailValidation.html.twig',  array('user' => $user));
+            'ClarolineCoreBundle:Registration:emailValidation.html.twig',  array('user' => $user, 'moocId' => $moocId));
 
 
         return $this->send($subject, $body, array($user));
@@ -233,11 +233,11 @@ class MailManager
             } else {
                 $message->setTo($to);
             }
-            
+
             if ($replyToEmail !== null) {
             	$message->setReplyTo($replyToEmail);
             }
-            
+
 
             return $this->mailer->send($message) ? true : false;
         }
