@@ -441,7 +441,7 @@ class RegistrationController extends Controller
     private function getErrors(Form $form, &$errors)
     {
         foreach ($form->getErrors() as $error) {
-            $errors[] = $form->getPropertyPath().":".$error->getMessage();
+            $errors[$form->getName()] = $error->getMessage();
         }
         foreach ($form->all() as $child) {
             $this->getErrors($child, $errors);
