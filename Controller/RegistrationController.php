@@ -98,7 +98,6 @@ class RegistrationController extends Controller
         
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
 
-
         if ($session->has("moocSession")) {
         	$moocSession = $session->get("moocSession");
         	$moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
@@ -333,6 +332,10 @@ class RegistrationController extends Controller
 
         if ($form->isValid()) {
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
+
+            /* @var $request Request */
+            $request = $this->get('request');
+            $user->setLocale($request->getLocale());
             $this->get('claroline.manager.user_manager')->createUserWithRole(
                 $user,
                 PlatformRoles::USER

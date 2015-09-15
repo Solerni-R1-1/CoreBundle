@@ -257,6 +257,7 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
         $this->createUser($user);
+
         $this->roleManager->setRoleToRoleSubject($user, $roleName);
         $this->objectManager->endFlushSuite();
 
