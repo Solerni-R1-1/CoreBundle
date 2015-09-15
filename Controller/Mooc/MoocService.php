@@ -100,7 +100,7 @@ class MoocService extends Controller
             die('must not be executed');
         }
 
-        if($user instanceof User){
+        if($user instanceof User) {
         	$log = $logRepository->getDetailsForDoerActionResource(
         			$user,
         			LogChapterReadEvent::ACTION,
