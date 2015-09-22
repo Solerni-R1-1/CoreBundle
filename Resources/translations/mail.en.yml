@@ -16,7 +16,7 @@ sub_confirm_remind: Here is a reminder of your account login details
 sub_confirm_only: you are the only one to know
 sub_confirm_link: You can now access your account by
 sub_confirm_here: here
-sub_confirm_soon: See you very soon on Solerni, your new collaborative French-language MOOC platform.
+sub_confirm_soon: See you very soon on Solerni, your new collaborative French MOOC platform.
 
 sub_email_title: Confirmation of your email address on Solerni
 sub_email_body1: We have received a registration request from you using your email address
@@ -30,13 +30,13 @@ sub_mooc_started: which started on
 sub_mooc_will_start: which will start on
 sub_mooc_duration: and last
 sub_mooc_weeks: weeks
-sub_mooc_body: Very shortly you will receive an email from the teaching team informing you of how the MOOC will proceed. In the meantime, we would like to thank you for registering and hope you really enjoy this new training course on Solerni, your collaborative French-language MOOC platform.
+sub_mooc_body: Very shortly you will receive an email from the teaching team informing you of how the MOOC will proceed. In the meantime, we would like to thank you for registering and hope you really enjoy this new training course on Solerni, your collaborative French MOOC platform.
 
 pass_change_confirm_title: Changing your Solerni password
 sub_confirm_body: We confirm the change of your password on our platform. You can now reconnect with your new password
 
 sub_welcome_title: Welcome to Solerni
-sub_welcome_body1: We are delighted to welcome you to Solerni, your new collaborative French-language MOOC platform.
+sub_welcome_body1: We are delighted to welcome you to Solerni, your new collaborative French MOOC platform.
 sub_welcome_body2: More than just gaining knowledge, we hope this platform will help you to hone your skills. Indeed, we see learning as more than just something to be done alone with a teacher or a trainer, but also together, as a network. You hone your skills by following a pathway that promotes interaction and activities. You will be supported by your peers at all times, but also by teachers whose aim is to help you learn by encouraging information sharing and mutual enrichment.
 sub_welcome_body3: Let's get started, sign up for a MOOC
 sub_welcome_body4: Our platform has just launched and new, varied MOOCs will be added over the weeks.
