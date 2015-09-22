@@ -33,7 +33,7 @@ sub_mooc_weeks: semaines
 sub_mooc_body: Vous recevrez très prochainement un mail de l’équipe pédagogique vous informant du déroulement du Mooc. En attendant, nous vous remercions pour votre inscription et vous souhaitons beaucoup de  plaisir à suivre ce nouveau parcours d’apprentissage sur Solerni, votre plateforme de Moocs francophone collaborative.
 
 pass_change_confirm_title: Changement de votre mot de passe Solerni
-sub_confirm_body: Nous vous confirmons le changement effectif de votre mot de passe sur notre plateforme. Vous pouvez dès à présent vous reconnecter avec votre nouveau mot de passe#GB
+sub_confirm_body: Nous vous confirmons le changement effectif de votre mot de passe sur notre plateforme. Vous pouvez dès à présent vous reconnecter avec votre nouveau mot de passe
 
 sub_welcome_title: Bienvenue sur Solerni
 sub_welcome_body1: We are delighted to welcome you to Solerni, your new collaborative French-language MOOC platform.

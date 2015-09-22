@@ -1410,20 +1410,20 @@ home_button4: You gain recognition of what you have learned
 home_new: Newly added
 home_see_news: See all the newly added Moocs
 
-valid_success_title: Votre compte est validé avec succès.#GB
-valid_success_redirect1: Nous allons vous rediriger vers la page demandée. Si la redirection ne s'effectue pas automatiquement, vous pouvez#GB
-valid_success_redirect2: cliquer sur ce lien#GB
-valid_success_already_title: Votre compte est déjà validé.#GB
-valid_success_already_body1: Nous allons vous rediriger vers votre tableau de bord. Si la redirection ne s'effectue pas automatiquement, vous pouvez#GB
-valid_error_title: Problème à l'activation du compte#GB
-valid_error_body1: La validation du compte correspondant à l'email#GB
-valid_error_body2: n'est pas possible. Ce compte n'existe pas, a été supprimé ou bien la clé de validation est incorrecte#GB
-valid_error_body3: Si vous avez supprimé par erreur votre compte, veuillez en récréer un nouveau en cliquant sur#GB
-valid_error_body4: inscription#GB
+valid_success_title: Your account has been successfully validated.
+valid_success_redirect1: We will redirect you to the requested page. If the redirection does not happen automatically, you can
+valid_success_redirect2: click on this link
+valid_success_already_title: Your account has already been validated.
+valid_success_already_body1: We will redirect you to your dashboard. If the redirection does not happen automatically, you can
+valid_error_title: Problem while activating the account
+valid_error_body1: The validation of the account corresponding to mail adress
+valid_error_body2: is not possible. This account does not exist, has been deleted or the validation key is incorrect
+valid_error_body3: If you have deleted your account by mistake, please create a new one by clicking on
+valid_error_body4: register
 
-sub_registered_title: Votre inscription a été enregistrée, il ne reste plus qu'à valider votre compte#GB
-sub_registered_body1: Pour valider définitivement votre inscription, cliquez sur le lien contenu dans le mail que nous avons envoyé à l'adresse#GB
-sub_registered_body2: Si vous ne recevez pas notre mail, veuillez vérifier si celui-ci n'est pas bloqué dans vos courriers indésirables#GB
-sub_registered_body3: Si c'est le cas, merci d'ajouter cette adresse noreply@solerni.com dans votre carnet d'adresses#GB
-sub_registered_body4: Sinon#GB
-sub_registered_body5: cliquez sur ce lien pour recevoir de nouveau notre email#GB
+sub_registered_title: Your registration has been recorded, you now need to validate your account.
+sub_registered_body1: To definitely confirm your registration, click the link in the email we sent to the mail address
+sub_registered_body2: If you don't receive our mail, please check if it is not stucked in your spam folder
+sub_registered_body3: If this is the case, please add this address noreply@solerni.com to your address book
+sub_registered_body4: Otherwise
+sub_registered_body5: click this link to receive this mail again
