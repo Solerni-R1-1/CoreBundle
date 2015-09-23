@@ -224,7 +224,12 @@ DEPLACE DANS base.html.twig
     <!-- tinymce -->
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
+
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') or (workspace is defined and workspace and is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()))  %}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce_admin.js') }}"></script>
+    {% else %}
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+    {% endif %}
 
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'home' }, true ) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }, true ) }}"></script>
