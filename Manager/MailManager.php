@@ -99,7 +99,7 @@ class MailManager
      */
     public function sendValidationMessage(User $user, $moocId = null)
     {
-        $subject = 'Confirmation de votre adresse email sur Solerni';
+        $subject = $subject = $this->translator->trans('sub_email_title', array(), 'mail');
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailValidation.html.twig',  array('user' => $user, 'moocId' => $moocId));
 
@@ -114,7 +114,7 @@ class MailManager
      */
     public function sendValidationConfirmeeMessage(User $user){
 
-        $subject = 'Rappel de vos identifiants Solerni';
+        $subject = $this->translator->trans('sub_confirm_title', array(), 'mail');
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailValidationConfirmee.html.twig',  array('user' => $user));
 
@@ -130,7 +130,7 @@ class MailManager
      */
     public function sendInscriptionMoocMessage(User $user, MoocSession $session){
 
-        $subject = 'Confirmation d’inscription au Mooc '.$session->getMooc()->getTitle();
+        $subject = $this->translator->trans('sub_mooc_title', array(), 'mail').' '.$session->getMooc()->getTitle();
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailInscriptionMooc.html.twig',  array('user' => $user, 'session' => $session));
 
@@ -144,7 +144,7 @@ class MailManager
      */
     public function sendCreationMessage(User $user)
     {
-        $subject = 'Bienvenue sur Solerni';
+        $subject = $this->translator->trans('sub_welcome_title', array(), 'mail');
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailRegistration.html.twig',  array('user' => $user));
 
@@ -159,7 +159,7 @@ class MailManager
      */
     public function sendChangePasswordMessage(User $user)
     {
-        $subject = 'Changement de votre mot de passe Solerni';
+        $subject = $this->translator->trans('pass_change_confirm_title', array(), 'mail');
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Registration:emailChangePassword.html.twig',  array('user' => $user));
 
