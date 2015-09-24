@@ -248,6 +248,9 @@ DEPLACE DANS base.html.twig
         jQuery( document ).ready(function() {
             if ( window.location.hash ) {
                 jQuery('.js-dropdown-language .slrn-topbar-item__sub a').each( function() {
+                    if (!window.location.origin) {
+                        window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+                    }
                    jQuery(this).attr('href', window.location.origin + window.location.pathname + jQuery(this).attr('href') + window.location.hash );
                 });
             }
