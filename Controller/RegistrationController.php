@@ -434,7 +434,7 @@ class RegistrationController extends Controller
             $this->userManager->sendEmailValidation($user, $moocId);
         } else {
             $status = "ko";
-            $returnCode = 400;
+            $returnCode = 200;
 
             $this->getErrors($form, $errors);
         }
