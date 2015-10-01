@@ -283,7 +283,7 @@ class RegistrationController extends Controller
             // Finish mooc notification    
             } elseif ($request->query->has('moocId')) {
                 $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
-                $moocSession = $moocRepository->getActiveOrLastSessionForMoocId($request->query->get('moocId'));
+                $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($request->query->get('moocId'), $userDb);
 
                 $nextUrl = $this->get('router')->generate('session_subscribe', array ( 'sessionId' => $moocSession->getId() ));
             } else {
