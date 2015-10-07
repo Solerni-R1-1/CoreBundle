@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -303,6 +304,133 @@ class RegistrationController extends Controller
     }
 
 /************************ END ******************************/
+    /**
+     * @Route(
+     *     "/ifcam/auto_login_register",
+     *     name="claro_registration_ifcam_auto_login_register"
+     * )
+     *
+     * Entry point for IFCAM users. Either register or just login a user and register it to the specified MOOC if not already registered. Then redirect to this MOOC blog page.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ifcamAutoLoginRegisterAction(Request $request)
+    {
+        /* @var $validator ValidatorInterface: */
+        $validator = $this->get('validator');
+
+        $this->checkAccess();
+        $session = $this->request->getSession();
+        $user = new User();
+
+        $localeManager = $this->get('claroline.common.locale_manager');
+        $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+
+        $data = $request->request->all();
+
+        if (array_key_exists('firstname', $data)) {
+            $user->setFirstName($data['firstname']);
+        }
+        if (array_key_exists('familyname', $data)) {
+            $user->setLastName($data['familyname']);
+        }
+        if (array_key_exists('uniqueid', $data)) {
+            $user->setUsername($data['uniqueid']);
+        }
+        if (array_key_exists('email', $data)) {
+            $user->setMail($data['email']);
+        }
+
+        $errors = $validator->validate($user);
+
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                echo $error->getPropertyPath()." => ".$error->getMessage()."\n";
+            }
+            return new Response("error");
+        } else {
+            // Find existing user with same login if possible
+            $foundUser = $this->userManager->getUserByUsername($user->getUsername());
+            if ($foundUser) { // If found
+                $user = $foundUser;
+            } else { // If not found
+                $user->setLockedLogin(true);
+                $user->setLockedPassword(true);
+                $user->setIsEnabled(true);
+                $user->setIsValidate(true);
+                $user->setPlainPassword("toto");
+
+                $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
+
+                $user->setLocale($request->getLocale());
+                $this->get('claroline.manager.user_manager')->createUserWithRole(
+                    $user,
+                    PlatformRoles::USER
+                );
+            }
+
+            // Get MOOC with given MOOC id
+            if (array_key_exists('moocId', $data)) {
+                $moocId = $data['moocId'];
+
+                $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
+                $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($request->query->get('moocId'), $user);
+
+                if ($moocSession) {
+
+                    // If user is not already registered to given MOOC, register it
+                    if (false) {
+
+                    }
+
+                    // Redirect
+                    return new Response("ok");
+                } else {
+                    // Throw ERROR
+                    throw new BadRequestHttpException();
+                }
+            } else {
+                // Throw ERROR
+                throw new BadRequestHttpException();
+            }
+        }
+        /* @var $form Form */
+//        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
+//
+//        $form->handleRequest($this->get('request'));
+
+//        if ($form->isValid()) {
+//            $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
+//
+//            /* @var $request Request */
+//            $request = $this->get('request');
+//            $user->setLocale($request->getLocale());
+//            $this->get('claroline.manager.user_manager')->createUserWithRole(
+//                $user,
+//                PlatformRoles::USER
+//            );
+//
+//            $data['mail'] = $user->getMail();
+//            $data['hash'] = $this->getHash($user->getMail());
+//            return $this->redirect($this->generateUrl('claro_registration_send_mail', $data));
+//        } else {
+//            if ($session->has("moocSession")) {
+//                $moocSession = $session->get("moocSession");
+//                $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+//                $data['moocSession'] = $moocSession;
+//            }
+//
+//            if ($session->has("privateMoocSession")) {
+//                $moocSession = $session->get("privateMoocSession");
+//                $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
+//                $data['privateMoocSession'] = $moocSession;
+//            }
+//
+//            $data['form'] = $form->createView();
+//
+//            return $data;
+//        }
+    }
 
     /**
      * @Route(

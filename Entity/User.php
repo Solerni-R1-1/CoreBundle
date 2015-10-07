@@ -418,6 +418,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $userMoocPreferences;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $lockedLogin = 0;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $lockedPassword = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -1018,6 +1028,26 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setIsMailNotified($isMailNotified)
     {
         $this->isMailNotified = $isMailNotified;
+    }
+
+    public function setLockedLogin($lockedLogin)
+    {
+        $this->lockedLogin = $lockedLogin;
+    }
+
+    public function isLockedLogin()
+    {
+        return $this->lockedLogin;
+    }
+
+    public function setLockedPassword($lockedPassword)
+    {
+        $this->lockedPassword = $lockedPassword;
+    }
+
+    public function isLockedPassword()
+    {
+        return $this->lockedPassword;
     }
 
     public function isMailNotified()
