@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -26,6 +27,7 @@ use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -47,6 +49,7 @@ class RegistrationController extends Controller
 {
     private $request;
     private $userManager;
+    private $workspaceManager;
     private $configHandler;
     private $validator;
     private $roleManager;
@@ -57,6 +60,7 @@ class RegistrationController extends Controller
      *     "request"       = @DI\Inject("request"),
      *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "validator"     = @DI\Inject("validator")
      * })
@@ -66,7 +70,8 @@ class RegistrationController extends Controller
         UserManager $userManager,
         PlatformConfigurationHandler $configHandler,
         ValidatorInterface $validator,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->request = $request;
@@ -74,6 +79,7 @@ class RegistrationController extends Controller
         $this->configHandler = $configHandler;
         $this->validator = $validator;
         $this->roleManager = $roleManager;
+        $this->workspaceManager = $workspaceManager;
     }
     /**
      * @Route(
@@ -319,12 +325,7 @@ class RegistrationController extends Controller
         /* @var $validator ValidatorInterface: */
         $validator = $this->get('validator');
 
-        $this->checkAccess();
-        $session = $this->request->getSession();
         $user = new User();
-
-        $localeManager = $this->get('claroline.common.locale_manager');
-        $termsOfService = $this->get('claroline.common.terms_of_service_manager');
 
         $data = $request->request->all();
 
@@ -341,23 +342,26 @@ class RegistrationController extends Controller
             $user->setMail($data['email']);
         }
 
-        $errors = $validator->validate($user);
+        // Find existing user with same login if possible
+        $foundUser = $this->userManager->getUserByUsername($user->getUsername());
 
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                echo $error->getPropertyPath()." => ".$error->getMessage()."\n";
-            }
-            return new Response("error");
+        if ($foundUser) { // If found
+            $user = $foundUser;
         } else {
-            // Find existing user with same login if possible
-            $foundUser = $this->userManager->getUserByUsername($user->getUsername());
-            if ($foundUser) { // If found
-                $user = $foundUser;
-            } else { // If not found
+            $errors = $validator->validate($user);
+
+            if (count($errors) > 0) {
+                /*foreach ($errors as $error) {
+                    echo $error->getPropertyPath() . " => " . $error->getMessage() . "\n";
+                }*/
+                throw new BadRequestHttpException();
+            } else {
                 $user->setLockedLogin(true);
                 $user->setLockedPassword(true);
                 $user->setIsEnabled(true);
                 $user->setIsValidate(true);
+                $user->setAcceptedTerms(true);
+                $user->setAcceptedComTerms(false);
                 $user->setPlainPassword("toto");
 
                 $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
@@ -368,68 +372,76 @@ class RegistrationController extends Controller
                     PlatformRoles::USER
                 );
             }
+        }
 
-            // Get MOOC with given MOOC id
-            if (array_key_exists('moocId', $data)) {
-                $moocId = $data['moocId'];
+        // Automatically login user
+        $token = new UsernamePasswordToken($user, null, "your_firewall_name", $user->getRoles());
+        $this->get("security.context")->setToken($token);
 
-                $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
-                $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($request->query->get('moocId'), $user);
+        // and dispatch the login event
+        $request = $this->get("request");
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
-                if ($moocSession) {
+        // Get MOOC with given MOOC id
+        if (array_key_exists('moocId', $data)) {
+            $moocId = $data['moocId'];
 
-                    // If user is not already registered to given MOOC, register it
-                    if (false) {
+            $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
+            $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($moocId, $user);
 
+            if ($moocSession) {
+
+                // If user is not already registered to given MOOC, register it
+                if (!$user->isRegisteredToSession($moocSession)) {
+                    if (  ! $moocSession->getMooc()->isPublic() ) {
+                        if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
+                            return $this->render(
+                                'ClarolineCoreBundle:Exception:error403.html.twig',
+                                array( 'custom_message' => $this->translator->trans( 'access_restricted', array(), 'platform') ),
+                                new Response( '', 403 )
+                            );
+                        }
                     }
 
-                    // Redirect
-                    return new Response("ok");
-                } else {
-                    // Throw ERROR
-                    throw new BadRequestHttpException();
+                    /* add user to workspace if not already member */
+                    $workspace = $moocSession->getMooc()->getWorkspace();
+                    $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
+                    $isRegistered = false;
+                    foreach( $userWorkspaces as $userWorkspace ) {
+                        if ( $userWorkspace->getId() == $workspace->getId() ) {
+                            $isRegistered = true;
+                        }
+                    }
+                    if ( ! $isRegistered ) {
+                        $this->workspaceManager->addUserAction( $workspace, $user );
+                    }
+                    /* add user to moocSession */
+                    $users = $moocSession->getUsers();
+                    $users->add( $user );
+                    $moocSession->setUsers( $users );
+                    $this->getDoctrine()->getManager()->persist($moocSession);
+                    $this->getDoctrine()->getManager()->flush();
                 }
+
+                // Redirect
+                return $this->redirectToRoute(
+                    'mooc_view_session',
+                    array(
+                        'moocId' => $moocSession->getMooc()->getId(),
+                        'moocName' => $moocSession->getMooc()->getAlias(),
+                        'sessionId' => $moocSession->getId(),
+                        'word' => 'sinformer'
+                    )
+                );
             } else {
                 // Throw ERROR
                 throw new BadRequestHttpException();
             }
+        } else {
+            // Throw ERROR
+            throw new BadRequestHttpException();
         }
-        /* @var $form Form */
-//        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
-//
-//        $form->handleRequest($this->get('request'));
-
-//        if ($form->isValid()) {
-//            $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
-//
-//            /* @var $request Request */
-//            $request = $this->get('request');
-//            $user->setLocale($request->getLocale());
-//            $this->get('claroline.manager.user_manager')->createUserWithRole(
-//                $user,
-//                PlatformRoles::USER
-//            );
-//
-//            $data['mail'] = $user->getMail();
-//            $data['hash'] = $this->getHash($user->getMail());
-//            return $this->redirect($this->generateUrl('claro_registration_send_mail', $data));
-//        } else {
-//            if ($session->has("moocSession")) {
-//                $moocSession = $session->get("moocSession");
-//                $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
-//                $data['moocSession'] = $moocSession;
-//            }
-//
-//            if ($session->has("privateMoocSession")) {
-//                $moocSession = $session->get("privateMoocSession");
-//                $moocSession = $this->getDoctrine()->getRepository("ClarolineCoreBundle:Mooc\MoocSession")->find($moocSession->getId());
-//                $data['privateMoocSession'] = $moocSession;
-//            }
-//
-//            $data['form'] = $form->createView();
-//
-//            return $data;
-//        }
     }
 
     /**
