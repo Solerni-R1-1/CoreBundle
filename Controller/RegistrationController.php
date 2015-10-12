@@ -424,14 +424,18 @@ class RegistrationController extends Controller
                     $this->getDoctrine()->getManager()->flush();
                 }
 
+                $router = $this->get('router');
+
                 // Redirect
-                return $this->redirectToRoute(
-                    'mooc_view_session',
-                    array(
-                        'moocId' => $moocSession->getMooc()->getId(),
-                        'moocName' => $moocSession->getMooc()->getAlias(),
-                        'sessionId' => $moocSession->getId(),
-                        'word' => 'sinformer'
+                return $this->redirect(
+                    $router->generate(
+                        'mooc_view_session',
+                        array(
+                            'moocId' => $moocSession->getMooc()->getId(),
+                            'moocName' => $moocSession->getMooc()->getAlias(),
+                            'sessionId' => $moocSession->getId(),
+                            'word' => 'sinformer'
+                        )
                     )
                 );
             } else {
