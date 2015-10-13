@@ -24,7 +24,7 @@
                                 {{ 'edit_profile'|trans({}, 'platform') }}
                             </a>
                         </li>
-                        {% if FALSE == user.isFacebookAccount %}
+                        {% if FALSE == user.isFacebookAccount  and FALSE == user.lockedPassword %}
                         <li role="presentation" >
                             <a role="menuitem" href="{{ path('claro_user_password_edit') }}">
                                 {{ 'edit_password'|trans({}, 'platform') }}

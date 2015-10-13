@@ -202,6 +202,12 @@ class AuthenticationController
                         'error' => $this->translator->trans('fb_forbidden', array(), 'platform'),
                         'form' => $form->createView()
                     );
+                } else if ($user->isLockedPassword() === TRUE) {
+
+                    return array(
+                        'error' => $this->translator->trans('syfadis_forbidden', array(), 'platform'),
+                        'form' => $form->createView()
+                    );
                 }
 
                 $user->setHashTime(time());

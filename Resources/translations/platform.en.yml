@@ -1072,6 +1072,7 @@ constraint_whitelist: White list <br><span style="font-weight:normal">(1 email p
 constraint_pattern: Authorised domains <br><span style="font-weight:normal">(@domain.ext, 1 per line)</span>
 constraint_choose_owner: --Choose the owner of the access rules--
 fb_forbidden: It is not possible to reset accounts linked to social networks.
+syfadis_forbidden: It is not possible to reset accounts linked to Syfadis.
 see_all_owner_moocs: View all MOOCs
 mooc_analytics: MOOC statistics
 mooc_analytics_home: Claroline

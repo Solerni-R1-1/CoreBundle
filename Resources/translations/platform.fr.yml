@@ -1057,6 +1057,7 @@ constraint_pattern: Domaines autorisés<br><span style="font-weight:normal">(@do
 constraint_choose_owner: -- Choisir le propriétaire des règles d'accès --
 
 fb_forbidden: Il n'est pas possible de réinitialiser les comptes liés aux réseaux sociaux.
+syfadis_forbidden: Il n'est pas possible de réinitialiser les comptes liés à Syfadis.
 see_all_owner_moocs: Voir tous les moocs
 mooc_analytics: Statistiques du MOOC
 mooc_analytics_home: Claroline
