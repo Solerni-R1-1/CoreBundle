@@ -36,7 +36,8 @@
                         {{ form_widget(form.firstName, {'attr': {
 								'data-validation': 'alphanumeric required',
 								'data-validation-allowing': '-éèöàñïîêôâ ',
-								'data-validation-error-msg' : firstNameInvalidMsg}
+								'data-validation-error-msg' : firstNameInvalidMsg,
+                                'disabled' : user.lockedLogin}
 														 })
 						}}
                         {{ form_errors(form.firstName) }}
@@ -49,7 +50,8 @@
                         {{ form_widget(form.lastName, {'attr': {
 								'data-validation': 'alphanumeric required',
 								'data-validation-allowing': '-éèöàñïîêôâ ',
-								'data-validation-error-msg' : lastNameInvalidMsg}
+								'data-validation-error-msg' : lastNameInvalidMsg,
+                                'disabled' : user.lockedLogin}
 														 })
 						}}
                         {{ form_errors(form.lastName) }}
@@ -316,6 +318,7 @@
         </form>
 
     </div>
+    {% if not user.lockedLogin %}
     <hr class="slrn-hr--lightgrey">
     <div class="slrn-unsubscribe">
         {{ 'user_wish_to_unsubscribe'|trans({}, 'platform') }}
@@ -323,6 +326,7 @@
             {{ 'unsubscribe_self'|trans({}, 'platform' )}}
         </a>
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
