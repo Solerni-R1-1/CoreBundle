@@ -7,5 +7,5 @@ function addClass(ele,cls) {
 }
 
 if(window.self !== window.top){
-    addClass(document.querySelector("body"), "iframe");
+    //addClass(document.querySelector("body"), "iframe");
 }
