@@ -396,9 +396,10 @@ class RegistrationController extends Controller
                 if (!$user->isRegisteredToSession($moocSession)) {
                     if (  ! $moocSession->getMooc()->isPublic() ) {
                         if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
+                            $translator = $this->get('translator');
                             return $this->render(
                                 'ClarolineCoreBundle:Exception:error403.html.twig',
-                                array( 'custom_message' => $this->translator->trans( 'access_restricted', array(), 'platform') ),
+                                array( 'custom_message' => $translator->trans( 'access_restricted', array(), 'platform') ),
                                 new Response( '', 403 )
                             );
                         }
