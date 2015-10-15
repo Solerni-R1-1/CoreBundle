@@ -1044,4 +1044,10 @@ class Mooc
     public function isShowWorkGroup() {
     	return $this->showWorkGroup;
     }
+
+
+    public function __toString()
+    {
+        return "Mooc ".$this->id." = ".$this->title;
+    }
 }

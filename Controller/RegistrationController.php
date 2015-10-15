@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Mooc\Mooc;
+use Claroline\CoreBundle\Entity\Mooc\MoocAccessConstraints;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -362,7 +364,8 @@ class RegistrationController extends Controller
                 $user->setIsValidate(true);
                 $user->setAcceptedTerms(true);
                 $user->setAcceptedComTerms(false);
-                $user->setPlainPassword("toto");
+                $plainPassword = $user->getFirstName().$user->getLastName().$user->getUsername().$user->getMail();
+                $user->setPlainPassword(md5($plainPassword));
 
                 $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
 
@@ -391,38 +394,65 @@ class RegistrationController extends Controller
             $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($moocId, $user);
 
             if ($moocSession) {
+                $em = $this->get('doctrine.orm.entity_manager');
+
+                $needToUpdateConstraint = false;
+                /* Add user to access constraint if not already in it */
+                if (  ! $moocSession->getMooc()->isPublic() ) {
+                    if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
+                        $needToUpdateConstraint = true;
+                    }
+                }
+
+
+                /* add user to workspace if not already member */
+                $workspace = $moocSession->getMooc()->getWorkspace();
+                $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
+                $isRegistered = false;
+                foreach( $userWorkspaces as $userWorkspace ) {
+                    if ( $userWorkspace->getId() == $workspace->getId() ) {
+                        $isRegistered = true;
+                    }
+                }
+                if ( ! $isRegistered ) {
+                    $this->workspaceManager->addUserAction( $workspace, $user );
+                }
 
                 // If user is not already registered to given MOOC, register it
                 if (!$user->isRegisteredToSession($moocSession)) {
-                    if (  ! $moocSession->getMooc()->isPublic() ) {
-                        if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
-                            $translator = $this->get('translator');
-                            return $this->render(
-                                'ClarolineCoreBundle:Exception:error403.html.twig',
-                                array( 'custom_message' => $translator->trans( 'access_restricted', array(), 'platform') ),
-                                new Response( '', 403 )
-                            );
-                        }
-                    }
-
-                    /* add user to workspace if not already member */
-                    $workspace = $moocSession->getMooc()->getWorkspace();
-                    $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
-                    $isRegistered = false;
-                    foreach( $userWorkspaces as $userWorkspace ) {
-                        if ( $userWorkspace->getId() == $workspace->getId() ) {
-                            $isRegistered = true;
-                        }
-                    }
-                    if ( ! $isRegistered ) {
-                        $this->workspaceManager->addUserAction( $workspace, $user );
-                    }
                     /* add user to moocSession */
                     $users = $moocSession->getUsers();
                     $users->add( $user );
                     $moocSession->setUsers( $users );
-                    $this->getDoctrine()->getManager()->persist($moocSession);
-                    $this->getDoctrine()->getManager()->flush();
+                    $em->persist($moocSession);
+                    $em->flush();
+                }
+
+                if ($needToUpdateConstraint) {
+                    /* @var $mooc Mooc */
+                    $mooc = $moocSession->getMooc();
+
+                    $em->refresh($mooc);
+                    $accessConstraints = $mooc->getAccessConstraints();
+
+                    if (count($accessConstraints) > 0) {
+                        $accessConstraint = $accessConstraints[0];
+                        $whiteList = $accessConstraint->getWhitelist()."\n";
+                    } else {
+                        $accessConstraint = new MoocAccessConstraints();
+                        $accessConstraint->setName("GENERATED_".$mooc->getTitle());
+                        $accessConstraint->setMoocs(array($mooc));
+                        $accessConstraint->setMoocOwner($mooc->getOwner());
+                        $accessConstraints->add($accessConstraint);
+                        $mooc->setAccessConstraints($accessConstraints);
+                        $em->persist($mooc);
+                        $whiteList = "";
+                    }
+                    $accessConstraint->setWhitelist($whiteList.$user->getMail());
+
+                    $em->persist($accessConstraint);
+
+                    $em->flush();
                 }
 
                 $router = $this->get('router');

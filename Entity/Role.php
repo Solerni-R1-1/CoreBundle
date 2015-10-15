@@ -235,4 +235,9 @@ class Role implements RoleInterface
     {
         return $this->workspace;
     }
+
+    public function __toString()
+    {
+        return "Role ".$this->id." = ".$this->name;
+    }
 }

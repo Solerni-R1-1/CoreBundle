@@ -848,6 +848,7 @@ class WorkspaceManager
         $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
 
         if (count($userRoles) === 0) {
+
             $this->roleManager->associateRole($user, $role);
             /*$this->dispatcher->dispatch(
                 'log',
