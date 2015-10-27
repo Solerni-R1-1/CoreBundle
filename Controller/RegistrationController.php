@@ -349,10 +349,16 @@ class RegistrationController extends Controller
 
         if ($foundUser) { // If found
             $user = $foundUser;
+            $user->setFirstName($data['firstname']);
+            $user->setLastName($data['familyname']);
+            $user->setMail($data['email']);
+
+            $this->getDoctrine()->getManager()->persist($user);
+            $this->getDoctrine()->getManager()->flush();
         } else {
             $errors = $validator->validate($user);
 
-            if (count($errors) > 0) {
+            if (count($errors) > 1 || (count($errors) == 1 && $errors[0]->getPropertyPath() != "username")) {
                 /*foreach ($errors as $error) {
                     echo $error->getPropertyPath() . " => " . $error->getMessage() . "\n";
                 }*/

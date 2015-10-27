@@ -117,10 +117,10 @@
                     </div>
                 {% endif %}
                 {# PICTURE INPUT - SHOW REGULAR FIELD FOR IE8 #}
-                <!--[if !(IE 8)]> -->
+                <!--[if gt IE 9]> -->
                 <div class="form-group row hide slrn-picture-upload-field">
                 <!-- <![endif]-->
-                <!--[IF (IE 8)]>
+                <!--[IF lte IE 9]>
                 <div class="form-group row slrn-picture-upload-field">
                 <![endif]-->
                     {{ form_label(form.pictureFile) }}
@@ -144,8 +144,8 @@
                         <i class="small">{{'format_use'|trans({}, 'platform')}}</i>
                     </div>
                 </div>
-                {# UPLOAD BUTTON (NOT WORKING SO WE DON'T SHOW IT FOR IE8) #}
-                <!--[if !(IE 8)]> -->
+                {# UPLOAD BUTTON (NOT WORKING SO WE DON'T SHOW IT FOR IE8 OR IE9) #}
+                <!--[if gt IE 9]> -->
                 <div class="form-group row slrn-picture-upload-field--custom">
                     <label class="control-label col-md-3">
                         {{ 'picture_profile'|trans({}, 'platform')}}
