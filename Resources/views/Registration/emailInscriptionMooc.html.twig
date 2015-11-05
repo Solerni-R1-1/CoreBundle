@@ -29,7 +29,7 @@
                                     <td>
 
 
-{{'mail_hello'|trans({}, 'mail')}} {{user.getFirstName()}}, {{user.getLastName()}}<br/>
+{{'mail_hello'|trans({}, 'mail')}} {{user.getFirstName()}} {{user.getLastName()}},<br/>
 <br/>
 {{'sub_mooc_confirm'|trans({}, 'mail')}} {{ session.getMooc().getTitle() }} {% if session.getStartDate() <= date() %}{{'sub_mooc_started'|trans({}, 'mail')}}{% else %}{{'sub_mooc_will_start'|trans({}, 'mail')}}{% endif %} {{ session.getStartDate()|date('d/m/Y') }}{% if session.getMooc().getDuration() is not empty %} {{'sub_mooc_duration'|trans({}, 'mail')}} {{ session.getMooc().getDuration() }} {{'sub_mooc_weeks'|trans({}, 'mail')}}{% endif %}.<br/>
 <br/>
