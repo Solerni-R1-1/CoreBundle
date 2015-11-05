@@ -202,8 +202,10 @@ class MailManager
                 $locale = $this->ch->getParameter('locale_language');
             }
 
-            $usedLayout = $layout[$locale]['content'];
-            $body = str_replace('%content%', $body, $usedLayout);
+            //$usedLayout = $layout[$locale]['content'];
+
+            //$body = str_replace('%content%', $body, $usedLayout);
+
             $body = str_replace('%platform_name%', $this->ch->getParameter('name'), $body);
 
             if ($from) {
@@ -213,6 +215,7 @@ class MailManager
                 $body = str_replace('%first_name%', $this->ch->getParameter('name'), $body);
                 $body = str_replace('%last_name%', '', $body);
             }
+
 
             foreach ($users as $user) {
 
