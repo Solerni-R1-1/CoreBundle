@@ -33,8 +33,10 @@
 <br/>
 {{'sub_mooc_confirm'|trans({}, 'mail')}} {{ session.getMooc().getTitle() }} {% if session.getStartDate() <= date() %}{{'sub_mooc_started'|trans({}, 'mail')}}{% else %}{{'sub_mooc_will_start'|trans({}, 'mail')}}{% endif %} {{ session.getStartDate()|date('d/m/Y') }}{% if session.getMooc().getDuration() is not empty %} {{'sub_mooc_duration'|trans({}, 'mail')}} {{ session.getMooc().getDuration() }} {{'sub_mooc_weeks'|trans({}, 'mail')}}{% endif %}.<br/>
 <br/>
+{#
 {{'sub_mooc_body'|trans({}, 'mail')}}
 <br/>
+#}
 <br/>
 {% include('ClarolineCoreBundle:Partials:mailFooter.html.twig') %}
                             </table>
