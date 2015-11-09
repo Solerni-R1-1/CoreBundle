@@ -14,3 +14,4 @@ name_required: Nom requis.
 role_already_exists: Ce rôle existe déjà.
 maxSizeMessage: 'Le fichier est trop volumineux ({{ size }} Mo). Sa taille ne doit pas dépasser {{ limit }} Mo.'
 user_ws_not_exists: L'utilisateur, le groupe ou le workspace {{ name }} n'existe pas.
+The CSRF token is invalid. Please try to resubmit the form.: Votre formulaire n'a pas pu être envoyé. Merci de bien vouloir le renvoyer.
