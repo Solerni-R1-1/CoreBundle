@@ -117,13 +117,13 @@ class CatalogueController extends Controller
                 }
             }
         }
-        
+
         return $this->render(
             'ClarolineCoreBundle:Mooc:ownerCatalogue.html.twig',
             array(
                 'owner'     => $owner,
                 'user'      => $user,
-                'sessions'  => $autorizedSessions
+                'sessions'  => array_reverse($autorizedSessions)
             )
         );
     }

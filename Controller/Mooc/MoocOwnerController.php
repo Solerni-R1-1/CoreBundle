@@ -36,7 +36,6 @@ class MoocOwnerController extends Controller
             $forms[] = $deleteForm->createView();
         }
 
-
         return array(
             'entities' => $entities,
             'forms' => $forms
