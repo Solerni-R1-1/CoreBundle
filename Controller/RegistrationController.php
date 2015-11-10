@@ -123,7 +123,7 @@ class RegistrationController extends Controller
 
     /**
      * @Route(
-     *     "/send_mail/{mail}/{hash}",
+     *     "/send_mail/{userId}",
      *     name="claro_registration_send_mail"
      * )
      *
@@ -133,28 +133,23 @@ class RegistrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendEmailValidationAction($mail = null, $hash = null)
+    public function sendEmailValidationAction($userId = null)
     {
-        if( empty($mail) ){
+        if( empty($userId) ){
             throw new AccessDeniedHttpException();
-        }
-        
-        if( ! $hash ) {
-            $hash = $this->getHash($mail);
         }
 
         $em = $this->getDoctrine()->getManager();
         $userRepository = $em->getRepository('ClarolineCoreBundle:User');
-        $users = $userRepository->findByMail($mail); // get user
+        $user = $userRepository->find($userId); // get user
 
-        if(empty($users)){
+        if(!$user) {
             throw new AccessDeniedHttpException();
         }
 
-        $user = $users[0];
-
-        $key = $user->getKeyValidate();
         $mail = $user->getMail();
+        $hash = $this->getHash($mail);
+        $key = $user->getKeyValidate();
 
         // Redirect to dashboard if user is already validated
         if ( $user->getIsValidate() ) {
@@ -182,7 +177,7 @@ class RegistrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function validateUserFormAction($mail) {
+    /*public function validateUserFormAction($mail) {
         $log = $this->container->get('logger');
         $log->debug("Calling Formulaire manualy");
 
@@ -216,11 +211,11 @@ class RegistrationController extends Controller
                     'hash' => $this->getHash($mail),
                     'key' => $key
                 );
-    }
+    }*/
 
     /**
      * @Route(
-     *     "/validate_form/{mail}/{key}",
+     *     "/validate_form/{key}",
      *     name="claro_registration_validate_user"
      * )
      *
@@ -230,34 +225,27 @@ class RegistrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function validateUserAction(Request $request, $mail, $key) {
+    public function validateUserAction(Request $request, $key) {
         
         $form = null;
         $log = $this->container->get('logger');
 
-        $log->debug("Trying validation {$mail} with key {$key}");
+        $log->debug("Trying validation with key {$key}");
         $em = $this->getDoctrine()->getManager();
         $userRepository = $em->getRepository('ClarolineCoreBundle:User');
-        $users = $userRepository->findByMail($mail); // get user
+        $userDb = $userRepository->findOneByKeyValidate($key); // get user
 
-        $userDb = null;
         $user = null;
-        if(!empty($users)){
-            $userDb = $users[0];
-        }
 
         $nextUrl = '';
 
         if($userDb == null || $userDb->getKeyValidate() !== $key){
-
-            $log->debug("key {$key} not valid for mail {$mail}");
+            $log->debug("key {$key} correspond to no user");
             $msg = 'accountValidation_key_ko';
 
-            $user = new User();
-            if(!empty($mail)){
-                $user->setMail($mail);
-            }
-            $user->setKeyValidate(null);
+            $userDb = new User();
+            $userDb->setMail("");
+            $userDb->setKeyValidate(null);
             
             /*
             $form = $this->get('form.factory')
@@ -273,7 +261,7 @@ class RegistrationController extends Controller
             $userDb->setIsValidate(true);
             $em->persist($userDb);
             $em->flush();
-            $log->debug("Auto-validation {$mail} with success with key {$key}");
+            $log->debug("Auto-validation success with key {$key}");
             $token = new UsernamePasswordToken($userDb, null, 'main', $userDb->getRoles());
             $this->get('security.context')->setToken($token);
             $this->get('session')->set('_security_main',serialize($token));
@@ -301,11 +289,11 @@ class RegistrationController extends Controller
         }
 
         return array(
-            'user'=> $user, 
+            'user'=> $userDb,
             'msg' => $msg, 
             // 'form' => $form, 
-            'mail' => $mail, 
-            'hash' => $this->getHash($mail),
+            'mail' => $userDb->getMail(),
+            'hash' => $this->getHash($userDb->getMail()),
             'key' => $key,
             'nextUrl' => $nextUrl
         );
@@ -522,8 +510,7 @@ class RegistrationController extends Controller
                 PlatformRoles::USER
             );
 
-            $data['mail'] = $user->getMail();
-            $data['hash'] = $this->getHash($user->getMail());
+            $data['userId'] = $user->getId();
             return $this->redirect($this->generateUrl('claro_registration_send_mail', $data));
         } else {
             if ($session->has("moocSession")) {

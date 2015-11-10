@@ -35,9 +35,9 @@
 <br/>
 {{'sub_email_body2'|trans({}, 'mail')}} :<br/>
 <br/>
-<a href='{{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}'>{{'sub_email_link'|trans({}, 'mail')}}</a><br/>
+<a href='{{ url('claro_registration_validate_user', { 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}'>{{'sub_email_link'|trans({}, 'mail')}}</a><br/>
 <br/>
-{{'sub_email_copy'|trans({}, 'mail')}} :  {{ url('claro_registration_validate_user', { 'mail': user.getMail(), 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}<br/>
+{{'sub_email_copy'|trans({}, 'mail')}} :  {{ url('claro_registration_validate_user', { 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}<br/>
 <br/>
 <br/>
 {% include('ClarolineCoreBundle:Partials:mailFooter.html.twig') %}
