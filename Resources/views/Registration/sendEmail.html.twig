@@ -24,7 +24,7 @@
         <p>{{'sub_registered_body1'|trans({}, 'platform')}} {{ mail }}.</p>
         <p>- {{'sub_registered_body2'|trans({}, 'platform')}}.</p>
         <p>- {{'sub_registered_body3'|trans({}, 'platform')}}.</p>
-        <p>{{'sub_registered_body4'|trans({}, 'platform')}}, <a href='{{ path('claro_registration_send_mail', { 'mail': mail , 'hash' : hash}) }}' class='slrn-red-link'>{{'sub_registered_body5'|trans({}, 'platform')}}.</a></p>
+        <p>{{'sub_registered_body4'|trans({}, 'platform')}}, <a href='{{ path('claro_registration_send_mail', { 'userId' : userId}) }}' class='slrn-red-link'>{{'sub_registered_body5'|trans({}, 'platform')}}.</a></p>
     </div>
 {% endblock %}
 

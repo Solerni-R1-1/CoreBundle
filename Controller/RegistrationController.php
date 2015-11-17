@@ -162,7 +162,7 @@ class RegistrationController extends Controller
         $this->userManager->sendEmailValidation($user);
 
         // But in the end it doesn't even matter
-        return array('mail'=> $mail, 'hash' => $hash);
+        return array('mail'=> $mail, 'userId' => $userId);
     }
 
     /**

@@ -14,4 +14,4 @@ name_required: Name required.
 role_already_exists: This role already exists.
 maxSizeMessage: 'The file is too large ({{ size }} MB). Its size must not exceed {{ limit }} MB.'
 user_ws_not_exists: The {{ name }} user, group or workspace does not exist.
-The CSRF token is invalid. Please try to resubmit the form.: Your form couldn't be sent. Please send it again.
+The CSRF token is invalid. Please try to resubmit the form.: Your form could not be submitted. Thank you for returning it to us
