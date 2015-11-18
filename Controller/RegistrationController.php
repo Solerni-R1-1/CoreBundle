@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -312,164 +313,172 @@ class RegistrationController extends Controller
      */
     public function ifcamAutoLoginRegisterAction(Request $request)
     {
-        /* @var $validator ValidatorInterface: */
-        $validator = $this->get('validator');
+        // First of all, we need to check if the referer is ifcam (http://ifcam-pp.elearning.ca-ifcam.fr/)
+        $referer = $request->headers->get('referer');
 
-        $user = new User();
-
-        $data = $request->request->all();
-
-        if (array_key_exists('firstname', $data)) {
-            $user->setFirstName($data['firstname']);
-        }
-        if (array_key_exists('familyname', $data)) {
-            $user->setLastName($data['familyname']);
-        }
-        if (array_key_exists('uniqueid', $data)) {
-            $user->setUsername($data['uniqueid']);
-        }
-        if (array_key_exists('email', $data)) {
-            $user->setMail($data['email']);
-        }
-
-        // Find existing user with same login if possible
-        $foundUser = $this->userManager->getUserByUsername($user->getUsername());
-
-        if ($foundUser) { // If found
-            $user = $foundUser;
-            $user->setFirstName($data['firstname']);
-            $user->setLastName($data['familyname']);
-            $user->setMail($data['email']);
-
-            $this->getDoctrine()->getManager()->persist($user);
-            $this->getDoctrine()->getManager()->flush();
+        if (strpos('http://ifcam-pp.elearning.ca-ifcam.fr', $referer) !== 0) {
+            throw new BadRequestHttpException();
         } else {
-            $errors = $validator->validate($user);
 
-            if (count($errors) > 1 || (count($errors) == 1 && $errors[0]->getPropertyPath() != "username")) {
-                /*foreach ($errors as $error) {
-                    echo $error->getPropertyPath() . " => " . $error->getMessage() . "\n";
-                }*/
-                throw new BadRequestHttpException();
-            } else {
-                $user->setLockedLogin(true);
-                $user->setLockedPassword(true);
-                $user->setIsEnabled(true);
-                $user->setIsValidate(true);
-                $user->setAcceptedTerms(true);
-                $user->setAcceptedComTerms(false);
-                $plainPassword = $user->getFirstName().$user->getLastName().$user->getUsername().$user->getMail();
-                $user->setPlainPassword(md5($plainPassword));
+            /* @var $validator ValidatorInterface: */
+            $validator = $this->get('validator');
 
-                $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
+            $user = new User();
 
-                $user->setLocale($request->getLocale());
-                $this->get('claroline.manager.user_manager')->createUserWithRole(
-                    $user,
-                    PlatformRoles::USER
-                );
+            $data = $request->request->all();
+
+            if (array_key_exists('firstname', $data)) {
+                $user->setFirstName($data['firstname']);
             }
-        }
+            if (array_key_exists('familyname', $data)) {
+                $user->setLastName($data['familyname']);
+            }
+            if (array_key_exists('uniqueid', $data)) {
+                $user->setUsername($data['uniqueid']);
+            }
+            if (array_key_exists('email', $data)) {
+                $user->setMail($data['email']);
+            }
 
-        // Automatically login user
-        $token = new UsernamePasswordToken($user, null, "your_firewall_name", $user->getRoles());
-        $this->get("security.context")->setToken($token);
+            // Find existing user with same login if possible
+            $foundUser = $this->userManager->getUserByUsername($user->getUsername());
 
-        // and dispatch the login event
-        $request = $this->get("request");
-        $event = new InteractiveLoginEvent($request, $token);
-        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+            if ($foundUser) { // If found
+                $user = $foundUser;
+                $user->setFirstName($data['firstname']);
+                $user->setLastName($data['familyname']);
+                $user->setMail($data['email']);
 
-        // Get MOOC with given MOOC id
-        if (array_key_exists('moocId', $data)) {
-            $moocId = $data['moocId'];
+                $this->getDoctrine()->getManager()->persist($user);
+                $this->getDoctrine()->getManager()->flush();
+            } else {
+                $errors = $validator->validate($user);
 
-            $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
-            $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($moocId, $user);
+                if (count($errors) > 1 || (count($errors) == 1 && $errors[0]->getPropertyPath() != "username")) {
+                    /*foreach ($errors as $error) {
+                        echo $error->getPropertyPath() . " => " . $error->getMessage() . "\n";
+                    }*/
+                    throw new BadRequestHttpException();
+                } else {
+                    $user->setLockedLogin(true);
+                    $user->setLockedPassword(true);
+                    $user->setIsEnabled(true);
+                    $user->setIsValidate(true);
+                    $user->setAcceptedTerms(true);
+                    $user->setAcceptedComTerms(false);
+                    $plainPassword = $user->getFirstName() . $user->getLastName() . $user->getUsername() . $user->getMail();
+                    $user->setPlainPassword(md5($plainPassword));
 
-            if ($moocSession) {
-                $em = $this->get('doctrine.orm.entity_manager');
+                    $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
 
-                $needToUpdateConstraint = false;
-                /* Add user to access constraint if not already in it */
-                if (  ! $moocSession->getMooc()->isPublic() ) {
-                    if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
-                        $needToUpdateConstraint = true;
+                    $user->setLocale($request->getLocale());
+                    $this->get('claroline.manager.user_manager')->createUserWithRole(
+                        $user,
+                        PlatformRoles::USER
+                    );
+                }
+            }
+
+            // Automatically login user
+            $token = new UsernamePasswordToken($user, null, "your_firewall_name", $user->getRoles());
+            $this->get("security.context")->setToken($token);
+
+            // and dispatch the login event
+            $request = $this->get("request");
+            $event = new InteractiveLoginEvent($request, $token);
+            $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+
+            // Get MOOC with given MOOC id
+            if (array_key_exists('moocId', $data)) {
+                $moocId = $data['moocId'];
+
+                $moocRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession');
+                $moocSession = $moocRepository->getActiveMoocSessionForUserAndMoocId($moocId, $user);
+
+                if ($moocSession) {
+                    $em = $this->get('doctrine.orm.entity_manager');
+
+                    $needToUpdateConstraint = false;
+                    /* Add user to access constraint if not already in it */
+                    if (!$moocSession->getMooc()->isPublic()) {
+                        if (!$this->roleManager->hasUserAccess($user, $moocSession->getMooc()->getWorkspace())) {
+                            $needToUpdateConstraint = true;
+                        }
                     }
-                }
 
 
-                /* add user to workspace if not already member */
-                $workspace = $moocSession->getMooc()->getWorkspace();
-                $userWorkspaces = $this->workspaceManager->getWorkspacesByUser( $user );
-                $isRegistered = false;
-                foreach( $userWorkspaces as $userWorkspace ) {
-                    if ( $userWorkspace->getId() == $workspace->getId() ) {
-                        $isRegistered = true;
+                    /* add user to workspace if not already member */
+                    $workspace = $moocSession->getMooc()->getWorkspace();
+                    $userWorkspaces = $this->workspaceManager->getWorkspacesByUser($user);
+                    $isRegistered = false;
+                    foreach ($userWorkspaces as $userWorkspace) {
+                        if ($userWorkspace->getId() == $workspace->getId()) {
+                            $isRegistered = true;
+                        }
                     }
-                }
-                if ( ! $isRegistered ) {
-                    $this->workspaceManager->addUserAction( $workspace, $user );
-                }
-
-                // If user is not already registered to given MOOC, register it
-                if (!$user->isRegisteredToSession($moocSession)) {
-                    /* add user to moocSession */
-                    $users = $moocSession->getUsers();
-                    $users->add( $user );
-                    $moocSession->setUsers( $users );
-                    $em->persist($moocSession);
-                    $em->flush();
-                }
-
-                if ($needToUpdateConstraint) {
-                    /* @var $mooc Mooc */
-                    $mooc = $moocSession->getMooc();
-
-                    $em->refresh($mooc);
-                    $accessConstraints = $mooc->getAccessConstraints();
-
-                    if (count($accessConstraints) > 0) {
-                        $accessConstraint = $accessConstraints[0];
-                        $whiteList = $accessConstraint->getWhitelist()."\n";
-                    } else {
-                        $accessConstraint = new MoocAccessConstraints();
-                        $accessConstraint->setName("GENERATED_".$mooc->getTitle());
-                        $accessConstraint->setMoocs(array($mooc));
-                        $accessConstraint->setMoocOwner($mooc->getOwner());
-                        $accessConstraints->add($accessConstraint);
-                        $mooc->setAccessConstraints($accessConstraints);
-                        $em->persist($mooc);
-                        $whiteList = "";
+                    if (!$isRegistered) {
+                        $this->workspaceManager->addUserAction($workspace, $user);
                     }
-                    $accessConstraint->setWhitelist($whiteList.$user->getMail());
 
-                    $em->persist($accessConstraint);
+                    // If user is not already registered to given MOOC, register it
+                    if (!$user->isRegisteredToSession($moocSession)) {
+                        /* add user to moocSession */
+                        $users = $moocSession->getUsers();
+                        $users->add($user);
+                        $moocSession->setUsers($users);
+                        $em->persist($moocSession);
+                        $em->flush();
+                    }
 
-                    $em->flush();
-                }
+                    if ($needToUpdateConstraint) {
+                        /* @var $mooc Mooc */
+                        $mooc = $moocSession->getMooc();
 
-                $router = $this->get('router');
+                        $em->refresh($mooc);
+                        $accessConstraints = $mooc->getAccessConstraints();
 
-                // Redirect
-                return $this->redirect(
-                    $router->generate(
-                        'mooc_view_session',
-                        array(
-                            'moocId' => $moocSession->getMooc()->getId(),
-                            'moocName' => $moocSession->getMooc()->getAlias(),
-                            'sessionId' => $moocSession->getId(),
-                            'word' => 'sinformer'
+                        if (count($accessConstraints) > 0) {
+                            $accessConstraint = $accessConstraints[0];
+                            $whiteList = $accessConstraint->getWhitelist() . "\n";
+                        } else {
+                            $accessConstraint = new MoocAccessConstraints();
+                            $accessConstraint->setName("GENERATED_" . $mooc->getTitle());
+                            $accessConstraint->setMoocs(array($mooc));
+                            $accessConstraint->setMoocOwner($mooc->getOwner());
+                            $accessConstraints->add($accessConstraint);
+                            $mooc->setAccessConstraints($accessConstraints);
+                            $em->persist($mooc);
+                            $whiteList = "";
+                        }
+                        $accessConstraint->setWhitelist($whiteList . $user->getMail());
+
+                        $em->persist($accessConstraint);
+
+                        $em->flush();
+                    }
+
+                    $router = $this->get('router');
+
+                    // Redirect
+                    return $this->redirect(
+                        $router->generate(
+                            'mooc_view_session',
+                            array(
+                                'moocId' => $moocSession->getMooc()->getId(),
+                                'moocName' => $moocSession->getMooc()->getAlias(),
+                                'sessionId' => $moocSession->getId(),
+                                'word' => 'sinformer'
+                            )
                         )
-                    )
-                );
+                    );
+                } else {
+                    // Throw ERROR
+                    throw new BadRequestHttpException();
+                }
             } else {
                 // Throw ERROR
                 throw new BadRequestHttpException();
             }
-        } else {
-            // Throw ERROR
-            throw new BadRequestHttpException();
         }
     }
 
