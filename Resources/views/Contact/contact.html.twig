@@ -85,7 +85,80 @@
 			              id="generic-form"
 			              class="form-horizontal nolabel has-validation-callback">
 			            <div class="panel-body">
-			                {{ form_widget(form) }}
+                            <div class="form-group row">
+                                {{ form_label(form.contact) }}
+                                <div class="col-md-9">
+			                        {{ form_widget(form.contact, {'attr': {
+                                        'data-validation': 'required',
+                                        'data-validation-error-msg' : 'contact_error_mandatory'|trans({}, 'platform'),
+                                        'data-validation-event': 'keyup'
+                                    }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.civilite) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.civilite) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.prenom) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.prenom, {'attr': {
+                                        'data-validation': 'required',
+                                        'data-validation-error-msg' : 'contact_error_mandatory'|trans({}, 'platform'),
+                                        'data-validation-event': 'keyup'
+                                    }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.nom) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.nom, {'attr': {
+                                        'data-validation': 'required',
+                                        'data-validation-error-msg' : 'contact_error_mandatory'|trans({}, 'platform'),
+                                        'data-validation-event': 'keyup'
+                                    }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.replyTo) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.replyTo, {'attr': {
+                                        'data-validation': 'required',
+                                        'data-validation-error-msg' : 'contact_error_mandatory'|trans({}, 'platform'),
+                                        'data-validation-event': 'keyup'
+                                    }}) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.societe) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.societe) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.telephone) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.telephone) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.fonction) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.fonction) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.content) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(form.content, {'attr': {
+                                        'data-validation': 'required',
+                                        'data-validation-error-msg' : 'contact_error_mandatory'|trans({}, 'platform'),
+                                        'data-validation-event': 'keyup'
+                                    }}) }}
+                                </div>
+                            </div>
 			                {{ form_rest(form) }}
 			            </div>
 			            <div class="panel-footer">

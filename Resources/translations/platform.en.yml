@@ -1197,6 +1197,7 @@ Contactez_nous_edition : Editing services list
 contact_name : Service label
 contact_mail : Service e-mail
 contact_success : Your message has been sent.
+contact_error_mandatory : Please fill this field.
 remove_contact_confirm_message : Are you sure you wish to delete this service?
 #Page contact
 message_send : Your message has been sent.
