@@ -30,7 +30,7 @@ sub_mooc_started: which started on
 sub_mooc_will_start: which will start on
 sub_mooc_duration: and last
 sub_mooc_weeks: weeks
-sub_mooc_body: Very shortly you will receive an email from the teaching team informing you of how the MOOC will proceed. In the meantime, we would like to thank you for registering and hope you really enjoy this new training course on Solerni, your collaborative French MOOC platform.
+sub_mooc_body: We would like to thank you for registering and hope you really enjoy this new training course on Solerni, your collaborative French MOOC platform.
 
 pass_change_confirm_title: Changing your Solerni password
 sub_confirm_body: We confirm the change of your password on our platform. You can now reconnect with your new password
