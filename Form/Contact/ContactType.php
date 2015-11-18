@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ContactType extends AbstractType
 {
@@ -44,6 +45,7 @@ class ContactType extends AbstractType
         			'empty_value' => $this->translator->trans('contact_form_demande', array(), 'platform'),
 				    'choices'   => $this->contacts,
 				    'required'  => true,
+                    'constraints' => new NotBlank()
 				)
         	)->add('civilite', 'choice', 
                 array(
@@ -60,6 +62,7 @@ class ContactType extends AbstractType
                 array(
                     'attr' => array('placeholder' => $this->translator->trans('contact_form_prenom', array(), 'platform')),
                     'required'  => true,
+                    'constraints' => new NotBlank()
                 )
             )->add(
                 'nom',
@@ -67,6 +70,7 @@ class ContactType extends AbstractType
                 array(
                     'attr' => array('placeholder' => $this->translator->trans('contact_form_nom', array(), 'platform')),
                     'required'  => true,
+                    'constraints' => new NotBlank()
                 )
             )->add(
                 'replyTo',
@@ -74,7 +78,10 @@ class ContactType extends AbstractType
                 array(
                     'attr' => array('placeholder' => $this->translator->trans('contact_form_replyTo', array(), 'platform')),
                     'required' => true,
-                    'constraints' => new Email()
+                    'constraints' => array(
+                        new Email(),
+                        new NotBlank()
+                    )
                 )
             );
 
@@ -135,7 +142,8 @@ class ContactType extends AbstractType
                 'textarea',
                 array(
                     'attr' => array('class' => 'contact_text'),
-                    'required' => true
+                    'required' => true,
+                    'constraints' => new NotBlank()
                 )
             );
     }
