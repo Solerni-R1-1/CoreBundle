@@ -317,7 +317,7 @@ class RegistrationController extends Controller
         $referer = $request->headers->get('referer');
 
         //if (strpos('http://ifcam-pp.elearning.ca-ifcam.fr', $referer) === FALSE) {
-        if (strpos($referer, 'http://ifcam-pp.elearning.ca-ifcam.fr') === FALSE) {
+        if (strpos($referer, 'elearning.ca-ifcam.fr') === FALSE) {
             throw new BadRequestHttpException();
         } else {
 
