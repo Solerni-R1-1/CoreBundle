@@ -37,7 +37,7 @@
 								'data-validation': 'alphanumeric required',
 								'data-validation-allowing': '-éèöàñïîêôâ ',
 								'data-validation-error-msg' : firstNameInvalidMsg,
-                                'disabled' : user.lockedLogin}
+                                'readonly' : user.lockedLogin}
 														 })
 						}}
                         {{ form_errors(form.firstName) }}
@@ -51,7 +51,7 @@
 								'data-validation': 'alphanumeric required',
 								'data-validation-allowing': '-éèöàñïîêôâ ',
 								'data-validation-error-msg' : lastNameInvalidMsg,
-                                'disabled' : user.lockedLogin}
+                                'readonly' : user.lockedLogin}
 														 })
 						}}
                         {{ form_errors(form.lastName) }}
@@ -66,7 +66,7 @@
                                 'data-validation-regexp': '^([a-zA-Z0-9._]+)$',
 								'data-validation-length': 'min3',
 								'data-validation-error-msg' : usernameInvalidMsg,
-                                'disabled' : user.lockedLogin}
+                                'readonly' : user.lockedLogin}
 														 })
 						 }}
                         {{ form_errors(form.username) }}
