@@ -211,7 +211,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             !$this->isImpersonated() and 
             !in_array($event->getRequest()->attributes->get('_route'), $authorizedUrl)) {
 
-            $uri = $this->router->generate('claro_registration_send_mail', array('mail' => $user->getMail()));
+            $uri = $this->router->generate('claro_registration_send_mail', array('userId' => $user->getId()));
             $response = new RedirectResponse($uri);
             $event->setResponse($response);
             $this->breakChain = true;
