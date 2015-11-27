@@ -1374,7 +1374,7 @@ password_hint_intro: 'Ajoutez au minimum : '
 password_hint_morecar: ' caractère supplémentaire'
 password_hint_morecars: ' caractères supplémentaires'
 password_hint_onenumber: un chiffre
-password_hint_onesymbol: un symbole
+password_hint_onesymbol: 'un symbole (! @ # _ $ % ^ & * ?)'
 password_hint_onemin: une minuscule
 password_hint_onemaj: une majuscule
 password_hint_nowhitespace: Attention ! Votre mot de passe contient au moins un espace. Merci de le retirer.

@@ -1340,7 +1340,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         // Third rule : one maj character minimum
         // Fourth rule : one min character minimum
         // Firth rule : one symbol minimum
-        if ( ! preg_match_all('$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$', $password) ) {
+        if ( ! preg_match_all('$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W_])\S*$', $password) ) {
             return false;
         }
 
