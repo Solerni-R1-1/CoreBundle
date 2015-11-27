@@ -428,6 +428,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $lockedPassword = 0;
 
+
+    const FORUM_ORDER_DESC= 0;
+    const FORUM_ORDER_ASC = 1;
+    const FORUM_ORDER_POP = 2;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $forumOrder = self::FORUM_ORDER_ASC;
+
     public function __construct()
     {
         parent::__construct();
@@ -1286,6 +1295,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setLinkedIn($linkedIn) { $this->linkedIn = $linkedIn; }
 
     public function setGooglePlus($googlePlus) { $this->googlePlus = $googlePlus; }
+
+    public function getForumOrder() { return $this->forumOrder; }
+
+    public function setForumOrder($forumOrder) { $this->forumOrder = $forumOrder; }
 
     public function getAge() {
     	if ($this->birthdate != null) {
