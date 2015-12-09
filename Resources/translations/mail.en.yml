@@ -25,12 +25,12 @@ sub_email_link: confirm my registration
 sub_email_copy: If the button does not work, copy and paste the following link to your browser's address bar
 
 sub_mooc_title: Confirmation of registration for MOOC
-sub_mooc_confirm: We would like to confirm your registration for MOOC
+sub_mooc_confirm: We are pleased to confirm your registration for MOOC
 sub_mooc_started: which started on
 sub_mooc_will_start: which will start on
 sub_mooc_duration: and last
 sub_mooc_weeks: weeks
-sub_mooc_body: We would like to thank you for registering and hope you really enjoy this new training course on Solerni, your collaborative French MOOC platform.
+sub_mooc_body: We hope you really enjoy this new training course on Solerni, your collaborative French MOOC platform.
 
 pass_change_confirm_title: Changing your Solerni password
 sub_confirm_body: We confirm the change of your password on our platform. You can now reconnect with your new password
