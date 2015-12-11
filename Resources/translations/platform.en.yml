@@ -539,7 +539,7 @@ public_empty: 'There is no public workspace'
 public_workspaces: 'Public workspaces'
 profile_description_title: Find out more about me
 profile_form_gender: Sex
-profile_form_city: Town/City
+profile_form_city: Address
 profile_form_country: Country
 profile_form_birthdate: Date of birth
 profile_form_website: Website
