@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            {% set nbRules = badge.rules|length %}
+            {#% set nbRules = badge.rules|length %}
             {% if 0 < nbRules %}
                 {% if 0 == validatedRules.validRules %}
                 <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 {% endif %}
-            {% endif %}
+            {% endif %#}
         </div>
     </div>
 {% endblock %}

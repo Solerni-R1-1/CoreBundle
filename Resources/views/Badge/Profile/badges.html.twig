@@ -2,11 +2,14 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
+{% set detailedBadges = is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
+
 {% trans_default_domain "badge" %}
 
 {% block bodyClasses %}{{ parent() }} body-badges{% endblock %}
 
 {% block content %}
+
     <div class="row"><div class="panel panel-default">
     {{ macros.flashBox() }}
         {# OR PROFILE WIDGET #}
@@ -96,56 +99,59 @@
                                                     
                                                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                     <h4>{{ 'badges_badge'|trans({}, 'platform') }} &laquo; {{ badge.name }} &raquo;</h4>
-                                                    <p><strong>{{ 'badges_attribue_le'|trans({}, 'platform') }}</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }} {{ 'badges_by'|trans({}, 'platform') }} {{userBadge.issuer.lastname}}</p>
+                                                    <p><strong>{{ 'badges_attribue_le'|trans({}, 'platform') }}</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }}{# {{ 'badges_by'|trans({}, 'platform') }} {{userBadge.issuer.lastname}}#}</p>
+                                                    {% if detailedBadges %}
                                                     <p><strong>{{ 'badges_name'|trans({}, 'platform') }} :</strong> {{ badge.name }}</p>
                                                     <p><strong>{{ 'badges_version'|trans({}, 'platform') }} :</strong> {{ badge.version }}</p>
+                                                    {% endif %}
                                                     <p><strong>{{ 'badges_description'|trans({}, 'platform') }} :</strong> {{ badge.description }}</p>
                                                     <p><strong>{{ 'badges_critere'|trans({}, 'platform') }} :</strong> {{ badge.criteria|raw }}</p>
-                                                    <p><strong>{{ 'badges_actions'|trans({}, 'platform') }} :</strong></p>
-                                                    {% set nbRules = badge.rules|length %}
-                                                    {% if 0 < nbRules %}                                
-                                                        {% set validatedRules = validatedRulesPerBadges[badge.id] %}                                
-                                                        
-                                                        {% if 0 == validatedRules.validRules %}
-                                                            <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
-                                                        {% elseif validatedRules.validRules < nbRules %}
-                                                            <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'badge') }}.</div>
-                                                        {% else %}
+                                                    {% if detailedBadges %}
+                                                        <p><strong>{{ 'badges_actions'|trans({}, 'platform') }} :</strong></p>
+                                                        {% set nbRules = badge.rules|length %}
+                                                        {% if 0 < nbRules %}
+                                                            {% set validatedRules = validatedRulesPerBadges[badge.id] %}
 
-                                                            <table class="table table-bordered">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>{{ 'action'|trans({}, 'platform') }}</th>
-                                                                        <th>{{ 'date'|trans({}, 'platform') }}</th>
-                                                                        <th>{{ 'resource'|trans({}, 'platform') }}</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                {% for validatedRule in validatedRules.rules %}
-                                                                    {% for validatedLog in validatedRule.logs %}
-                                                                        {% set log    = validatedLog.log %}
-                                                                        {% set action = 'log_' ~ log.action ~ '_title' %}
+                                                            {% if 0 == validatedRules.validRules %}
+                                                                <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
+                                                            {% elseif validatedRules.validRules < nbRules %}
+                                                                <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'badge') }}.</div>
+                                                            {% else %}
+
+                                                                <table class="table table-bordered">
+                                                                    <thead>
                                                                         <tr>
-                                                                            <td>{{ action|trans({}, 'log') }}</td>
-                                                                            <td>{{ log.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
-                                                                            <td>
-                                                                                {% if validatedLog.url is not null %}
-                                                                                    {{ validatedLog.url | raw }}
-                                                                                {% else %}
-                                                                                    {% if log.resourceNode != null %}
-                                                                                        <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">{{ log.resourceNode.path }}</a>
-                                                                                    {% endif %}
-                                                                                {% endif %}
-                                                                            </td>
+                                                                            <th>{{ 'action'|trans({}, 'platform') }}</th>
+                                                                            <th>{{ 'date'|trans({}, 'platform') }}</th>
+                                                                            <th>{{ 'resource'|trans({}, 'platform') }}</th>
                                                                         </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    {% for validatedRule in validatedRules.rules %}
+                                                                        {% for validatedLog in validatedRule.logs %}
+                                                                            {% set log    = validatedLog.log %}
+                                                                            {% set action = 'log_' ~ log.action ~ '_title' %}
+                                                                            <tr>
+                                                                                <td>{{ action|trans({}, 'log') }}</td>
+                                                                                <td>{{ log.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
+                                                                                <td>
+                                                                                    {% if validatedLog.url is not null %}
+                                                                                        {{ validatedLog.url | raw }}
+                                                                                    {% else %}
+                                                                                        {% if log.resourceNode != null %}
+                                                                                            <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">{{ log.resourceNode.path }}</a>
+                                                                                        {% endif %}
+                                                                                    {% endif %}
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endfor %}
                                                                     {% endfor %}
-                                                                {% endfor %}
-                                                                </tbody>
-                                                            </table>
+                                                                    </tbody>
+                                                                </table>
 
+                                                            {% endif %}
                                                         {% endif %}
                                                     {% endif %}
-                                                    
                                                 </div>
                                             </div>
                                           </div>
