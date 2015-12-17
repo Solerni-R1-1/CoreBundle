@@ -70,7 +70,7 @@
             {% set status = badge.status %}
             {% set badgeEntity = badge.badge %}
             {% if 2 == status %}
-                    {% set buttonLink = path( 'claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badgeEntity.slug } ) %}
+                    {% set buttonLink = badge.resource.url %}{#path( 'claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badgeEntity.slug } ) %}#}
                     {% set issuedAt = badge.issuedDate %}
             {% elseif badge.resource.url is defined %}
                    	{% set buttonLink =  badge.resource.url %}
@@ -103,7 +103,7 @@
                     {% endif %}
                     <article class="slrn-my_badges-list__content">{{ badgeEntity.criteria | raw }}</article>
                     <footer class="slrn-my_badges-list__footer">
-                        <span class="slrn-gratuit-icon">{{ 'free_price'|trans({}, 'platform') }}</span>
+                        {#<span class="slrn-gratuit-icon">{{ 'free_price'|trans({}, 'platform') }}</span>#}
                          {% if 2 == status %}
                             <a class="btn btn-primary pull-right" href="{{ buttonLink }}">
                                 {{'my_badge_details'|trans({}, 'platform')}}
