@@ -77,6 +77,10 @@
 
                             <div class="row">
                                 {% for userBadge in userBadges2 %}
+                            {% if loop.index0 % 4 == 0 and loop.index0 != 0 %}
+                            </div>
+                            <div class="row">
+                            {% endif %}
                                     {% set badge = userBadge.badge %}
                                     <div class="col-xs-3 text-center slrn-mesbadges-badge badge-type-{% if badge.isSkillBadge %}competence {% elseif badge.isKnowledgeBadge %}connaissance{% else %}solerni{% endif %}">
                                         <span class="badge_span_image" data-toggle="modal" data-target="#myModal{{badge.id}}">
@@ -158,8 +162,7 @@
                                           
                                         </div><!-- /.modal-content -->
                                       </div><!-- /.modal-dialog -->
-                                    </div><!-- /.modal -->  
-
+                                    </div><!-- /.modal -->
                                 {% endfor %}
                             </div>
                             <hr/>
