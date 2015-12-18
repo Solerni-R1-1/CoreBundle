@@ -233,7 +233,14 @@ class SolerniExtension extends \Twig_Extension
         }
         $hours = floor($time / 60);
         $minutes = ($time % 60);
-        return sprintf($format, $hours, $minutes);
+
+        if (0 == $hours) {
+            return sprintf('%02dmin', $minutes);
+        } else if (0 == $minutes) {
+            return sprintf('%02dH', $hours);
+        } else {
+            return sprintf($format, $hours, $minutes);
+        }
     }
     
     /**

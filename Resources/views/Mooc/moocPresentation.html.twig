@@ -73,7 +73,7 @@
                     {% endif %}
                     {% if mooc.getDuration() is not empty or mooc.getWeeklyTime() is not empty %}<br/>{% endif %}
                     {% if mooc.getWeeklyTime() is not empty %}{{'weekly_duration'|trans({}, 'platform')}}&nbsp;:
-                        <span class="slrn-bold">{{mooc.getWeeklyTime() | minsToHoursMins('%dh%dmin')}}{% endif %}</span>
+                        <span class="slrn-bold">{{mooc.getWeeklyTime() | minsToHoursMins('%02dh%02dmin')}}{% endif %}</span>
                 </li>
 			{% endif%}
 
