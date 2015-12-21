@@ -180,7 +180,8 @@ class ProfileController extends Controller
         return array(
             'badgesPerMoocs'   => $badgesPerMoocs,
             'hashPerMoocs'     => $hashPerMoocs,
-            'validatedRulesPerBadges' => $validatedRulesPerBadges
+            'validatedRulesPerBadges' => $validatedRulesPerBadges,
+            'user'             => $user
         );
     }
 }

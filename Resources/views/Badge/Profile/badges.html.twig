@@ -3,6 +3,11 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% set detailedBadges = is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
+{% for role in user.roles %}
+    {% if role matches '/^ROLE_WS_MANAGER_*/' %}
+        {% set detailedBadges = true %}
+    {% endif %}
+{% endfor %}
 
 {% trans_default_domain "badge" %}
 
