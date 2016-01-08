@@ -2,12 +2,7 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% set detailedBadges = is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
-{% for role in user.roles %}
-    {% if role matches '/^ROLE_WS_MANAGER_*/' %}
-        {% set detailedBadges = true %}
-    {% endif %}
-{% endfor %}
+{% set isAdmin = is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_CREATOR') %}
 
 {% trans_default_domain "badge" %}
 
@@ -70,6 +65,9 @@
                     {% for moocname, badgesPerMooc in badgesPerMoocs %}
                         {% set mooc = badgesPerMooc.mooc %}
                         {% set userBadges2 = badgesPerMooc.userBadges %}
+
+                        {% set detailedBadges = isAdmin or is_granted('ROLE_WS_MANAGER_' ~ mooc.workspace.getGuid()) %}
+
                         <div class='mooc_wrapper' id='m_{{hashPerMoocs[moocname]}}'>
                             <h3>
                             {% if moocname == 'nomooc' %}
@@ -108,7 +106,7 @@
                                                     
                                                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                                     <h4>{{ 'badges_badge'|trans({}, 'platform') }} &laquo; {{ badge.name }} &raquo;</h4>
-                                                    <p><strong>{{ 'badges_attribue_le'|trans({}, 'platform') }}</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }}{# {{ 'badges_by'|trans({}, 'platform') }} {{userBadge.issuer.lastname}}#}</p>
+                                                    <p><strong>{{ 'badges_attribue_le'|trans({}, 'platform') }}</strong> {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform'))|raw }}{% if detailedBadges %} {{ 'badges_by'|trans({}, 'platform') }} {{userBadge.issuer.lastname}} {% endif %}</p>
                                                     {% if detailedBadges %}
                                                     <p><strong>{{ 'badges_name'|trans({}, 'platform') }} :</strong> {{ badge.name }}</p>
                                                     <p><strong>{{ 'badges_version'|trans({}, 'platform') }} :</strong> {{ badge.version }}</p>
