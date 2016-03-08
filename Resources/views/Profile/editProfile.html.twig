@@ -256,6 +256,38 @@
                         {{ form_errors(form.description) }}
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-3 "></label>
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.notifarticle) }}
+                        <label for="profile_form_notifarticle" style="font-weight: normal">{{ form.notifarticle.vars.label|trans({}, 'platform') }}</label>
+                        {{ form_errors(form.notifarticle) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-3 "></label>
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.notifsujettheme) }}
+                        <label for="profile_form_notifsujettheme" style="font-weight: normal">{{ form.notifsujettheme.vars.label|trans({}, 'platform') }}</label>
+                        {{ form_errors(form.notifsujettheme) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-3 "></label>
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.notifciter) }}
+                        <label for="profile_form_notifciter" style="font-weight: normal">{{ form.notifciter.vars.label|trans({}, 'platform') }}</label>
+                        {{ form_errors(form.notifciter) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-3 "></label>
+                    <div class="col-md-9 col-xs-9 slrn-profile-edit-field">
+                        {{ form_widget(form.notiflike) }}
+                        <label for="profile_form_notiflike" style="font-weight: normal">{{ form.notiflike.vars.label|trans({}, 'platform') }}</label>
+                        {{ form_errors(form.notiflike) }}
+                    </div>
+                </div>
                 {# OPTIN #}
                 {% if form.accepted_com_terms is defined %}
                 <div class="form-group row">
@@ -291,6 +323,10 @@
                         </div>
                     </div>
                 {% endif %}
+
+
+
+
                 {# CACHE : TOKEN #}
                 <div class="form-group row hide">
                     {{ form_label(form._token, label|default(null), { 'label_attr' : { 'class': 'hide' } } ) }}

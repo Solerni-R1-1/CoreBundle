@@ -136,7 +136,13 @@ class ProfileType extends AbstractType
 	            'description',
 	            'tinymce',
 	            array('required' => false, 'label' => 'description')
-	        );
+	        )
+            ->add('notifarticle', 'checkbox',  array('label' => 'Recevoir notification article', 'required' => false))
+            ->add('notifsujettheme', 'checkbox',  array( 'label' => 'Recevoir notification thème','required' => false))
+            ->add('notifciter', 'checkbox',  array( 'label' => 'Recevoir notification citation','required' => false))
+            ->add('notiflike', 'checkbox',  array('label' => 'Recevoir notification like', 'required' => false))
+
+        ;
 
     }
 

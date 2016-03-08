@@ -1,0 +1,110 @@
+<!doctype html>
+
+<html lang="fr">
+<head>
+    <title>{{'sub_confirm_title'|trans({}, 'mail')}}</title>
+</head>
+<body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+    <tr bgcolor="#4b667c">
+        <td width="620" align="center">
+            <table border="0" width="620" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="left">
+                        <a href="https://solerni.org"><img border="0" src="http://laborange.fr/sites/default/files/logo-beta.png" alt="Solerni" /></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="620" align="center">
+            <table border="0" width="620" cellpadding="0" cellspacing="0">
+
+                <tr>
+                    <td align="left" bgcolor="#ffffff">
+                        <table border="0" width="100%" cellpadding="20" cellspacing="0">
+                            <tr>
+                                <td>
+
+                                    {{'mail_hello'|trans({}, 'mail')}} {{user.getFirstName()}} {{user.getLastName()}},<br/>
+
+                                    {% if notifType == "article" %}
+
+                                          {#<a href='{{ url('claro_registration_validate_user', { 'key' : user.getKeyValidate, 'moocId' : moocId} ) }}'>{{'sub_email_link'|trans({}, 'mail')}}</a><br/>
+
+                                        <br/>Email
+                                        {{'sub_confirm_link'|trans({}, 'mail')}} <a href='{{ url('claro_security_login') }}'>{{'sub_confirm_here'|trans({}, 'mail')}}</a>.<br/>
+                                        <br/>#}
+
+
+
+                                        {{'notif_addarticle'|trans({}, 'mail')}} {{titleDispositif()}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien()}}
+
+
+                                        {#Un nouvel article a été ajouté sur la page « S’informer » du dispositif d’apprentissage {nom du dispositif}.#}
+                                        {#Consulter l’article : {lien page}#}
+
+
+
+                                    {% elseif notifType == "sujet" %}
+
+                                        {{'notif_addsujet'|trans({}, 'mail')}} {{titleDispositif()}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien()}}
+
+                                        {#Un nouveau sujet a été ajouté sur le forum {nom du dispositif}.#}
+                                        {#Consulter le sujet : {lien du sujet}#}
+
+
+
+                                    {% elseif notifType == "theme" %}
+
+                                        {{'notif_addtheme'|trans({}, 'mail')}} {{titleDispositif()}}
+                                        {{'notif_consulttheme'|trans({}, 'mail')}} : {{lien()}}
+
+                                        {#Un nouveau thème a été ajouté sur le forum {nom du dispositif}.#}
+                                        {#Consulter le thème : {lien du thème}#}
+
+
+
+                                    {% elseif notifType == "citation" %}
+
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}} {{'notif_addcitation'|trans({}, 'mail')}} : {{titleDispositif()}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} {{lien()}}
+
+                                        {#{Prénom} {NOM} a répondu à votre message sur le forum {nom du dispositif}.#}
+                                        {#Consulter la réponse : {permalien}#}
+
+
+                                    {% elseif notifType == "like" %}
+
+
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}} : {{titleDispositif()}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien()}}
+
+                                        {#{Prénom} {NOM} a « liké » votre message sur le forum {nom du dispositif}.#}
+                                        {#Consulter votre message : {permalien}#}
+
+
+
+                                    {% endif %}
+
+
+
+
+                                    {#L'équipe de Solerni.org#}
+                                    {#Apprendre c'est toujours mieux ensemble sur Solerni.org#}
+
+                                    <br/>
+                                    {% include('ClarolineCoreBundle:Partials:mailFooter.html.twig') %}
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

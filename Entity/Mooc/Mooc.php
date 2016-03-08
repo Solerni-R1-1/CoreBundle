@@ -105,7 +105,7 @@ class Mooc
      * @ORM\Column(name="certification_type", type="json_array")
      */
     private $certificationType = array();
-    
+
     /**
      * @var integer
      * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
@@ -120,6 +120,26 @@ class Mooc
 	 * @Assert\NotBlank(groups={"language_required"})
      */
     private $language;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $notifarticlemooc = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $notifsujetthememooc = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $notifcitermooc = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $notiflikemooc = false;
 
     /**
      * @var boolean
@@ -148,6 +168,70 @@ class Mooc
      * @ORM\Column(name="team_description", type="text", nullable=true)
      */
     private $teamDescription;
+
+    /**
+     * @return mixed
+     */
+    public function getNotifarticlemooc()
+    {
+        return $this->notifarticlemooc;
+    }
+
+    /**
+     * @param mixed $notifarticlemooc
+     */
+    public function setNotifarticlemooc($notifarticlemooc)
+    {
+        $this->notifarticlemooc = $notifarticlemooc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifsujetthememooc()
+    {
+        return $this->notifsujetthememooc;
+    }
+
+    /**
+     * @param mixed $notifsujetthememooc
+     */
+    public function setNotifsujetthememooc($notifsujetthememooc)
+    {
+        $this->notifsujetthememooc = $notifsujetthememooc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifcitermooc()
+    {
+        return $this->notifcitermooc;
+    }
+
+    /**
+     * @param mixed $notifcitermooc
+     */
+    public function setNotifcitermooc($notifcitermooc)
+    {
+        $this->notifcitermooc = $notifcitermooc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotiflikemooc()
+    {
+        return $this->notiflikemooc;
+    }
+
+    /**
+     * @param mixed $notiflikemooc
+     */
+    public function setNotiflikemooc($notiflikemooc)
+    {
+        $this->notiflikemooc = $notiflikemooc;
+    }
 
     /**
      * @var boolean

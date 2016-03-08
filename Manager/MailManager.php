@@ -107,7 +107,7 @@ class MailManager
         return $this->send($subject, $body, array($user));
     }
 
-        /**
+    /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return boolean
@@ -238,7 +238,7 @@ class MailManager
             }
 
             if ($replyToEmail !== null) {
-            	$message->setReplyTo($replyToEmail);
+                $message->setReplyTo($replyToEmail);
             }
 
 
@@ -308,11 +308,11 @@ class MailManager
 
         $subject = 'Demande de contact Solerni au service '.$contactName;
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Contact:emailContact.html.twig',  
-                array('contactName' => $contactName,
-                        'replyTo' => $replyTo,
-                        'data' => $data,
-                        'content' => $content));
+            'ClarolineCoreBundle:Contact:emailContact.html.twig',
+            array('contactName' => $contactName,
+                'replyTo' => $replyTo,
+                'data' => $data,
+                'content' => $content));
 
         $userSolerni = new User();
         $userSolerni->setMail($contactMail);
@@ -326,4 +326,42 @@ class MailManager
     public function getSupportMail(){
         return $this->ch->getParameter('support_email');
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return boolean
+     */
+    public function sendNotificationMessage(User $user, $notifType,  MoocSession $mooc, User $userAction = null, $titleDispositif = null, $lien = null)
+    {
+        $titlemooc = $mooc->getMooc()->getTitle();
+
+        if ($notifType=="article"){
+            $subject = $titlemooc.' : '. $this->translator->trans('notif_title_article', array(), 'mail');
+
+        }else if($notifType == "sujet"){
+
+            $subject = $titlemooc.' : '. $this->translator->trans('notif_title_sujet', array(), 'mail');
+
+        }else if($notifType == "theme"){
+
+            $subject = $titlemooc.' : '. $this->translator->trans('notif_title_theme', array(), 'mail');
+
+        }else if($notifType == "citation"){
+
+            $subject = $titlemooc.' : '. $this->translator->trans('notif_title_citation', array(), 'mail');
+
+        } else if ($notifType == "like"){
+
+            $subject = $titlemooc.' : '.  $this->translator->trans('notif_title_like', array(), 'mail');
+
+        }
+
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Notification:notification_template.html.twig',  array('user' => $user, $notifType, $userAction, $titleDispositif, $lien));
+
+
+        return $this->send($subject, $body, array($user));
+    }
+
 }

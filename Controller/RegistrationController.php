@@ -509,6 +509,11 @@ class RegistrationController extends Controller
 
         $form->handleRequest($this->get('request'));
 
+        printf('coucou');
+        print($form->getErrorsAsString());
+        print($form->getErrors());
+
+
         if ($form->isValid()) {
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
 

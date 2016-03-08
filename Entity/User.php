@@ -408,7 +408,27 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $googlePlus;
 
-        /**
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $notifarticle = true;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $notifsujettheme = true;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $notifciter = true;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $notiflike = true;
+
+    /**
      * @var $userMoocPreferences[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Mooc\UserMoocPreferences",
@@ -547,6 +567,70 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->lastName = $lastName;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotiflike()
+    {
+        return $this->notiflike;
+    }
+
+    /**
+     * @param mixed $notiflike
+     */
+    public function setNotiflike($notiflike)
+    {
+        $this->notiflike = $notiflike;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifarticle()
+    {
+        return $this->notifarticle;
+    }
+
+    /**
+     * @param mixed $notifarticle
+     */
+    public function setNotifarticle($notifarticle)
+    {
+        $this->notifarticle = $notifarticle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifsujettheme()
+    {
+        return $this->notifsujettheme;
+    }
+
+    /**
+     * @param mixed $notifsujettheme
+     */
+    public function setNotifsujettheme($notifsujettheme)
+    {
+        $this->notifsujettheme = $notifsujettheme;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifciter()
+    {
+        return $this->notifciter;
+    }
+
+    /**
+     * @param mixed $notifciter
+     */
+    public function setNotifciter($notifciter)
+    {
+        $this->notifciter = $notifciter;
     }
 
     /**
