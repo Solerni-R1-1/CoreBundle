@@ -46,11 +46,6 @@ class BaseProfileType extends AbstractType
             ->add('mail', 'email', array('label' => 'email'))
             ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
-        $builder->add('notifarticle', 'checkbox',  array('label' => 'Recevoir notification article', 'required' => false));
-        $builder->add('notifsujettheme', 'checkbox',  array( 'label' => 'Recevoir notification thème','required' => false));
-        $builder->add('notifciter', 'checkbox',  array( 'label' => 'Recevoir notification citation','required' => false));
-        $builder->add('notiflike', 'checkbox',  array('label' => 'Recevoir notification like', 'required' => false));
-
         $content = $this->termsOfService->getTermsOfService(false);
 
         if ($this->termsOfService->isActive() and $content instanceof Content) {
