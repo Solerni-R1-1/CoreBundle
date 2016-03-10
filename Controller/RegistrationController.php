@@ -509,9 +509,8 @@ class RegistrationController extends Controller
 
         $form->handleRequest($this->get('request'));
 
-        printf('coucou');
-        print($form->getErrorsAsString());
-        print($form->getErrors());
+    //    print($form->getErrorsAsString());
+  //      print($form->getErrors());
 
 
         if ($form->isValid()) {
