@@ -40,8 +40,8 @@
 
 
 
-                                        {{'notif_addarticle'|trans({}, 'mail')}} {{titleDispositif()}}
-                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien()}}
+                                        {{'notif_addarticle'|trans({}, 'mail')}} {{titleDispositif}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien}}
 
 
                                         {#Un nouvel article a été ajouté sur la page « S’informer » du dispositif d’apprentissage {nom du dispositif}.#}
@@ -51,8 +51,8 @@
 
                                     {% elseif notifType == "sujet" %}
 
-                                        {{'notif_addsujet'|trans({}, 'mail')}} {{titleDispositif()}}
-                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien()}}
+                                        {{'notif_addsujet'|trans({}, 'mail')}} {{titleDispositif}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien}}
 
                                         {#Un nouveau sujet a été ajouté sur le forum {nom du dispositif}.#}
                                         {#Consulter le sujet : {lien du sujet}#}
@@ -61,8 +61,8 @@
 
                                     {% elseif notifType == "theme" %}
 
-                                        {{'notif_addtheme'|trans({}, 'mail')}} {{titleDispositif()}}
-                                        {{'notif_consulttheme'|trans({}, 'mail')}} : {{lien()}}
+                                        {{'notif_addtheme'|trans({}, 'mail')}} {{titleDispositif}}
+                                        {{'notif_consulttheme'|trans({}, 'mail')}} : {{lien}}
 
                                         {#Un nouveau thème a été ajouté sur le forum {nom du dispositif}.#}
                                         {#Consulter le thème : {lien du thème}#}
@@ -71,8 +71,8 @@
 
                                     {% elseif notifType == "citation" %}
 
-                                        {{userAction.getFirstName()}} {{userAction.getLastName()}} {{'notif_addcitation'|trans({}, 'mail')}} : {{titleDispositif()}}
-                                        {{'notif_consultarticle'|trans({}, 'mail')}} {{lien()}}
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}} {{'notif_addcitation'|trans({}, 'mail')}} : {{titleDispositif}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} {{lien}}
 
                                         {#{Prénom} {NOM} a répondu à votre message sur le forum {nom du dispositif}.#}
                                         {#Consulter la réponse : {permalien}#}
@@ -81,8 +81,8 @@
                                     {% elseif notifType == "like" %}
 
 
-                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}} : {{titleDispositif()}}
-                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien()}}
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}} : {{titleDispositif}}
+                                        {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien}}
 
                                         {#{Prénom} {NOM} a « liké » votre message sur le forum {nom du dispositif}.#}
                                         {#Consulter votre message : {permalien}#}

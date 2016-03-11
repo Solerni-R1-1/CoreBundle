@@ -357,8 +357,16 @@ class MailManager
 
         }
 
+
+       // print_r($user);
+        print_r($notifType);
+        print_r($userAction);
+        print_r( $titleDispositif);
+        print_r( $lien);
+
+
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Notification:notification_template.html.twig',  array('user' => $user, $notifType, $userAction, $titleDispositif, $lien));
+            'ClarolineCoreBundle:Notification:notification_template.html.twig',  array('user' => $user, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien'=> $lien));
 
 
         return $this->send($subject, $body, array($user));
