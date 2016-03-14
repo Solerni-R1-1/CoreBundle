@@ -332,44 +332,100 @@ class MailManager
      *
      * @return boolean
      */
-    public function sendNotificationMessage(User $user, $notifType,  MoocSession $mooc, User $userAction = null, $titleDispositif = null, $lien = null)
+    public function sendNotificationMessage(User $userCible, $notifType,  MoocSession $mooc, User $userAction = null, $titleDispositif = null, $lien = null)
     {
+
+
         $titlemooc = $mooc->getMooc()->getTitle();
 
-        if ($notifType=="article"){
+        if ($notifType=="article" && $mooc->getMooc()->getNotifarticlemooc() == 1 ){
+
             $subject = $titlemooc.' : '. $this->translator->trans('notif_title_article', array(), 'mail');
 
-        }else if($notifType == "sujet"){
+
+            foreach ($mooc->getUsers() as  $user) {
+                if ($user->getNotifarticle() == 1) {
+
+                    $body = $this->container->get('templating')->render(
+                        'ClarolineCoreBundle:Notification:notification_template.html.twig', array('user' => $user, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien' => $lien));
+
+                    return  $this->send($subject, $body, array($user));
+
+                }
+            }
+
+        }else if($notifType == "sujet" && $mooc->getMooc()->getNotifsujetthememooc() == 1){
 
             $subject = $titlemooc.' : '. $this->translator->trans('notif_title_sujet', array(), 'mail');
 
-        }else if($notifType == "theme"){
+            foreach ($mooc->getUsers() as  $user) {
+                if ($user->getNotifsujettheme() == 1) {
+
+
+                    $body = $this->container->get('templating')->render(
+                        'ClarolineCoreBundle:Notification:notification_template.html.twig', array('user' => $user, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien' => $lien));
+
+                    return     $this->send($subject, $body, array($user));
+
+                }
+            }
+
+        }else if($notifType == "theme" && $mooc->getMooc()->getNotifsujetthememooc() == 1 ){
+
 
             $subject = $titlemooc.' : '. $this->translator->trans('notif_title_theme', array(), 'mail');
 
-        }else if($notifType == "citation"){
+           // foreach ($mooc->getUsersNotifTheme() as  $user) {
+
+               // if ($user[4]) {
+
+            foreach ($mooc->getUsers() as  $user) {
+                if ($user->getNotifsujettheme() == 1) {
+
+                    $body = $this->container->get('templating')->render(
+                        'ClarolineCoreBundle:Notification:notification_template.html.twig', array('user' => $user, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien' => $lien));
+
+                    //  $body = $this->container->get('templating')->render(
+                    //      'ClarolineCoreBundle:Notification:notification_template.html.twig', array('lastname' => $user[0], 'firstname' => $user[1], 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien' => $lien));
+
+                    //$this->send($subject, $body, array($user[3]));
+                    $this->send($subject, $body, array($user));
+                }
+            }
+
+        }else if($notifType == "citation" && $mooc->getMooc()->getNotifcitermooc() == 1){
 
             $subject = $titlemooc.' : '. $this->translator->trans('notif_title_citation', array(), 'mail');
 
-        } else if ($notifType == "like"){
+            $body = $this->container->get('templating')->render(
+                'ClarolineCoreBundle:Notification:notification_template.html.twig', array('user' => $userCible, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien' => $lien));
+
+
+            foreach ($mooc->getUsers() as  $user) {
+                if ($user->getNotifciter() == 1 && $user->isEqualTo($userCible)) {
+
+                    return    $this->send($subject, $body, array($userCible));
+                }
+            }
+
+        } else if ($notifType == "like" && $mooc->getMooc()->getNotiflikemooc() == 1){
 
             $subject = $titlemooc.' : '.  $this->translator->trans('notif_title_like', array(), 'mail');
 
+            $body = $this->container->get('templating')->render(
+                'ClarolineCoreBundle:Notification:notification_template.html.twig', array('user' => $userCible, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien' => $lien));
+
+
+            foreach ($mooc->getUsers() as  $user) {
+                if ($user->getNotiflike() == 1 && $user->isEqualTo($userCible)) {
+
+                    return      $this->send($subject, $body, array($userCible));
+                }
+            }
+
         }
-
-
-       // print_r($user);
-        print_r($notifType);
-        print_r($userAction);
-        print_r( $titleDispositif);
-        print_r( $lien);
-
-
-        $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Notification:notification_template.html.twig',  array('user' => $user, 'notifType' => $notifType, 'userAction' => $userAction, 'titleDispositif' => $titleDispositif, 'lien'=> $lien));
-
-
-        return $this->send($subject, $body, array($user));
+        print (4);
+        return true;
     }
 
 }

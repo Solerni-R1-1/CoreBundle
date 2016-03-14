@@ -283,7 +283,59 @@ class MoocSession extends AbstractIndexable
 
     	return $allUsers;
     }
-    
+
+    /**
+     * Get all Users activate Notification
+     *
+     * @return Array (mail -> { notifs... } )
+     */
+    public function getUsersNotif() {
+
+
+        // Get all users of session who activated notification
+        $allUsers = array();
+
+        foreach ($this->getUsers() as $user) {
+            if (($user->getNotifarticle()) || ($user->getNotifsujettheme())  || ($user->getNotifciter()) || ($user->getNotiflike())) {
+                if (!in_array($user, $allUsers)) {
+
+                    $user = array($user->getLastName(), $user->getFirstName(), $user->getMail(), $user->getNotifarticle() , $user->getNotifsujettheme()  , $user->getNotifciter() , $user->getNotiflike()) ;
+                    $allUsers[] = $user;
+
+                }
+            }
+        }
+
+        return $allUsers;
+    }
+
+
+    /**
+     * Get all Users activate Notification
+     *
+     * @return Array (mail -> { notifs... } )
+     */
+    public function getUsersNotifTheme() {
+
+
+        // Get all users of session who activated notification
+        $allUsers = array();
+
+        foreach ($this->getUsers() as $user) {
+
+            if ($user->getNotifciter()) {
+                if (!in_array($user, $allUsers)) {
+                    $allUsers[] = $user;
+
+                }
+            }
+        }
+
+        return $allUsers;
+    }
+
+
+
     /**
      * Get Users
      * 
