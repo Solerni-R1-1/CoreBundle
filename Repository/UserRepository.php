@@ -1293,14 +1293,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
     
     public function getAllUsersForExport(MoocSession $session, $excludeRoles = array()) {
-		$from = $session->getStartInscriptionDate();
-		$to = $session->getEndInscriptionDate();
-
 
     	$dql = "SELECT DISTINCT
+    				u.id AS id,
     				u.username AS username,
     				u.firstName AS firstname,
     				u.lastName AS lastname,
+    				u.locale AS locale,
+    				u.notifarticle AS  notifarticle,
+                    u.notifsujettheme AS notifsujettheme,
+    				u.notifciter AS notifciter,
+    				u.notiflike AS notiflike,
     				u.mail AS mail,
     				(CASE WHEN u.isValidate = 1 THEN 'oui' ELSE 'non' END) AS validate
     			FROM Claroline\CoreBundle\Entity\User u
@@ -1322,7 +1325,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     	return $result;
     }
-    
+
     public function getWorkspaceUserIds(AbstractWorkspace $workspace, array $excludeRoles) {
     	$dql = "SELECT u.id FROM Claroline\CoreBundle\Entity\User u
     			JOIN u.roles r

@@ -29,7 +29,16 @@ class Version20160302182945 extends AbstractMigration
             ADD notifcitermooc TINYINT(1) NOT NULL DEFAULT 0,
             ADD notiflikemooc TINYINT(1) NOT NULL DEFAULT 0
         ");
+        $this->addSql(" UPDATE claro_user SET notifarticle=0;
+        ");
+        $this->addSql(" UPDATE claro_user SET notifsujettheme=0;
+        ");
+        $this->addSql(" UPDATE claro_user SET notifciter=0;
+        ");
+        $this->addSql(" UPDATE claro_user SET notiflike=0;
+        ");
     }
+
 
     public function down(Schema $schema)
     {
