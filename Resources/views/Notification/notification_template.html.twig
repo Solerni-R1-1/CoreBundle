@@ -2,7 +2,7 @@
 
 <html lang="fr">
 <head>
-    <title>{{'sub_confirm_title'|trans({}, 'mail')}}</title>
+    <title>Solerni</title>
 </head>
 <body style="margin: 0px; font-family : Helvetica, Arial, Verdana;" bgcolor="#f8f7f7" link="#ff004f" alink="#ff004f" vlink="#ff004f" style="margin:0px;">
 
@@ -39,7 +39,7 @@
                                         <br/>#}
 
 
-                                        {{'notif_addarticle'|trans({}, 'mail')}} {{titleDispositif}}<br/>
+                                        {{'notif_addarticle'|trans({}, 'mail')}} <b>{{titleDispositif}}.</b><br/><br/>
                                         {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien}}<br/><br/>
 
                                         {#Un nouvel article a été ajouté sur la page « S’informer » du dispositif d’apprentissage {nom du dispositif}.#}
@@ -47,7 +47,7 @@
 
                                     {% elseif notifType == "sujet" %}
 
-                                        {{'notif_addsujet'|trans({}, 'mail')}} {{titleDispositif}}<br/>
+                                        {{'notif_addsujet'|trans({}, 'mail')}} <b>{{titleDispositif}}.</b><br/><br/>
                                         {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien}}<br/><br/>
 
                                         {#Un nouveau sujet a été ajouté sur le forum {nom du dispositif}.#}
@@ -55,7 +55,7 @@
 
                                     {% elseif notifType == "theme" %}
 
-                                        {{'notif_addtheme'|trans({}, 'mail')}} {{titleDispositif}}<br/>
+                                        {{'notif_addtheme'|trans({}, 'mail')}} <b>{{titleDispositif}}.</b><br/><br/>
                                         {{'notif_consulttheme'|trans({}, 'mail')}} : {{lien}}<br/><br/>
 
                                         {#Un nouveau thème a été ajouté sur le forum {nom du dispositif}.#}
@@ -63,7 +63,7 @@
 
                                     {% elseif notifType == "citation" %}
 
-                                        {{userAction.getFirstName()}} {{userAction.getLastName()}} {{'notif_addcitation'|trans({}, 'mail')}} : {{titleDispositif}}<br/>
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}} {{'notif_addcitation'|trans({}, 'mail')}} <b>{{titleDispositif}}.</b><br/><br/>
                                         {{'notif_consultarticle'|trans({}, 'mail')}} {{lien}}<br/><br/>
 
                                         {#{Prénom} {NOM} a répondu à votre message sur le forum {nom du dispositif}.#}
@@ -71,7 +71,7 @@
 
                                     {% elseif notifType == "like" %}
 
-                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}} : {{titleDispositif}}<br/>
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}} <b>{{titleDispositif}}.</b><br/><br/>
                                         {{'notif_consultarticle'|trans({}, 'mail')}} : {{lien}}<br/><br/>
 
                                         {#{Prénom} {NOM} a « liké » votre message sur le forum {nom du dispositif}.#}

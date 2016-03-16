@@ -255,7 +255,16 @@
                         {{ form_widget(form.description) }}
                         {{ form_errors(form.description) }}
                     </div>
+
                 </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-3 "></label>
+                    <div class="col-md-9 col-xs-9">
+                        <label style="font-weight: normal"> {{ 'Notification_deb'|trans({}, 'platform')}}</label>
+                        <label style="font-weight: normal"> {{ 'Notification_debu'|trans({}, 'platform')}}</label>
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label class="control-label col-md-3 "></label>
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field">

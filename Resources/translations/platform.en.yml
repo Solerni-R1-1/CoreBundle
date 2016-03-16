@@ -16,14 +16,18 @@
 'I agree that my personal information be used for commercial purposes' : 'I accept that my personal information can be used for commercial purposes '
 'Last action': '{1} Last action|[1,Inf] %logAmount% Last actions'
 'Last name': Surname
+'Notification_title': 'Notifications'
+'Notification_deb' : 'You can receive notifications for devices that have enabled them.'
+'Notification_debu' : 'If you disable the notifications, you will not receive them for any of the devices.'
 'Recevoir notification article': 'Receive a notification when a new article is published in the blog  “learn more”'
 'Recevoir notification thème': 'Receive a notification when a new heading or subject is posted in any forum'
 'Recevoir notification citation': 'Receive a notification when a participant quotes my messages in any forum'
 'Recevoir notification like': 'Receive a notification when a participant likes my messages in any forum'
-'Envoyer notification article': 'Send a notification when a new article is published in the blog  “learn more”'
-'Envoyer notification thème': 'Send a notification when a new heading or subject is posted in any forum'
-'Envoyer notification citation': 'Send a notification when a participant quotes my messages in any forum'
-'Envoyer notification like': 'Send a notification when a participant likes my messages in any forum'
+
+'Envoyer notification article': 'Send a notification to participants when an article is published in the blog "learn more"'
+'Envoyer notification thème': 'Send a notification to participants when a new heading or subject is created in the forum'
+'Envoyer notification citation': 'Send a notification message to the message editor when his message is quoted in the forum'
+'Envoyer notification like': 'Send a notification to the message editor when his message is "liked" in the forum'
 
 'Or choose an existing file from resource manager': 'Please choose an existing file in the resource manager'
 'Overview of all recent activities in %workspaceName%': 'Overview of all %workspaceName% recent activities'
