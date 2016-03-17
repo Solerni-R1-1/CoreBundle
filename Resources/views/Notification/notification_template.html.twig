@@ -71,7 +71,7 @@
 
                                     {% elseif notifType == "like" %}
 
-                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}}<b>{{titleDispositif}}</b>{{'notif_end'|trans({}, 'mail')}}<br/><br/>
+                                        {{userAction.getFirstName()}} {{userAction.getLastName()}}  {{'notif_addlike'|trans({}, 'mail')}} <b>{{titleDispositif}}</b>{{'notif_end'|trans({}, 'mail')}}<br/><br/>
                                         {{'notif_consultlike'|trans({}, 'mail')}} : <a href="{{lien}}">{{lien}}</a><br/><br/>
 
                                         {#{Prénom} {NOM} a « liké » votre message sur le forum {nom du dispositif}.#}
