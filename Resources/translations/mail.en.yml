@@ -22,7 +22,7 @@ notif_addtheme: A new heading has been posted in the
 notif_addarticle: A new article has been posted  in the blog “Learn more” of
 notif_addcitation: quoted your message in the
 notif_addlike: liked your message in the
-notif_end: forum
+notif_end :  ' forum'
 
 notif_consultsujet: See the subject
 notif_consulttheme:  See the heading
