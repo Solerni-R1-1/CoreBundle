@@ -17,7 +17,7 @@
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 'Last name': Nom
 'Notification_title': 'Notifications'
-'Notification_deb' : 'Vous pouvez recevoir des notifications pour les dispositifs qui les ont activée s.'
+'Notification_deb' : 'Vous pouvez recevoir des notifications pour les dispositifs qui les ont activées.'
 'Notification_debu' : 'Si vous désactivez les notifications, vous ne les recevrez plus pour l’ensemble des dispositifs.'
 'Recevoir notification article': 'Recevoir une notification lorsqu’un article est publié sur les pages « S’informer »'
 'Recevoir notification thème': 'Recevoir une notification lorsqu’un thème ou un sujet est créé sur les forums'

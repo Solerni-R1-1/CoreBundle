@@ -10,10 +10,11 @@ init_password_body: Vous avez demandé la réinitialisation de votre mot de pass
 init_password_pseudo: Votre pseudo est
 init_password_link: Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe
 
+notif_mail_bonjour: Bonjour
 notif_title_sujet: Création d'un nouveau sujet
 notif_title_theme: Création d'un nouveau thème
 notif_title_article: Publication d'un nouvel article
-notif_title_citation: Création d'un nouveau sujet
+notif_title_citation: Votre message a été cité
 notif_title_like: Votre message a reçu un Like
 
 notif_addsujet: Un nouveau sujet a été ajouté sur le forum
@@ -21,12 +22,13 @@ notif_addtheme:  Un nouveau thème a été ajouté sur le forum
 notif_addarticle:  Un nouvel article a été publié sur la page « S’informer » du dispositif d’apprentissage
 notif_addcitation: a répondu à votre message sur le forum
 notif_addlike: a « liké » votre message sur le forum
+notif_end: .
 
 notif_consultsujet: Consulter le sujet
 notif_consulttheme:  Consulter le thème
 notif_consultarticle:  Consulter l’article
 notif_consultcitation: Consulter la réponse
-notif_consultlike: Consulter votre réponse
+notif_consultlike: Consulter votre message
 
 sub_confirm_title: Rappel de vos identifiants Solerni
 sub_confirm_thanks: Nous vous remercions pour votre inscription sur le site

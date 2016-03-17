@@ -10,17 +10,19 @@ init_password_body: You have requested a password reset. If you did not request 
 init_password_pseudo: Your username is
 init_password_link: Click on the link to reset your password
 
-notif_title_sujet: A new subject has been posted
-notif_title_theme: A new heading has been posted
-notif_title_article: A new article has been posted
-notif_title_citation: A participant quoted your message
-notif_title_like: A participant liked your message
+notif_mail_bonjour: Dear
+notif_title_sujet: a new subject has been posted
+notif_title_theme: a new heading has been posted
+notif_title_article: a new article has been posted
+notif_title_citation: a participant quoted your message
+notif_title_like: a participant liked your message
 
-notif_addsujet: A new subject has been published in the forum
-notif_addtheme: A new heading has been posted in the forum
+notif_addsujet: A new subject has been published in the
+notif_addtheme: A new heading has been posted in the
 notif_addarticle: A new article has been posted  in the blog “Learn more” of
-notif_addcitation: quoted your message in the forum
-notif_addlike: liked your message in the forum
+notif_addcitation: quoted your message in the
+notif_addlike: liked your message in the
+notif_end: forum
 
 notif_consultsujet: See the subject
 notif_consulttheme:  See the heading
