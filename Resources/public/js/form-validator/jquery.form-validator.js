@@ -1293,12 +1293,16 @@
 
             if ("." === ext) {
                 return false;
-            } else if (dot < 2 || dot > 57) {
+            } else if (dot < 2 || dot > 56) {
                 return false;
             } else {
                 var firstChar = domain.substring(0, 1),
+                    secondChar = domain.substring(1, 2),
                     lastChar = domain.substring(domain.length - 1, domain.length);
 
+                if (secondChar === '-' ){
+                    return false;
+                }
                 if (firstChar === '-' || firstChar === '.' || lastChar === '-' || lastChar === '.') {
                     return false;
                 }
