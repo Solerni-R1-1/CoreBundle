@@ -1304,7 +1304,7 @@
                 return false;
             } else if (firstCharaTld === '-' || lastCharaTld === '-') {
                 return false;
-            } else if (ext.replace(/[-\da-z\.]/g, '') !== '') {
+            } else if (ext.replace(/[-a-z\.]/g, '') !== '') {
                 return false;
             } else if (lengthtld < 2 || lengthtld > 56) {
                 return false;
