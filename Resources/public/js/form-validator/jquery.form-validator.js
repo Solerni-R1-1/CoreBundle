@@ -1289,20 +1289,33 @@
 
             var dot = val.lastIndexOf('.'),
                 domain = val.substring(0, dot),
-                ext = val.substring(dot, val.length);
+                ext = val.substring(dot, val.length),
+                lengthtld = ext.length - 1, seconde,
+                firstCharaTld =ext.substring(1, 2),
+                secondCharaTld =ext.substring(2, 3),
+                lastCharaTld = ext.substring(ext.length - 1, ext.length) ;
 
-            if ("." === ext) {
+            //alert(lengthtld);
+            //alert("firstCharaTld"+firstCharaTld);
+            //alert("secondCharaTld:"+secondCharaTld);
+            //alert("lastCharaTld"+lastCharaTld);
+
+            if (secondCharaTld === '-' ){
                 return false;
-            } else if (dot < 2 || dot > 56) {
+            } else if (firstCharaTld === '-' || lastCharaTld === '-') {
+                return false;
+            } else if (ext.replace(/[-\da-z\.]/g, '') !== '') {
+                return false;
+            } else if (lengthtld < 2 || lengthtld > 56) {
+                return false;
+            } else if ("." === ext) {
+                return false;
+            } else if (dot < 2 || dot > 57) {
                 return false;
             } else {
                 var firstChar = domain.substring(0, 1),
-                    secondChar = domain.substring(1, 2),
                     lastChar = domain.substring(domain.length - 1, domain.length);
 
-                if (secondChar === '-' ){
-                    return false;
-                }
                 if (firstChar === '-' || firstChar === '.' || lastChar === '-' || lastChar === '.') {
                     return false;
                 }
