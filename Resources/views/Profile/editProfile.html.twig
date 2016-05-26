@@ -35,7 +35,7 @@
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.firstName, {'attr': {
 								'data-validation': 'alphanumeric required',
-								'data-validation-allowing': '-éèöàñïîêôâ ',
+								'data-validation-allowing': '-éè\'öàñïîêôâ ',
 								'data-validation-error-msg' : firstNameInvalidMsg,
                                 'readonly' : user.lockedLogin}
 														 })
@@ -49,7 +49,7 @@
                     <div class="col-md-9 col-xs-9 slrn-profile-edit-field slrn-profile-edit-field--mandatory">
                         {{ form_widget(form.lastName, {'attr': {
 								'data-validation': 'alphanumeric required',
-								'data-validation-allowing': '-éèöàñïîêôâ ',
+								'data-validation-allowing': '-éè\'öàñïîêôâ ',
 								'data-validation-error-msg' : lastNameInvalidMsg,
                                 'readonly' : user.lockedLogin}
 														 })
