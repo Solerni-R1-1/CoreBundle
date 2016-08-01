@@ -28,6 +28,10 @@
     <span class="mooc_status">
         {{ 'mooc_is_over'|trans({}, 'platform') }}
     </span>
+    <h1>{{ date("midnight today")|date('d-m-Y H:i:s') }}</h1>
+    <h1>{{ date("now")|date('d-m-Y H:i:s') }}</h1>
+    <h1> {{ session.getEndDate()|date('d-m-Y H:i:s') }}</h1>
+
     {% if isRegistered %}
         {# give access to mooc archives if the user was subscribed #}
         <a href="{{ path( 'mooc_view_session', { 
