@@ -13,11 +13,11 @@
         {% endfor %}
         {% set userGroups = user.getGroups() %}
         {% for userGroup in userGroups %}
-        	{% for sessionGroup in userGroup.getMoocSessions() %}
-	            {% if sessionGroup.getId() == session.getId() %}
-	                {% set isRegistered = true %}
-	            {% endif %}
-	        {% endfor %}
+            {% for sessionGroup in userGroup.getMoocSessions() %}
+                {% if sessionGroup.getId() == session.getId() %}
+                    {% set isRegistered = true %}
+                {% endif %}
+            {% endfor %}
         {% endfor %}
     {% endif %}
 {% endif %}
@@ -28,61 +28,57 @@
     <span class="mooc_status">
         {{ 'mooc_is_over'|trans({}, 'platform') }}
     </span>
-    <h1>{{ date("midnight today")|date('d-m-Y H:i:s') }}</h1>
-    <h1>{{ date("now")|date('d-m-Y H:i:s') }}</h1>
-    <h1> {{ session.getEndDate()|date('d-m-Y H:i:s') }}</h1>
-
     {% if isRegistered %}
         {# give access to mooc archives if the user was subscribed #}
-        <a href="{{ path( 'mooc_view_session', { 
-				        'moocId': session.getMooc().getId(), 
-				        'moocName': session.getMooc().getAlias()|url_encode,
-				        'sessionId': session.getId(), 
-				        'word': 'sinformer'
-				    }) }}"
-		  class="link-btn-spacing pink_link">{{ 'mooc_archives'|trans({}, 'platform') }}</a>
+        <a href="{{ path( 'mooc_view_session', {
+            'moocId': session.getMooc().getId(),
+            'moocName': session.getMooc().getAlias()|url_encode,
+            'sessionId': session.getId(),
+            'word': 'sinformer'
+        }) }}"
+           class="link-btn-spacing pink_link">{{ 'mooc_archives'|trans({}, 'platform') }}</a>
     {% else %}
         {# if the mooc is redoable, ask for notification #}
         {% if session.getMooc().getPostEndAction() == 1 %}
-        	{% if user != 'anon.' and user.getNotifyWorkspaces().contains(session.getMooc().getWorkspace()) %}
+            {% if user != 'anon.' and user.getNotifyWorkspaces().contains(session.getMooc().getWorkspace()) %}
                 <a href="{{ path( 'claro_workspace_unregister_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-gris longText">{{ 'dont_get_warned_next_session'|trans({}, 'platform') }}</a>
-        	{% else %}
+            {% else %}
                 <a href="{{ path( 'claro_workspace_register_notify', { 'workspaceId' : session.getMooc().getWorkspace().getId() }) }}" class="btn btn-primary longText">{{ 'get_warned_next_session'|trans({}, 'platform') }}</a>
-        	{% endif %}
+            {% endif %}
         {% else %}
             {# otherwise just display invisible button for spacing #}
             <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div>{# here for spacing #}
         {% endif %}
     {% endif %}
-            
- {# session is not started yet #}    
+
+    {# session is not started yet #}
 {% elseif session.getStartDate() > date() and session.getStartInscriptionDate() > date() or session.getStartDate() > date() and isRegistered %}
     <a class="btn btn-gris disabled" href="#">{{ 'available_on'|trans({}, 'platform') }} {{ session.getStartDate()|date('d/m/Y') }}</a>
 
-{# user is not subscribed and date is over #}
+    {# user is not subscribed and date is over #}
 {% elseif session.getEndInscriptionDate() < date("midnight today") and not isRegistered %}
     <span class="mooc_status">
         {{ 'inscription_closed'|trans({}, 'platform') }}
     </span>
     <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
-    
-{# Inscription is open, user is registered #}
+
+    {# Inscription is open, user is registered #}
 {% elseif isRegistered %}
     {# button go to mooc #}
-    <a class="btn btn-blue" href="{{ path( 'mooc_view_session', { 
-        'moocId': session.getMooc().getId(), 
-        'moocName': session.getMooc().getAlias(), 
-        'sessionId': session.getId(), 
+    <a class="btn btn-blue" href="{{ path( 'mooc_view_session', {
+        'moocId': session.getMooc().getId(),
+        'moocName': session.getMooc().getAlias(),
+        'sessionId': session.getId(),
         'word': 'sinformer'
     }) }}">{{ 'go_to_mooc'|trans({}, 'platform') }}</a>
-{# inscription is open but session is full #}
+    {# inscription is open but session is full #}
 {% elseif session.getMaxUsers() != 0 and nbUsers >= session.getMaxUsers() %}
     <span class="mooc_status">
         {{ 'session_full'|trans({}, 'platform') }}
     </span>
     <div class="btn btn-gris disabled is-invisible">How Not To Be Seen</div> {# here for spacing #}
-    
-{# not registered and registration is started, so subscribe #}
+
+    {# not registered and registration is started, so subscribe #}
 {% else %}
     <a class="btn btn-primary" href="{{ path( 'session_subscribe', { 'sessionId': session.getId() }) }}">
         {{ 'subscribe_to_mooc'|trans({}, 'platform') }}

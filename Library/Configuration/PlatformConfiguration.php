@@ -23,6 +23,7 @@ class PlatformConfiguration
     private $theme;
     private $footer;
     private $role;
+    private $desc;
     private $termsOfService;
     private $cookieLifetime;
     private $mailerTransport;
@@ -49,6 +50,8 @@ class PlatformConfiguration
     
     private $httpProxyUrl;
     private $httpProxyPort;
+
+
 
     /**
      * @param mixed $sessionDbDataCol

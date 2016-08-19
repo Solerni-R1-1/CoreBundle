@@ -26,7 +26,7 @@ class PlatformConfigurationHandler
     private $configFile;
     private $parameters;
     private $defaultParameters = array(
-        'name' => null,
+        'name' => 'Solerni',
         'nameActive' => true,
         'support_email' => null,
         'footer' => null,

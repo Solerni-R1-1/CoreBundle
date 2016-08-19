@@ -3,11 +3,22 @@
 {# TITLE #}
 {% block title %}{% spaceless %}
     {% if _resource is defined %}
-        {{ _resource.getResourceNode().getName() | striptags | raw }}
+        {{ _resource.getResourceNode().getNamext() | striptags | raw }}
     {% else %}
         {{ parent() }}
     {% endif %}
 {% endspaceless %}{% endblock %}
+
+{#DESC#}
+{% block desc %}{% spaceless %}
+    {% if _resource is defined %}
+        {{ _resource.getResourceNode().getDesc() | striptags | raw }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endspaceless %}{% endblock %}
+
+
 
 {# no subnavbar for personnal workspaces. We need to find out workspace #}
 {% if workspace is not defined %}

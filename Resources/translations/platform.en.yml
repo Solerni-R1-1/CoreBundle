@@ -238,6 +238,7 @@ delete_category_confirm_title: 'Deletion of a category'
 delete_home_tab: 'Delete the tab'
 description: 'Description'
 desktop: Desktop
+description_desktop: 'Culture générale. Art. Histoire. Acculturation digitale. Découvrez des dispositifs d’apprentissages innovants et collaboratifs proposés sur la plateforme MOOC d’Orange'
 desktop_home_tab_creation: 'Tab creation for the desktop'
 desktop_home_tab_edition: 'Tab editing for the desktop'
 desktop_home_tabs: 'Tabs for the desktop'
@@ -1029,7 +1030,7 @@ mooc_by_entreprise: MOOCs proposed by %entreprise%
 proposed_by: Proposed by
 know_more: Find out more
 know_more_cookies: Learn more
-mooc_archives: Access course archives
+mooc_archives: Access archives
 get_warned_next_session: Notify me of the next session
 dont_get_warned_next_session: Do not notify me of the next session
 mooc_is_over: MOOC completed
