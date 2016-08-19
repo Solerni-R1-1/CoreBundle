@@ -23,7 +23,6 @@ class PlatformConfiguration
     private $theme;
     private $footer;
     private $role;
-    private $desc;
     private $termsOfService;
     private $cookieLifetime;
     private $mailerTransport;

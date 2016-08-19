@@ -13,16 +13,10 @@
 <!--<![endif]-->
     <head>
         {% set description = getContent('platformDescription') %}
-
-        {% set desc = 'Solerni' %}
-
         {% block meta %}
-            {% if config.getParameter('desc') != "" %}
-                <meta name="Description" content="{{ desc | striptags |raw }}">
+             {% if not description is empty %}
+                <meta name="Description" content="{{ description.content | striptags }}">
             {% endif %}
-            {#{% if not description is empty %}#}
-                {#<meta name="Description" content="{{ description.content | striptags }}">#}
-            {#{% endif %}#}
             <meta charset="utf-8">
             {# The following line is needed for unit testing as the DOMDocument
                used by the SF's crawler doesn't recognize the HTML5 charset meta tag.
@@ -41,7 +35,7 @@
             {% block title %}
                 {{ pagetitle | striptags | raw }}
                 {% if not description is empty %}
-                     {{ description.content | striptags | raw }}
+                    - {{ description.content | striptags | raw }}
                 {% endif %}
             {% endblock %}
         {% endspaceless %}</title>
