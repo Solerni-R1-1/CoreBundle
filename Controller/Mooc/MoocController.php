@@ -37,15 +37,15 @@ use Claroline\CoreBundle\Manager\AnalyticsManager;
  * Description of StaticController
  *
  * @author Kevin Danezis <kdanezis@sii.fr>
- * 
+ *
  * @copyright 2014 @ sii.fr for Orange
- *           
+ *
  */
 class MoocController extends Controller
 {
-	private $patternId = '/^[0-9]+$/';
-	private $patternName = '/^[0-9a-zA-Z\-\_](+)$/';
-    
+    private $patternId = '/^[0-9]+$/';
+    private $patternName = '/^[0-9a-zA-Z\-\_](+)$/';
+
     private $translator;
     private $security;
     private $router;
@@ -53,8 +53,8 @@ class MoocController extends Controller
     private $mailManager;
     private $moocService;
     private $roleManager;
-    
-    
+
+
     /**
      * @DI\InjectParams({
      *     "security"           = @DI\Inject("security.context"),
@@ -67,17 +67,17 @@ class MoocController extends Controller
      *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager")
      * })
      */
-    public function __construct( 
-            SecurityContextInterface $security, 
-            UrlGeneratorInterface $router, 
-            TranslatorInterface $translator,
-            WorkspaceManager $workspaceManager,
-            MailManager $mailManager,
-            MoocService $moocService,
-    		RoleManager $roleManager,
-            AnalyticsManager $analyticsManager
-            
-        ) {
+    public function __construct(
+        SecurityContextInterface $security,
+        UrlGeneratorInterface $router,
+        TranslatorInterface $translator,
+        WorkspaceManager $workspaceManager,
+        MailManager $mailManager,
+        MoocService $moocService,
+        RoleManager $roleManager,
+        AnalyticsManager $analyticsManager
+
+    ) {
         $this->translator           = $translator;
         $this->security             = $security;
         $this->router               = $router;
@@ -98,22 +98,22 @@ class MoocController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = false})
      */
     public function moocPageAction(Mooc $mooc, $user ) {
-        
+
         $session = $this->moocService->getActiveOrNextSessionFromWorkspace( $mooc->getWorkspace(), $user );
         $nbUsers = $this->analyticsManager->getTotalUsersWithGroupsForSession($session);
-        
+
         if (  ! $mooc->isPublic() ) {
-        	/* redirect anon users to login if mooc is private */
-        	if ($user == 'anon.') {
+            /* redirect anon users to login if mooc is private */
+            if ($user == 'anon.') {
                 // keep trace of the session
                 $this->get('session')->set('privateMoocSession', $session);
                 // redirect
-	            return  $this->redirect( $url = $this->get('router')->generate('claro_security_login') );
-        	}
+                return  $this->redirect( $url = $this->get('router')->generate('claro_security_login') );
+            }
             /* check righs */
             if ( ! $this->roleManager->hasUserAccess( $user, $mooc->getWorkspace() ) ) {
                 return $this->return403ForPrivateMooc();
-        	}
+            }
         }
 
         return $this->render(
@@ -122,15 +122,15 @@ class MoocController extends Controller
                 'mooc'      => $mooc,
                 'session'   => $session,
                 'user'      => $user,
-            	'nbUsers'	=> $nbUsers
+                'nbUsers'	=> $nbUsers
             )
         );
     }
 
     /**
      * Redirect the user towards another action depending of a keyword
-     * 
-     * 
+     *
+     *
      * @Route("/{moocId}/{moocName}/session/{sessionId}/{word}", name="mooc_view_session")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
@@ -146,8 +146,8 @@ class MoocController extends Controller
      */
     public function sessionPageAction( $mooc, $moocSession, $word, $user ){
 
-    	$session = new Session();
-    	$session->set($mooc->getId().'-moocSession', $moocSession->getId());
+        $session = new Session();
+        $session->set($mooc->getId().'-moocSession', $moocSession->getId());
         if(!preg_match($this->patternId, $mooc->getId() )){
             return $this->inner404("parametre moocId invalid : ". $mooc->getId() );
         }
@@ -162,23 +162,23 @@ class MoocController extends Controller
 
         if( $moocSession->getMooc()->getId() != $mooc->getId() ){
             return $this->inner404("mooc non correspondant . expected : "
-                        .$session->getMooc()->getId()." given : " . $mooc->getId() );
+                .$session->getMooc()->getId()." given : " . $mooc->getId() );
         }
 
 
         switch ($word){
-            case "apprendre" : 
+            case "apprendre" :
                 return $this->sessionApprendrePage($moocSession->getMooc(), $user);
                 break;
 
-            case "discuter" : 
+            case "discuter" :
                 return $this->sessionDiscuterPage($moocSession);
                 break;
 
             case "partager" :
                 return $this->sessionPartagerPage($mooc->getWorkspace());
                 break;
-            
+
             case "sinformer" :
                 return $this->sessionSinformerPage($moocSession->getMooc(), $user);
                 break;
@@ -222,9 +222,9 @@ class MoocController extends Controller
     }
 
     /**
-     * 
+     *
      * Redirect user to the lesson object of the mooc
-     * 
+     *
      */
     private function sessionApprendrePage( $mooc, $user ) {
 
@@ -252,7 +252,7 @@ class MoocController extends Controller
             $resourceType = $node->getResourceType()->getName();
             $nodeid = $node->getId();
             $url = $this->get('router')
-                         ->generate('claro_resource_open', array('resourceType' => $resourceType, "node" => $nodeid));
+                ->generate('claro_resource_open', array('resourceType' => $resourceType, "node" => $nodeid));
             return  $this->redirect($url);
         }
 
@@ -270,11 +270,11 @@ class MoocController extends Controller
         $workspaceId = $workspace->getId();
 
         $url = $this->get('router')
-                     ->generate('claro_workspace_open_tool', array('workspaceId' => $workspaceId, "toolName" => "resource_manager"));
+            ->generate('claro_workspace_open_tool', array('workspaceId' => $workspaceId, "toolName" => "resource_manager"));
         return  $this->redirect($url);
 
     }
-    
+
     /**
      * Redirect user to the blog resource of the workspace
      * Fallback to page apprendre
@@ -286,17 +286,17 @@ class MoocController extends Controller
             $blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
             $url = $this->get('router')->generate('icap_blog_view', array('blogId' => $blog->getId()));
             return  $this->redirect($url);
-            
+
         } else {
             return $this->sessionApprendrePage($mooc, $user);
-            
+
         }
 
     }
 
     /**
      * @Route("/session/{sessionId}/subscribe", name="session_subscribe")
-     * 
+     *
      * @EXT\ParamConverter(
      *      "moocSession",
      *      class="ClarolineCoreBundle:Mooc\MoocSession",
@@ -308,17 +308,17 @@ class MoocController extends Controller
 
         /* Register session and redirect to login if anon. */
         if ( $user == 'anon.' ) {
-        	$this->get('session')->set('moocSession', $moocSession);
+            $this->get('session')->set('moocSession', $moocSession);
             return $this->redirect( $this->router->generate('claro_security_login', array () ) );
         }
-        
+
         // If the mooc is private check rights
         if (  ! $moocSession->getMooc()->isPublic() ) {
             if ( ! $this->roleManager->hasUserAccess( $user, $moocSession->getMooc()->getWorkspace() ) ) {
-        		return $this->return403ForPrivateMooc();
-        	}
+                return $this->return403ForPrivateMooc();
+            }
         }
-        
+
         $showmodal = false;
         if (!$user->isRegisteredToSession($moocSession)) {
             /* add user to workspace if not already member */
@@ -349,63 +349,63 @@ class MoocController extends Controller
 
         /* redirect to lesson default page */
         if ($showmodal) {
-            $route = $this->router->generate('mooc_view', array ( 
-                'moocId' => $moocSession->getMooc()->getId(), 
+            $route = $this->router->generate('mooc_view', array (
+                'moocId' => $moocSession->getMooc()->getId(),
                 'moocName' => $moocSession->getMooc()->getAlias(),
                 'showmodal' => $showmodal
-                ) );
+            ) );
         } else {
-            $route = $this->router->generate('mooc_view', array ( 
-                'moocId' => $moocSession->getMooc()->getId(), 
+            $route = $this->router->generate('mooc_view', array (
+                'moocId' => $moocSession->getMooc()->getId(),
                 'moocName' => $moocSession->getMooc()->getAlias()
-                ) );
+            ) );
         }
 
         return new RedirectResponse($route);
     }
 
-   /**
-    * Render a session list (called from twig)
-    * 
-    * @ParamConverter("user", options={"authenticatedUser" = true })
-    */
+    /**
+     * Render a session list (called from twig)
+     *
+     * @ParamConverter("user", options={"authenticatedUser" = true })
+     */
     public function getUserSessionsListAction( $user, $sessionComponentLayout = '2-column', $showUserProgression = false, $returnAvailable = true )
     {
         $userSession = $user->getMoocSessions();
         $groups = $user->getGroups();
         foreach ($groups as $group) {
-        	foreach ($group->getMoocSessions() as $groupSession) {
-        		if (!$userSession->contains($groupSession)) {
-        			$userSession[] = $groupSession;
-        		}
-        	}
+            foreach ($group->getMoocSessions() as $groupSession) {
+                if (!$userSession->contains($groupSession)) {
+                    $userSession[] = $groupSession;
+                }
+            }
         }
 
         $sessionsAvailable = array();
         if(count($userSession) == 0 && $returnAvailable){
             //15 days before / after
-            $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(15, $user, 4); 
+            $sessionsAvailable = $this->moocService->getAvailableSessionAroundToday(15, $user, 4);
             if (count($sessionsAvailable) > 1) {
-            	$sessionComponentLayout = "slider-small";
+                $sessionComponentLayout = "slider-small";
             }
-        } 
+        }
 
 
         return $this->render(
-        'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
-        array(
-            'sessions'                  => $userSession,
-            'sessionsAvailable'         => $sessionsAvailable,
-            'user'                      => $user,
-            'sessionComponentLayout'    => $sessionComponentLayout,
-            'showUserProgression'       => true
+            'ClarolineCoreBundle:Mooc:moocSessionsList.html.twig',
+            array(
+                'sessions'                  => $userSession,
+                'sessionsAvailable'         => $sessionsAvailable,
+                'user'                      => $user,
+                'sessionComponentLayout'    => $sessionComponentLayout,
+                'showUserProgression'       => true
             )
         );
     }
 
     /**
      * Render a session Component (called from twig)
-     * 
+     *
      * @ParamConverter("user", options={"authenticatedUser" = false })
      */
     public function renderSessionComponentAction( $session, $user, $sessionComponentLayout = '2-column', $showUserProgression = false )
@@ -417,85 +417,97 @@ class MoocController extends Controller
         } else {
             $progression = null;
         }
-        
+
         $nbUsers = $this->analyticsManager->getTotalUsersWithGroupsForSession($session);
 
-        return $this->render(
-        'ClarolineCoreBundle:Mooc:moocSessionComponent.html.twig',
-        array( 
-            'session'                   => $session,
-            'user'                      => $user,
-            'progression'               => $progression,
-            'sessionComponentLayout'    => $sessionComponentLayout,
-            'nbUsers'                   => $nbUsers
-            )
-        );
+
+        if ( ($session-> getEndDate()) > date("Y-m-d H:i:s")) {
+            if ($session->getArchived() == 0) {
+                error_log("Session archived - id : ".$session->getId().", id-mooc : " .$session->getMooc()->getId().", nom-mooc : " .$session->getMooc()->getTitle().", title : " .$session->getTitle().", start_date : ".$session->getStartDate()->format('Y-m-d H:i:s').", end_date : " . $session->getEndDate()->format('Y-m-d H:i:s') . ", start_inscription_date : " . $session->getStartInscriptionDate()->format('Y-m-d H:i:s').", end_inscription_date : ".$session->getEndInscriptionDate()->format('Y-m-d H:i:s').", now : ".date("Y-m-d H:i:s"). ", timezone : ".date_default_timezone_get().", midnight : ".date('Y-m-d H:i:s', strtotime("midnight today")));
+                $this->container->get('logger')-> info("Session archived - id : ".$session->getId().", id-mooc : " .$session->getMooc()->getId().", nom-mooc : " .$session->getMooc()->getTitle().", title : " .$session->getTitle().", start_date : ".$session->getStartDate()->format('Y-m-d H:i:s').", end_date : " . $session->getEndDate()->format('Y-m-d H:i:s') . ", start_inscription_date : " . $session->getStartInscriptionDate()->format('Y-m-d H:i:s').", end_inscription_date : ".$session->getEndInscriptionDate()->format('Y-m-d H:i:s').", now : ".date("Y-m-d H:i:s"). ", timezone : ".date_default_timezone_get().", midnight : ".date('Y-m-d H:i:s', strtotime("midnight today")));
+
+                $session->setArchived('1');
+                $this->getDoctrine()->getManager()->persist($session);
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
+
+            return $this->render(
+                'ClarolineCoreBundle:Mooc:moocSessionComponent.html.twig',
+                array(
+                    'session'                   => $session,
+                    'user'                      => $user,
+                    'progression'               => $progression,
+                    'sessionComponentLayout'    => $sessionComponentLayout,
+                    'nbUsers'                   => $nbUsers
+                )
+            );
+        }
+
+        /**
+         * @Route("/workspace/{workspaceId}/workgroup", name="claro_show_work_group")
+         *
+         * @EXT\ParamConverter(
+         *      "workspace",
+         *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+         *      options={"id" = "workspaceId", "strictId" = true}
+         * )
+         * @ParamConverter("user", options={"authenticatedUser" = false })
+         */
+        public function showWorkGroupAction(AbstractWorkspace $workspace, $user) {
+        if ($workspace->isMooc() && $workspace->getMooc()->isShowWorkGroup()) {
+            $workgroup = $workspace->getMooc()->getWorkGroup();
+
+            return $this->render(
+                'ClarolineCoreBundle:Tool\workspace\workgroup:workgroup.html.twig',
+                array(
+                    "workspace" => $workspace,
+                    "workgroup" => $workgroup
+
+                )
+            );
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
-    
-    /**
-     * @Route("/workspace/{workspaceId}/workgroup", name="claro_show_work_group")
-     *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @ParamConverter("user", options={"authenticatedUser" = false })
-     */
-    public function showWorkGroupAction(AbstractWorkspace $workspace, $user) {
-    	if ($workspace->isMooc() && $workspace->getMooc()->isShowWorkGroup()) {
-    		$workgroup = $workspace->getMooc()->getWorkGroup();
-    		
-    		return $this->render(
-    				'ClarolineCoreBundle:Tool\workspace\workgroup:workgroup.html.twig',
-    				array(
-    						"workspace" => $workspace,
-    						"workgroup" => $workgroup
-    						
-    				)
-    		);
-    	} else {
-    		throw new NotFoundHttpException();
-    	}
-    }
-    
-    /**
-     * Generate tabs on any mooc (onglet Apprendre, Discuter, etc) if the resource is set
-     *
-     * @ParamConverter("workspace",
-     *                 class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *                 options={"id" = "workspaceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = false})
-     */
-    public function renderSolerniTabsAction(AbstractWorkspace $workspace, $user )
+
+        /**
+         * Generate tabs on any mooc (onglet Apprendre, Discuter, etc) if the resource is set
+         *
+         * @ParamConverter("workspace",
+         *                 class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+         *                 options={"id" = "workspaceId"})
+         * @ParamConverter("user", options={"authenticatedUser" = false})
+         */
+        public function renderSolerniTabsAction(AbstractWorkspace $workspace, $user )
     {
         $router = $this->get('router');
         $solerniTabs = array(
             'solerniTabs' => array(),
             'workspace' => $workspace,
         );
-        
+
         // Check Session
         $session = $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user);
         $currentUrl = $_SERVER['REQUEST_URI'];
-        
+
 
         if ( $workspace->isMooc() ) {
-        	$mooc = $workspace->getMooc();
-        	$blogRes = $mooc->getBlog();
-        	if ($blogRes != null) {
-        		$blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
-        		$url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
-        		$solerniTabs['solerniTabs'][] = array(
-        				'name' => $this->translator->trans('sinformer', array(), 'platform'),
-        				'url' => $url,
-        				'title' => $this->translator->trans('sinformer_title', array(), 'platform'),
-        				'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
-        		);
-        	}
+            $mooc = $workspace->getMooc();
+            $blogRes = $mooc->getBlog();
+            if ($blogRes != null) {
+                $blog = $this->getDoctrine()->getRepository('IcapBlogBundle:Blog')->findOneBy(array("resourceNode" => $blogRes));
+                $url = $router->generate('icap_blog_view', array('blogId' => $blog->getId()));
+                $solerniTabs['solerniTabs'][] = array(
+                    'name' => $this->translator->trans('sinformer', array(), 'platform'),
+                    'url' => $url,
+                    'title' => $this->translator->trans('sinformer_title', array(), 'platform'),
+                    'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
+                );
+            }
         }
-        
-        
+
+
         if ( $session ) {
             //get the mooc lesson
             $lesson = $this->moocService->getLessonFromWorkspace($workspace, $user);
@@ -509,14 +521,14 @@ class MoocController extends Controller
                         'name' => $this->translator->trans('apprendre', array(), 'platform'),
                         'url' => $url,
                         'title' => $this->translator->trans('apprendre_title', array(), 'platform'),
-                    	'isSelected' => !(strpos(  $url, dirname($currentUrl) ) === false)
+                        'isSelected' => !(strpos(  $url, dirname($currentUrl) ) === false)
                     );
                 }
             }
             // Get forum
             $forum = $this->getDoctrine()
-                    ->getRepository( 'ClarolineForumBundle:Forum' )
-                    ->findOneByResourceNode( $session->getForum() );
+                ->getRepository( 'ClarolineForumBundle:Forum' )
+                ->findOneByResourceNode( $session->getForum() );
             // get the forum link
             if ($forum) {
                 // generate tab
@@ -526,17 +538,17 @@ class MoocController extends Controller
                     'name' => $this->translator->trans('discuter', array(), 'platform'),
                     'url' => $url,
                     'title' => $this->translator->trans('discuter_title', array(), 'platform'),
-                   	'isSelected' => !(strpos(  dirname( $currentUrl ), $forumUrl ) === false)
+                    'isSelected' => !(strpos(  dirname( $currentUrl ), $forumUrl ) === false)
                 );
             }
         }
-        
-        
-        
+
+
+
         // Generate tab for resource manager
         $showResourceManager = true;
         if ($workspace->isMooc() && !$workspace->getMooc()->isShowResourceManager()) {
-        	$showResourceManager = false;
+            $showResourceManager = false;
         }
         if ( $session && $showResourceManager ) {
             $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'resource_manager'));
@@ -547,59 +559,59 @@ class MoocController extends Controller
                 'isSelected' => !(strpos(  $currentUrl, $url ) === false)
             );
         }
-        
+
         if ($workspace->isMooc() && $workspace->getMooc()->isShowWorkGroup()) {
-        	$url = $router->generate('claro_show_work_group', array('workspaceId' => $workspace->getId()));
-        	$solerniTabs['solerniTabs'][] = array(
-        		'name'	=> $this->translator->trans('workgroup', array(), 'platform'),
-        		'url'	=> $url,
-        		'title' => $this->translator->trans('workgroup_title', array(), 'platform'),
-        		'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)	
-        	);
+            $url = $router->generate('claro_show_work_group', array('workspaceId' => $workspace->getId()));
+            $solerniTabs['solerniTabs'][] = array(
+                'name'	=> $this->translator->trans('workgroup', array(), 'platform'),
+                'url'	=> $url,
+                'title' => $this->translator->trans('workgroup_title', array(), 'platform'),
+                'isSelected' => !(strpos($_SERVER['REQUEST_URI'], $url) === false)
+            );
         }
-        
+
         $url = $router->generate('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'my_badges'));
         $isMyBadgesPage = array( 'isMyBadgesPage' => !(strpos( $currentUrl, $url ) === false) );
-        
+
         return $this->render(
             'ClarolineCoreBundle:Partials:includeSolerniTabs.html.twig',
             $solerniTabs + $isMyBadgesPage
         );
     }
 
-    /**
-     * 
-     * Render presentation widget for the mooc (left column of designs) 
-     * 
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = false})
-     */
-    public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
+        /**
+         *
+         * Render presentation widget for the mooc (left column of designs)
+         *
+         * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
+         * @ParamConverter("user", options={"authenticatedUser" = false})
+         */
+        public function getWorkspacePresentationWidgetAction( $workspace, $user, $renderProgression = true )
     {
         $lesson = $this->moocService->getLessonFromWorkspace($workspace, $user);
 
         if ( $renderProgression ) {
             $progression = $this->moocService->getUserProgressionInLesson($user, $workspace);
         } else {
-           $progression = null; 
+            $progression = null;
         }
 
         return $this->render(
             'ClarolineCoreBundle:Partials:workspacePresentationWidget.html.twig',
             array(
-            'session' => $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user),
-            'progression' => $progression,
-            'workspace' => $workspace
+                'session' => $this->moocService->getSessionForRegisteredUserFromWorkspace($workspace, $user),
+                'progression' => $progression,
+                'workspace' => $workspace
             )
         );
     }
-    
-    private function return403ForPrivateMooc() {
+
+        private function return403ForPrivateMooc() {
         return $this->render(
             'ClarolineCoreBundle:Exception:error403.html.twig',
             array( 'custom_message' => $this->translator->trans( 'access_restricted', array(), 'platform') ),
             new Response( '', 403 )
         );
     }
-    
-}
+
+    }

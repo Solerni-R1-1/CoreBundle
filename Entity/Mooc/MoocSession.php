@@ -119,6 +119,32 @@ class MoocSession extends AbstractIndexable
      */
     protected $sessionsByUsers;
 
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="archived", type="integer", nullable=true)
+     * @Assert\GreaterThanOrEqual(value="0", message = "Integer must be positive")
+     */
+    private $archived;
+
+    /**
+     * @return int
+     */
+    public function getArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * @param int $archived
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
+    }
+
+
                 
     /**
      * Get id
