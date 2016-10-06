@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
@@ -50,6 +51,7 @@ class CatalogueController extends Controller
         $this->translator = $translator;
         $this->security = $security;
         $this->router = $router;
+
     }
     
     /**
@@ -84,36 +86,39 @@ class CatalogueController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = false })
      * @ParamConverter("owner", class="ClarolineCoreBundle:Mooc\MoocOwner", options={"id" = "ownerId"})
      */
-    public function moocOwnerCatalogueAction( $user, $owner, $ownerName )
+    public function moocOwnerCatalogueAction( $user,  $owner, $ownerName )
     {
-     
+
         // We need to check if the user have the right to see each session
         $sessionsByUsersRepository = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\SessionsByUsers');
         $autorizedSessions = array();
         $is_admin = ( $user instanceof \Claroline\CoreBundle\Entity\User && $user->hasRole('ROLE_ADMIN') ) ? true : false;;
-        
+
         foreach(  $owner->getMoocs() as $mooc ) {
             foreach( $mooc->getMoocSessions() as $session ) {
-                // Mooc is public, OR user is member of the session OR user is admin = add session to the list
-                if (
-                    $mooc->isPublic()                       ||
-                    $is_admin                               || 
-                    $session->getUsers()->contains( $user ) ||
-                    $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user) ) )
+                $session_id = $session->getId();
+                if ( $mooc->isPublic() ||  $is_admin  ||  $sessionsByUsersRepository->findOneBy( array( 'moocSession' => $session, 'user' => $user)))
                 {
                     $autorizedSessions[] = $session;
-                } else {
-                	if ($user instanceof \Claroline\CoreBundle\Entity\User) {
-	                	$groups = $user->getGroups();
-	                	foreach ($groups as $group) {
-	                		foreach ($group->getMoocSessions() as $groupSession) {
-	                			if ($groupSession->getId() == $session->getId()) {
-	                				$autorizedSessions[] = $session;
-	                				break;
-	                			}
-	                		}
-	                	}
-                	}
+                }
+                else if ($user instanceof \Claroline\CoreBundle\Entity\User){
+                    foreach(  $user->getMoocSessions() as $sessionUser ) {
+                        if ($sessionUser->getId() == $session_id ){
+                            $autorizedSessions[] = $session;
+                        }
+                    }
+                } else{
+                    if ($user instanceof \Claroline\CoreBundle\Entity\User) {
+                        $groups = $user->getGroups();
+                        foreach ($groups as $group) {
+                            foreach ($group->getMoocSessions() as $groupSession) {
+                                if ($groupSession->getId() == $session_id) {
+                                    $autorizedSessions[] = $session;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -127,6 +132,5 @@ class CatalogueController extends Controller
             )
         );
     }
-
 
 }
