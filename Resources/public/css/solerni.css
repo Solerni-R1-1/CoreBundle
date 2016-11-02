@@ -2679,7 +2679,7 @@ a.slrn-red-link, a.slrn-red-link:active, a.slrn-red-link:hover{
 }
 
 .slrn-linkedIn:before {
-	content:"http://linkedin.com/pub/";
+	content:"http://linkedin.com/";
 }
 
 .slrn-facebook:before {

@@ -42,7 +42,7 @@
             	{% endif %}
             	{% if user.getLinkedIn() != null %}
             	<li class="slrn-profile-social-li"><i class="slrn-icon-profile-linkedin"></i>
-            	<a href="//linkedin.com/pub/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link" target="_blank">
+            	<a href="//linkedin.com/{{ user.getLinkedIn() }}" class="pink_link slrn-profile-social-link" target="_blank">
             		{{ user.getLinkedIn() }}
             	</a></li>
             	{% endif %}
